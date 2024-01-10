@@ -13,6 +13,8 @@ COPY package*.json ./
 # run npm ci -> continuous integration for production
 RUN npm install
 RUN npm install -g nodemon
+RUN npm install -g prisma
+
 
 # now we need to copy all the files into
 # our container so we can run the app
@@ -24,4 +26,4 @@ COPY . .
 # -L will allow for nodemon to reload
 # --inspect-brk=0.0.0.0 is needed for
 # debugging containerized apps
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev", "npx", "prisma", "migrate", "deploy"]
