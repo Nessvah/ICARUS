@@ -15,7 +15,7 @@ services:
       - ./gateway:/usr/src/app
 
   mongodb:
-    image: mongo:6-jammy
+    image: mongo
     container_name: mongodb
     ports:
       - '27017:27017'
