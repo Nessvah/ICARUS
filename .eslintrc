@@ -1,13 +1,15 @@
 {
   "env": {
     "node": true,
-    "es2021": true,
+    "es2022": true,
     "jest": true
   },
   "extends": ["eslint:recommended", "plugin:node/recommended"], //coding rules - eslint
   "plugins": ["prettier"],
   "parserOptions": {
-    "ecmaVersion": 2021
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "allowImportExportEverywhere": true
   },
   "rules": {
     "spaced-comment": "off",
@@ -23,6 +25,7 @@
     "prefer-destructuring": ["error", { "object": true, "array": false }],
     "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }],
     "no-duplicate-imports": "error",
+    "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] }],
     "no-var": "error",
     "eqeqeq": "warn",
     "prettier/prettier": ["error", { "singleQuote": true, "parser": "flow", "endOfLine": "auto" }]
