@@ -16,22 +16,12 @@ services:
 
   mongodb:
     image: mongo
+    command: --serviceExecutor adaptive
     container_name: mongodb
     ports:
       - '27017:27017'
     volumes:
       - icarus-data:/data/db
 
-  prisma:
-    container_name: prisma
-    build:
-      context: ./gateway
-      dockerfile: Dockerfile
-    depends_on:
-      - mongodb
-    environment:
-      DATABASE_URL: mongodb://localhost:27017/icarus-test
-    volumes:
-      - ./prisma:/app
 volumes:
   icarus-data:
