@@ -10,17 +10,44 @@ services:
       dockerfile: Dockerfile
 
     ports:
-      - '5000:5000'
+      - 5000:5000
+    depends_on:
+      - mongodb
+      - mysql
+    networks:
+      - gateway-network
     volumes:
       - ./gateway:/usr/src/app
 
   mongodb:
-    image: mongo
-    container_name: mongodb
+    container_name: mongodb_icarus
+    image: mongo:6.0
+    volumes:
+      - ~/mongo:/data/db
     ports:
       - '27017:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=123
+      - MONGO_INITDB_DATABASE=admin
+    networks:
+      - gateway-network
+
+  mysql:
+    container_name: mysql_icarus
+    image: mysql:8.0
     volumes:
-      - icarus-data:/data/db
+      - db:/var/lib/mysql
+    ports:
+      - '3310:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+    networks:
+      - gateway-network
+
+networks:
+  gateway-network:
+    driver: bridge
 
 volumes:
-  icarus-data:
+  db:
