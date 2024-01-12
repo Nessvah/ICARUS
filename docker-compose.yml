@@ -16,7 +16,6 @@ services:
 
   mongodb:
     image: mongo
-    command: --serviceExecutor adaptive
     container_name: mongodb
     ports:
       - '27017:27017'

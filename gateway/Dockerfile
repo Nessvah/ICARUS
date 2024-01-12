@@ -13,7 +13,6 @@ COPY package*.json ./
 # run npm ci -> continuous integration for production
 RUN npm install
 RUN npm install -g nodemon
-RUN npm install -g prisma
 
 
 # now we need to copy all the files into
