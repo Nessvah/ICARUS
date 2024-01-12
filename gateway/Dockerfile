@@ -25,3 +25,6 @@ COPY . .
 # --inspect-brk=0.0.0.0 is needed for
 # debugging containerized apps
 CMD ["npm", "run", "dev"]
+
+EXPOSE 5000
+
