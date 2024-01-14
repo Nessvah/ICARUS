@@ -13,7 +13,9 @@ services:
       - 5000:5000
     depends_on:
       - mongodb
+      - cassandra
       - mysql
+      - mssql
     networks:
       - gateway-network
     volumes:
@@ -27,11 +29,21 @@ services:
     ports:
       - '27017:27017'
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=123
-      - MONGO_INITDB_DATABASE=admin
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
     networks:
       - gateway-network
+
+  cassandra:
+    container_name: cassandra_container
+    image: cassandra:5.0
+    ports:
+      - '9042:9042'
+    environment:
+      - CASSANDRA_CLUSTER_NAME=${CASSANDRA_CLUSTER_NAME}
+    volumes:
+      - cassandra_data:/var/lib/cassandra    
 
   mysql:
     container_name: mysql_icarus
@@ -41,7 +53,20 @@ services:
     ports:
       - '3310:3306'
     environment:
-      - MYSQL_ROOT_PASSWORD=123
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    networks:
+      - gateway-network
+
+  mssql:
+    container_name: mssql_icarus
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    volumes:
+      - mssql-data:/var/opt/mssql
+    ports:
+      - '1433:1433'
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
     networks:
       - gateway-network
 
