@@ -43,7 +43,7 @@ services:
     environment:
       - CASSANDRA_CLUSTER_NAME=${CASSANDRA_CLUSTER_NAME}
     volumes:
-      - cassandra_data:/var/lib/cassandra    
+      - cassandra_data:/var/lib/cassandra
 
   mysql:
     container_name: mysql_icarus
