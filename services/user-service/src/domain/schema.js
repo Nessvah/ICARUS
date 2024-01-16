@@ -1,4 +1,4 @@
-const { gql } = require('graphql-tag');
+import { gql } from 'graphql-tag';
 
 const typeDefs = gql`
   scalar DateTime
@@ -6,6 +6,7 @@ const typeDefs = gql`
   type Query {
     me: User
     accounts: [User!]!
+    roles: [Role!]!
   }
 
   type User @key(fields: "idCostumer") {
@@ -17,13 +18,17 @@ const typeDefs = gql`
   }
 
   type Role {
-    id: ID
-    role: String
+    id: ID!
+    role: String!
   }
 
   input CreateAccount {
     email: String!
     password: String!
+  }
+
+  input RoleInput {
+    role: String!
   }
 
   type AuthPayload {
@@ -34,7 +39,8 @@ const typeDefs = gql`
   type Mutation {
     createAccount(input: CreateAccount!): AuthPayload!
     authorize(email: String!, password: String!): AuthPayload!
+    createRole(input: RoleInput!): Role!
   }
 `;
 
-module.exports = { typeDefs };
+export { typeDefs };
