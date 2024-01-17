@@ -24,7 +24,7 @@ Handles user interaction, user interfaces, and presentation logic:
 - REST api controllers
 - View, templates or components in web app
 
-### Aplication Layer
+### Application Layer
 
 Orchestrates use cases and contains business logic:
 
