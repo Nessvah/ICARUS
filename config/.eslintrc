@@ -1,7 +1,7 @@
- {
+{
   "extends": ["airbnb", "prettier", "plugin:node/recommended"], //coding rules - eslint
   "plugins": ["prettier"],
-  "rules": { 
+  "rules": {
     "spaced-comment": "off",
     "no-console": "warn",
     "consistent-return": "off",
@@ -16,4 +16,4 @@
     "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }],
     "prettier/prettier": ["error", { "endOfLine": "auto" }]
   }
-} 
+}
