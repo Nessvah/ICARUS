@@ -2,8 +2,8 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 import { ApolloServer } from '@apollo/server';
-import { buildSubgraphSchema } from '@apollo/subgraph';
 import { startStandaloneServer } from '@apollo/server/standalone';
+import { buildSubgraphSchema } from '@apollo/subgraph';
 
 // Importing schema and resolvers from the domain directory
 import { typeDefs } from '../domain/schema.js';
