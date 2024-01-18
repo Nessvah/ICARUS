@@ -3,6 +3,9 @@ import gql from 'graphql-tag';
 const typeDefs = gql`
   scalar DateTime
 
+  """
+  something here
+  """
   type Query {
     me: User
     accounts: [User!]!

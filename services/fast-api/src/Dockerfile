@@ -18,13 +18,14 @@ RUN npm install -g nodemon
 # now we need to copy all the files into
 # our container so we can run the app
 # . . copy everything from this current directory
-# to our previous directory (/usr/src/app)
+
 COPY . .
 
-# Run the server
+# Expose port 5001
+
+EXPOSE 5001
+
 # -L will allow for nodemon to reload
 # --inspect-brk=0.0.0.0 is needed for
 # debugging containerized apps
 CMD ["npm", "run", "dev"]
-
-EXPOSE 5001

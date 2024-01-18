@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./infrastructure/server.js"
+    "start": "node ./infrastructure/server.js",
+    "dev": "nodemon ./infrastructure/server.js"
   },
   "keywords": [],
   "author": "",
@@ -20,5 +21,8 @@
     "graphql-tag": "^2.12.6",
     "jsonwebtoken": "^9.0.2",
     "mssql": "^10.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
   }
 }

@@ -20,6 +20,7 @@ const resolvers = {
       return createNewRole(input);
     },
 
+    // testing workflow
     //! This was throwing an error because it didn't matched schemas
     // addRoleToUSer(_, { input }, { addRoleUser }) {
     //   return addRoleUser(input);
