@@ -20,7 +20,7 @@ async function startApolloServer() {
   });
 
   //? Start the standalone server and get the server URL, when the gateway is fully implemented, the startStandaloneServer will have to be modified or deleted?
-  //const { url } =
+
   await startStandaloneServer(server, {
     // Add context to the server options, which provides authentication for each request
     context({ req }) {
@@ -29,9 +29,6 @@ async function startApolloServer() {
     // Specify the port to listen on from the environment variable
     listen: { port: process.env.PORT },
   });
-
-  // Log the server URL
-  //console.log(`User service running at: ${url}`);
 }
 
 // Start the Apollo server

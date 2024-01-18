@@ -52,11 +52,7 @@ const createUser = (input) => {
   input.created = new Date().toISOString();
   users.push(input);
   const user = users[users.length - 1];
-  const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
-  return {
-    token,
-    user,
-  };
+  return user;
 };
 
 const findAllUsers = () => {
