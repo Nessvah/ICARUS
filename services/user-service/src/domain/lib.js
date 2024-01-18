@@ -106,6 +106,24 @@ const createNewRole = ({ role }) => {
   return newRole;
 };
 
+const addRoleUser = (input) => {
+  const roleExist = roles.find((role) => role.role === input.role);
+
+  const userExist = users.find((user, i) => {
+    if (user.id === input.id && roleExist) {
+      const userRoleExist = user.roles.find((role) => {
+        if (role.role === roleExist.role) {
+          return role;
+        }
+      });
+      !userRoleExist ? users[i].roles.push(roleExist) : '';
+      return user;
+    }
+  });
+
+  return userExist;
+};
+
 const auth = (req) => {
   let currentUser = null;
   if (req.headers.authorization) {
@@ -129,6 +147,7 @@ const auth = (req) => {
     findCurrentUser,
     createNewRole,
     authLogin,
+    addRoleUser,
   };
 };
 

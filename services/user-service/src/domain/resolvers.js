@@ -14,6 +14,9 @@ const resolvers = {
     createRole(_, { input }, { createNewRole }) {
       return createNewRole(input);
     },
+    addRoleToUSer(_, { input }, { addRoleUser }) {
+      return addRoleUser(input);
+    },
   },
 };
 

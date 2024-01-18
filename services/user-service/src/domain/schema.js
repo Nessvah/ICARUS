@@ -22,6 +22,11 @@ const typeDefs = gql`
     role: String!
   }
 
+  input RoleInputById {
+    id: ID!
+    role: String!
+  }
+
   input CreateAccount {
     email: String!
     password: String!
@@ -40,6 +45,7 @@ const typeDefs = gql`
     createAccount(input: CreateAccount!): AuthPayload!
     authorize(email: String!, password: String!): AuthPayload!
     createRole(input: RoleInput!): Role!
+    addRoleToUSer(input: RoleInputById!): User!
   }
 `;
 
