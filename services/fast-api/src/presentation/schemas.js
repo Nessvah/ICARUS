@@ -7,9 +7,10 @@ const typeDefs = gql`
     me: User
     accounts: [User!]!
     roles: [Role!]!
+    products: [Product]
   }
 
-  type User @key(fields: "idCostumer") {
+  type User {
     id: ID!
     email: String!
     roles: [Role]
@@ -18,11 +19,6 @@ const typeDefs = gql`
   }
 
   type Role {
-    id: ID!
-    role: String!
-  }
-
-  input RoleInputById {
     id: ID!
     role: String!
   }
@@ -45,7 +41,18 @@ const typeDefs = gql`
     createAccount(input: CreateAccount!): AuthPayload!
     authorize(email: String!, password: String!): AuthPayload!
     createRole(input: RoleInput!): Role!
-    addRoleToUSer(input: RoleInputById!): User!
+    # addRoleToUser(input: RoleInput!): User!
+  }
+
+  type Product {
+    ProductId: Int
+    SKU: String!
+    Name: String!
+    Description: String
+    Price: Float
+    ImageUrl: String
+    StockLevel: Int
+    CategoryId: Int
   }
 `;
 
