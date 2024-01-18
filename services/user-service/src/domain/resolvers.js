@@ -1,8 +1,8 @@
 const resolvers = {
   Query: {
     me: (_, __, { currentUser, findCurrentUser }) => findCurrentUser(currentUser),
-    accounts: (_, __, { currentUser, findAllUsers }) => findAllUsers(currentUser),
-    roles: (_, __, { currentUser, findAllRoles }) => findAllRoles(currentUser),
+    accounts: (_, __, { findAllUsers }) => findAllUsers(),
+    roles: (_, __, { findAllRoles }) => findAllRoles(),
   },
   Mutation: {
     createAccount(_, { input }, { createUser }) {
