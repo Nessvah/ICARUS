@@ -59,24 +59,15 @@ const createUser = (input) => {
   };
 };
 
-const findAllUsers = (currentUser) => {
-  if (!currentUser) {
-    throw new Error('User not authenticated');
-  }
+const findAllUsers = () => {
   return users;
 };
 
-const findAllRoles = (currentUser) => {
-  if (!currentUser) {
-    throw new Error('User not authenticated');
-  }
+const findAllRoles = () => {
   return roles;
 };
 
 const findCurrentUser = (currentUser) => {
-  if (!currentUser) {
-    throw new Error('Invalid authorization');
-  }
   return currentUser;
 };
 
@@ -126,6 +117,12 @@ const addRoleUser = (input) => {
 
 const auth = (req) => {
   let currentUser = null;
+  if (req.body.operationName === 'Authorize' || req.body.operationName === 'CreateAccount') {
+    return {
+      createUser,
+      authLogin,
+    };
+  }
   if (req.headers.authorization) {
     try {
       const { email } = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
@@ -135,20 +132,23 @@ const auth = (req) => {
         }
         return false;
       });
+      if (!currentUser) {
+        throw new Error(`invalid authorization token`);
+      }
+      return {
+        currentUser,
+        createUser,
+        findAllUsers,
+        findAllRoles,
+        findCurrentUser,
+        createNewRole,
+        authLogin,
+        addRoleUser,
+      };
     } catch (error) {
       throw new Error(`invalid authorization token`);
     }
   }
-  return {
-    currentUser,
-    createUser,
-    findAllUsers,
-    findAllRoles,
-    findCurrentUser,
-    createNewRole,
-    authLogin,
-    addRoleUser,
-  };
 };
 
 export { auth };
