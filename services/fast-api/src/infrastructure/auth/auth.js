@@ -60,35 +60,18 @@ const createUser = (input) => {
   input.created = new Date().toISOString();
   users.push(input);
   const user = users[users.length - 1];
-
-  //? This is not necessary
-  // The user will only get a token if after creating he's account,
-  // after verifying their email user for the registration, and
-  // if he can get a successfull sign in
-  //const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
-  return {
-    user,
-  };
+  return user;
 };
 
-const findAllUsers = (currentUser) => {
-  if (!currentUser) {
-    throw new Error('User not authenticated');
-  }
+const findAllUsers = () => {
   return users;
 };
 
-const findAllRoles = (currentUser) => {
-  if (!currentUser) {
-    throw new Error('User not authenticated');
-  }
+const findAllRoles = () => {
   return roles;
 };
 
 const findCurrentUser = (currentUser) => {
-  if (!currentUser) {
-    throw new Error('Invalid authorization');
-  }
   return currentUser;
 };
 
@@ -118,8 +101,32 @@ const createNewRole = ({ role }) => {
   return newRole;
 };
 
+const addRoleUser = (input) => {
+  const roleExist = roles.find((role) => role.role === input.role);
+
+  const userExist = users.find((user, i) => {
+    if (user.id === input.id && roleExist) {
+      const userRoleExist = user.roles.find((role) => {
+        if (role.role === roleExist.role) {
+          return role;
+        }
+      });
+      !userRoleExist ? users[i].roles.push(roleExist) : '';
+      return user;
+    }
+  });
+
+  return userExist;
+};
+
 const auth = (req) => {
   let currentUser = null;
+  if (req.body.operationName === 'Authorize' || req.body.operationName === 'CreateAccount') {
+    return {
+      createUser,
+      authLogin,
+    };
+  }
   if (req.headers.authorization) {
     try {
       const { email } = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
@@ -129,20 +136,24 @@ const auth = (req) => {
         }
         return false;
       });
+      if (!currentUser) {
+        throw new Error(`invalid authorization token`);
+      }
+      return {
+        currentUser,
+        getProducts,
+        createUser,
+        findAllUsers,
+        findAllRoles,
+        findCurrentUser,
+        createNewRole,
+        authLogin,
+        addRoleUser,
+      };
     } catch (error) {
       throw new Error(`invalid authorization token`);
     }
   }
-  return {
-    currentUser,
-    getProducts,
-    createUser,
-    findAllUsers,
-    findAllRoles,
-    findCurrentUser,
-    createNewRole,
-    authLogin,
-  };
 };
 
 export { auth };
