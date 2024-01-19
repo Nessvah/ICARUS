@@ -3,6 +3,14 @@
 # Set node version
 FROM node:20.10-bookworm
 
+# set env variables
+ENV PORT=5001
+ENV JWT_SECRET=cookiesfornow
+ENV DB_USER=admin
+ENV DB_PWD=admin123
+ENV DB_HOST=icarus-sql-server.cr6kusygg978.eu-north-1.rds.amazonaws.com
+ENV DB_DATABASE=Icarus
+
 # create working directory in container
 WORKDIR /usr/src/app
 
