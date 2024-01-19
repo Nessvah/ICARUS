@@ -136,6 +136,7 @@ const auth = (req) => {
         }
         return false;
       });
+
       if (!currentUser) {
         throw new Error(`invalid authorization token`);
       }

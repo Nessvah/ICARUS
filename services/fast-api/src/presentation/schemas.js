@@ -23,6 +23,11 @@ const typeDefs = gql`
     role: String!
   }
 
+  input RoleInputById {
+    id: ID!
+    role: String!
+  }
+
   input CreateAccount {
     email: String!
     password: String!
