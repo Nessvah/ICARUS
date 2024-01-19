@@ -36,4 +36,4 @@ EXPOSE 5001
 # -L will allow for nodemon to reload
 # --inspect-brk=0.0.0.0 is needed for
 # debugging containerized apps
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]

@@ -22,7 +22,7 @@ async function connectDB() {
       //console.log('connected to rds');
     }
   } catch (error) {
-    //  console.error(error);
+    //console.error(error);
   }
 }
 
