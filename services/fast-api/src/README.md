@@ -15,6 +15,17 @@
     - [Step 5: Configure AWS Credentials on EC2](#step-5-configure-aws-credentials-on-ec2)
     - [Step 6: Authenticate Docker on EC2 with ECR](#step-6-authenticate-docker-on-ec2-with-ecr)
     - [Step 7: Pull and Run Docker Image on EC2](#step-7-pull-and-run-docker-image-on-ec2)
+  - [Run Docker Container as a Systemd Service](#run-docker-container-as-a-systemd-service)
+    - [Step 1: Create a Systemd Service File](#step-1-create-a-systemd-service-file)
+    - [Step 2: Reload systemd and Start the Service](#step-2-reload-systemd-and-start-the-service)
+    - [Step 3: Enable Automatic Startup (Optional)](#step-3-enable-automatic-startup-optional)
+      - [Managing the Service](#managing-the-service)
+        - [Stop the service](#stop-the-service)
+        - [Start the service](#start-the-service)
+        - [Restart the service](#restart-the-service)
+        - [View Service Status](#view-service-status)
+        - [View Service Logs](#view-service-logs)
+        - [Disable automatic Startup](#disable-automatic-startup)
 
 ## Docker Image Deployment Guide
 
@@ -145,4 +156,102 @@ After this you can go to your web browser and connect to your app.
 
 ```bash
 http://<ec2_public_ip>:<host_port>
+```
+
+## Run Docker Container as a Systemd Service
+
+Leveraging systemd on EC2 enhances the development and testing experience, promoting consistency, automation, and effective issue resolution.
+
+### Step 1: Create a Systemd Service File
+
+Create a new systemd service file, e.g., `mydockerapp.service`, in the `/etc/systemd/system/` directory. Replace placeholders with your actual values.
+
+In most cases, you might need admin permissions to do this. Use whatever text editor you are comfortable with.
+
+```bash
+sudo nano /etc/systemd/system/mydockerapp.service
+```
+
+After that include this in that file:
+
+```init
+[Unit]
+Description=My Docker App
+
+[Service]
+Restart=always
+# ExecStartPre=/usr/bin/docker pull ecr-uri:version
+ExecStart=/usr/bin/docker run -d --name mydockerapp-container -p host_port:container_port ecr-uri:version
+ExecStop=/usr/bin/docker stop mydockerapp-container
+ExecStopPost=/usr/bin/docker rm mydockerapp-container
+
+[Install]
+WantedBy=default.target
+```
+
+In this context, a `#` will be interpreted as a comment and that's why the ExecStartPre is commented out. You can decide to pull the latest or a specific version of the docker image every time the service restarts, but if you want more control over which version is running, you might want to keep it commented.
+
+- `Description`: A brief description of your service.
+- `Restart`: Configures how the service should be restarted.
+- `ExecStartPre` : Command to pull the latest Docker image before starting the container.
+- `ExecStart`: Command to start the Docker container.
+- `ExecStop`:Command to stop the Docker container.
+- `ExecStopPost`: Command to remove the Docker container after stopping.
+
+### Step 2: Reload systemd and Start the Service
+
+Reload the systemd to apply the changes and start your docker service.
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl start mydockerapp.service
+```
+
+### Step 3: Enable Automatic Startup (Optional)
+
+If you want your Docker container to start automatically when the system boots, enable the systemd service.
+
+```bash
+sudo systemctl enable mydockerapp.service
+```
+
+#### Managing the Service
+
+##### Stop the service
+
+```bash
+sudo systemctl stop mydockerapp.service
+```
+
+##### Start the service
+
+```bash
+sudo systemctl start mydockerapp.service
+```
+
+##### Restart the service
+
+```bash
+sudo systemctl restart mydockerapp.service
+```
+
+##### View Service Status
+
+```bash
+sudo systemctl status mydockerapp.service
+
+```
+
+##### View Service Logs
+
+```bash
+sudo journalctl -u mydockerapp.service
+
+```
+
+##### Disable automatic Startup
+
+```bash
+sudo systemctl disable mydockerapp.service
+
 ```
