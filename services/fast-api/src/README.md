@@ -20,12 +20,6 @@
     - [Step 2: Reload systemd and Start the Service](#step-2-reload-systemd-and-start-the-service)
     - [Step 3: Enable Automatic Startup (Optional)](#step-3-enable-automatic-startup-optional)
       - [Managing the Service](#managing-the-service)
-        - [Stop the service](#stop-the-service)
-        - [Start the service](#start-the-service)
-        - [Restart the service](#restart-the-service)
-        - [View Service Status](#view-service-status)
-        - [View Service Logs](#view-service-logs)
-        - [Disable automatic Startup](#disable-automatic-startup)
 
 ## Docker Image Deployment Guide
 
@@ -217,39 +211,39 @@ sudo systemctl enable mydockerapp.service
 
 #### Managing the Service
 
-##### Stop the service
+**Stop the service**
 
 ```bash
 sudo systemctl stop mydockerapp.service
 ```
 
-##### Start the service
+**Start the service**
 
 ```bash
 sudo systemctl start mydockerapp.service
 ```
 
-##### Restart the service
+**Restart the service**
 
 ```bash
 sudo systemctl restart mydockerapp.service
 ```
 
-##### View Service Status
+**View Service Status**
 
 ```bash
 sudo systemctl status mydockerapp.service
 
 ```
 
-##### View Service Logs
+**View Service Logs**
 
 ```bash
 sudo journalctl -u mydockerapp.service
 
 ```
 
-##### Disable automatic Startup
+**Disable automatic Startup**
 
 ```bash
 sudo systemctl disable mydockerapp.service
