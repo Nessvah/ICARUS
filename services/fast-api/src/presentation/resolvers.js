@@ -1,4 +1,5 @@
 import { getProducts } from '../app/productsUseCase.js';
+import { getAllOrders } from '../app/queryOrderService.js';
 
 const resolvers = {
   Query: {
@@ -6,6 +7,7 @@ const resolvers = {
     accounts: (_, __, { findAllUsers }) => findAllUsers(),
     roles: (_, __, { findAllRoles }) => findAllRoles(),
     products: async (_, __, { currentUser }) => await getProducts(currentUser),
+    orders: async (_, __, { currentUser }) => await getAllOrders(currentUser),
   },
 
   Mutation: {

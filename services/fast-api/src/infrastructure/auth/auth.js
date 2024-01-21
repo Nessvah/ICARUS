@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { getProducts } from '../../app/productsUseCase.js';
+import { getAllOrders } from '../../app/queryOrderService.js';
 const users = [
   {
     id: '1',
@@ -150,6 +151,7 @@ const auth = (req) => {
         createNewRole,
         authLogin,
         addRoleUser,
+        getAllOrders,
       };
     } catch (error) {
       throw new Error(`invalid authorization token`);

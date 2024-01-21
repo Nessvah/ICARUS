@@ -8,6 +8,7 @@ const typeDefs = gql`
     accounts: [User!]!
     roles: [Role!]!
     products: [Product]
+    orders: [Order]!
   }
 
   type User {
@@ -58,6 +59,15 @@ const typeDefs = gql`
     ImageUrl: String
     StockLevel: Int
     CategoryId: Int
+  }
+
+  type Order {
+    orderId: Int
+    customerId: Int
+    order_number: String
+    order_date: String
+    order_total: Float
+    payment_id: Int
   }
 `;
 
