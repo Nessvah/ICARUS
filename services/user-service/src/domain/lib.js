@@ -113,12 +113,6 @@ const addRoleUser = (input) => {
 
 const auth = (req) => {
   let currentUser = null;
-  if (req.body.operationName === 'Authorize' || req.body.operationName === 'CreateAccount') {
-    return {
-      createUser,
-      authLogin,
-    };
-  }
   if (req.headers.authorization) {
     try {
       const { email } = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
@@ -144,6 +138,18 @@ const auth = (req) => {
     } catch (error) {
       throw new Error(`invalid authorization token`);
     }
+  }
+  if (
+    req.body.operationName === 'Authorize' ||
+    req.body.operationName === 'CreateAccount' ||
+    req.body.operationName === 'IntrospectionQuery'
+  ) {
+    return {
+      createUser,
+      authLogin,
+    };
+  } else {
+    throw new Error('invalid authorization');
   }
 };
 
