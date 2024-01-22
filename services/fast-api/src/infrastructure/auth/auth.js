@@ -1,5 +1,28 @@
 import jwt from 'jsonwebtoken';
 import { getProducts } from '../../app/productsUseCase.js';
+import { initiateAuth } from './authCognito.js';
+import { getUser } from './getUserCognito.js';
+import { signUp } from './signUpCognito.js';
+import winston from 'winston';
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: { service: 'user-service' },
+  transports: [
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' }),
+  ],
+});
+
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    }),
+  );
+}
+
 const users = [
   {
     id: '1',
@@ -55,20 +78,21 @@ const roles = [
   { id: '3', role: 'intern' },
 ];
 
-const createUser = (input) => {
-  input.id = Math.floor(Math.random() * 1000);
-  input.created = new Date().toISOString();
-  users.push(input);
-  const user = users[users.length - 1];
-
+const createUser = async (input) => {
+  try {
+    const createdUser = await signUp(input);
+    return {
+      createdUser,
+    };
+  } catch (e) {
+    logger.error('Error creating user ', e);
+  }
   //? This is not necessary
   // The user will only get a token if after creating he's account,
   // after verifying their email user for the registration, and
   // if he can get a successfull sign in
   //const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
-  return {
-    user,
-  };
+  return;
 };
 
 const findAllUsers = (currentUser) => {
@@ -92,23 +116,20 @@ const findCurrentUser = (currentUser) => {
   return currentUser;
 };
 
-const authLogin = (email, password) => {
-  const user = users.find((user) => {
-    if (user.email === email) {
-      return user;
-    }
-    return false;
-  });
-  if (!user) {
-    throw new Error(`account for ${email} not found`);
+const authLogin = async (email, password) => {
+  let token = '';
+  try {
+    // Call the initiateAuth function with the provided username and password
+    const response = await initiateAuth({ email, password });
+    token = response.AuthenticationResult.IdToken; // Log the response if authentication is successful
+  } catch (e) {
+    logger.error('Error:', e); // Log any unhandled exceptions
   }
-  if (user.password !== password) {
-    throw new Error(`password for ${email} is incorrect`);
-  }
-  const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
   return {
     token,
-    user,
+    user: {
+      email: 'maldonado.pe@hotmail.com',
+    },
   };
 };
 
@@ -118,17 +139,17 @@ const createNewRole = ({ role }) => {
   return newRole;
 };
 
-const auth = (req) => {
+const auth = async (req) => {
   let currentUser = null;
   if (req.headers.authorization) {
     try {
-      const { email } = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
-      currentUser = users.find((user) => {
-        if (user.email === email) {
-          return user;
-        }
+      const { email } = jwt.decode(req.headers.authorization);
+      currentUser = await getUser(email);
+      if (currentUser === email) {
+        return currentUser;
+      } else {
         return false;
-      });
+      }
     } catch (error) {
       throw new Error(`invalid authorization token`);
     }
