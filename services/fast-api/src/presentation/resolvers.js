@@ -3,9 +3,8 @@ import { getProducts } from '../app/productsUseCase.js';
 const resolvers = {
   Query: {
     me: (_, __, { currentUser, findCurrentUser }) => findCurrentUser(currentUser),
-    accounts: (_, __, { currentUser, findAllUsers }) => findAllUsers(currentUser),
-    roles: (_, __, { currentUser, findAllRoles }) => findAllRoles(currentUser),
-
+    accounts: (_, __, { findAllUsers }) => findAllUsers(),
+    roles: (_, __, { findAllRoles }) => findAllRoles(),
     products: async (_, __, { currentUser }) => await getProducts(currentUser),
   },
 
@@ -19,11 +18,9 @@ const resolvers = {
     createRole(_, { input }, { createNewRole }) {
       return createNewRole(input);
     },
-
-    //! This was throwing an error because it didn't matched schemas
-    // addRoleToUSer(_, { input }, { addRoleUser }) {
-    //   return addRoleUser(input);
-    // },
+    addRoleToUSer(_, { input }, { addRoleUser }) {
+      return addRoleUser(input);
+    },
   },
 };
 
