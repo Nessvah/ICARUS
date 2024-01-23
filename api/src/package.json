@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./infrastructure/server.js",
     "dev": "nodemon ./infrastructure/server.js",
-    "generate-docs": "npx spectaql --config ./config/config.yml"
+    "generate-docs": "npx spectaql ./config/config.yml"
   },
   "keywords": [],
   "author": "",
