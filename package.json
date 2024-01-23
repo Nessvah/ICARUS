@@ -12,7 +12,7 @@
     "generate-docs": "spectaql ./config/config.yml"
   },
   "lint-staged": {
-    "*.js !(*.min.js)": "npm run lint",
+    "*.js !(*.min.js, *.min.css)": "npm run lint",
     "*.{js,md}": "npm run format"
   },
   "keywords": [],
