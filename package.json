@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "lint": "eslint . --fix --max-warnings=0",
     "format": "prettier . --write",
     "prepare": "husky install",
-    "pep-talk": "echo 'Go Icarus Team 🚀!'"
+    "pep-talk": "echo 'Go Icarus Team 🚀!'",
+    "generate-docs": "spectaql ./config/config.yml"
   },
   "lint-staged": {
     "*.js": "npm run lint",
