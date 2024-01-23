@@ -14,7 +14,7 @@
   },
   "overrides": [
     {
-      "files": ["public/javascripts/*.min.js"],
+      "files": ["public/javascripts/*.min.js", "public/stylesheets/*.min.css"],
       "rules": {
         "eslint-disable": "off"
       }
