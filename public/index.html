@@ -85,14 +85,17 @@
           <div id="introduction" data-traverse-target="introduction">
             <div id="welcome" class="doc-row">
               <div class="doc-copy">
-                <p>Welcome to the party!</p>
+                <p>
+                  Welcome to the Icarus API Reference. This reference includes the complete set of GraphQL types,
+                  queries, mutations, and their parametes. Learn how to authenticate to the api in the Getting Started.
+                </p>
               </div>
               <div class="doc-examples">
                 <div class="example-section welcome-contact-section">
                   <h5>Contact</h5>
                   <p class="contact-name">API Support</p>
-                  <p class="contact-email"><a href="mailto:support@example.com">support@example.com</a></p>
-                  <p class="contact-url"><a href="http://www.example.com/support">http://www.example.com/support</a></p>
+                  <p class="contact-email"><a href="mailto:support@icarus.com">support@icarus.com</a></p>
+                  <p class="contact-url"><a href="http://www.icarus.com/support">http://www.icarus.com/support</a></p>
                 </div>
                 <div class="example-section welcome-license-section">
                   <h5>License</h5>
@@ -105,7 +108,7 @@
                 </div>
                 <div class="example-section welcome-tos-section">
                   <h5>Terms of Service</h5>
-                  <p><a href="https://www.example.com/terms">https://www.example.com/terms</a></p>
+                  <p><a href="https://www.icarus.com/terms">https://www.icarus.com/terms</a></p>
                 </div>
                 <div class="example-section welcome-api-endpoints-section example-section-is-code">
                   <h5>API Endpoints</h5>
@@ -165,9 +168,9 @@ http://13.53.175.139:5001/
     <span class="hljs-attr">"accounts"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
         <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"roles"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Role</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"idCostumer"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"idCostumer"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"created"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2007-12-03T10:15:30Z"</span>
       <span class="hljs-punctuation">}</span>
     <span class="hljs-punctuation">]</span>
@@ -290,14 +293,14 @@ http://13.53.175.139:5001/
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"products"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
-        <span class="hljs-attr">"ProductId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"SKU"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"ProductId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"SKU"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"Name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"Description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"Price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"ImageUrl"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"Price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"ImageUrl"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"StockLevel"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"CategoryId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span>
+        <span class="hljs-attr">"CategoryId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span>
       <span class="hljs-punctuation">}</span>
     <span class="hljs-punctuation">]</span>
   <span class="hljs-punctuation">}</span>
@@ -352,7 +355,7 @@ http://13.53.175.139:5001/
     <span class="hljs-attr">"roles"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
         <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
+        <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
       <span class="hljs-punctuation">}</span>
     <span class="hljs-punctuation">]</span>
   <span class="hljs-punctuation">}</span>
@@ -468,7 +471,7 @@ http://13.53.175.139:5001/
                       <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"authorize"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"token"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"token"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"user"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">User</span>
     <span class="hljs-punctuation">}</span>
   <span class="hljs-punctuation">}</span>
@@ -715,7 +718,7 @@ http://13.53.175.139:5001/
                     <head></head>
                     <body>
                       <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">"token"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"token"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"user"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">User</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
@@ -794,7 +797,7 @@ http://13.53.175.139:5001/
                     <head></head>
                     <body>
                       <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"password"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
@@ -1024,10 +1027,10 @@ http://13.53.175.139:5001/
                     <body>
                       <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"ProductId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"SKU"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"SKU"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"Name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"Description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"Price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"Price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"ImageUrl"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"StockLevel"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"CategoryId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span>
@@ -1084,7 +1087,10 @@ http://13.53.175.139:5001/
                   <html>
                     <head></head>
                     <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
+<span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -1161,7 +1167,7 @@ http://13.53.175.139:5001/
                   <html>
                     <head></head>
                     <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol">"xyz789"</span>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol">"abc123"</span>
 </code></pre>
                     </body>
                   </html>
@@ -1245,7 +1251,7 @@ http://13.53.175.139:5001/
   <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"roles"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Role</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"idCostumer"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"idCostumer"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"created"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2007-12-03T10:15:30Z"</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
@@ -1255,9 +1261,7 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </section>
-          <div class="doc-row no-margin">
-            <div class="doc-copy doc-separator"></div>
-          </div>
+          <div class="doc-row no-margin"></div>
         </article>
         <div class="drawer-overlay"></div>
       </div>
