@@ -39,6 +39,14 @@ const users = [
     idCostumer: 'Cust4',
     created: '2022-04-02T18:20:00Z',
   },
+  {
+    id: '5',
+    email: 'admin@example.com',
+    password: 'admin123',
+    roles: [{ id: '3', role: 'intern' }],
+    idCostumer: 'Cust14',
+    created: '2022-04-02T18:20:00Z',
+  },
 ];
 
 const roles = [

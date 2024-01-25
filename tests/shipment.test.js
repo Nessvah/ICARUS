@@ -1,4 +1,4 @@
-import { resolvers } from '../presentation/resolvers';
+import { resolvers } from '../src/presentation/resolvers';
 
 // experimental test for getShipmentById
 describe('getShipmentById', () => {
