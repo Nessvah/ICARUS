@@ -59,6 +59,41 @@ const typeDefs = gql`
     StockLevel: Int
     CategoryId: Int
   }
+
+  input AddressInput {
+    street: String!
+    city: String!
+    state: String!
+    zipCode: String!
+    country: String!
+  }
+
+  type Address {
+    street: String
+    city: String
+    state: String
+    zipCode: String
+    country: String
+  }
+
+  type Shipment {
+    _id: ID!
+    order_id: String!
+    shipmentDate: DateTime!
+    shipmentStatus: [String!]!
+    address: Address!
+    billingAddress: Address
+  }
+
+  type Query {
+    getShipmentById(_id: ID!): Shipment
+    getAllShipments: [Shipment]
+    getShipmentsByOrderId(order_id: String!): [Shipment]
+  }
+
+  type Mutation {
+    updateShipmentAddress(_id: ID!, address: AddressInput!): Shipment
+  }
 `;
 
 export { typeDefs };

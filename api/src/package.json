@@ -5,7 +5,7 @@
   "main": "./infrastructure/server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node ./infrastructure/server.js",
     "dev": "nodemon ./infrastructure/server.js",
     "generate-docs": "npx spectaql ./config/config.yml"
@@ -24,6 +24,8 @@
     "mssql": "^10.0.2"
   },
   "devDependencies": {
-    "nodemon": "^3.0.3"
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.3",
+    "supertest": "^6.3.4"
   }
 }
