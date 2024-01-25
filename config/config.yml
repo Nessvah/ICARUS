@@ -38,12 +38,12 @@ introspection:
 
 info:
   title: Icarus API Documentation
-  description: Welcome to the party!
-  termsOfService: https://www.example.com/terms
+  description: Welcome to the Icarus API Reference. This reference includes the complete set of GraphQL types, queries, mutations, and their parametes. Learn how to authenticate to the api in the Getting Started.
+  termsOfService: https://www.icarus.com/terms
   contact:
     name: API Support
-    url: http://www.example.com/support
-    email: support@example.com
+    url: http://www.icarus.com/support
+    email: support@icarus.com
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html

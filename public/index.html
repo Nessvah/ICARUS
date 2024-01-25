@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="images/favicon.ico" sizes="32x32">
+    <link rel="icon" type="image/png" href="images/favicon.ico" sizes="32x32" />
     <title>Icarus API Documentation</title>
     <link rel="stylesheet" href="stylesheets/spectaql.min.css" />
     <script src="javascripts/spectaql.min.js"></script>
@@ -85,23 +85,30 @@
           <div id="introduction" data-traverse-target="introduction">
             <div id="welcome" class="doc-row">
               <div class="doc-copy">
-                <p>Welcome to the party!</p>
+                <p>
+                  Welcome to the Icarus API Reference. This reference includes the complete set of GraphQL types,
+                  queries, mutations, and their parametes. Learn how to authenticate to the api in the Getting Started.
+                </p>
               </div>
               <div class="doc-examples">
                 <div class="example-section welcome-contact-section">
                   <h5>Contact</h5>
                   <p class="contact-name">API Support</p>
-                  <p class="contact-email"><a href="mailto:support@example.com">support@example.com</a></p>
-                  <p class="contact-url"><a href="http://www.example.com/support">http://www.example.com/support</a></p>
+                  <p class="contact-email"><a href="mailto:support@icarus.com">support@icarus.com</a></p>
+                  <p class="contact-url"><a href="http://www.icarus.com/support">http://www.icarus.com/support</a></p>
                 </div>
                 <div class="example-section welcome-license-section">
                   <h5>License</h5>
                   <p class="license-name">Apache 2.0</p>
-                  <p class="license-url"><a href="https://www.apache.org/licenses/LICENSE-2.0.html">https://www.apache.org/licenses/LICENSE-2.0.html</a></p>
+                  <p class="license-url">
+                    <a href="https://www.apache.org/licenses/LICENSE-2.0.html"
+                      >https://www.apache.org/licenses/LICENSE-2.0.html</a
+                    >
+                  </p>
                 </div>
                 <div class="example-section welcome-tos-section">
                   <h5>Terms of Service</h5>
-                  <p><a href="https://www.example.com/terms">https://www.example.com/terms</a></p>
+                  <p><a href="https://www.icarus.com/terms">https://www.icarus.com/terms</a></p>
                 </div>
                 <div class="example-section welcome-api-endpoints-section example-section-is-code">
                   <h5>API Endpoints</h5>
@@ -112,16 +119,19 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </div>
-          <h1 id="group-Operations-Queries" class="group-heading" data-traverse-target="group-Operations-Queries">Queries</h1>
+          <h1 id="group-Operations-Queries" class="group-heading" data-traverse-target="group-Operations-Queries">
+            Queries
+          </h1>
           <section id="query-accounts" class="operation operation-query" data-traverse-target="query-accounts">
-            <h2 class="operation-heading ">
+            <h2 class="operation-heading">
               <code>accounts</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p> Returns <a href="#definition-User"><code>[User!]!</code></a>
+                  <p>
+                    Returns <a href="#definition-User"><code>[User!]!</code></a>
                   </p>
                 </div>
               </div>
@@ -131,7 +141,8 @@ http://13.53.175.139:5001/
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Accounts <span class="hljs-tag">{
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Accounts <span class="hljs-tag">{
   <span class="hljs-symbol">accounts <span class="hljs-tag">{
     <span class="hljs-symbol">id</span>
     <span class="hljs-symbol">email</span>
@@ -151,14 +162,15 @@ http://13.53.175.139:5001/
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"accounts"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
         <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"roles"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Role</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"idCostumer"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"idCostumer"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"created"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2007-12-03T10:15:30Z"</span>
       <span class="hljs-punctuation">}</span>
     <span class="hljs-punctuation">]</span>
@@ -175,14 +187,15 @@ http://13.53.175.139:5001/
             <div class="operation-group-name">
               <a href="#group-Operations-Queries">Queries</a>
             </div>
-            <h2 class="operation-heading ">
+            <h2 class="operation-heading">
               <code>me</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p> Returns a <a href="#definition-User"><code>User</code></a>
+                  <p>
+                    Returns a <a href="#definition-User"><code>User</code></a>
                   </p>
                 </div>
               </div>
@@ -192,7 +205,8 @@ http://13.53.175.139:5001/
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Me <span class="hljs-tag">{
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Me <span class="hljs-tag">{
   <span class="hljs-symbol">me <span class="hljs-tag">{
     <span class="hljs-symbol">id</span>
     <span class="hljs-symbol">email</span>
@@ -212,7 +226,8 @@ http://13.53.175.139:5001/
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"me"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
       <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span>
@@ -234,14 +249,15 @@ http://13.53.175.139:5001/
             <div class="operation-group-name">
               <a href="#group-Operations-Queries">Queries</a>
             </div>
-            <h2 class="operation-heading ">
+            <h2 class="operation-heading">
               <code>products</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p> Returns <a href="#definition-Product"><code>[Product]</code></a>
+                  <p>
+                    Returns <a href="#definition-Product"><code>[Product]</code></a>
                   </p>
                 </div>
               </div>
@@ -251,7 +267,8 @@ http://13.53.175.139:5001/
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Products <span class="hljs-tag">{
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Products <span class="hljs-tag">{
   <span class="hljs-symbol">products <span class="hljs-tag">{
     <span class="hljs-symbol">ProductId</span>
     <span class="hljs-symbol">SKU</span>
@@ -271,18 +288,19 @@ http://13.53.175.139:5001/
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"products"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
-        <span class="hljs-attr">"ProductId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"SKU"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"ProductId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"SKU"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"Name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"Description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"Price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"ImageUrl"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"Price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"ImageUrl"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"StockLevel"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"CategoryId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span>
+        <span class="hljs-attr">"CategoryId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span>
       <span class="hljs-punctuation">}</span>
     <span class="hljs-punctuation">]</span>
   <span class="hljs-punctuation">}</span>
@@ -298,14 +316,15 @@ http://13.53.175.139:5001/
             <div class="operation-group-name">
               <a href="#group-Operations-Queries">Queries</a>
             </div>
-            <h2 class="operation-heading ">
+            <h2 class="operation-heading">
               <code>roles</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p> Returns <a href="#definition-Role"><code>[Role!]!</code></a>
+                  <p>
+                    Returns <a href="#definition-Role"><code>[Role!]!</code></a>
                   </p>
                 </div>
               </div>
@@ -315,7 +334,8 @@ http://13.53.175.139:5001/
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Roles <span class="hljs-tag">{
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Roles <span class="hljs-tag">{
   <span class="hljs-symbol">roles <span class="hljs-tag">{
     <span class="hljs-symbol">id</span>
     <span class="hljs-symbol">role</span>
@@ -329,12 +349,13 @@ http://13.53.175.139:5001/
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"roles"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
         <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
+        <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
       <span class="hljs-punctuation">}</span>
     <span class="hljs-punctuation">]</span>
   <span class="hljs-punctuation">}</span>
@@ -346,16 +367,23 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </section>
-          <h1 id="group-Operations-Mutations" class="group-heading" data-traverse-target="group-Operations-Mutations">Mutations</h1>
-          <section id="mutation-authorize" class="operation operation-mutation" data-traverse-target="mutation-authorize">
-            <h2 class="operation-heading ">
+          <h1 id="group-Operations-Mutations" class="group-heading" data-traverse-target="group-Operations-Mutations">
+            Mutations
+          </h1>
+          <section
+            id="mutation-authorize"
+            class="operation operation-mutation"
+            data-traverse-target="mutation-authorize"
+          >
+            <h2 class="operation-heading">
               <code>authorize</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p> Returns an <a href="#definition-AuthPayload"><code>AuthPayload!</code></a>
+                  <p>
+                    Returns an <a href="#definition-AuthPayload"><code>AuthPayload!</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -370,17 +398,21 @@ http://13.53.175.139:5001/
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>email</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                          <span class="property-name"><code>email</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-String"><code>String!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>password</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                          <span class="property-name"><code>password</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-String"><code>String!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                     </tbody>
                   </table>
@@ -392,7 +424,8 @@ http://13.53.175.139:5001/
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> Authorize<span class="hljs-tag">(
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> Authorize<span class="hljs-tag">(
   <span class="hljs-code">$email</span>:<span class="hljs-type"> String!</span>,
   <span class="hljs-code">$password</span>:<span class="hljs-type"> String!</span>
 )</span> <span class="hljs-tag">{
@@ -421,7 +454,8 @@ http://13.53.175.139:5001/
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"password"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
 <span class="hljs-punctuation">}</span>
@@ -433,10 +467,11 @@ http://13.53.175.139:5001/
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"authorize"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"token"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"token"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"user"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">User</span>
     <span class="hljs-punctuation">}</span>
   <span class="hljs-punctuation">}</span>
@@ -448,18 +483,23 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </section>
-          <section id="mutation-createAccount" class="operation operation-mutation" data-traverse-target="mutation-createAccount">
+          <section
+            id="mutation-createAccount"
+            class="operation operation-mutation"
+            data-traverse-target="mutation-createAccount"
+          >
             <div class="operation-group-name">
               <a href="#group-Operations-Mutations">Mutations</a>
             </div>
-            <h2 class="operation-heading ">
+            <h2 class="operation-heading">
               <code>createAccount</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p> Returns an <a href="#definition-AuthPayload"><code>AuthPayload!</code></a>
+                  <p>
+                    Returns an <a href="#definition-AuthPayload"><code>AuthPayload!</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -474,10 +514,12 @@ http://13.53.175.139:5001/
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>input</code></span> - <span class="property-type"><a href="#definition-CreateAccount"><code>CreateAccount!</code></a></span>
+                          <span class="property-name"><code>input</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-CreateAccount"><code>CreateAccount!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                     </tbody>
                   </table>
@@ -489,7 +531,8 @@ http://13.53.175.139:5001/
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> CreateAccount<span class="hljs-tag">(<span class="hljs-code">$input</span>:<span class="hljs-type"> CreateAccount!</span>)</span> <span class="hljs-tag">{
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> CreateAccount<span class="hljs-tag">(<span class="hljs-code">$input</span>:<span class="hljs-type"> CreateAccount!</span>)</span> <span class="hljs-tag">{
   <span class="hljs-symbol">createAccount<span class="hljs-tag">(input: <span class="hljs-code">$input</span>)</span> <span class="hljs-tag">{
     <span class="hljs-symbol">token</span>
     <span class="hljs-symbol">user <span class="hljs-tag">{
@@ -512,7 +555,8 @@ http://13.53.175.139:5001/
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"input"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">CreateAccount</span><span class="hljs-punctuation">}</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"input"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">CreateAccount</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -521,7 +565,8 @@ http://13.53.175.139:5001/
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"createAccount"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
       <span class="hljs-attr">"token"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
@@ -536,18 +581,23 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </section>
-          <section id="mutation-createRole" class="operation operation-mutation" data-traverse-target="mutation-createRole">
+          <section
+            id="mutation-createRole"
+            class="operation operation-mutation"
+            data-traverse-target="mutation-createRole"
+          >
             <div class="operation-group-name">
               <a href="#group-Operations-Mutations">Mutations</a>
             </div>
-            <h2 class="operation-heading ">
+            <h2 class="operation-heading">
               <code>createRole</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p> Returns a <a href="#definition-Role"><code>Role!</code></a>
+                  <p>
+                    Returns a <a href="#definition-Role"><code>Role!</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -562,10 +612,12 @@ http://13.53.175.139:5001/
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>input</code></span> - <span class="property-type"><a href="#definition-RoleInput"><code>RoleInput!</code></a></span>
+                          <span class="property-name"><code>input</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-RoleInput"><code>RoleInput!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                     </tbody>
                   </table>
@@ -577,7 +629,8 @@ http://13.53.175.139:5001/
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> CreateRole<span class="hljs-tag">(<span class="hljs-code">$input</span>:<span class="hljs-type"> RoleInput!</span>)</span> <span class="hljs-tag">{
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> CreateRole<span class="hljs-tag">(<span class="hljs-code">$input</span>:<span class="hljs-type"> RoleInput!</span>)</span> <span class="hljs-tag">{
   <span class="hljs-symbol">createRole<span class="hljs-tag">(input: <span class="hljs-code">$input</span>)</span> <span class="hljs-tag">{
     <span class="hljs-symbol">id</span>
     <span class="hljs-symbol">role</span>
@@ -591,7 +644,8 @@ http://13.53.175.139:5001/
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"input"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">RoleInput</span><span class="hljs-punctuation">}</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"input"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">RoleInput</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -600,7 +654,8 @@ http://13.53.175.139:5001/
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"createRole"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
       <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
@@ -616,7 +671,11 @@ http://13.53.175.139:5001/
             </div>
           </section>
           <h1 id="group-Types" class="group-heading" data-traverse-target="group-Types">Types</h1>
-          <section id="definition-AuthPayload" class="definition definition-object" data-traverse-target="definition-AuthPayload">
+          <section
+            id="definition-AuthPayload"
+            class="definition definition-object"
+            data-traverse-target="definition-AuthPayload"
+          >
             <h2 class="definition-heading">AuthPayload</h2>
             <div class="doc-row">
               <div class="doc-copy">
@@ -631,16 +690,22 @@ http://13.53.175.139:5001/
                     </thead>
                     <tbody>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>token</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>token</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-String"><code>String!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>user</code></span> - <span class="property-type"><a href="#definition-User"><code>User!</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>user</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-User"><code>User!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                     </tbody>
                   </table>
@@ -651,8 +716,9 @@ http://13.53.175.139:5001/
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">"token"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"token"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"user"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">User</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
@@ -662,7 +728,11 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </section>
-          <section id="definition-Boolean" class="definition definition-scalar" data-traverse-target="definition-Boolean">
+          <section
+            id="definition-Boolean"
+            class="definition definition-scalar"
+            data-traverse-target="definition-Boolean"
+          >
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
@@ -674,11 +744,14 @@ http://13.53.175.139:5001/
                   <p>The <code>Boolean</code> scalar type represents <code>true</code> or <code>false</code>.</p>
                 </div>
               </div>
-              <div class="doc-examples">
-              </div>
+              <div class="doc-examples"></div>
             </div>
           </section>
-          <section id="definition-CreateAccount" class="definition definition-input-object" data-traverse-target="definition-CreateAccount">
+          <section
+            id="definition-CreateAccount"
+            class="definition definition-input-object"
+            data-traverse-target="definition-CreateAccount"
+          >
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
@@ -697,17 +770,21 @@ http://13.53.175.139:5001/
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>email</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                          <span class="property-name"><code>email</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-String"><code>String!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>password</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                          <span class="property-name"><code>password</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-String"><code>String!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                     </tbody>
                   </table>
@@ -718,8 +795,9 @@ http://13.53.175.139:5001/
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"password"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
@@ -729,20 +807,24 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </section>
-          <section id="definition-DateTime" class="definition definition-scalar" data-traverse-target="definition-DateTime">
+          <section
+            id="definition-DateTime"
+            class="definition definition-scalar"
+            data-traverse-target="definition-DateTime"
+          >
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
             <h2 class="definition-heading">DateTime</h2>
             <div class="doc-row">
-              <div class="doc-copy">
-              </div>
+              <div class="doc-copy"></div>
               <div class="doc-examples">
                 <div class="example-section example-section-is-code">
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol">"2007-12-03T10:15:30Z"</span>
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol">"2007-12-03T10:15:30Z"</span>
 </code></pre>
                     </body>
                   </html>
@@ -759,7 +841,10 @@ http://13.53.175.139:5001/
               <div class="doc-copy">
                 <div class="definition-description doc-copy-section">
                   <h5>Description</h5>
-                  <p>The <code>Float</code> scalar type represents signed double-precision fractional values as specified by <a href="https://en.wikipedia.org/wiki/IEEE_floating_point">IEEE 754</a>.</p>
+                  <p>
+                    The <code>Float</code> scalar type represents signed double-precision fractional values as specified
+                    by <a href="https://en.wikipedia.org/wiki/IEEE_floating_point">IEEE 754</a>.
+                  </p>
                 </div>
               </div>
               <div class="doc-examples">
@@ -767,7 +852,8 @@ http://13.53.175.139:5001/
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-number">123.45</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-number">123.45</span>
 </code></pre>
                     </body>
                   </html>
@@ -784,7 +870,13 @@ http://13.53.175.139:5001/
               <div class="doc-copy">
                 <div class="definition-description doc-copy-section">
                   <h5>Description</h5>
-                  <p>The <code>ID</code> scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as <code>&quot;4&quot;</code>) or integer (such as <code>4</code>) input value will be accepted as an ID.</p>
+                  <p>
+                    The <code>ID</code> scalar type represents a unique identifier, often used to refetch an object or
+                    as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended
+                    to be human-readable. When expected as an input type, any string (such as
+                    <code>&quot;4&quot;</code>) or integer (such as <code>4</code>) input value will be accepted as an
+                    ID.
+                  </p>
                 </div>
               </div>
               <div class="doc-examples">
@@ -792,7 +884,8 @@ http://13.53.175.139:5001/
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol">"4"</span>
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol">"4"</span>
 </code></pre>
                     </body>
                   </html>
@@ -809,7 +902,10 @@ http://13.53.175.139:5001/
               <div class="doc-copy">
                 <div class="definition-description doc-copy-section">
                   <h5>Description</h5>
-                  <p>The <code>Int</code> scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.</p>
+                  <p>
+                    The <code>Int</code> scalar type represents non-fractional signed whole numeric values. Int can
+                    represent values between -(2^31) and 2^31 - 1.
+                  </p>
                 </div>
               </div>
               <div class="doc-examples">
@@ -817,7 +913,8 @@ http://13.53.175.139:5001/
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-number">987</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-number">987</span>
 </code></pre>
                     </body>
                   </html>
@@ -825,7 +922,11 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </section>
-          <section id="definition-Product" class="definition definition-object" data-traverse-target="definition-Product">
+          <section
+            id="definition-Product"
+            class="definition definition-object"
+            data-traverse-target="definition-Product"
+          >
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
@@ -843,52 +944,76 @@ http://13.53.175.139:5001/
                     </thead>
                     <tbody>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>ProductId</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>ProductId</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-Int"><code>Int</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>SKU</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>SKU</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-String"><code>String!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>Name</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>Name</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-String"><code>String!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>Description</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>Description</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-String"><code>String</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>Price</code></span> - <span class="property-type"><a href="#definition-Float"><code>Float</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>Price</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-Float"><code>Float</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>ImageUrl</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>ImageUrl</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-String"><code>String</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>StockLevel</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>StockLevel</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-Int"><code>Int</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>CategoryId</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>CategoryId</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-Int"><code>Int</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                     </tbody>
                   </table>
@@ -899,12 +1024,13 @@ http://13.53.175.139:5001/
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"ProductId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"SKU"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"SKU"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"Name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"Description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"Price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"Price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"ImageUrl"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"StockLevel"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"CategoryId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span>
@@ -934,16 +1060,22 @@ http://13.53.175.139:5001/
                     </thead>
                     <tbody>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>id</code></span> - <span class="property-type"><a href="#definition-ID"><code>ID!</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>id</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-ID"><code>ID!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>role</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>role</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-String"><code>String!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                     </tbody>
                   </table>
@@ -954,7 +1086,11 @@ http://13.53.175.139:5001/
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
+<span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -962,7 +1098,11 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </section>
-          <section id="definition-RoleInput" class="definition definition-input-object" data-traverse-target="definition-RoleInput">
+          <section
+            id="definition-RoleInput"
+            class="definition definition-input-object"
+            data-traverse-target="definition-RoleInput"
+          >
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
@@ -981,10 +1121,12 @@ http://13.53.175.139:5001/
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>role</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                          <span class="property-name"><code>role</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-String"><code>String!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                     </tbody>
                   </table>
@@ -995,7 +1137,8 @@ http://13.53.175.139:5001/
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -1012,7 +1155,10 @@ http://13.53.175.139:5001/
               <div class="doc-copy">
                 <div class="definition-description doc-copy-section">
                   <h5>Description</h5>
-                  <p>The <code>String</code> scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.</p>
+                  <p>
+                    The <code>String</code> scalar type represents textual data, represented as UTF-8 character
+                    sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+                  </p>
                 </div>
               </div>
               <div class="doc-examples">
@@ -1020,7 +1166,8 @@ http://13.53.175.139:5001/
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol">"xyz789"</span>
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol">"abc123"</span>
 </code></pre>
                     </body>
                   </html>
@@ -1046,34 +1193,49 @@ http://13.53.175.139:5001/
                     </thead>
                     <tbody>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>id</code></span> - <span class="property-type"><a href="#definition-ID"><code>ID!</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>id</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-ID"><code>ID!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>email</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>email</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-String"><code>String!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>roles</code></span> - <span class="property-type"><a href="#definition-Role"><code>[Role]</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>roles</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-Role"><code>[Role]</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>idCostumer</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>idCostumer</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-String"><code>String</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
-                        <td data-property-name=""><span class="property-name"><code>created</code></span> - <span class="property-type"><a href="#definition-DateTime"><code>DateTime!</code></a></span>
+                        <td data-property-name="">
+                          <span class="property-name"><code>created</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-DateTime"><code>DateTime!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                     </tbody>
                   </table>
@@ -1084,11 +1246,12 @@ http://13.53.175.139:5001/
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"roles"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Role</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"idCostumer"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"idCostumer"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"created"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2007-12-03T10:15:30Z"</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
@@ -1098,11 +1261,7 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </section>
-          <div class="doc-row no-margin">
-            <div class="doc-copy doc-separator">
-              <a class="powered-by" href="https://github.com/anvilco/spectaql">Documentation by <span>Anvil SpectaQL</span></a>
-            </div>
-          </div>
+          <div class="doc-row no-margin"></div>
         </article>
         <div class="drawer-overlay"></div>
       </div>
