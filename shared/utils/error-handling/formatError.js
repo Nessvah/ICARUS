@@ -1,13 +1,16 @@
 import { GraphQLError } from 'graphql';
-import { AuthenticationError } from './custom-errors/AuthenticationError.js';
-import { AuthorizationError } from './custom-errors/AuthorizationError.js';
-import { DatabaseError } from './custom-errors/DatabaseError.js';
-import { InternalError } from './custom-errors/InternalError.js';
-import { NotFoundError } from './custom-errors/NotFoundError.js';
-import { RateLimitError } from './custom-errors/RateLimitError.js';
-import { ServiceUnavailableError } from './custom-errors/ServiceUnavailableError.js';
-import { UserInputError } from './custom-errors/UserInputError.js';
-import { ValidationError } from './custom-errors/ValidationError.js';
+import {
+  AuthenticationError,
+  AuthorizationError,
+  DatabaseError,
+  InternalError,
+  NotFoundError,
+  RateLimitError,
+  ServiceUnavailableError,
+  UserInputError,
+  ValidationError,
+} from './CustomErrors.js';
+
 //See README.md documentation file to understand this function
 const customFormatError = (error) => {
   // Check if it's an instance of your customErrors or GraphQLError
@@ -25,7 +28,7 @@ const customFormatError = (error) => {
   ) {
     return {
       message: error.message,
-      extensions: error.extensions || {}, //the stacktrace inside extensions will not appear in production - to implement as soon as structure definitelly done.
+      extensions: error.extensions || {}, //the stacktrace inside extensions, location and path will not appear in production - to implement as soon as structure definitelly done.
       locations: error.locations,
       path: error.path,
     };

@@ -2,9 +2,9 @@
 
 This document describes the error handling system used in our GraphQL server, which follows Apollo Server's best practices.
 
-## customErrors Folder
+## CustomErrors.js file
 
-Our custom errors are designed to provide detailed, standardized error messages to the client. These errors are found in the `utils/error-handling/custom-errors` directory.
+Our custom errors are designed to provide detailed, standardized error messages to the client. These errors are found in the `shared/utils/error-handling` directory.
 
 ### List of Custom Errors
 
