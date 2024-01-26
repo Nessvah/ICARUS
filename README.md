@@ -38,14 +38,14 @@ You need to install or make sure that these tools are pre-installed on your mach
 - [NPM](https://www.npmjs.com/package/npm) or [NVM](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating) (Node Version Manager): Package manager for Node.js (NPM) is used to install and manage Node.js packages, while NVM allows you to easily switch between different Node.js versions.
 
 ### Built With
+<div align="center">
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="AWS" style="width: 100px; height: 100px;">
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original-wordmark.svg" alt="Docker" style="width: 100px; height: 100px;">
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="Node.js" style="width: 100px; height: 100px; ">
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original-wordmark.svg" alt="Express" style="width: 100px; height: 100px;">
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/graphql/graphql-plain-wordmark.svg" alt="GraphQL" style="width: 100px; height: 100px;">
+</div>
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-
-<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="AWS" style="width: 100px; height: 100px; margin-right: 10px;">
-<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original-wordmark.svg" alt="Docker" style="width: 100px; height: 100px; margin-right: 10px;">
-<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="Node.js" style="width: 100px; height: 100px; margin-right: 10px;">
-<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original-wordmark.svg" alt="Express" style="width: 100px; height: 100px; margin-right: 10px;">
-<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/graphql/graphql-plain-wordmark.svg" alt="GraphQL" style="width: 100px; height: 100px;margin-right: 10px;">
 
 ## Install Project
 
