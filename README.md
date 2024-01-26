@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://icarus-docs.netlify.app">
-    <img src="./public/images/icarus_logo.jpeg" alt="Icarus Logo" width="200" height="200" style="border-radius: 50%">
+    <img src="./docs/images/icarus_logo.png" alt="Icarus Logo" width="200" height="200">
   </a>
 
   <h4>
