@@ -25,9 +25,9 @@ const startServer = async () => {
       return auth(req);
     },
     // Specify the port to listen on from the environment variable
-    listen: { port: process.env.PORT },
+    listen: { port: process.env.PORT || 4000 },
   });
-  //console.log(`🚀  Server ready at ${url}`);
+  //console.log(`🚀  Server ready at ${process.env.PORT}`);
 };
 
 startServer();

@@ -3,9 +3,6 @@ import gql from 'graphql-tag';
 const typeDefs = gql`
   scalar DateTime
 
-  """
-  something here
-  """
   type Query {
     me: User
     accounts: [User!]!
@@ -22,7 +19,12 @@ const typeDefs = gql`
   }
 
   type Role {
-    id: ID!
+    email: String!
+    role: String!
+  }
+
+  input RoleInputById {
+    email: String!
     role: String!
   }
 
@@ -41,10 +43,10 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createAccount(input: CreateAccount!): AuthPayload!
+    createAccount(input: CreateAccount!): User!
     authorize(email: String!, password: String!): AuthPayload!
     createRole(input: RoleInput!): Role!
-    # addRoleToUser(input: RoleInput!): User!
+    addRoleToUSer(input: RoleInputById!): User!
   }
 
   type Product {
