@@ -94,6 +94,10 @@ const typeDefs = gql`
   type Mutation {
     updateShipmentAddress(_id: ID!, address: AddressInput!): Shipment
   }
+  #database error test - to delete later
+  type Query {
+    testDatabaseError: String
+  }
 `;
 
 export { typeDefs };
