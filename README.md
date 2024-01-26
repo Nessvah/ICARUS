@@ -1,19 +1,90 @@
-# Projeto "ICARUS"
+<header align="center">
+    <img alt='icarus logo' src="./public/images/icarus_logo.jpeg" width="50%" style="border-radius: 50%">
 
-Desenvolvimento da Plataforma de Backend em Node.js para Integração de Sistemas
+</header>
 
-## Objetivo do Projeto:
+<h4 align="center">
+  <a href="https://icarus-docs.netlify.app">Developer Documentation</a>
+</h4>
 
-Desenvolver uma plataforma de backend em Node.js que sirva como ponto central de integração para vários sistemas. A plataforma deve ser capaz de criar uma API GraphQL que permita operações CRUD completas nos sistemas integrados. Inicialmente, o foco será no suporte a bases de dados relacionais e não relacionais. A arquitetura da plataforma deve ser modular e extensível, permitindo a fácil integração de mais serviços e APIs no futuro.
+---
 
-## Tarefas Iniciais:
+## Table of Contents
 
-- Pesquisar e implementar a estrutura básica do servidor Node.js.
-- Integrar suporte para bases de dados relacionais (por exemplo, MySQL) e não relacionais (por exemplo, MongoDB).
-- Implementar a criação de uma API GraphQL que ofereça operações CRUD básicas.
-- Desenvolver mecanismos para facilitar a extensibilidade da plataforma para integração de novos serviços.
-- Criar documentação clara sobre o funcionamento da plataforma e como os desenvolvedores podem contribuir.
+- [Table of Contents](#table-of-contents)
+- [Project Objective:](#project-objective)
+- [Setup Project](#setup-project)
+  - [Prerequisites](#prerequisites)
+- [Install Project](#install-project)
+- [Docker Image Deployment Guide](#docker-image-deployment-guide)
+- [Developer Documentation](#developer-documentation)
+- [Docker Image Deployment](#docker-image-deployment)
+- [Contributors](#contributors)
 
-## Etapa Futura:
+## Project Objective:
 
-Após a conclusão inicial, os desenvolvedores devem explorar a possibilidade de integrar mais serviços e APIs, garantindo que a estrutura permaneça flexível para expansões futuras. A documentação deve ser continuamente atualizada para refletir as adições realizadas.
+The goal of this project is to develop a Node.js backend platform serving as a central integration point for various systems. The platform should be capable of creating a GraphQL API enabling comprehensive CRUD operations across integrated systems. Initially, emphasis will be placed on supporting both relational and non-relational databases. The architecture of the platform should be modular and extensible, allowing easy integration of additional services and APIs in the future.
+
+## Setup Project
+
+### Prerequisites
+
+You need to install or make sure that these tools are pre-installed on your machine:
+
+- [NodeJS](https://nodejs.org/en/download/): JavaScript runtime build.
+- [Git](https://git-scm.com/): Open source version control system.
+- [Docker](https://www.docker.com/): Platform for developing, shipping, and running applications in containers.
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html): Command-line interface for Amazon Web Services (AWS).
+- [NPM](https://www.npmjs.com/package/npm) or [NVM](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating) (Node Version Manager): Package manager for Node.js (NPM) is used to install and manage Node.js packages, while NVM allows you to easily switch between different Node.js versions.
+
+## Install Project
+
+1. Clone the Repository
+
+```bash
+git clone https://github.com/Nessvah/ICARUS
+```
+
+1. Install packages in the `root` and `src/` directory
+
+```
+npm install
+```
+
+3. In the `src/` create a `.env` file and add the jwt secret and the port to run your server
+
+```bash
+JWT_SECRET=secret
+PORT=portnumber
+
+```
+
+4. Run the server to start working locally
+
+In the `src/` directory run:
+
+```bash
+npm start
+```
+
+## Docker Image Deployment Guide
+
+To deploy your container to AWS ECR and run your API on a EC2, [click here](./docs/md/docker-ec2.md) to follow the instructions.
+
+## Developer Documentation
+
+[Check out our dedicated docs page for more technical documentation.](https://icarus-docs.netlify.app)
+
+## Docker Image Deployment
+
+## Contributors
+
+- [Eliana Delgado](https://github.com/EssDelgado)
+- [Pedro Maldonado](https://github.com/pedro-afm)
+- [Sílvia Costa](https://github.com/Nessvah)
+- [Susana Silva](https://github.com/Su401)
+- [Willian Fischer](https://github.com/WillianFischer)
+
+<p align="center">
+<strong>Happy Coding</strong> ❤️
+</p>
