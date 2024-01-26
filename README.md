@@ -1,13 +1,12 @@
-<header align="center">
-    <img alt='icarus logo' src="./public/images/icarus_logo.jpeg" width="50%" style="border-radius: 50%">
+<div align="center">
+  <a href="https://icarus-docs.netlify.app">
+    <img src="./public/images/icarus_logo.jpeg" alt="Icarus Logo" width="200" height="200" style="border-radius: 50%">
+  </a>
 
-</header>
-
-<h4 align="center">
-  <a href="https://icarus-docs.netlify.app">Developer Documentation</a>
-</h4>
-
----
+  <h4>
+    <a href="https://icarus-docs.netlify.app">Developer Documentation</a>
+  </h4>
+</div>
 
 ## Table of Contents
 
@@ -15,11 +14,12 @@
 - [Project Objective:](#project-objective)
 - [Setup Project](#setup-project)
   - [Prerequisites](#prerequisites)
+  - [Built With](#built-with)
 - [Install Project](#install-project)
 - [Docker Image Deployment Guide](#docker-image-deployment-guide)
 - [Developer Documentation](#developer-documentation)
-- [Docker Image Deployment](#docker-image-deployment)
-- [Contributors](#contributors)
+- [Contributing](#contributing)
+- [Team Members](#team-members)
 
 ## Project Objective:
 
@@ -36,6 +36,16 @@ You need to install or make sure that these tools are pre-installed on your mach
 - [Docker](https://www.docker.com/): Platform for developing, shipping, and running applications in containers.
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html): Command-line interface for Amazon Web Services (AWS).
 - [NPM](https://www.npmjs.com/package/npm) or [NVM](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating) (Node Version Manager): Package manager for Node.js (NPM) is used to install and manage Node.js packages, while NVM allows you to easily switch between different Node.js versions.
+
+### Built With
+
+This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="AWS" style="width: 100px; height: 100px; margin-right: 10px;">
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original-wordmark.svg" alt="Docker" style="width: 100px; height: 100px; margin-right: 10px;">
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="Node.js" style="width: 100px; height: 100px; margin-right: 10px;">
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original-wordmark.svg" alt="Express" style="width: 100px; height: 100px; margin-right: 10px;">
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/graphql/graphql-plain-wordmark.svg" alt="GraphQL" style="width: 100px; height: 100px;margin-right: 10px;">
 
 ## Install Project
 
@@ -75,9 +85,21 @@ To deploy your container to AWS ECR and run your API on a EC2, [click here](./do
 
 [Check out our dedicated docs page for more technical documentation.](https://icarus-docs.netlify.app)
 
-## Docker Image Deployment
+## Contributing
 
-## Contributors
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request feature/AmazingFeature)
+   Open a Pull Request
+
+## Team Members
 
 - [Eliana Delgado](https://github.com/EssDelgado)
 - [Pedro Maldonado](https://github.com/pedro-afm)
