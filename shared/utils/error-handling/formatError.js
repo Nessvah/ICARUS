@@ -11,9 +11,10 @@ import {
   ValidationError,
 } from './CustomErrors.js';
 
-//See README.md documentation file to understand this function
 const customFormatError = (error) => {
-  // Check if it's an instance of your customErrors or GraphQLError
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  // Check if it's an instance of customErrors or GraphQLError
   if (
     error instanceof AuthenticationError ||
     error instanceof AuthorizationError ||
@@ -26,14 +27,21 @@ const customFormatError = (error) => {
     error instanceof ValidationError ||
     error instanceof GraphQLError
   ) {
+    // In production, only show the error message
+    if (isProduction) {
+      return { message: error.message };
+    }
+
+    // In development environment, show detailed error information - message, extensions, locations and path
     return {
       message: error.message,
-      extensions: error.extensions || {}, //the stacktrace inside extensions, location and path will not appear in production - to implement as soon as structure definitelly done.
+      extensions: error.extensions || {},
       locations: error.locations,
       path: error.path,
     };
   }
-  return error; // return other errors as they are
+
+  return error; // return other GraphQL errors as they are
 };
 
 export { customFormatError };
