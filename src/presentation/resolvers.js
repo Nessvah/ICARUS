@@ -63,10 +63,6 @@ const resolvers = {
       }
       return matchingShipments;
     },
-    //TO TEST DATABASE ERROR... TO DELETE LATER
-    testDatabaseError: () => {
-      throw new DatabaseError();
-    },
   },
 
   Mutation: {
