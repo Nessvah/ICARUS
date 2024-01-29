@@ -1,9 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { getAllUsers } from './getAllUsers.js';
-import { signUp } from './signUpCognito.js';
+import { getAllUsers, getUser, initiateAuth, signUp } from './Cognito/index.js';
 import winston from 'winston';
-import { getUser } from './getUserCognito.js';
-import { initiateAuth } from './initiateAuthCognito.js';
 
 const users = [
   {
