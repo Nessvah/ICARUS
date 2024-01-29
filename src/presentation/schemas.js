@@ -8,6 +8,9 @@ const typeDefs = gql`
     accounts: [User!]!
     roles: [Role!]!
     products: [Product]
+    getShipmentById(_id: ID!): Shipment
+    getAllShipments: [Shipment]
+    getShipmentsByOrderId(order_id: String!): [Shipment]
   }
 
   type User {
@@ -45,6 +48,7 @@ const typeDefs = gql`
     authorize(email: String!, password: String!): AuthPayload!
     createRole(input: RoleInput!): Role!
     addRoleToUSer(input: RoleInputById!): User!
+    updateShipmentAddress(_id: ID!, address: AddressInput!): Shipment
   }
 
   type Product {
@@ -83,14 +87,9 @@ const typeDefs = gql`
     billingAddress: Address
   }
 
+  #database error test - to delete later
   type Query {
-    getShipmentById(_id: ID!): Shipment
-    getAllShipments: [Shipment]
-    getShipmentsByOrderId(order_id: String!): [Shipment]
-  }
-
-  type Mutation {
-    updateShipmentAddress(_id: ID!, address: AddressInput!): Shipment
+    testDatabaseError: String
   }
 `;
 
