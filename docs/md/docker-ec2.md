@@ -1,11 +1,14 @@
-# ICARUS API
+# Docker Image Deployment Guide
 
-## Overview
+This guide outlines the process of building a Docker image locally, pushing it to Amazon Elastic Container Registry (ECR), and then pulling and running the image on an Amazon EC2 instance.
 
-- [ICARUS API](#icarus-api)
-  - [Overview](#overview)
-  - [Docker Image Deployment Guide](#docker-image-deployment-guide)
-    - [Prerequisites](#prerequisites)
+![Docker Image Build](../images/docker_build_deploy.png)
+
+## Overview:
+
+- [Docker Image Deployment Guide](#docker-image-deployment-guide)
+  - [Overview:](#overview)
+  - [Prerequisites](#prerequisites)
   - [Building and Pushing Docker Image to ECR](#building-and-pushing-docker-image-to-ecr)
     - [Step 1: Build Docker Image Locally](#step-1-build-docker-image-locally)
     - [Step 2: Verify or Create ECR Repository](#step-2-verify-or-create-ecr-repository)
@@ -21,13 +24,7 @@
     - [Step 3: Enable Automatic Startup (Optional)](#step-3-enable-automatic-startup-optional)
       - [Managing the Service](#managing-the-service)
 
-## Docker Image Deployment Guide
-
-This guide outlines the process of building a Docker image locally, pushing it to Amazon Elastic Container Registry (ECR), and then pulling and running the image on an Amazon EC2 instance.
-
-![Docker Image Build](./docs/images/docker_build_deploy.png)
-
-### Prerequisites
+## Prerequisites
 
 Before you begin, ensure you have the following prerequisites installed and configured:
 

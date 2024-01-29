@@ -13,28 +13,7 @@ introspection:
 
   # Hide any Types that are not used anywhere in your schema after other things have been hidden.
   # Default: true
-  hideUnusedTypes: true
-
-  # Whether to document any Types at all
-  # Default: true
-  objectsDocumentedDefault: true
-  # Whether to document an individual Type, in the absence of a metadata directive
-  # Default: true
-  objectDocumentedDefault: true
-
-  # Whether to document any Input Object types at all
-  # Default: true
-  inputsDocumentedDefault: true
-  # Whether to document an individual Input Object, in the absence of a metadata directive
-  # Default: true
-  inputDocumentedDefault: true
-
-  # Whether to document any Enums at all
-  # Default: true
-  enumsDocumentedDefault: true
-  # Whether to document an individual Enum, in the absence of a metadata directive
-  # Default: true
-  enumDocumentedDefault: true
+  hideUnusedTypes: false
 
 info:
   title: Icarus API Documentation
