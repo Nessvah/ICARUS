@@ -66,6 +66,11 @@ npm install
 ```bash
 JWT_SECRET=secret
 PORT=portnumber
+accessKeyId=AWSkeyId
+secretAccessKey=AWSaccesskey
+UserPoolId=AWSuserPoolId
+ClientId=AWSclientId
+region=AWSregion
 
 ```
 
