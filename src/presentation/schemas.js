@@ -11,10 +11,8 @@ const typeDefs = gql`
   }
 
   type User {
-    id: ID!
     email: String!
-    roles: [Role]
-    idCostumer: String
+    role: String!
     created: DateTime!
   }
 

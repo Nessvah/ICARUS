@@ -33,8 +33,14 @@ const orders = [
 const resolvers = {
   // DateTime: DateTimeResolver,
   Query: {
-    me: (_, __, { currentUser, findCurrentUser }) => findCurrentUser(currentUser),
-    accounts: (_, __, { findAllUsers }) => findAllUsers(),
+    me: async (_, __, { currentUser, findCurrentUser }) => {
+      const result = await findCurrentUser(currentUser);
+      return result;
+    },
+    accounts: async (_, __, { findAllUsers }) => {
+      const result = await findAllUsers();
+      return result.users;
+    },
     roles: (_, __, { findAllRoles }) => findAllRoles(),
     products: async (_, __, { currentUser }) => await getProducts(currentUser),
     //get shipment by id
@@ -63,8 +69,9 @@ const resolvers = {
   },
 
   Mutation: {
-    createAccount(_, { input }, { createUser }) {
-      return createUser(input);
+    async createAccount(_, { input }, { createUser }) {
+      const result = await createUser(input);
+      return result.user;
     },
     authorize(_, { email, password }, { authLogin }) {
       return authLogin(email, password);
