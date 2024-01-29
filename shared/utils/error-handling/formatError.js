@@ -12,7 +12,7 @@ import {
 } from './CustomErrors.js';
 
 const customFormatError = (error) => {
-  const isProduction = process.env.NODE_ENV === 'production';
+  /* console.log('Current NODE_ENV:', process.env.NODE_ENV); */
 
   // Check if it's an instance of customErrors or GraphQLError
   if (
@@ -27,12 +27,7 @@ const customFormatError = (error) => {
     error instanceof ValidationError ||
     error instanceof GraphQLError
   ) {
-    // In production, only show the error message
-    if (isProduction) {
-      return { message: error.message };
-    }
-
-    // In development environment, show detailed error information - message, extensions, locations and path
+    // In development environment, show detailed error information - message, extensions, locations and path but not in production
     return {
       message: error.message,
       extensions: error.extensions || {},
