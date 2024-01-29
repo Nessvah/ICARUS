@@ -1,7 +1,7 @@
 import { getProducts } from '../app/productsUseCase.js';
 // to ask Silvia later
 // eslint-disable-next-line node/no-unpublished-import
-import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js';
+// import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js';
 
 //TESTING PURPOSES VARIABLES - TO DELETE LATER
 const shipments = [
