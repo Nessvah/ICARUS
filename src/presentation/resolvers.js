@@ -3,6 +3,7 @@ import { getProducts } from '../app/productsUseCase.js';
 // eslint-disable-next-line node/no-unpublished-import
 // import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js';
 
+import { isAutenticated } from '../infrastructure/auth/AuthResolvers.js';
 //TESTING PURPOSES VARIABLES - TO DELETE LATER
 const shipments = [
   {
@@ -37,9 +38,9 @@ const resolvers = {
   // DateTime: DateTimeResolver,
   Query: {
     me: (_, __, { currentUser, findCurrentUser }) => findCurrentUser(currentUser),
-    accounts: (_, __, { findAllUsers }) => findAllUsers(),
+    accounts: isAutenticated((_, __, { findAllUsers }) => findAllUsers()),
     roles: (_, __, { findAllRoles }) => findAllRoles(),
-    products: async (_, __, { currentUser }) => await getProducts(currentUser),
+    products: isAutenticated(async (_, __, { currentUser }) => await getProducts(currentUser)),
     //get shipment by id
     getShipmentById: (_, { _id }) => {
       const shipment = shipments.find((shipment) => shipment._id === _id);

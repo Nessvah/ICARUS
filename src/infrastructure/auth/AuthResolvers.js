@@ -17,16 +17,4 @@ const isAutenticated = (resolver) => async (_, args, ctx) => {
   return resolver(_, args, ctx);
 };
 
-/**
- * Resolver for an authenticated query
- */
-
-const authenticatedQueryResolver = isAutenticated(async (_, args, ctx) => {});
-
-/**
- * unauthenticatedQueryResolver
- */
-
-const unauthenticatedQueryResolver = async (_, args, ctx) => {};
-
 export { isAutenticated };
