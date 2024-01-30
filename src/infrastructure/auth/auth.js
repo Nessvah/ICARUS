@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const users = [
+export const users = [
   {
     id: '1',
     email: 'piparo@example.com',
