@@ -34,6 +34,11 @@ const typeDefs = gql`
     password: String!
   }
 
+  input AuthorizeUser {
+    email: String!
+    password: String!
+  }
+
   input RoleInput {
     role: String!
   }
@@ -45,7 +50,7 @@ const typeDefs = gql`
 
   type Mutation {
     createAccount(input: CreateAccount!): User!
-    authorize(email: String!, password: String!): AuthPayload!
+    authorize(input: AuthorizeUser!): AuthPayload!
     createRole(input: RoleInput!): Role!
     addRoleToUSer(input: RoleInputById!): User!
     updateShipmentAddress(_id: ID!, address: AddressInput!): Shipment

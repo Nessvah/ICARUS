@@ -1,6 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { getAllUsers, getUser, initiateAuth, signUp } from './Cognito/index.js';
 import winston from 'winston';
+import crypto from 'crypto';
+import { isValidPassword } from './Cognito/userValidation/passwordValidation.js';
+import { isValidEmail } from './Cognito/userValidation/emailValidation.js';
+import { decryptingPassword } from './Cognito/userValidation/decrypt.js';
 
 const users = [
   {
@@ -77,23 +81,36 @@ if (process.env.NODE_ENV !== 'production') {
 
 const createUser = async (input) => {
   try {
-    // Sending signUp request to Cognito with user inputs (email, password)
-    const responseStatusCode = await signUp(input);
-    logger.info(`User createad successfully! Status code: ${responseStatusCode}`);
-    // If user sign up is successfully, createdUser receives input.email
-    const userResponse = await getUser(input.email);
-    const emailAttribute = userResponse.UserAttributes.find((Attribute) => Attribute.Name === 'email');
-    const emailValue = emailAttribute ? emailAttribute.Value : null;
-    const roleAttribute = userResponse.UserAttributes.find((Attribute) => Attribute.Name === 'custom:role');
-    const roleValue = roleAttribute ? roleAttribute.Value : null;
-    const user = {
-      role: roleValue,
-      email: emailValue,
-      created: userResponse.UserCreateDate,
-    };
-    return {
-      user,
-    };
+    const publicKey = process.env.publicKeyFrontend;
+    const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password));
+    // To verify if email and password are on standard required
+    const decryptedData = decryptingPassword(input, encryptedData);
+    const verifyUserPassword = isValidPassword(decryptedData);
+    const verifygUserEmail = isValidEmail(decryptedData.email);
+    // If they are, it's time to call cognito function to add them
+    if (verifyUserPassword && verifygUserEmail) {
+      // Sending signUp request to Cognito with user inputs (email, password)
+      const responseStatusCode = await signUp(decryptedData);
+      logger.info(`User createad successfully! Status code: ${responseStatusCode}`);
+      // If user sign up is successfully, createdUser receives input.email
+      const userResponse = await getUser(input.email);
+      const emailAttribute = userResponse.UserAttributes.find((Attribute) => Attribute.Name === 'email');
+      const emailValue = emailAttribute ? emailAttribute.Value : null;
+      const roleAttribute = userResponse.UserAttributes.find((Attribute) => Attribute.Name === 'custom:role');
+      const roleValue = roleAttribute ? roleAttribute.Value : null;
+      const user = {
+        role: roleValue,
+        email: emailValue,
+        created: userResponse.UserCreateDate,
+      };
+      return {
+        user,
+      };
+    } else {
+      return {
+        message: 'Email or Password not compliant with standard required',
+      };
+    }
   } catch (e) {
     logger.error('Error creating user: ', e);
     return {
@@ -109,7 +126,9 @@ const createUser = async (input) => {
 
 const findAllUsers = async () => {
   try {
+    // Search all users in cognito user pool
     const allUsersResponse = await getAllUsers();
+    // Making a transformation into the data to screen it
     const users = allUsersResponse.Users.map((user) => {
       const created = user.UserCreateDate;
       const emailAttribute = user.Attributes.find((Attribute) => Attribute.Name === 'email');
@@ -136,7 +155,9 @@ const findAllRoles = () => {
 };
 
 const findCurrentUser = async (currentUser) => {
+  // Getting current user information on user pool
   const loggedUser = await getUser(currentUser);
+  // Making transformations to screen it
   const emailAttribute = loggedUser.UserAttributes.find((Attribute) => Attribute.Name === 'email');
   const emailValue = emailAttribute ? emailAttribute.Value : null;
   const roleAttribute = loggedUser.UserAttributes.find((Attribute) => Attribute.Name === 'custom:role');
@@ -149,18 +170,29 @@ const findCurrentUser = async (currentUser) => {
   return user;
 };
 
-const authLogin = async (email, password) => {
+const authLogin = async (input) => {
   try {
-    // Calling cognito authentication function with inputs
-    const response = await initiateAuth({ email, password });
+    const publicKey = process.env.publicKeyFrontend;
+    const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password));
+    // To verify if email and password are on standard required
+    const decryptedData = decryptingPassword(input, encryptedData);
+    const verifyUserPassword = isValidPassword(decryptedData);
+    const verifygUserEmail = isValidEmail(decryptedData.email);
+    // If they are, it's time to call cognito function to initiate
+    // cognito authentication function with inputs
+    if (verifyUserPassword && verifygUserEmail) {
+      const { email, password } = decryptedData;
+      const response = await initiateAuth({ email, password });
 
-    // Confirming if the response of the request was successfully
-    if (response.$metadata.httpStatusCode === 200) {
-      return {
-        token: response.AuthenticationResult.IdToken,
-      };
-    } else {
-      return new Error('Server error');
+      // Confirming if the response of the request was successfully
+      if (response.$metadata.httpStatusCode === 200) {
+        return {
+          token: response.AuthenticationResult.IdToken,
+          user: decryptedData,
+        };
+      } else {
+        return new Error('Server error');
+      }
     }
   } catch (e) {
     logger.error('An error occurred during authentication:', e.message);

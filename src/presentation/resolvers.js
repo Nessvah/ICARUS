@@ -76,8 +76,8 @@ const resolvers = {
       const result = await createUser(input);
       return result.user;
     },
-    authorize(_, { email, password }, { authLogin }) {
-      return authLogin(email, password);
+    async authorize(_, { input }, { authLogin }) {
+      return await authLogin(input);
     },
     createRole(_, { input }, { createNewRole }) {
       return createNewRole(input);

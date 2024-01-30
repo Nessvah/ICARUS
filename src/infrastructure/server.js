@@ -5,7 +5,7 @@ import { startStandaloneServer } from '@apollo/server/standalone';
 import { resolvers } from '../presentation/resolvers.js';
 import { typeDefs } from '../presentation/schemas.js';
 import { auth } from './auth/auth.js';
-import { connectDB } from './db/mssql.js';
+//import { connectDB } from './db/mssql.js';
 // to ask Silvia later
 // eslint-disable-next-line node/no-unpublished-import
 import { customFormatError } from '../../shared/utils/error-handling/formatError.js';
@@ -18,11 +18,11 @@ const server = new ApolloServer({
 });
 
 const startServer = async () => {
-  try {
+  /* try {
     connectDB();
   } catch (e) {
     //console.error('cant connect to dbs', e);
-  }
+  } */
 
   await startStandaloneServer(server, {
     // Add context to the server options, which provides authentication for each request

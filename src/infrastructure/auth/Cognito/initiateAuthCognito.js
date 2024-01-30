@@ -28,6 +28,7 @@ const initiateAuth = async function ({ email, password }) {
     });
 
     const response = await client.send(command);
+    console.log(response);
     return response;
   } catch (e) {
     // Log the error using a logging library or console.log
