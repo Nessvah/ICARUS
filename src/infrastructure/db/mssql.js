@@ -1,28 +1,23 @@
-import sql from 'mssql';
-
-const sqlConfig = {
-  user: `${process.env.DB_USER}`,
-  password: `${process.env.DB_PWD}`,
-  server: `${process.env.DB_HOST}`,
-  database: `${process.env.DB_DATABASE}`,
-  pool: {
-    max: 10,
-    min: 0,
-    idleTimeoutMillis: 30000,
-  },
-  options: {
-    trustServerCertificate: true, // change to true for local dev / self-signed certs
-  },
-};
+// Get the client
+import mysql from 'mysql2/promise';
 
 async function connectDB() {
   try {
-    if (!sql.isConnected) {
-      await sql.connect(sqlConfig);
-      //console.log('connected to rds');
-    }
-  } catch (error) {
-    //console.error(error);
+    // Create the connection to database
+    const connection = await mysql.createConnection({
+      host: 'ec2-13-49-245-170.eu-north-1.compute.amazonaws.com',
+      user: 'root',
+      // database: 'icarus',
+      port: 3306,
+      password: 'admin123',
+    });
+
+    console.log('connected to ec2 mysql ');
+
+    const tables = await connection.query('SHOW DATABASES;');
+    console.log(tables);
+  } catch (err) {
+    console.log(err);
   }
 }
 
