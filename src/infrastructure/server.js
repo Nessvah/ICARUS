@@ -5,9 +5,9 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import { graphqlMorgan } from '../shared/utils/logs/morgan.js';
 import morgan from 'morgan';
-import Logger from '../shared/utils/logs/logConfig.js';
+import { accessLogStream, MongoDBStream } from '../shared/utils/loggers/morganLogger.js';
+import Logger from '../shared/utils/loggers/logConfig.js';
 import { users } from './auth/auth.js';
 
 import { resolvers } from '../presentation/resolvers.js';
@@ -70,9 +70,11 @@ await server.start();
 
 app.use(
   '/',
-
   cors(),
   express.json(),
+
+  morgan('combined', { stream: accessLogStream }),
+  morgan(':method :url :status :res[content-length] - :response-time ms', { stream: new MongoDBStream() }),
   expressMiddleware(server, {
     // context: ({ req }) => {
     //   Logger.info(req.header('x-forwarded-for') || req.socket.remoteAddress);
