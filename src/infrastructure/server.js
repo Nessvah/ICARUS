@@ -35,7 +35,12 @@ const server = new ApolloServer({
 // Start the Apollo Server
 server.start().then(() => {
   // Applies apollo Server middleware to the Express app
-  server.applyMiddleware({ app });
+  server.applyMiddleware({ app, path: '/' });
+
+  // error middleware after Apollo middleware
+  app.use((err, req, res, next) => {
+    res.status(500).json({ error: 'Internal Server Error' });
+  });
 
   const port = process.env.PORT;
   app.listen(port, () => {
