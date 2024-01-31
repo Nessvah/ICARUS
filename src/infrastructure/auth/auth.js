@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { getAllUsers, getUser, initiateAuth, signUp } from './Cognito/index.js';
 import winston from 'winston';
-import crypto from 'crypto';
 import { isValidPassword } from './Cognito/userValidation/passwordValidation.js';
 import { isValidEmail } from './Cognito/userValidation/emailValidation.js';
 import { decryptingPassword } from './Cognito/userValidation/decrypt.js';
@@ -83,11 +82,11 @@ const createUser = async (input) => {
   try {
     //* I'm incrypting the information which comes from frontend here to test
     //* but the encryptation is made on frontend
-    const publicKey = process.env.publicKeyFrontend;
-    const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password));
+    /* const publicKey = process.env.publicKeyFrontend;
+    const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password)); */
 
     // Decrypting password which came from frontend
-    const decryptedData = decryptingPassword(input, encryptedData);
+    const decryptedData = decryptingPassword(input);
 
     // Verifying password and email from frontend to see if they are standardized
     const verifyUserPassword = isValidPassword(decryptedData);
@@ -180,11 +179,11 @@ const authLogin = async (input) => {
   try {
     //* I'm incrypting the information which comes from frontend here to test
     //* but the encryptation is made on frontend
-    const publicKey = process.env.publicKeyFrontend;
-    const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password));
+    /* const publicKey = process.env.publicKeyFrontend;
+    const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password)); */
 
     // Decrypting password which came from frontend
-    const decryptedData = decryptingPassword(input, encryptedData);
+    const decryptedData = decryptingPassword(input);
 
     // Verifying password and email from frontend to see if they are standardized
     const verifyUserPassword = isValidPassword(decryptedData);
