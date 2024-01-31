@@ -8,7 +8,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node ./infrastructure/server.js",
     "dev": "nodemon ./infrastructure/server.js",
-    "generate-docs": "npx spectaql ./config/config.yml"
+    "generate-docs": "npx spectaql ../config/config.yml"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,8 @@
   "dependencies": {
     "@apollo/server": "^4.10.0",
     "@apollo/subgraph": "^2.6.3",
+    "apollo-server-express": "^3.13.0",
+    "cors": "^2.8.5",
     "@aws-sdk/client-cognito-identity-provider": "^3.499.0",
     "bcrypt": "^5.1.1",
     "crypto": "^1.0.1",
