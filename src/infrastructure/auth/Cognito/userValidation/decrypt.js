@@ -1,10 +1,9 @@
 import crypto from 'crypto';
 
 // Decrypting data from input
-
 const decryptingPassword = function (input, password) {
   try {
-    console.log('to aqui');
+    // Creating a decryption based on privateKey and the password
     let decryptedPassword = crypto.privateDecrypt(
       {
         key: process.env.privateKeyBackend,
@@ -12,6 +11,8 @@ const decryptingPassword = function (input, password) {
       },
       password,
     );
+    // Sending the correct object response with password decrypted
+    // to verify the password and email
     let decryptedDataResponse = {
       email: input.email,
       password: decryptedPassword.toString('utf8'),

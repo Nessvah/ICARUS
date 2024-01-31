@@ -81,12 +81,18 @@ if (process.env.NODE_ENV !== 'production') {
 
 const createUser = async (input) => {
   try {
+    //* I'm incrypting the information which comes from frontend here to test
+    //* but the encryptation is made on frontend
     const publicKey = process.env.publicKeyFrontend;
     const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password));
-    // To verify if email and password are on standard required
+
+    // Decrypting password which came from frontend
     const decryptedData = decryptingPassword(input, encryptedData);
+
+    // Verifying password and email from frontend to see if they are standardized
     const verifyUserPassword = isValidPassword(decryptedData);
     const verifygUserEmail = isValidEmail(decryptedData.email);
+
     // If they are, it's time to call cognito function to add them
     if (verifyUserPassword && verifygUserEmail) {
       // Sending signUp request to Cognito with user inputs (email, password)
@@ -172,10 +178,15 @@ const findCurrentUser = async (currentUser) => {
 
 const authLogin = async (input) => {
   try {
+    //* I'm incrypting the information which comes from frontend here to test
+    //* but the encryptation is made on frontend
     const publicKey = process.env.publicKeyFrontend;
     const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password));
-    // To verify if email and password are on standard required
+
+    // Decrypting password which came from frontend
     const decryptedData = decryptingPassword(input, encryptedData);
+
+    // Verifying password and email from frontend to see if they are standardized
     const verifyUserPassword = isValidPassword(decryptedData);
     const verifygUserEmail = isValidEmail(decryptedData.email);
     // If they are, it's time to call cognito function to initiate
@@ -229,7 +240,7 @@ const auth = async (req) => {
     try {
       // Decoding jwt to get the email inside the token
       // inserted in autohorization field
-      const { email } = jwt.decode(req.headers.authorization);
+      const { email } = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
       // Calling getUserCognito function to compare the email
       // inside the token with a Cognito user email
       const response = await getUser(email);
