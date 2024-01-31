@@ -37,6 +37,11 @@ server.start().then(() => {
   // Applies apollo Server middleware to the Express app
   server.applyMiddleware({ app });
 
+  // error middleware after Apollo middleware
+  app.use((err, req, res, next) => {
+    res.status(500).json({ error: 'Internal Server Error' });
+  });
+
   const port = process.env.PORT;
   app.listen(port, () => {
     /* console.log(`🚀  Server ready at ${process.env.PORT}`); */
