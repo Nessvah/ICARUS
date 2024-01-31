@@ -35,7 +35,13 @@ const server = new ApolloServer({
 // Start the Apollo Server
 server.start().then(() => {
   // Applies apollo Server middleware to the Express app
-  server.applyMiddleware({ app, path: '/' });
+  //BY DEFAULT THE PATH WILL BE /graphql
+  server.applyMiddleware({ app });
+
+  //testing middleware
+  app.get('/test-error', (req, res, next) => {
+    throw new Error('Test Error');
+  });
 
   // error middleware after Apollo middleware
   app.use((err, req, res, next) => {
@@ -47,3 +53,5 @@ server.start().then(() => {
     /* console.log(`🚀  Server ready at ${process.env.PORT}`); */
   });
 });
+
+export default app;
