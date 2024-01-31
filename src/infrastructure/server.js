@@ -1,10 +1,7 @@
 import 'dotenv/config';
-import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import cors from 'cors';
-import http from 'http';
 
 import { resolvers } from '../presentation/resolvers.js';
 import { typeDefs } from '../presentation/schemas.js';
@@ -18,18 +15,21 @@ import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js
 
 const app = express();
 
+app.use(cors());
+
 connectDB().catch(() => {
   throw new DatabaseError();
 });
-
-const httpServer = http.createServer(app);
 
 // Create an instance of ApolloServer
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   formatError: customFormatError,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  context: ({ req }) => {
+    // Add context to the Apollo Server, which provides authentication for each request
+    return auth(req);
+  },
 });
 
 // Start the Apollo Server
