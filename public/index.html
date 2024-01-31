@@ -192,18 +192,23 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </section>
-          <section id="query-getAllShipments" class="operation operation-query" data-traverse-target="query-getAllShipments">
+          <section
+            id="query-getAllShipments"
+            class="operation operation-query"
+            data-traverse-target="query-getAllShipments"
+          >
             <div class="operation-group-name">
               <a href="#group-Operations-Queries">Queries</a>
             </div>
-            <h2 class="operation-heading ">
+            <h2 class="operation-heading">
               <code>getAllShipments</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p> Returns <a href="#definition-Shipment"><code>[Shipment]</code></a>
+                  <p>
+                    Returns <a href="#definition-Shipment"><code>[Shipment]</code></a>
                   </p>
                 </div>
               </div>
@@ -213,7 +218,8 @@ http://13.53.175.139:5001/
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> GetAllShipments <span class="hljs-tag">{
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> GetAllShipments <span class="hljs-tag">{
   <span class="hljs-symbol">getAllShipments <span class="hljs-tag">{
     <span class="hljs-symbol">_id</span>
     <span class="hljs-symbol">order_id</span>
@@ -243,7 +249,8 @@ http://13.53.175.139:5001/
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"getAllShipments"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
@@ -264,18 +271,23 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </section>
-          <section id="query-getShipmentById" class="operation operation-query" data-traverse-target="query-getShipmentById">
+          <section
+            id="query-getShipmentById"
+            class="operation operation-query"
+            data-traverse-target="query-getShipmentById"
+          >
             <div class="operation-group-name">
               <a href="#group-Operations-Queries">Queries</a>
             </div>
-            <h2 class="operation-heading ">
+            <h2 class="operation-heading">
               <code>getShipmentById</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p> Returns a <a href="#definition-Shipment"><code>Shipment</code></a>
+                  <p>
+                    Returns a <a href="#definition-Shipment"><code>Shipment</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -290,10 +302,12 @@ http://13.53.175.139:5001/
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>_id</code></span> - <span class="property-type"><a href="#definition-ID"><code>ID!</code></a></span>
+                          <span class="property-name"><code>_id</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-ID"><code>ID!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                     </tbody>
                   </table>
@@ -305,7 +319,8 @@ http://13.53.175.139:5001/
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> GetShipmentById<span class="hljs-tag">(<span class="hljs-code">$_id</span>: ID!)</span> <span class="hljs-tag">{
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> GetShipmentById<span class="hljs-tag">(<span class="hljs-code">$_id</span>: ID!)</span> <span class="hljs-tag">{
   <span class="hljs-symbol">getShipmentById<span class="hljs-tag">(_id: <span class="hljs-code">$_id</span>)</span> <span class="hljs-tag">{
     <span class="hljs-symbol">_id</span>
     <span class="hljs-symbol">order_id</span>
@@ -335,7 +350,8 @@ http://13.53.175.139:5001/
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">}</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -344,7 +360,8 @@ http://13.53.175.139:5001/
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"getShipmentById"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
       <span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span>
@@ -363,18 +380,23 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </section>
-          <section id="query-getShipmentsByOrderId" class="operation operation-query" data-traverse-target="query-getShipmentsByOrderId">
+          <section
+            id="query-getShipmentsByOrderId"
+            class="operation operation-query"
+            data-traverse-target="query-getShipmentsByOrderId"
+          >
             <div class="operation-group-name">
               <a href="#group-Operations-Queries">Queries</a>
             </div>
-            <h2 class="operation-heading ">
+            <h2 class="operation-heading">
               <code>getShipmentsByOrderId</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p> Returns <a href="#definition-Shipment"><code>[Shipment]</code></a>
+                  <p>
+                    Returns <a href="#definition-Shipment"><code>[Shipment]</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -389,10 +411,12 @@ http://13.53.175.139:5001/
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>order_id</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                          <span class="property-name"><code>order_id</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-String"><code>String!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                     </tbody>
                   </table>
@@ -404,7 +428,8 @@ http://13.53.175.139:5001/
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> GetShipmentsByOrderId<span class="hljs-tag">(<span class="hljs-code">$order_id</span>:<span class="hljs-type"> String!</span>)</span> <span class="hljs-tag">{
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> GetShipmentsByOrderId<span class="hljs-tag">(<span class="hljs-code">$order_id</span>:<span class="hljs-type"> String!</span>)</span> <span class="hljs-tag">{
   <span class="hljs-symbol">getShipmentsByOrderId<span class="hljs-tag">(order_id: <span class="hljs-code">$order_id</span>)</span> <span class="hljs-tag">{
     <span class="hljs-symbol">_id</span>
     <span class="hljs-symbol">order_id</span>
@@ -434,7 +459,8 @@ http://13.53.175.139:5001/
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"order_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"order_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -443,7 +469,8 @@ http://13.53.175.139:5001/
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"getShipmentsByOrderId"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
@@ -648,9 +675,15 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </section>
-          <h1 id="group-Operations-Mutations" class="group-heading" data-traverse-target="group-Operations-Mutations">Mutations</h1>
-          <section id="mutation-authorize" class="operation operation-mutation" data-traverse-target="mutation-authorize">
-            <h2 class="operation-heading ">
+          <h1 id="group-Operations-Mutations" class="group-heading" data-traverse-target="group-Operations-Mutations">
+            Mutations
+          </h1>
+          <section
+            id="mutation-authorize"
+            class="operation operation-mutation"
+            data-traverse-target="mutation-authorize"
+          >
+            <h2 class="operation-heading">
               <code>authorize</code>
             </h2>
             <div class="doc-row">
@@ -773,7 +806,8 @@ http://13.53.175.139:5001/
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p> Returns an <a href="#definition-AuthPayload"><code>AuthPayload!</code></a>
+                  <p>
+                    Returns an <a href="#definition-AuthPayload"><code>AuthPayload!</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -944,18 +978,23 @@ http://13.53.175.139:5001/
               </div>
             </div>
           </section>
-          <section id="mutation-updateShipmentAddress" class="operation operation-mutation" data-traverse-target="mutation-updateShipmentAddress">
+          <section
+            id="mutation-updateShipmentAddress"
+            class="operation operation-mutation"
+            data-traverse-target="mutation-updateShipmentAddress"
+          >
             <div class="operation-group-name">
               <a href="#group-Operations-Mutations">Mutations</a>
             </div>
-            <h2 class="operation-heading ">
+            <h2 class="operation-heading">
               <code>updateShipmentAddress</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p> Returns a <a href="#definition-Shipment"><code>Shipment</code></a>
+                  <p>
+                    Returns a <a href="#definition-Shipment"><code>Shipment</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -970,17 +1009,21 @@ http://13.53.175.139:5001/
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>_id</code></span> - <span class="property-type"><a href="#definition-ID"><code>ID!</code></a></span>
+                          <span class="property-name"><code>_id</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-ID"><code>ID!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>address</code></span> - <span class="property-type"><a href="#definition-AddressInput"><code>AddressInput!</code></a></span>
+                          <span class="property-name"><code>address</code></span> -
+                          <span class="property-type"
+                            ><a href="#definition-AddressInput"><code>AddressInput!</code></a></span
+                          >
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                       </tr>
                     </tbody>
                   </table>
@@ -992,7 +1035,8 @@ http://13.53.175.139:5001/
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> UpdateShipmentAddress<span class="hljs-tag">(
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> UpdateShipmentAddress<span class="hljs-tag">(
   <span class="hljs-code">$_id</span>: ID!,
   <span class="hljs-code">$address</span>:<span class="hljs-type"> AddressInput!</span>
 )</span> <span class="hljs-tag">{
@@ -1028,7 +1072,8 @@ http://13.53.175.139:5001/
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"address"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">AddressInput</span>
 <span class="hljs-punctuation">}</span>
@@ -1040,7 +1085,8 @@ http://13.53.175.139:5001/
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"updateShipmentAddress"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
       <span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span>
@@ -1060,7 +1106,11 @@ http://13.53.175.139:5001/
             </div>
           </section>
           <h1 id="group-Types" class="group-heading" data-traverse-target="group-Types">Types</h1>
-          <section id="definition-AuthPayload" class="definition definition-object" data-traverse-target="definition-AuthPayload">
+          <section
+            id="definition-AuthPayload"
+            class="definition definition-object"
+            data-traverse-target="definition-AuthPayload"
+          >
             <h2 class="definition-heading">AuthPayload</h2>
             <div class="doc-row">
               <div class="doc-copy">
@@ -1519,7 +1569,8 @@ http://13.53.175.139:5001/
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -1547,7 +1598,8 @@ http://13.53.175.139:5001/
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol">"xyz789"</span>
+                    <body>
+                      <pre><code class="hljs language-gql"><span class="hljs-symbol">"xyz789"</span>
 </code></pre>
                     </body>
                   </html>
@@ -1626,7 +1678,8 @@ http://13.53.175.139:5001/
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body>
+                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"roles"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Role</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
