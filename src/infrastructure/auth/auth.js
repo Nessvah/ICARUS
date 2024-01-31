@@ -1,4 +1,9 @@
 import jwt from 'jsonwebtoken';
+import { getAllUsers, getUser, initiateAuth, signUp } from './Cognito/index.js';
+import winston from 'winston';
+import { isValidPassword } from './Cognito/userValidation/passwordValidation.js';
+import { isValidEmail } from './Cognito/userValidation/emailValidation.js';
+import { decryptingPassword } from './Cognito/userValidation/decrypt.js';
 
 const users = [
   {
@@ -55,44 +60,154 @@ const roles = [
   { id: '3', role: 'intern' },
 ];
 
-const createUser = (input) => {
-  input.id = Math.floor(Math.random() * 1000);
-  input.created = new Date().toISOString();
-  users.push(input);
-  const user = users[users.length - 1];
-  return user;
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: { service: 'user-service' },
+  transports: [
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' }),
+  ],
+});
+
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    }),
+  );
+}
+
+const createUser = async (input) => {
+  try {
+    //* I'm incrypting the information which comes from frontend here to test
+    //* but the encryptation is made on frontend
+    /* const publicKey = process.env.publicKeyFrontend;
+    const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password)); */
+
+    // Decrypting password which came from frontend
+    const decryptedData = decryptingPassword(input);
+
+    // Verifying password and email from frontend to see if they are standardized
+    const verifyUserPassword = isValidPassword(decryptedData);
+    const verifygUserEmail = isValidEmail(decryptedData.email);
+
+    // If they are, it's time to call cognito function to add them
+    if (verifyUserPassword && verifygUserEmail) {
+      // Sending signUp request to Cognito with user inputs (email, password)
+      const responseStatusCode = await signUp(decryptedData);
+      logger.info(`User createad successfully! Status code: ${responseStatusCode}`);
+      // If user sign up is successfully, createdUser receives input.email
+      const userResponse = await getUser(input.email);
+      const emailAttribute = userResponse.UserAttributes.find((Attribute) => Attribute.Name === 'email');
+      const emailValue = emailAttribute ? emailAttribute.Value : null;
+      const roleAttribute = userResponse.UserAttributes.find((Attribute) => Attribute.Name === 'custom:role');
+      const roleValue = roleAttribute ? roleAttribute.Value : null;
+      const user = {
+        role: roleValue,
+        email: emailValue,
+        created: userResponse.UserCreateDate,
+      };
+      return {
+        user,
+      };
+    } else {
+      return {
+        message: 'Email or Password not compliant with standard required',
+      };
+    }
+  } catch (e) {
+    logger.error('Error creating user: ', e);
+    return {
+      error: 'User creation failed',
+    };
+  }
+  //? This is not necessary
+  // The user will only get a token if after creating he's account,
+  // after verifying their email user for the registration, and
+  // if he can get a successfull sign in
+  //const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
 };
 
-const findAllUsers = () => {
-  return users;
+const findAllUsers = async () => {
+  try {
+    // Search all users in cognito user pool
+    const allUsersResponse = await getAllUsers();
+    // Making a transformation into the data to screen it
+    const users = allUsersResponse.Users.map((user) => {
+      const created = user.UserCreateDate;
+      const emailAttribute = user.Attributes.find((Attribute) => Attribute.Name === 'email');
+      const emailValue = emailAttribute ? emailAttribute.Value : null;
+      const roleAttribute = user.Attributes.find((Attribute) => Attribute.Name === 'custom:role');
+      const roleValue = roleAttribute ? roleAttribute.Value : null;
+      return {
+        email: emailValue,
+        role: roleValue,
+        created,
+      };
+    });
+    return {
+      users,
+    };
+  } catch (e) {
+    logger.error('An error has occurred: ', e);
+    throw e;
+  }
 };
 
 const findAllRoles = () => {
   return roles;
 };
 
-const findCurrentUser = (currentUser) => {
-  return currentUser;
+const findCurrentUser = async (currentUser) => {
+  // Getting current user information on user pool
+  const loggedUser = await getUser(currentUser);
+  // Making transformations to screen it
+  const emailAttribute = loggedUser.UserAttributes.find((Attribute) => Attribute.Name === 'email');
+  const emailValue = emailAttribute ? emailAttribute.Value : null;
+  const roleAttribute = loggedUser.UserAttributes.find((Attribute) => Attribute.Name === 'custom:role');
+  const roleValue = roleAttribute ? roleAttribute.Value : null;
+  const user = {
+    role: roleValue,
+    email: emailValue,
+    created: loggedUser.UserCreateDate,
+  };
+  return user;
 };
 
-const authLogin = (email, password) => {
-  const user = users.find((user) => {
-    if (user.email === email) {
-      return user;
+const authLogin = async (input) => {
+  try {
+    //* I'm incrypting the information which comes from frontend here to test
+    //* but the encryptation is made on frontend
+    /* const publicKey = process.env.publicKeyFrontend;
+    const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password)); */
+
+    // Decrypting password which came from frontend
+    const decryptedData = decryptingPassword(input);
+
+    // Verifying password and email from frontend to see if they are standardized
+    const verifyUserPassword = isValidPassword(decryptedData);
+    const verifygUserEmail = isValidEmail(decryptedData.email);
+    // If they are, it's time to call cognito function to initiate
+    // cognito authentication function with inputs
+    if (verifyUserPassword && verifygUserEmail) {
+      const { email, password } = decryptedData;
+      const response = await initiateAuth({ email, password });
+
+      // Confirming if the response of the request was successfully
+      if (response.$metadata.httpStatusCode === 200) {
+        return {
+          token: response.AuthenticationResult.IdToken,
+          user: decryptedData,
+        };
+      } else {
+        return new Error('Server error');
+      }
     }
-    return false;
-  });
-  if (!user) {
-    throw new Error(`account for ${email} not found`);
+  } catch (e) {
+    logger.error('An error occurred during authentication:', e.message);
+    throw e; // Rethrow the error to propagate it up the call stack
   }
-  if (user.password !== password) {
-    throw new Error(`password for ${email} is incorrect`);
-  }
-  const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
-  return {
-    token,
-    user,
-  };
 };
 
 const createNewRole = ({ role }) => {
@@ -119,45 +234,48 @@ const addRoleUser = (input) => {
   return userExist;
 };
 
-const auth = (req) => {
-  let currentUser = null;
+const auth = async (req) => {
   if (req.headers.authorization) {
     try {
-      const { email } = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
-      currentUser = users.find((user) => {
-        if (user.email === email) {
-          return user;
-        }
-        return false;
-      });
-      if (!currentUser) {
-        throw new Error(`invalid authorization token`);
+      // Decoding jwt to get the email inside the token
+      // inserted in autohorization field
+      const { email } = jwt.decode(req.headers.authorization);
+      // Calling getUserCognito function to compare the email
+      // inside the token with a Cognito user email
+      const response = await getUser(email);
+      // Based on Cognito response, if it's 200, the user is able to
+      // query, otherwise send an error
+      if (response.$metadata.httpStatusCode !== 200) {
+        logger.error(`invalid authorization token`);
+      } else {
+        const currentUser = email;
+        return {
+          currentUser,
+          createUser,
+          findAllUsers,
+          findAllRoles,
+          findCurrentUser,
+          createNewRole,
+          authLogin,
+          addRoleUser,
+        };
       }
-      return {
-        currentUser,
-        createUser,
-        findAllUsers,
-        findAllRoles,
-        findCurrentUser,
-        createNewRole,
-        authLogin,
-        addRoleUser,
-      };
     } catch (error) {
-      throw new Error(`invalid authorization token`);
+      logger.error(`invalid authorization token`);
     }
-  }
-  if (
-    req.body.operationName === 'Authorize' ||
-    req.body.operationName === 'CreateAccount' ||
-    req.body.operationName === 'IntrospectionQuery'
-  ) {
-    return {
-      createUser,
-      authLogin,
-    };
   } else {
-    throw new Error('invalid authorization');
+    //? Maybe it's not necessary if here, it's just return the functions
+    //? that don't need authorization
+    if (
+      req.body.operationName === 'Authorize' ||
+      req.body.operationName === 'CreateAccount' ||
+      req.body.operationName === 'IntrospectionQuery'
+    ) {
+      return {
+        createUser,
+        authLogin,
+      };
+    }
   }
 };
 

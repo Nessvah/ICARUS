@@ -4,7 +4,7 @@ const typeDefs = gql`
   scalar DateTime
 
   type Query {
-    me: User
+    me: User!
     accounts: [User!]!
     roles: [Role!]!
     products: [Product]
@@ -14,10 +14,8 @@ const typeDefs = gql`
   }
 
   type User {
-    id: ID!
     email: String!
-    roles: [Role]
-    idCostumer: String
+    role: String
     created: DateTime!
   }
 
@@ -36,6 +34,11 @@ const typeDefs = gql`
     password: String!
   }
 
+  input AuthorizeUser {
+    email: String!
+    password: String!
+  }
+
   input RoleInput {
     role: String!
   }
@@ -47,7 +50,7 @@ const typeDefs = gql`
 
   type Mutation {
     createAccount(input: CreateAccount!): User!
-    authorize(email: String!, password: String!): AuthPayload!
+    authorize(input: AuthorizeUser!): AuthPayload!
     createRole(input: RoleInput!): Role!
     addRoleToUSer(input: RoleInputById!): User!
     updateShipmentAddress(_id: ID!, address: AddressInput!): Shipment
