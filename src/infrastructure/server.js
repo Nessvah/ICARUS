@@ -1,6 +1,7 @@
 import 'dotenv/config';
-import { ApolloServer } from '@apollo/server';
-import { startStandaloneServer } from '@apollo/server/standalone';
+import { ApolloServer } from 'apollo-server-express';
+import express from 'express';
+import cors from 'cors';
 
 import { resolvers } from '../presentation/resolvers.js';
 import { typeDefs } from '../presentation/schemas.js';
@@ -9,30 +10,48 @@ import { connectDB } from './db/mssql.js';
 // to ask Silvia later
 // eslint-disable-next-line node/no-unpublished-import
 import { customFormatError } from '../../shared/utils/error-handling/formatError.js';
+// eslint-disable-next-line node/no-unpublished-import
+import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js';
 
+const app = express();
+
+app.use(cors());
+
+connectDB().catch(() => {
+  throw new DatabaseError();
+});
+
+// Create an instance of ApolloServer
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  //error-handling classes
   formatError: customFormatError,
+  context: ({ req }) => {
+    // Add context to the Apollo Server, which provides authentication for each request
+    return auth(req);
+  },
 });
 
-const startServer = async () => {
-  try {
-    connectDB();
-  } catch (e) {
-    //console.error('cant connect to dbs', e);
-  }
+// Start the Apollo Server
+server.start().then(() => {
+  // Applies apollo Server middleware to the Express app
+  //BY DEFAULT THE PATH WILL BE /graphql
+  server.applyMiddleware({ app });
 
-  await startStandaloneServer(server, {
-    // Add context to the server options, which provides authentication for each request
-    context({ req }) {
-      return auth(req);
-    },
-    // Specify the port to listen on from the environment variable
-    listen: { port: process.env.PORT || 5001 },
+  //testing middleware
+  app.get('/test-error', (req, res, next) => {
+    throw new Error('Test Error');
   });
-  //console.log(`🚀  Server ready at ${process.env.PORT}`);
-};
 
-startServer();
+  // error middleware after Apollo middleware
+  app.use((err, req, res, next) => {
+    res.status(500).json({ error: 'Internal Server Error' });
+  });
+
+  const port = process.env.PORT;
+  app.listen(port, () => {
+    /* console.log(`🚀  Server ready at ${process.env.PORT}`); */
+  });
+});
+
+export default app;
