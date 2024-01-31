@@ -90,9 +90,9 @@ const typeDefs = gql`
   }
 
   #database error test - to delete later
-  type Query {
-    testDatabaseError: String
-  }
+  # type Query {
+  #   testDatabaseError: String
+  # }
 `;
 
 export { typeDefs };
