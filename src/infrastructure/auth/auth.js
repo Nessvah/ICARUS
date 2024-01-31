@@ -240,7 +240,7 @@ const auth = async (req) => {
     try {
       // Decoding jwt to get the email inside the token
       // inserted in autohorization field
-      const { email } = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
+      const { email } = jwt.decode(req.headers.authorization);
       // Calling getUserCognito function to compare the email
       // inside the token with a Cognito user email
       const response = await getUser(email);

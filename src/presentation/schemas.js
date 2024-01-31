@@ -4,7 +4,7 @@ const typeDefs = gql`
   scalar DateTime
 
   type Query {
-    me: User
+    me: User!
     accounts: [User!]!
     roles: [Role!]!
     products: [Product]
@@ -15,7 +15,7 @@ const typeDefs = gql`
 
   type User {
     email: String!
-    role: String!
+    role: String
     created: DateTime!
   }
 

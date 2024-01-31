@@ -1,7 +1,10 @@
 import 'dotenv/config';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import express from 'express';
 import cors from 'cors';
+import http from 'http';
 
 import { resolvers } from '../presentation/resolvers.js';
 import { typeDefs } from '../presentation/schemas.js';
@@ -15,30 +18,36 @@ import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js
 
 const app = express();
 
-app.use(cors());
-
 connectDB().catch(() => {
   throw new DatabaseError();
 });
+
+const httpServer = http.createServer(app);
 
 // Create an instance of ApolloServer
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   formatError: customFormatError,
-  context: ({ req }) => {
-    // Add context to the Apollo Server, which provides authentication for each request
-    return auth(req);
-  },
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
 // Start the Apollo Server
-server.start().then(() => {
-  // Applies apollo Server middleware to the Express app
-  server.applyMiddleware({ app });
+await server.start();
 
-  const port = process.env.PORT;
-  app.listen(port, () => {
-    /* console.log(`🚀  Server ready at ${process.env.PORT}`); */
-  });
-});
+app.use(
+  '/',
+  cors({
+    origin: 'http://localhost:3000',
+    allowedHeaders: 'Content-Type, Authorization',
+  }),
+  express.json(),
+  expressMiddleware(server, {
+    context: async ({ req }) => {
+      return auth(req);
+    },
+  }),
+);
+
+await new Promise((resolve) => httpServer.listen({ port: process.env.PORT || 3001 }, resolve));
+console.log(`🚀 Server ready at http://localhost:3000/`);
