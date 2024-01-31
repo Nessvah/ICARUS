@@ -33,21 +33,17 @@ const server = new ApolloServer({
 });
 
 // Start the Apollo Server
-await server.start();
+server.start().then(() => {
+  // Applies apollo Server middleware to the Express app
+  server.applyMiddleware({ app, path: '/' });
 
-app.use(
-  '/',
-  cors({
-    origin: 'http://localhost:3000',
-    allowedHeaders: 'Content-Type, Authorization',
-  }),
-  express.json(),
-  expressMiddleware(server, {
-    context: async ({ req }) => {
-      return auth(req);
-    },
-  }),
-);
+  // error middleware after Apollo middleware
+  app.use((err, req, res, next) => {
+    res.status(500).json({ error: 'Internal Server Error' });
+  });
 
-await new Promise((resolve) => httpServer.listen({ port: process.env.PORT || 3001 }, resolve));
-console.log(`🚀 Server ready at http://localhost:3000/`);
+  const port = process.env.PORT;
+  app.listen(port, () => {
+    /* console.log(`🚀  Server ready at ${process.env.PORT}`); */
+  });
+});
