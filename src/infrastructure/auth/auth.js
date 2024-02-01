@@ -80,6 +80,8 @@ if (process.env.NODE_ENV !== 'production') {
   );
 }
 
+logger.info('mudanca');
+
 const createUser = async (input) => {
   try {
     //* I'm incrypting the information which comes from frontend here to test
