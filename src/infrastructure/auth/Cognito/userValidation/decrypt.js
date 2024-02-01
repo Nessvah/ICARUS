@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 
 // Decrypting data from input
-const decryptingPassword = function (input) {
+const decryptingPassword = function (password, input) {
   try {
     // Creating a decryption based on privateKey and the password
     let decryptedPassword = crypto.privateDecrypt(
@@ -9,7 +9,7 @@ const decryptingPassword = function (input) {
         key: process.env.privateKeyBackend,
         format: 'pem',
       },
-      input.password,
+      password,
     );
     // Sending the correct object response with password decrypted
     // to verify the password and email
