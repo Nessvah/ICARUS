@@ -5,11 +5,11 @@ async function connectDB() {
   try {
     // Create the connection to database
     const connection = await mysql.createConnection({
-      host: 'ec2-13-49-245-170.eu-north-1.compute.amazonaws.com',
-      user: 'root',
-      // database: 'icarus',
-      port: 3306,
-      password: 'admin123',
+      host: process.env.MYSQL_HOST || 'localhost',
+      user: process.env.MYSQL_USER || 'root',
+      database: process.env.MYSQL_DATABASE || 'localIcarus',
+      password: process.env.MYSQL_PWD || '',
+      port: process.env.MYSQL_PORT || 3306,
     });
 
     console.log('connected to ec2 mysql ');
