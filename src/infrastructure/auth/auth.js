@@ -4,6 +4,7 @@ import winston from 'winston';
 import { isValidPassword } from './Cognito/userValidation/passwordValidation.js';
 import { isValidEmail } from './Cognito/userValidation/emailValidation.js';
 import { decryptingPassword } from './Cognito/userValidation/decrypt.js';
+import { tokenVerifier } from './Cognito/userValidation/jwtVerifier.js';
 
 const users = [
   {
@@ -197,7 +198,7 @@ const authLogin = async (input) => {
       // Confirming if the response of the request was successfully
       if (response.$metadata.httpStatusCode === 200) {
         return {
-          token: response.AuthenticationResult.IdToken,
+          token: response.AuthenticationResult,
           user: decryptedData,
         };
       } else {
@@ -235,19 +236,16 @@ const addRoleUser = (input) => {
 };
 
 const auth = async (req) => {
-  if (req.headers.authorization) {
+  const token = req.headers.authorization;
+  if (token) {
     try {
-      // Decoding jwt to get the email inside the token
+      // Verifying AWS jwt to see if it is correct
+      const jwtResponse = tokenVerifier(token.AccessToken);
       // inserted in autohorization field
-      const { email } = jwt.decode(req.headers.authorization);
-      // Calling getUserCognito function to compare the email
-      // inside the token with a Cognito user email
-      const response = await getUser(email);
-      // Based on Cognito response, if it's 200, the user is able to
-      // query, otherwise send an error
-      if (response.$metadata.httpStatusCode !== 200) {
-        logger.error(`invalid authorization token`);
-      } else {
+      if (jwtResponse) {
+        const { email } = jwt.decode(token.IdToken);
+        // Calling getUserCognito function to compare the email
+        // inside the token with a Cognito user email
         const currentUser = email;
         return {
           currentUser,
