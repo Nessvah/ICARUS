@@ -61,11 +61,17 @@ git clone https://github.com/Nessvah/ICARUS
 npm install
 ```
 
-3. In the `src/` create a `.env` file and add the jwt secret and the port to run your server
+3. In the `src/` create a `.env` file and add the jwt secret, the port to run your server, accessKeyId, secretAccessKey, UserPoolId, ClientId and region to configure and using AWS Cognito tools, and privateKeyBackend to decrypting password information which comes from frontend application
 
 ```bash
 JWT_SECRET=secret
 PORT=portnumber
+accessKeyId=AWSkeyId
+secretAccessKey=AWSaccesskey
+UserPoolId=AWSuserPoolId
+ClientId=AWSclientId
+region=AWSregion
+privateKeyBackend=----BEGINPRIVATEKEY-----
 
 ```
 
