@@ -181,8 +181,6 @@ const findCurrentUser = async (currentUser) => {
 
 const authLogin = async (input) => {
   try {
-    console.log('estou aqui');
-    console.log(input);
     //* I'm incrypting the information which comes from frontend here to test
     //* but the encryptation is made on frontend
     const publicKey = process.env.publicKeyFrontend;
