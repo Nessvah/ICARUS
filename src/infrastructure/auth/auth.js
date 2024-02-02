@@ -181,6 +181,8 @@ const findCurrentUser = async (currentUser) => {
 
 const authLogin = async (input) => {
   try {
+    console.log('estou aqui');
+    console.log(input);
     //* I'm incrypting the information which comes from frontend here to test
     //* but the encryptation is made on frontend
     const publicKey = process.env.publicKeyFrontend;
@@ -198,10 +200,15 @@ const authLogin = async (input) => {
       const { email, password } = decryptedData;
       const response = await initiateAuth({ email, password });
 
+      const token = JSON.stringify({
+        IdToken: response.AuthenticationResult.IdToken,
+        AccessToken: response.AuthenticationResult.AccessToken,
+        RefreshToken: response.AuthenticationResult.RefreshToken,
+      });
       // Confirming if the response of the request was successfully
       if (response.$metadata.httpStatusCode === 200) {
         return {
-          token: response.AuthenticationResult,
+          token: token,
           user: decryptedData,
         };
       } else {
@@ -241,12 +248,14 @@ const addRoleUser = (input) => {
 const auth = async (req) => {
   const token = req.headers.authorization;
   if (token) {
+    const parsedToken = JSON.parse(token);
+    const parsedToken2 = JSON.parse(parsedToken);
     try {
       // Verifying AWS jwt to see if it is correct
-      const jwtResponse = tokenVerifier(token.AccessToken);
+      const jwtResponse = await tokenVerifier(parsedToken2.AccessToken);
       // inserted in autohorization field
       if (jwtResponse) {
-        const { email } = jwt.decode(token.IdToken);
+        const { email } = jwt.decode(parsedToken2.IdToken);
         // Calling getUserCognito function to compare the email
         // inside the token with a Cognito user email
         const currentUser = email;
