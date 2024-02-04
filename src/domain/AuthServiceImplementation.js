@@ -1,6 +1,6 @@
 import AuthService from './AuthService.js';
 import jwt from 'jsonwebtoken';
-import { AuthenticationError } from '../shared/utils/error-handling/CustomErrors.js';
+import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 /**
  * This class is the concrete implementation of the AuthService interface.
  */

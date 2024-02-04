@@ -2,6 +2,10 @@ import winston from 'winston';
 import 'winston-mongodb';
 import { MongoClient } from 'mongodb';
 
+// destructuring needed properties
+const { addColors, format, createLogger } = winston;
+const { printf, colorize, combine, timestamp } = format;
+
 /**
  * This function will configure all necessary transports
  * for logging to different destinations.
@@ -40,7 +44,7 @@ const configureLogger = () => {
     debug: 'white',
   };
 
-  winston.addColors(colors);
+  addColors(colors);
 
   // set the logging level based on the environment of the server
   const level = () => {
@@ -54,13 +58,13 @@ const configureLogger = () => {
   // log format includes timestamp, log level and message
   // this is applied to all log messages
 
-  const format = winston.format.combine(
+  const format = combine(
     // Add the message timestamp with the preferred format
-    winston.format.timestamp({ format: 'DD-MM-YYYY HH:mm:ss:ms' }),
+    timestamp({ format: 'DD-MM-YYYY HH:mm:ss:ms' }),
     // Tell Winston that the logs must be colored
-    winston.format.colorize({ all: true }),
+    colorize({ all: true }),
     // Define the format of the message showing the timestamp, the level and the message
-    winston.format.printf((info) => {
+    printf((info) => {
       const { timestamp, level, message, ip, url, method, requestBody, responseBody } = info;
       return `${timestamp} ${level}: ${message} - IP: ${ip}, URL: ${url}, Method: ${method}, Request Body: ${requestBody}, Response Body: ${responseBody}`;
     }),
@@ -68,7 +72,7 @@ const configureLogger = () => {
 
   const transports = configureTransports();
 
-  return winston.createLogger({
+  return createLogger({
     level: level(),
     levels,
     format,
@@ -122,6 +126,8 @@ const setupLogger = async () => {
 
   try {
     const client = await connectToDB();
+
+    // setup transport for mongodb
     mongodbTransport = await configureMongoDBTransport(client);
     logger.info('Connected successfully to mongodb');
   } catch (e) {
@@ -136,4 +142,8 @@ const setupLogger = async () => {
   return logger;
 };
 
-export default setupLogger;
+// Call the setupLogger function to obtain the configured logger and export it to use
+// through our program
+const logger = await setupLogger();
+
+export default logger;

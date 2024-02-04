@@ -5,22 +5,15 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import morgan from 'morgan';
-import { accessLogStream, MongoDBStream } from '../shared/utils/loggers/morganLogger.js';
-import Logger from '../shared/utils/loggers/logConfig.js';
-import { users } from './auth/auth.js';
+// import morgan from 'morgan';
+// import { accessLogStream, MongoDBStream } from '../utils/loggers/morganLogger.js';
+import logger from '../utils/loggers/logConfig.js';
 
 import { resolvers } from '../presentation/resolvers.js';
 import { typeDefs } from '../presentation/schemas.js';
 // import { auth } from './auth/auth.js';
 import { connectDB } from './db/mssql.js';
-// to ask Silvia later
-// eslint-disable-next-line node/no-unpublished-import
-import { customFormatError } from '../shared/utils/error-handling/formatError.js';
-import { AuthRepository } from './auth/AuthRepository.js';
-import { AuthServiceImplementation } from '../domain/AuthServiceImplementation.js';
-
-import { AuthorizationError } from '../shared/utils/error-handling/CustomErrors.js';
+import { customFormatError } from '../utils/error-handling/formatError.js';
 
 const app = express();
 
@@ -36,22 +29,6 @@ const server = new ApolloServer({
   resolvers,
   //error-handling classes
   formatError: customFormatError,
-  context: ({ req }) => {
-    Logger.info(req.header('x-forwarded-for') || req.socket.remoteAddress);
-
-    const token = req.headers.authorization || '';
-
-    const authRepo = new AuthRepository(users);
-    const auth = new AuthServiceImplementation(authRepo, process.env.JWT_SECRET);
-
-    // this return email!
-    const currentUser = auth.verifyToken(token);
-
-    if (!currentUser) {
-      throw new AuthorizationError('Sem autorização. Faça login.');
-    }
-    return { currentUser };
-  },
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
@@ -72,32 +49,11 @@ app.use(
   '/',
   cors(),
   express.json(),
-
-  morgan('combined', { stream: accessLogStream }),
-  morgan(':method :url :status :res[content-length] - :response-time ms', { stream: new MongoDBStream() }),
   expressMiddleware(server, {
-    // context: ({ req }) => {
-    //   Logger.info(req.header('x-forwarded-for') || req.socket.remoteAddress);
-    //   const token = req.headers.authorization || '';
-    //   const authRepo = new AuthRepository(users);
-    //   const auth = new AuthServiceImplementation(authRepo, process.env.JWT_SECRET);
-    //   const currentUser = auth.verifyToken(token);
-    //   if (!currentUser) {
-    //     throw new AuthorizationError('Sem autorização. Faça login.');
-    //   }
-    //   return { currentUser };
-    // },
+    context: ({ req }) => {},
   }),
 );
-// await server(server, {
-//   // Add context to the server options, which provides authentication for each request
-//   context({ req }) {
-//     return auth(req);
-//   },
-//   // Specify the port to listen on from the environment variable
-//   listen: { port: process.env.PORT || 5001 },
-// });
-// //console.log(`🚀  Server ready at ${process.env.PORT}`);
+
 // modify server startup
 await new Promise((resolve) => httpServer.listen({ port: process.env.PORT || 5001 }, resolve));
-console.log(`🚀  Server ready at ${process.env.PORT}`);
+logger.info(`🚀  Server ready at ${process.env.PORT}`);

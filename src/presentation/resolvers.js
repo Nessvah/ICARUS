@@ -3,7 +3,7 @@ import { getProducts } from '../app/productsUseCase.js';
 // eslint-disable-next-line node/no-unpublished-import
 // import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js';
 
-import { isAutenticated } from '../infrastructure/auth/AuthResolvers.js';
+import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
 //TESTING PURPOSES VARIABLES - TO DELETE LATER
 const shipments = [
   {

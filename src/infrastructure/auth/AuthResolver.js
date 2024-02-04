@@ -1,4 +1,4 @@
-import { AuthenticationError } from '../../shared/utils/error-handling/CustomErrors.js';
+import { AuthenticationError } from '../../utils/error-handling/CustomErrors.js';
 
 /**
  * middleware function / wrapper resolver that checks if the
