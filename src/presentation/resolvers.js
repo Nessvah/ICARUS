@@ -1,4 +1,6 @@
 import { getProducts } from '../app/productsUseCase.js';
+import { getSecrets } from '../infrastructure/auth/Cognito/userValidation/secretsManager.js';
+import { SECRETS } from '../utils/enums/enums.js';
 // to ask Silvia later
 // eslint-disable-next-line node/no-unpublished-import
 // import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js';
@@ -36,6 +38,19 @@ const orders = [
 const resolvers = {
   // DateTime: DateTimeResolver,
   Query: {
+    secrets: async () => {
+      try {
+        const key = await getSecrets(SECRETS.PUBLIC_KEY);
+
+        if (!key) {
+          throw new Error('Public key not available.');
+        }
+        return { publicKey: key };
+      } catch (error) {
+        console.error('Error fetching public key:', error);
+        throw new Error('Failed to fetch public key.');
+      }
+    },
     me: async (_, __, { currentUser, findCurrentUser }) => {
       const result = await findCurrentUser(currentUser);
       return result;

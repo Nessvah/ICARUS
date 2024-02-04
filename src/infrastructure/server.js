@@ -54,13 +54,13 @@ app.use(
 );
 
 //testing middleware
-app.get('/test-error', (req, res, next) => {
-  throw new Error('Test Error');
+app.get('/test', async (req, res, next) => {
+  res.json({ test: 'Testing rest endpoint' });
 });
 
 app.use((err, req, res, next) => {
   // Handle the error
-  console.log('Executing error handling middleware');
+
   res.status(500).json({ error: 'Internal Server Error' });
 });
 connectDB().catch(() => {

@@ -17,7 +17,7 @@ async function connectDB() {
     const tables = await connection.query('SHOW DATABASES;');
     console.log(tables);
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
   }
 }
 
