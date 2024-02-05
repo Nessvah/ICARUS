@@ -54,8 +54,6 @@ const resolvers = {
     accounts: async (_, __, { findAllUsers }) => {
       const users = await findAllUsers();
 
-      console.log(users);
-      console.log(Array.isArray(users));
       return users;
     },
 

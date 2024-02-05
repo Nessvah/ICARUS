@@ -1,10 +1,11 @@
 import { getAllUsers, getUser, initiateAuth, signUp } from './Cognito/index.js';
-import winston from 'winston';
 import { isValidPassword } from './Cognito/userValidation/passwordValidation.js';
 import { isValidEmail } from './Cognito/userValidation/emailValidation.js';
 import { decryptingPassword } from './Cognito/userValidation/decrypt.js';
 import { tokenVerifier } from './Cognito/userValidation/jwtVerifier.js';
 import { AuthorizationError } from '../../utils/error-handling/CustomErrors.js';
+import jwt from 'jsonwebtoken';
+import { logger } from '../server.js';
 
 export const users = [
   {
@@ -60,24 +61,6 @@ const roles = [
   { id: '2', role: 'manager' },
   { id: '3', role: 'intern' },
 ];
-
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  defaultMeta: { service: 'user-service' },
-  transports: [
-    new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' }),
-  ],
-});
-
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    }),
-  );
-}
 
 const createUser = async (input) => {
   try {
@@ -261,23 +244,29 @@ const auth = async (req) => {
   try {
     // Verifying AWS jwt to see if it is correct
     const jwtResponse = await tokenVerifier(tokenWithoutPrefix);
-    logger.info(jwtResponse);
+
     // inserted in autohorization field
     if (jwtResponse) {
-      // const { email } = jwt.decode(parsedToken2.IdToken);
-      // Calling getUserCognito function to compare the email
-      // inside the token with a Cognito user email
-      // const currentUser = email;
-      return {
-        //currentUser,
-        createUser,
-        findAllUsers,
-        findAllRoles,
-        findCurrentUser,
-        createNewRole,
-        authLogin,
-        addRoleUser,
-      };
+      try {
+        const { username } = jwt.decode(tokenWithoutPrefix);
+
+        // Calling getUserCognito function to compare the email
+        // inside the token with a Cognito user email
+        const currentUser = await getUser(username);
+
+        return {
+          currentUser,
+          createUser,
+          findAllUsers,
+          findAllRoles,
+          findCurrentUser,
+          createNewRole,
+          authLogin,
+          addRoleUser,
+        };
+      } catch (e) {
+        throw new Error('Error trying to decode');
+      }
     }
   } catch (error) {
     logger.error(`invalid authorization token`);
