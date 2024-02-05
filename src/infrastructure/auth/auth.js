@@ -5,9 +5,8 @@ import { isValidPassword } from './Cognito/userValidation/passwordValidation.js'
 import { isValidEmail } from './Cognito/userValidation/emailValidation.js';
 import { decryptingPassword } from './Cognito/userValidation/decrypt.js';
 import { tokenVerifier } from './Cognito/userValidation/jwtVerifier.js';
-import crypto from 'crypto';
 
-const users = [
+export const users = [
   {
     id: '1',
     email: 'piparo@example.com',

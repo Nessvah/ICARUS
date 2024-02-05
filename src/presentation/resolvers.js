@@ -5,6 +5,7 @@ import { SECRETS } from '../utils/enums/enums.js';
 // eslint-disable-next-line node/no-unpublished-import
 // import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js';
 
+import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
 //TESTING PURPOSES VARIABLES - TO DELETE LATER
 const shipments = [
   {
@@ -51,16 +52,12 @@ const resolvers = {
         throw new Error('Failed to fetch public key.');
       }
     },
-    me: async (_, __, { currentUser, findCurrentUser }) => {
-      const result = await findCurrentUser(currentUser);
-      return result;
-    },
-    accounts: async (_, __, { findAllUsers }) => {
-      const result = await findAllUsers();
-      return result.users;
-    },
+
+    me: (_, __, { currentUser, findCurrentUser }) => findCurrentUser(currentUser),
+    accounts: isAutenticated((_, __, { findAllUsers }) => findAllUsers()),
+
     roles: (_, __, { findAllRoles }) => findAllRoles(),
-    products: async (_, __, { currentUser }) => await getProducts(currentUser),
+    products: isAutenticated(async (_, __, { currentUser }) => await getProducts(currentUser)),
     //get shipment by id
     getShipmentById: (_, { _id }) => {
       const shipment = shipments.find((shipment) => shipment._id === _id);

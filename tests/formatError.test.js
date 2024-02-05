@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql';
-import { customFormatError } from '../shared/utils/error-handling/formatError.js';
+import { customFormatError } from '../src/shared/utils/error-handling/formatError.js';
 import {
   AuthenticationError,
   AuthorizationError,
@@ -10,7 +10,7 @@ import {
   ServiceUnavailableError,
   UserInputError,
   ValidationError,
-} from '../shared/utils/error-handling/CustomErrors.js';
+} from '../src/shared/utils/error-handling/CustomErrors.js';
 
 describe('customFormatError', () => {
   // AUTHENTICATION ERROR TEST
