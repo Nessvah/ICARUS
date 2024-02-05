@@ -5,6 +5,7 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
+import client from 'prom-client';
 import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
 import { resolvers } from '../presentation/resolvers.js';
@@ -20,6 +21,17 @@ const app = express();
 // allowing for our servers to shut down gracefully.
 
 const httpServer = http.createServer(app);
+
+// Create a Registry to register the metrics
+const register = new client.Registry();
+
+client.collectDefaultMetrics({
+  app: 'icarus-monitoring',
+  prefix: 'node_',
+  timeout: 10000,
+  gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5],
+  register,
+});
 
 // initialize winston before anything else
 export const logger = await initializeLogger;
@@ -45,7 +57,7 @@ await server.start();
 // and express middleware funtion
 
 app.use(
-  '/',
+  '/graphql',
   cors(),
   express.json(),
   // setup morgan middleware
@@ -56,6 +68,12 @@ app.use(
     },
   }),
 );
+
+// Prometheus end point
+app.get('/metrics', async (req, res) => {
+  res.setHeader('Content-Type', register.contentType);
+  res.send(await register.metrics());
+});
 
 //testing middleware
 app.get('/test', async (req, res, next) => {

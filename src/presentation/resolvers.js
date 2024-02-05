@@ -9,7 +9,6 @@ import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
 import { logger } from '../infrastructure/server.js';
 import { allProducts, productById } from '../models/productModel.js';
 
-const conn = await connectDB();
 //TESTING PURPOSES VARIABLES - TO DELETE LATER
 const shipments = [
   {
