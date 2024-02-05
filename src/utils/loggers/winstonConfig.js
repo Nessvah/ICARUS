@@ -20,6 +20,7 @@ const configureTransports = () => {
 
   const allLogsFileTransport = new winston.transports.File({
     filename: 'logs/allLogs.log',
+    level: 'http',
   });
 
   return [consoleTransport, errorFileTransport, allLogsFileTransport];
@@ -30,8 +31,8 @@ const configureLogger = () => {
   const levels = {
     error: 0,
     warn: 1,
-    info: 2,
-    http: 3,
+    http: 2,
+    info: 3,
     debug: 4,
   };
 
@@ -62,6 +63,7 @@ const configureLogger = () => {
     // Add the message timestamp with the preferred format
     timestamp({ format: 'DD-MM-YYYY HH:mm:ss:ms' }),
     // Tell Winston that the logs must be colored
+    //! colorize doesn't work properly with json format and will crash if we try
     colorize({ all: true }),
     // Define the format of the message showing the timestamp, the level and the message
     printf((info) => {
@@ -115,35 +117,47 @@ const configureMongoDBTransport = async (client) => {
  * This function will setup all the necessary configuration to make the logger ready for use through the api.
  * It will try to connect to the db to save logs and if successful will setup that transport and
  * add it to the logger config.
- * @returns will return the logger ready for use
+ * If the connection to the db fails, it will retry to reconnect 3x .
+ * This will initialize the logger when the module is imported to other parts.
+ * @returns will return the logger ready for use otherwise will exit the process for misconfiguration
  */
-const setupLogger = async () => {
-  const logger = configureLogger();
+const initializeLogger = (async () => {
+  // define max retires and counter
+  const max_retries = 3;
+  let retry_count = 0;
 
-  logger.info('Connecting to mongodb for logs...');
+  while (retry_count < max_retries) {
+    try {
+      const logger = configureLogger();
 
-  let mongodbTransport = null;
+      logger.info('Connecting to mongodb for logs...');
 
-  try {
-    const client = await connectToDB();
+      const client = await connectToDB();
 
-    // setup transport for mongodb
-    mongodbTransport = await configureMongoDBTransport(client);
-    logger.info('Connected successfully to mongodb');
-  } catch (e) {
-    logger.error('Failed to connect to MongoDB');
+      // setup transport for mongodb
+      const mongodbTransport = await configureMongoDBTransport(client);
+      logger.info('Connected successfully to mongodb');
+
+      /// add the mongo transport to the setup
+      logger.add(mongodbTransport);
+      return logger;
+    } catch (e) {
+      console.error('Failed to connect to MongoDB');
+
+      // increment counter for the retries
+      retry_count++;
+
+      // create a small delay of 2s between retries
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+    }
   }
 
-  // if the mongo transport setup was successful we can add to the logger
-  if (mongodbTransport) {
-    logger.add(mongodbTransport);
-  }
+  // if all attempts to connect fail, log an error and exit the app
+  console.error('Failed to connect to MongoDB after all the retries.');
 
-  return logger;
-};
+  //? ask for victors opinion on explicitly exiting app
+  // the 1 + code means that the app stoped due to an error
+  process.exit(1);
+})();
 
-// Call the setupLogger function to obtain the configured logger and export it to use
-// through our program
-const logger = await setupLogger();
-
-export default logger;
+export default initializeLogger;
