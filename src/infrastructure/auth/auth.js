@@ -183,10 +183,10 @@ const authLogin = async (input) => {
     // const publicKey = process.env.publicKeyFrontend;
 
     //const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password));
-    console.log('oi', input.password);
+
     // Decrypting password which came from frontend
     const decryptedData = await decryptingPassword(input.password, input);
-    console.log(decryptedData, 'hahah');
+
     // Verifying password and email from frontend to see if they are standardized
     const verifyUserPassword = isValidPassword(decryptedData);
     const verifygUserEmail = isValidEmail(decryptedData.email);

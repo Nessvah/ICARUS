@@ -1,11 +1,15 @@
-import { getProducts } from '../app/productsUseCase.js';
 import { getSecrets } from '../infrastructure/auth/Cognito/userValidation/secretsManager.js';
 import { SECRETS } from '../utils/enums/enums.js';
+import { connectDB } from '../infrastructure/db/mssql.js';
 // to ask Silvia later
 // eslint-disable-next-line node/no-unpublished-import
 // import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js';
 
 import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
+import { logger } from '../infrastructure/server.js';
+import { allProducts, productById } from '../models/productModel.js';
+
+const conn = await connectDB();
 //TESTING PURPOSES VARIABLES - TO DELETE LATER
 const shipments = [
   {
@@ -48,7 +52,7 @@ const resolvers = {
         }
         return { publicKey: key };
       } catch (error) {
-        console.error('Error fetching public key:', error);
+        logger.error('Error fetching public key:', error);
         throw new Error('Failed to fetch public key.');
       }
     },
@@ -57,7 +61,19 @@ const resolvers = {
     accounts: isAutenticated((_, __, { findAllUsers }) => findAllUsers()),
 
     roles: (_, __, { findAllRoles }) => findAllRoles(),
-    products: isAutenticated(async (_, __, { currentUser }) => await getProducts(currentUser)),
+    products: async () => {
+      try {
+        const results = await allProducts();
+        return results;
+      } catch (e) {
+        logger.error('Error while getting the products', e);
+      }
+    },
+
+    productById: async (_, { product_id }) => {
+      const productData = await productById(conn, product_id);
+      return productData ? productData : null;
+    },
     //get shipment by id
     getShipmentById: (_, { _id }) => {
       const shipment = shipments.find((shipment) => shipment._id === _id);

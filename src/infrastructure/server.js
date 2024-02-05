@@ -33,13 +33,6 @@ const server = new ApolloServer({
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
-// try to connect to the db
-try {
-  connectDB();
-} catch (e) {
-  //console.error('cant connect to dbs', e);
-}
-
 // setup express middleware for morgan http logs
 //* The order matters so this needs to be before starting apollo server
 app.use(morgan(':response-time ms :graphql', { stream: accessLogStream }));
@@ -74,6 +67,7 @@ app.use((err, req, res, next) => {
 
   res.status(500).json({ error: 'Internal Server Error' });
 });
+
 connectDB().catch(() => {
   // throw new DatabaseError();
 });
