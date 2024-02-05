@@ -80,4 +80,4 @@ connectDB().catch(() => {
 
 // modify server startup
 await new Promise((resolve) => httpServer.listen({ port: process.env.PORT || 5001 }, resolve));
-logger.log(`🚀  Server ready at ${process.env.PORT}`);
+logger.info(`🚀  Server ready at ${process.env.PORT}`);
