@@ -1,10 +1,10 @@
-import jwt from 'jsonwebtoken';
 import { getAllUsers, getUser, initiateAuth, signUp } from './Cognito/index.js';
 import winston from 'winston';
 import { isValidPassword } from './Cognito/userValidation/passwordValidation.js';
 import { isValidEmail } from './Cognito/userValidation/emailValidation.js';
 import { decryptingPassword } from './Cognito/userValidation/decrypt.js';
 import { tokenVerifier } from './Cognito/userValidation/jwtVerifier.js';
+import { AuthorizationError } from '../../utils/error-handling/CustomErrors.js';
 
 export const users = [
   {
@@ -123,11 +123,6 @@ const createUser = async (input) => {
       error: 'User creation failed',
     };
   }
-  //? This is not necessary
-  // The user will only get a token if after creating he's account,
-  // after verifying their email user for the registration, and
-  // if he can get a successfull sign in
-  //const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
 };
 
 const findAllUsers = async () => {
@@ -193,7 +188,6 @@ const authLogin = async (input) => {
     // If they are, it's time to call cognito function to initiate
     // cognito authentication function with inputs
     if (password && verifygUserEmail) {
-      console.log('something');
       const response = await initiateAuth({ email, password });
 
       const token = {
@@ -244,45 +238,49 @@ const addRoleUser = (input) => {
 };
 
 const auth = async (req) => {
+  //? Maybe it's not necessary if here, it's just return the functions
+  //? that don't need authorization
+  if (
+    req.body.operationName === 'Authorize' ||
+    req.body.operationName === 'CreateAccount' ||
+    req.body.operationName === 'IntrospectionQuery'
+  ) {
+    return {
+      createUser,
+      authLogin,
+    };
+  }
   const token = req.headers.authorization;
-  if (token) {
-    try {
-      // Verifying AWS jwt to see if it is correct
-      const jwtResponse = await tokenVerifier(token);
-      logger.info(jwtResponse);
-      // inserted in autohorization field
-      if (jwtResponse) {
-        // const { email } = jwt.decode(parsedToken2.IdToken);
-        // Calling getUserCognito function to compare the email
-        // inside the token with a Cognito user email
-        // const currentUser = email;
-        return {
-          //currentUser,
-          createUser,
-          findAllUsers,
-          findAllRoles,
-          findCurrentUser,
-          createNewRole,
-          authLogin,
-          addRoleUser,
-        };
-      }
-    } catch (error) {
-      logger.error(`invalid authorization token`);
-    }
-  } else {
-    //? Maybe it's not necessary if here, it's just return the functions
-    //? that don't need authorization
-    if (
-      req.body.operationName === 'Authorize' ||
-      req.body.operationName === 'CreateAccount' ||
-      req.body.operationName === 'IntrospectionQuery'
-    ) {
+
+  if (!token) {
+    throw new AuthorizationError('Não tem autorização.');
+  }
+
+  const tokenWithoutPrefix = token.split(' ')[1]; // Bearer agsgsshjagsdhgahsd
+
+  try {
+    // Verifying AWS jwt to see if it is correct
+    const jwtResponse = await tokenVerifier(tokenWithoutPrefix);
+    logger.info(jwtResponse);
+    // inserted in autohorization field
+    if (jwtResponse) {
+      // const { email } = jwt.decode(parsedToken2.IdToken);
+      // Calling getUserCognito function to compare the email
+      // inside the token with a Cognito user email
+      // const currentUser = email;
       return {
+        //currentUser,
         createUser,
+        findAllUsers,
+        findAllRoles,
+        findCurrentUser,
+        createNewRole,
         authLogin,
+        addRoleUser,
       };
     }
+  } catch (error) {
+    logger.error(`invalid authorization token`);
   }
 };
 
