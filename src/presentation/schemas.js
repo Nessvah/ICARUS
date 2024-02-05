@@ -22,8 +22,7 @@ const typeDefs = gql`
 
   type User {
     email: String!
-    role: String
-    created: DateTime!
+    created: String!
   }
 
   type Role {
@@ -51,8 +50,14 @@ const typeDefs = gql`
   }
 
   type AuthPayload {
-    token: String!
+    token: Token!
     user: User!
+  }
+
+  type Token {
+    accessToken: String!
+    idToken: String!
+    refreshToken: String!
   }
 
   type Mutation {
@@ -105,11 +110,5 @@ const typeDefs = gql`
     address: Address!
     billingAddress: Address
   }
-
-  #database error test - to delete later
-  # type Query {
-  #   testDatabaseError: String
-  # }
 `;
-
 export { typeDefs };

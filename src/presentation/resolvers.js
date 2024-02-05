@@ -1,11 +1,11 @@
 import { getSecrets } from '../infrastructure/auth/Cognito/userValidation/secretsManager.js';
 import { SECRETS } from '../utils/enums/enums.js';
-import { connectDB } from '../infrastructure/db/mssql.js';
+
 // to ask Silvia later
 // eslint-disable-next-line node/no-unpublished-import
 // import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js';
 
-import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
+//import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
 import { logger } from '../infrastructure/server.js';
 import { allProducts, productById } from '../models/productModel.js';
 
@@ -32,12 +32,6 @@ const shipments = [
     },
   },
 ];
-// eslint-disable-next-line no-unused-vars
-const orders = [
-  {
-    id: 'order1',
-  },
-];
 
 const resolvers = {
   // DateTime: DateTimeResolver,
@@ -57,7 +51,13 @@ const resolvers = {
     },
 
     me: (_, __, { currentUser, findCurrentUser }) => findCurrentUser(currentUser),
-    accounts: isAutenticated((_, __, { findAllUsers }) => findAllUsers()),
+    accounts: async (_, __, { findAllUsers }) => {
+      const users = await findAllUsers();
+
+      console.log(users);
+      console.log(Array.isArray(users));
+      return users;
+    },
 
     roles: (_, __, { findAllRoles }) => findAllRoles(),
     products: async () => {

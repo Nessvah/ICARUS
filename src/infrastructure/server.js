@@ -4,7 +4,7 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import express from 'express';
 import http from 'http';
-import cors from 'cors';
+// import cors from 'cors';
 import client from 'prom-client';
 import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
@@ -13,6 +13,7 @@ import { typeDefs } from '../presentation/schemas.js';
 // import { auth } from './auth/auth.js';
 import { connectDB } from './db/mssql.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
+import { auth } from '../infrastructure/auth/auth.js';
 
 const app = express();
 
@@ -58,13 +59,12 @@ await server.start();
 
 app.use(
   '/graphql',
-  cors(),
   express.json(),
   // setup morgan middleware
 
   expressMiddleware(server, {
     context: ({ req }) => {
-      return req;
+      return auth(req);
     },
   }),
 );

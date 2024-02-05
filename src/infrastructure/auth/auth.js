@@ -139,17 +139,15 @@ const findAllUsers = async () => {
       const created = user.UserCreateDate;
       const emailAttribute = user.Attributes.find((Attribute) => Attribute.Name === 'email');
       const emailValue = emailAttribute ? emailAttribute.Value : null;
-      const roleAttribute = user.Attributes.find((Attribute) => Attribute.Name === 'custom:role');
-      const roleValue = roleAttribute ? roleAttribute.Value : null;
+
+      const dateStr = created.toString();
       return {
         email: emailValue,
-        role: roleValue,
-        created,
+        created: dateStr,
       };
     });
-    return {
-      users,
-    };
+
+    return users;
   } catch (e) {
     logger.error('An error has occurred: ', e);
     throw e;
@@ -178,6 +176,7 @@ const findCurrentUser = async (currentUser) => {
 
 const authLogin = async (input) => {
   try {
+    const { email, password } = input;
     //* I'm incrypting the information which comes from frontend here to test
     //* but the encryptation is made on frontend
     // const publicKey = process.env.publicKeyFrontend;
@@ -185,27 +184,30 @@ const authLogin = async (input) => {
     //const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password));
 
     // Decrypting password which came from frontend
-    const decryptedData = await decryptingPassword(input.password, input);
+    //  const decryptedData = await decryptingPassword(input.password, input);
 
-    // Verifying password and email from frontend to see if they are standardized
-    const verifyUserPassword = isValidPassword(decryptedData);
-    const verifygUserEmail = isValidEmail(decryptedData.email);
+    // // Verifying password and email from frontend to see if they are standardized
+    //const verifyUserPassword = isValidPassword(password, email);
+    const verifygUserEmail = isValidEmail(email);
+
     // If they are, it's time to call cognito function to initiate
     // cognito authentication function with inputs
-    if (verifyUserPassword && verifygUserEmail) {
-      const { email, password } = decryptedData;
+    if (password && verifygUserEmail) {
+      console.log('something');
       const response = await initiateAuth({ email, password });
 
-      const token = JSON.stringify({
-        IdToken: response.AuthenticationResult.IdToken,
-        AccessToken: response.AuthenticationResult.AccessToken,
-        RefreshToken: response.AuthenticationResult.RefreshToken,
-      });
+      const token = {
+        idToken: response.AuthenticationResult.IdToken,
+        accessToken: response.AuthenticationResult.AccessToken,
+        refreshToken: response.AuthenticationResult.RefreshToken,
+      };
       // Confirming if the response of the request was successfully
       if (response.$metadata.httpStatusCode === 200) {
         return {
-          token: token,
-          user: decryptedData,
+          token,
+          user: {
+            email,
+          },
         };
       } else {
         return new Error('Server error');
@@ -244,19 +246,18 @@ const addRoleUser = (input) => {
 const auth = async (req) => {
   const token = req.headers.authorization;
   if (token) {
-    const parsedToken = JSON.parse(token);
-    const parsedToken2 = JSON.parse(parsedToken);
     try {
       // Verifying AWS jwt to see if it is correct
-      const jwtResponse = await tokenVerifier(parsedToken2.AccessToken);
+      const jwtResponse = await tokenVerifier(token);
+      logger.info(jwtResponse);
       // inserted in autohorization field
       if (jwtResponse) {
-        const { email } = jwt.decode(parsedToken2.IdToken);
+        // const { email } = jwt.decode(parsedToken2.IdToken);
         // Calling getUserCognito function to compare the email
         // inside the token with a Cognito user email
-        const currentUser = email;
+        // const currentUser = email;
         return {
-          currentUser,
+          //currentUser,
           createUser,
           findAllUsers,
           findAllRoles,
