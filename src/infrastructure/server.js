@@ -55,7 +55,8 @@ app.use(morgan(':response-time ms :graphql', { stream: morganMongoDBStream }));
 app.use(
   cors({
     origin: true,
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Authorization', 'Origin', 'Content-Type'],
     credentials: true,
     optionsSuccessStatus: 204,
   }),
