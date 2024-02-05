@@ -6,7 +6,7 @@ spectaql:
   displayAllServers: true
 
 introspection:
-  url: http://localhost:5001/
+  url: http://127.0.0.1:5001/graphql
   removeTrailingPeriodFromDescriptions: false
   queryNameStrategy: capitalizeFirst
   fieldExpansionDepth: 3
@@ -28,5 +28,5 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 
 servers:
-  - url: http://13.53.175.139:5001/
+  - url: http://51.21.145.183:5001/graphql
     description: Development
