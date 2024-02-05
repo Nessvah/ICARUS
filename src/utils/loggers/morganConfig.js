@@ -1,7 +1,6 @@
 import fs from 'node:fs';
 import morgan from 'morgan';
 import { logger } from '../../infrastructure/server.js';
-import { MongoDBStream } from './mongoDBstream.js';
 
 //* The log data will be written to the file asynchronously
 //* Using streams is beneficial in larger-scale applications or when
@@ -16,7 +15,7 @@ accessLogStream.on('error', (error) => {
  * queries and mutations as well other necessary info
  */
 
-morgan.token('graphql', async (req, res) => {
+morgan.token('graphql', (req, res) => {
   // check if it's a graphql query
   if (req.body && req.body.query) {
     const { query, variables, operationName } = req.body;
@@ -54,4 +53,11 @@ morgan.token('graphql', async (req, res) => {
   }
 });
 
-export { accessLogStream, morgan };
+// Create a stream for Morgan to write logs to MongoDB
+const morganMongoDBStream = {
+  write: (log) => {
+    logger.info(typeof log);
+  },
+};
+
+export { accessLogStream, morganMongoDBStream, morgan };

@@ -5,14 +5,13 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import { accessLogStream, morgan } from '../utils/loggers/morganConfig.js';
+import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
 import { resolvers } from '../presentation/resolvers.js';
 import { typeDefs } from '../presentation/schemas.js';
 // import { auth } from './auth/auth.js';
 import { connectDB } from './db/mssql.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
-import { MongoDBStream } from '../utils/loggers/mongoDBstream.js';
 
 const app = express();
 
@@ -45,7 +44,7 @@ try {
 // setup express middleware for morgan http logs
 //* The order matters so this needs to be before starting apollo server
 app.use(morgan(':response-time ms :graphql', { stream: accessLogStream }));
-app.use(morgan(':response-time ms :graphql', { stream: new MongoDBStream() }));
+app.use(morgan(':response-time ms :graphql', { stream: morganMongoDBStream }));
 
 // start our server and await for it to resolve
 await server.start();
