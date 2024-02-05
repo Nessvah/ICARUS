@@ -6,7 +6,7 @@ spectaql:
   displayAllServers: true
 
 introspection:
-  url: http://13.53.175.139:5001/
+  url: http://localhost:5001/
   removeTrailingPeriodFromDescriptions: false
   queryNameStrategy: capitalizeFirst
   fieldExpansionDepth: 3

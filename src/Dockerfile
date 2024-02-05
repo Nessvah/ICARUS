@@ -6,10 +6,13 @@ FROM node:20.10-bookworm
 # set env variables
 ENV PORT=5001
 ENV JWT_SECRET=cookiesfornow
-ENV DB_USER=admin
-ENV DB_PWD=admin123
-ENV DB_HOST=icarus-sql-server.cr6kusygg978.eu-north-1.rds.amazonaws.com
-ENV DB_DATABASE=Icarus
+ENV MYSQL_HOST=ec2-16-171-244-15.eu-north-1.compute.amazonaws.com
+ENV MYSQL_USER=root
+ENV MYSQL_PWD=admin123
+ENV MYSQL_DATABASE=icarus
+ENV MYSQL_PORT=3306
+
+ENV SECRET_NAME=icarus-secrets
 
 # create working directory in container
 WORKDIR /usr/src/app

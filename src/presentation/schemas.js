@@ -4,6 +4,7 @@ const typeDefs = gql`
   scalar DateTime
 
   type Query {
+    secrets: Key!
     me: User!
     accounts: [User!]!
     roles: [Role!]!
@@ -11,6 +12,11 @@ const typeDefs = gql`
     getShipmentById(_id: ID!): Shipment
     getAllShipments: [Shipment]
     getShipmentsByOrderId(order_id: String!): [Shipment]
+  }
+
+  type Key {
+    publicKey: String
+    privateKey: String
   }
 
   type User {

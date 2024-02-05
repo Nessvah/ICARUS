@@ -1,8 +1,11 @@
 import { getProducts } from '../app/productsUseCase.js';
+import { getSecrets } from '../infrastructure/auth/Cognito/userValidation/secretsManager.js';
+import { SECRETS } from '../utils/enums/enums.js';
 // to ask Silvia later
 // eslint-disable-next-line node/no-unpublished-import
 // import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js';
 
+import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
 //TESTING PURPOSES VARIABLES - TO DELETE LATER
 const shipments = [
   {
@@ -36,16 +39,25 @@ const orders = [
 const resolvers = {
   // DateTime: DateTimeResolver,
   Query: {
-    me: async (_, __, { currentUser, findCurrentUser }) => {
-      const result = await findCurrentUser(currentUser);
-      return result;
+    secrets: async () => {
+      try {
+        const key = await getSecrets(SECRETS.PUBLIC_KEY);
+
+        if (!key) {
+          throw new Error('Public key not available.');
+        }
+        return { publicKey: key };
+      } catch (error) {
+        console.error('Error fetching public key:', error);
+        throw new Error('Failed to fetch public key.');
+      }
     },
-    accounts: async (_, __, { findAllUsers }) => {
-      const result = await findAllUsers();
-      return result.users;
-    },
+
+    me: (_, __, { currentUser, findCurrentUser }) => findCurrentUser(currentUser),
+    accounts: isAutenticated((_, __, { findAllUsers }) => findAllUsers()),
+
     roles: (_, __, { findAllRoles }) => findAllRoles(),
-    products: async (_, __, { currentUser }) => await getProducts(currentUser),
+    products: isAutenticated(async (_, __, { currentUser }) => await getProducts(currentUser)),
     //get shipment by id
     getShipmentById: (_, { _id }) => {
       const shipment = shipments.find((shipment) => shipment._id === _id);

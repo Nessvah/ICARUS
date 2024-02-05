@@ -5,9 +5,8 @@ import { isValidPassword } from './Cognito/userValidation/passwordValidation.js'
 import { isValidEmail } from './Cognito/userValidation/emailValidation.js';
 import { decryptingPassword } from './Cognito/userValidation/decrypt.js';
 import { tokenVerifier } from './Cognito/userValidation/jwtVerifier.js';
-import crypto from 'crypto';
 
-const users = [
+export const users = [
   {
     id: '1',
     email: 'piparo@example.com',
@@ -79,8 +78,6 @@ if (process.env.NODE_ENV !== 'production') {
     }),
   );
 }
-
-logger.info('mudanca');
 
 const createUser = async (input) => {
   try {
@@ -181,16 +178,15 @@ const findCurrentUser = async (currentUser) => {
 
 const authLogin = async (input) => {
   try {
-    console.log('estou aqui');
-    console.log(input);
     //* I'm incrypting the information which comes from frontend here to test
     //* but the encryptation is made on frontend
-    const publicKey = process.env.publicKeyFrontend;
-    const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password));
+    // const publicKey = process.env.publicKeyFrontend;
 
+    //const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password));
+    console.log('oi', input.password);
     // Decrypting password which came from frontend
-    const decryptedData = decryptingPassword(encryptedData, input);
-
+    const decryptedData = await decryptingPassword(input.password, input);
+    console.log(decryptedData, 'hahah');
     // Verifying password and email from frontend to see if they are standardized
     const verifyUserPassword = isValidPassword(decryptedData);
     const verifygUserEmail = isValidEmail(decryptedData.email);
