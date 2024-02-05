@@ -8,7 +8,6 @@ const typeDefs = gql`
     me: User!
     accounts: [User!]!
     roles: [Role!]!
-    getProductById(product_id: ID!): Product
     products: [Product]
     productById(product_id: ID!): Product
     getShipmentById(_id: ID!): Shipment
@@ -76,7 +75,7 @@ const typeDefs = gql`
 
   input ProductInput {
     product_name: String!
-    price: Float!
+    price: String!
     description: String!
     icon_class: String!
     icon_label: String!

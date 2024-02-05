@@ -71,8 +71,8 @@ const resolvers = {
     },
 
     productById: async (_, { product_id }) => {
-      const productData = await productById(conn, product_id);
-      return productData ? productData : null;
+      const productData = await productById(product_id);
+      return productData ? productData : '';
     },
     //get shipment by id
     getShipmentById: (_, { _id }) => {

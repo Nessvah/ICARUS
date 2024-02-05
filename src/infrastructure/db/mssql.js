@@ -6,13 +6,19 @@ const { MYSQL_HOST, MYSQL_USER, MYSQL_PWD, MYSQL_DATABASE, MYSQL_PORT } = proces
 async function connectDB() {
   try {
     // Create the connection to database
-    const connection = mysql.createPool({
+    const pool = mysql.createPool({
       host: MYSQL_HOST,
       user: MYSQL_USER,
       database: MYSQL_DATABASE,
       port: MYSQL_PORT,
       password: MYSQL_PWD,
+      waitForConnections: true,
       connectionLimit: 10,
+      maxIdle: 10, // max idle connections, the default value is the same as `connectionLimit`
+      idleTimeout: 60000, // idle connections timeout, in milliseconds, the default value 60000
+      queueLimit: 0,
+      enableKeepAlive: true,
+      keepAliveInitialDelay: 0,
     });
 
     console.log('connected to ec2 mysql ');
@@ -22,8 +28,7 @@ async function connectDB() {
 
     //const dbSchema = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'icarus';"; */
 
-    // const tables = await connection.query('SELECT * FROM products LIMIT 10;');
-    return connection;
+    return pool;
   } catch (err) {
     console.error(err);
   }
