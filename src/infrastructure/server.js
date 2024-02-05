@@ -4,7 +4,7 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import express from 'express';
 import http from 'http';
-// import cors from 'cors';
+import cors from 'cors';
 import client from 'prom-client';
 import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
@@ -51,6 +51,16 @@ const server = new ApolloServer({
 app.use(morgan(':response-time ms :graphql', { stream: accessLogStream }));
 app.use(morgan(':response-time ms :graphql', { stream: morganMongoDBStream }));
 
+// configure cors
+app.use(
+  cors({
+    origin: true,
+    methods: ['GET', 'POST'],
+    credentials: true,
+    optionsSuccessStatus: 204,
+  }),
+);
+
 // start our server and await for it to resolve
 await server.start();
 
@@ -60,8 +70,6 @@ await server.start();
 app.use(
   '/graphql',
   express.json(),
-  // setup morgan middleware
-
   expressMiddleware(server, {
     context: ({ req }) => {
       return auth(req);
