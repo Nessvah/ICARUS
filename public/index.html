@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="images/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/png" href="images/favicon.ico" sizes="32x32">
     <title>Icarus API Documentation</title>
     <link rel="stylesheet" href="stylesheets/spectaql.min.css" />
     <script src="javascripts/spectaql.min.js"></script>
@@ -36,12 +36,16 @@
                 </h5>
                 <ul class="nav-group-section-items">
                   <li><a href="#query-accounts">accounts</a></li>
+                  <li><a href="#query-customerById">customerById</a></li>
+                  <li><a href="#query-customers">customers</a></li>
                   <li><a href="#query-getAllShipments">getAllShipments</a></li>
                   <li><a href="#query-getShipmentById">getShipmentById</a></li>
                   <li><a href="#query-getShipmentsByOrderId">getShipmentsByOrderId</a></li>
                   <li><a href="#query-me">me</a></li>
                   <li><a href="#query-productById">productById</a></li>
+                  <li><a href="#query-productByName">productByName</a></li>
                   <li><a href="#query-products">products</a></li>
+                  <li><a href="#query-productsByPrice">productsByPrice</a></li>
                   <li><a href="#query-roles">roles</a></li>
                   <li><a href="#query-secrets">secrets</a></li>
                 </ul>
@@ -71,10 +75,12 @@
               <li><a href="#definition-AuthorizeUser">AuthorizeUser</a></li>
               <li><a href="#definition-Boolean">Boolean</a></li>
               <li><a href="#definition-CreateAccount">CreateAccount</a></li>
+              <li><a href="#definition-Customer">Customer</a></li>
               <li><a href="#definition-DateTime">DateTime</a></li>
               <li><a href="#definition-Float">Float</a></li>
               <li><a href="#definition-ID">ID</a></li>
               <li><a href="#definition-Key">Key</a></li>
+              <li><a href="#definition-Price">Price</a></li>
               <li><a href="#definition-Product">Product</a></li>
               <li><a href="#definition-ProductInput">ProductInput</a></li>
               <li><a href="#definition-Role">Role</a></li>
@@ -100,10 +106,7 @@
           <div id="introduction" data-traverse-target="introduction">
             <div id="welcome" class="doc-row">
               <div class="doc-copy">
-                <p>
-                  Welcome to the Icarus API Reference. This reference includes the complete set of GraphQL types,
-                  queries, mutations, and their parametes. Learn how to authenticate to the api in the Getting Started.
-                </p>
+                <p>Welcome to the Icarus API Reference. This reference includes the complete set of GraphQL types, queries, mutations, and their parametes. Learn how to authenticate to the api in the Getting Started.</p>
               </div>
               <div class="doc-examples">
                 <div class="example-section welcome-contact-section">
@@ -115,11 +118,7 @@
                 <div class="example-section welcome-license-section">
                   <h5>License</h5>
                   <p class="license-name">Apache 2.0</p>
-                  <p class="license-url">
-                    <a href="https://www.apache.org/licenses/LICENSE-2.0.html"
-                      >https://www.apache.org/licenses/LICENSE-2.0.html</a
-                    >
-                  </p>
+                  <p class="license-url"><a href="https://www.apache.org/licenses/LICENSE-2.0.html">https://www.apache.org/licenses/LICENSE-2.0.html</a></p>
                 </div>
                 <div class="example-section welcome-tos-section">
                   <h5>Terms of Service</h5>
@@ -134,19 +133,16 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </div>
-          <h1 id="group-Operations-Queries" class="group-heading" data-traverse-target="group-Operations-Queries">
-            Queries
-          </h1>
+          <h1 id="group-Operations-Queries" class="group-heading" data-traverse-target="group-Operations-Queries">Queries</h1>
           <section id="query-accounts" class="operation operation-query" data-traverse-target="query-accounts">
-            <h2 class="operation-heading">
+            <h2 class="operation-heading ">
               <code>accounts</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns <a href="#definition-User"><code>[User!]!</code></a>
+                  <p> Returns <a href="#definition-User"><code>[User!]!</code></a>
                   </p>
                 </div>
               </div>
@@ -156,8 +152,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Accounts <span class="hljs-tag">{
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Accounts <span class="hljs-tag">{
   <span class="hljs-symbol">accounts <span class="hljs-tag">{
     <span class="hljs-symbol">email</span>
     <span class="hljs-symbol">created</span>
@@ -171,12 +166,11 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"accounts"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
-        <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"created"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
       <span class="hljs-punctuation">}</span>
     <span class="hljs-punctuation">]</span>
@@ -189,23 +183,105 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="query-getAllShipments"
-            class="operation operation-query"
-            data-traverse-target="query-getAllShipments"
-          >
+          <section id="query-customerById" class="operation operation-query" data-traverse-target="query-customerById">
             <div class="operation-group-name">
               <a href="#group-Operations-Queries">Queries</a>
             </div>
-            <h2 class="operation-heading">
-              <code>getAllShipments</code>
+            <h2 class="operation-heading ">
+              <code>customerById</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns <a href="#definition-Shipment"><code>[Shipment]</code></a>
+                  <p> Returns <a href="#definition-Customer"><code>[Customer]</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>customer_id</code></span> - <span class="property-type"><a href="#definition-ID"><code>ID!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> CustomerById<span class="hljs-tag">(<span class="hljs-code">$customer_id</span>: ID!)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">customerById<span class="hljs-tag">(customer_id: <span class="hljs-code">$customer_id</span>)</span> <span class="hljs-tag">{
+    <span class="hljs-symbol">email</span>
+    <span class="hljs-symbol">customer_id</span>
+    <span class="hljs-symbol">customer_name</span>
+    <span class="hljs-symbol">icon_class</span>
+    <span class="hljs-symbol">icon_label</span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"customer_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"customerById"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+      <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"customer_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"customer_name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"icon_class"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"icon_label"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">]</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="query-customers" class="operation operation-query" data-traverse-target="query-customers">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Queries">Queries</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>customers</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns <a href="#definition-Customer"><code>[Customer]</code></a>
                   </p>
                 </div>
               </div>
@@ -215,8 +291,65 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> GetAllShipments <span class="hljs-tag">{
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Customers <span class="hljs-tag">{
+  <span class="hljs-symbol">customers <span class="hljs-tag">{
+    <span class="hljs-symbol">email</span>
+    <span class="hljs-symbol">customer_id</span>
+    <span class="hljs-symbol">customer_name</span>
+    <span class="hljs-symbol">icon_class</span>
+    <span class="hljs-symbol">icon_label</span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"customers"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+      <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"customer_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"customer_name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"icon_class"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"icon_label"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">]</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="query-getAllShipments" class="operation operation-query" data-traverse-target="query-getAllShipments">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Queries">Queries</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>getAllShipments</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns <a href="#definition-Shipment"><code>[Shipment]</code></a>
+                  </p>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> GetAllShipments <span class="hljs-tag">{
   <span class="hljs-symbol">getAllShipments <span class="hljs-tag">{
     <span class="hljs-symbol">_id</span>
     <span class="hljs-symbol">order_id</span>
@@ -246,15 +379,14 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"getAllShipments"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
-        <span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"order_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"order_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"shipmentDate"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2007-12-03T10:15:30Z"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"shipmentStatus"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">"abc123"</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"shipmentStatus"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"address"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Address</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"billingAddress"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Address</span>
       <span class="hljs-punctuation">}</span>
@@ -268,23 +400,18 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="query-getShipmentById"
-            class="operation operation-query"
-            data-traverse-target="query-getShipmentById"
-          >
+          <section id="query-getShipmentById" class="operation operation-query" data-traverse-target="query-getShipmentById">
             <div class="operation-group-name">
               <a href="#group-Operations-Queries">Queries</a>
             </div>
-            <h2 class="operation-heading">
+            <h2 class="operation-heading ">
               <code>getShipmentById</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns a <a href="#definition-Shipment"><code>Shipment</code></a>
+                  <p> Returns a <a href="#definition-Shipment"><code>Shipment</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -299,12 +426,10 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>_id</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-ID"><code>ID!</code></a></span
-                          >
+                          <span class="property-name"><code>_id</code></span> - <span class="property-type"><a href="#definition-ID"><code>ID!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -316,8 +441,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> GetShipmentById<span class="hljs-tag">(<span class="hljs-code">$_id</span>: ID!)</span> <span class="hljs-tag">{
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> GetShipmentById<span class="hljs-tag">(<span class="hljs-code">$_id</span>: ID!)</span> <span class="hljs-tag">{
   <span class="hljs-symbol">getShipmentById<span class="hljs-tag">(_id: <span class="hljs-code">$_id</span>)</span> <span class="hljs-tag">{
     <span class="hljs-symbol">_id</span>
     <span class="hljs-symbol">order_id</span>
@@ -347,8 +471,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -357,12 +480,11 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"getShipmentById"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"order_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"order_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"shipmentDate"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2007-12-03T10:15:30Z"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"shipmentStatus"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"address"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Address</span><span class="hljs-punctuation">,</span>
@@ -377,23 +499,18 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="query-getShipmentsByOrderId"
-            class="operation operation-query"
-            data-traverse-target="query-getShipmentsByOrderId"
-          >
+          <section id="query-getShipmentsByOrderId" class="operation operation-query" data-traverse-target="query-getShipmentsByOrderId">
             <div class="operation-group-name">
               <a href="#group-Operations-Queries">Queries</a>
             </div>
-            <h2 class="operation-heading">
+            <h2 class="operation-heading ">
               <code>getShipmentsByOrderId</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns <a href="#definition-Shipment"><code>[Shipment]</code></a>
+                  <p> Returns <a href="#definition-Shipment"><code>[Shipment]</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -408,12 +525,10 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>order_id</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>order_id</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -425,8 +540,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> GetShipmentsByOrderId<span class="hljs-tag">(<span class="hljs-code">$order_id</span>:<span class="hljs-type"> String!</span>)</span> <span class="hljs-tag">{
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> GetShipmentsByOrderId<span class="hljs-tag">(<span class="hljs-code">$order_id</span>:<span class="hljs-type"> String!</span>)</span> <span class="hljs-tag">{
   <span class="hljs-symbol">getShipmentsByOrderId<span class="hljs-tag">(order_id: <span class="hljs-code">$order_id</span>)</span> <span class="hljs-tag">{
     <span class="hljs-symbol">_id</span>
     <span class="hljs-symbol">order_id</span>
@@ -456,8 +570,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"order_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"order_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -466,15 +579,14 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"getShipmentsByOrderId"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
         <span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"order_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"shipmentDate"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2007-12-03T10:15:30Z"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"shipmentStatus"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"shipmentStatus"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">"abc123"</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"address"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Address</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"billingAddress"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Address</span>
       <span class="hljs-punctuation">}</span>
@@ -492,15 +604,14 @@ http://51.21.145.183:5001/graphql
             <div class="operation-group-name">
               <a href="#group-Operations-Queries">Queries</a>
             </div>
-            <h2 class="operation-heading">
+            <h2 class="operation-heading ">
               <code>me</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns a <a href="#definition-User"><code>User!</code></a>
+                  <p> Returns a <a href="#definition-User"><code>User!</code></a>
                   </p>
                 </div>
               </div>
@@ -510,8 +621,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Me <span class="hljs-tag">{
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Me <span class="hljs-tag">{
   <span class="hljs-symbol">me <span class="hljs-tag">{
     <span class="hljs-symbol">email</span>
     <span class="hljs-symbol">created</span>
@@ -525,8 +635,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"me"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
       <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
@@ -545,15 +654,14 @@ http://51.21.145.183:5001/graphql
             <div class="operation-group-name">
               <a href="#group-Operations-Queries">Queries</a>
             </div>
-            <h2 class="operation-heading">
+            <h2 class="operation-heading ">
               <code>productById</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns a <a href="#definition-Product"><code>Product</code></a>
+                  <p> Returns <a href="#definition-Product"><code>[Product]</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -568,12 +676,10 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>product_id</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-ID"><code>ID!</code></a></span
-                          >
+                          <span class="property-name"><code>product_id</code></span> - <span class="property-type"><a href="#definition-ID"><code>ID!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -585,8 +691,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> ProductById<span class="hljs-tag">(<span class="hljs-code">$product_id</span>: ID!)</span> <span class="hljs-tag">{
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> ProductById<span class="hljs-tag">(<span class="hljs-code">$product_id</span>: ID!)</span> <span class="hljs-tag">{
   <span class="hljs-symbol">productById<span class="hljs-tag">(product_id: <span class="hljs-code">$product_id</span>)</span> <span class="hljs-tag">{
     <span class="hljs-symbol">product_id</span>
     <span class="hljs-symbol">product_name</span>
@@ -604,8 +709,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"product_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"product_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -614,17 +718,107 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-    <span class="hljs-attr">"productById"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"product_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"product_name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"icon_class"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"icon_label"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
-    <span class="hljs-punctuation">}</span>
+    <span class="hljs-attr">"productById"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+      <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">"product_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"product_name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"icon_class"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"icon_label"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">]</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="query-productByName" class="operation operation-query" data-traverse-target="query-productByName">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Queries">Queries</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>productByName</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns <a href="#definition-Product"><code>[Product]</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>product_name</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> ProductByName<span class="hljs-tag">(<span class="hljs-code">$product_name</span>:<span class="hljs-type"> String!</span>)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">productByName<span class="hljs-tag">(product_name: <span class="hljs-code">$product_name</span>)</span> <span class="hljs-tag">{
+    <span class="hljs-symbol">product_id</span>
+    <span class="hljs-symbol">product_name</span>
+    <span class="hljs-symbol">price</span>
+    <span class="hljs-symbol">description</span>
+    <span class="hljs-symbol">icon_class</span>
+    <span class="hljs-symbol">icon_label</span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"product_name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"productByName"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+      <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">"product_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"product_name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"icon_class"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"icon_label"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">]</span>
   <span class="hljs-punctuation">}</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
@@ -638,15 +832,14 @@ http://51.21.145.183:5001/graphql
             <div class="operation-group-name">
               <a href="#group-Operations-Queries">Queries</a>
             </div>
-            <h2 class="operation-heading">
+            <h2 class="operation-heading ">
               <code>products</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns <a href="#definition-Product"><code>[Product]</code></a>
+                  <p> Returns <a href="#definition-Product"><code>[Product]</code></a>
                   </p>
                 </div>
               </div>
@@ -656,8 +849,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Products <span class="hljs-tag">{
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Products <span class="hljs-tag">{
   <span class="hljs-symbol">products <span class="hljs-tag">{
     <span class="hljs-symbol">product_id</span>
     <span class="hljs-symbol">product_name</span>
@@ -675,16 +867,104 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"products"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
         <span class="hljs-attr">"product_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"product_name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"icon_class"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"icon_class"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"icon_label"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">]</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="query-productsByPrice" class="operation operation-query" data-traverse-target="query-productsByPrice">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Queries">Queries</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>productsByPrice</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns <a href="#definition-Product"><code>[Product]</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>price</code></span> - <span class="property-type"><a href="#definition-Price"><code>Price!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> ProductsByPrice<span class="hljs-tag">(<span class="hljs-code">$price</span>:<span class="hljs-type"> Price!</span>)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">productsByPrice<span class="hljs-tag">(price: <span class="hljs-code">$price</span>)</span> <span class="hljs-tag">{
+    <span class="hljs-symbol">product_id</span>
+    <span class="hljs-symbol">product_name</span>
+    <span class="hljs-symbol">price</span>
+    <span class="hljs-symbol">description</span>
+    <span class="hljs-symbol">icon_class</span>
+    <span class="hljs-symbol">icon_label</span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"price"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Price</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"productsByPrice"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+      <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">"product_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"product_name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"icon_class"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"icon_label"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
       <span class="hljs-punctuation">}</span>
     <span class="hljs-punctuation">]</span>
@@ -701,15 +981,14 @@ http://51.21.145.183:5001/graphql
             <div class="operation-group-name">
               <a href="#group-Operations-Queries">Queries</a>
             </div>
-            <h2 class="operation-heading">
+            <h2 class="operation-heading ">
               <code>roles</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns <a href="#definition-Role"><code>[Role!]!</code></a>
+                  <p> Returns <a href="#definition-Role"><code>[Role!]!</code></a>
                   </p>
                 </div>
               </div>
@@ -719,8 +998,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Roles <span class="hljs-tag">{
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Roles <span class="hljs-tag">{
   <span class="hljs-symbol">roles <span class="hljs-tag">{
     <span class="hljs-symbol">id</span>
     <span class="hljs-symbol">role</span>
@@ -734,10 +1012,14 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-    <span class="hljs-attr">"roles"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">]</span>
+    <span class="hljs-attr">"roles"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+      <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">]</span>
   <span class="hljs-punctuation">}</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
@@ -751,15 +1033,14 @@ http://51.21.145.183:5001/graphql
             <div class="operation-group-name">
               <a href="#group-Operations-Queries">Queries</a>
             </div>
-            <h2 class="operation-heading">
+            <h2 class="operation-heading ">
               <code>secrets</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns a <a href="#definition-Key"><code>Key!</code></a>
+                  <p> Returns a <a href="#definition-Key"><code>Key!</code></a>
                   </p>
                 </div>
               </div>
@@ -769,8 +1050,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Secrets <span class="hljs-tag">{
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> Secrets <span class="hljs-tag">{
   <span class="hljs-symbol">secrets <span class="hljs-tag">{
     <span class="hljs-symbol">publicKey</span>
     <span class="hljs-symbol">privateKey</span>
@@ -784,8 +1064,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"secrets"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
       <span class="hljs-attr">"publicKey"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
@@ -800,23 +1079,16 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <h1 id="group-Operations-Mutations" class="group-heading" data-traverse-target="group-Operations-Mutations">
-            Mutations
-          </h1>
-          <section
-            id="mutation-addRoleToUSer"
-            class="operation operation-mutation"
-            data-traverse-target="mutation-addRoleToUSer"
-          >
-            <h2 class="operation-heading">
+          <h1 id="group-Operations-Mutations" class="group-heading" data-traverse-target="group-Operations-Mutations">Mutations</h1>
+          <section id="mutation-addRoleToUSer" class="operation operation-mutation" data-traverse-target="mutation-addRoleToUSer">
+            <h2 class="operation-heading ">
               <code>addRoleToUSer</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns a <a href="#definition-User"><code>User!</code></a>
+                  <p> Returns a <a href="#definition-User"><code>User!</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -831,12 +1103,10 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>input</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-RoleInputById"><code>RoleInputById!</code></a></span
-                          >
+                          <span class="property-name"><code>input</code></span> - <span class="property-type"><a href="#definition-RoleInputById"><code>RoleInputById!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -848,8 +1118,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> AddRoleToUSer<span class="hljs-tag">(<span class="hljs-code">$input</span>:<span class="hljs-type"> RoleInputById!</span>)</span> <span class="hljs-tag">{
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> AddRoleToUSer<span class="hljs-tag">(<span class="hljs-code">$input</span>:<span class="hljs-type"> RoleInputById!</span>)</span> <span class="hljs-tag">{
   <span class="hljs-symbol">addRoleToUSer<span class="hljs-tag">(input: <span class="hljs-code">$input</span>)</span> <span class="hljs-tag">{
     <span class="hljs-symbol">email</span>
     <span class="hljs-symbol">created</span>
@@ -863,8 +1132,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"input"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">RoleInputById</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"input"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">RoleInputById</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -873,12 +1141,11 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"addRoleToUSer"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"created"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
+      <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"created"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
     <span class="hljs-punctuation">}</span>
   <span class="hljs-punctuation">}</span>
 <span class="hljs-punctuation">}</span>
@@ -889,23 +1156,18 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="mutation-authorize"
-            class="operation operation-mutation"
-            data-traverse-target="mutation-authorize"
-          >
+          <section id="mutation-authorize" class="operation operation-mutation" data-traverse-target="mutation-authorize">
             <div class="operation-group-name">
               <a href="#group-Operations-Mutations">Mutations</a>
             </div>
-            <h2 class="operation-heading">
+            <h2 class="operation-heading ">
               <code>authorize</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns an <a href="#definition-AuthPayload"><code>AuthPayload!</code></a>
+                  <p> Returns an <a href="#definition-AuthPayload"><code>AuthPayload!</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -920,12 +1182,10 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>input</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-AuthorizeUser"><code>AuthorizeUser!</code></a></span
-                          >
+                          <span class="property-name"><code>input</code></span> - <span class="property-type"><a href="#definition-AuthorizeUser"><code>AuthorizeUser!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -937,8 +1197,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> Authorize<span class="hljs-tag">(<span class="hljs-code">$input</span>:<span class="hljs-type"> AuthorizeUser!</span>)</span> <span class="hljs-tag">{
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> Authorize<span class="hljs-tag">(<span class="hljs-code">$input</span>:<span class="hljs-type"> AuthorizeUser!</span>)</span> <span class="hljs-tag">{
   <span class="hljs-symbol">authorize<span class="hljs-tag">(input: <span class="hljs-code">$input</span>)</span> <span class="hljs-tag">{
     <span class="hljs-symbol">token <span class="hljs-tag">{
       <span class="hljs-symbol">accessToken</span>
@@ -959,8 +1218,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"input"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">AuthorizeUser</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"input"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">AuthorizeUser</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -969,8 +1227,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"authorize"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
       <span class="hljs-attr">"token"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Token</span><span class="hljs-punctuation">,</span>
@@ -985,23 +1242,18 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="mutation-createAccount"
-            class="operation operation-mutation"
-            data-traverse-target="mutation-createAccount"
-          >
+          <section id="mutation-createAccount" class="operation operation-mutation" data-traverse-target="mutation-createAccount">
             <div class="operation-group-name">
               <a href="#group-Operations-Mutations">Mutations</a>
             </div>
-            <h2 class="operation-heading">
+            <h2 class="operation-heading ">
               <code>createAccount</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns a <a href="#definition-User"><code>User!</code></a>
+                  <p> Returns a <a href="#definition-User"><code>User!</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -1016,12 +1268,10 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>input</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-CreateAccount"><code>CreateAccount!</code></a></span
-                          >
+                          <span class="property-name"><code>input</code></span> - <span class="property-type"><a href="#definition-CreateAccount"><code>CreateAccount!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -1033,8 +1283,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> CreateAccount<span class="hljs-tag">(<span class="hljs-code">$input</span>:<span class="hljs-type"> CreateAccount!</span>)</span> <span class="hljs-tag">{
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> CreateAccount<span class="hljs-tag">(<span class="hljs-code">$input</span>:<span class="hljs-type"> CreateAccount!</span>)</span> <span class="hljs-tag">{
   <span class="hljs-symbol">createAccount<span class="hljs-tag">(input: <span class="hljs-code">$input</span>)</span> <span class="hljs-tag">{
     <span class="hljs-symbol">email</span>
     <span class="hljs-symbol">created</span>
@@ -1048,8 +1297,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"input"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">CreateAccount</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"input"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">CreateAccount</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -1058,11 +1306,10 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"createAccount"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"created"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
     <span class="hljs-punctuation">}</span>
   <span class="hljs-punctuation">}</span>
@@ -1074,23 +1321,18 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="mutation-createProduct"
-            class="operation operation-mutation"
-            data-traverse-target="mutation-createProduct"
-          >
+          <section id="mutation-createProduct" class="operation operation-mutation" data-traverse-target="mutation-createProduct">
             <div class="operation-group-name">
               <a href="#group-Operations-Mutations">Mutations</a>
             </div>
-            <h2 class="operation-heading">
+            <h2 class="operation-heading ">
               <code>createProduct</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns a <a href="#definition-Product"><code>Product</code></a>
+                  <p> Returns a <a href="#definition-Product"><code>Product</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -1105,12 +1347,10 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>input</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-ProductInput"><code>ProductInput</code></a></span
-                          >
+                          <span class="property-name"><code>input</code></span> - <span class="property-type"><a href="#definition-ProductInput"><code>ProductInput</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -1122,8 +1362,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> CreateProduct<span class="hljs-tag">(<span class="hljs-code">$input</span>:<span class="hljs-type"> ProductInput)</span> {
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> CreateProduct<span class="hljs-tag">(<span class="hljs-code">$input</span>:<span class="hljs-type"> ProductInput)</span> {
   createProduct(input: <span class="hljs-code">$input</span>)</span> <span class="hljs-tag">{
     <span class="hljs-symbol">product_id</span>
     <span class="hljs-symbol">product_name</span>
@@ -1141,8 +1380,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"input"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">ProductInput</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"input"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">ProductInput</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -1151,13 +1389,12 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"createProduct"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"product_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"product_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"product_name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"icon_class"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"icon_label"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
@@ -1171,23 +1408,18 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="mutation-createRole"
-            class="operation operation-mutation"
-            data-traverse-target="mutation-createRole"
-          >
+          <section id="mutation-createRole" class="operation operation-mutation" data-traverse-target="mutation-createRole">
             <div class="operation-group-name">
               <a href="#group-Operations-Mutations">Mutations</a>
             </div>
-            <h2 class="operation-heading">
+            <h2 class="operation-heading ">
               <code>createRole</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns a <a href="#definition-Role"><code>Role!</code></a>
+                  <p> Returns a <a href="#definition-Role"><code>Role!</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -1202,12 +1434,10 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>input</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-RoleInput"><code>RoleInput!</code></a></span
-                          >
+                          <span class="property-name"><code>input</code></span> - <span class="property-type"><a href="#definition-RoleInput"><code>RoleInput!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -1219,8 +1449,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> CreateRole<span class="hljs-tag">(<span class="hljs-code">$input</span>:<span class="hljs-type"> RoleInput!</span>)</span> <span class="hljs-tag">{
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> CreateRole<span class="hljs-tag">(<span class="hljs-code">$input</span>:<span class="hljs-type"> RoleInput!</span>)</span> <span class="hljs-tag">{
   <span class="hljs-symbol">createRole<span class="hljs-tag">(input: <span class="hljs-code">$input</span>)</span> <span class="hljs-tag">{
     <span class="hljs-symbol">id</span>
     <span class="hljs-symbol">role</span>
@@ -1234,8 +1463,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"input"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">RoleInput</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"input"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">RoleInput</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -1244,12 +1472,11 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"createRole"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
     <span class="hljs-punctuation">}</span>
   <span class="hljs-punctuation">}</span>
 <span class="hljs-punctuation">}</span>
@@ -1260,23 +1487,18 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="mutation-updateShipmentAddress"
-            class="operation operation-mutation"
-            data-traverse-target="mutation-updateShipmentAddress"
-          >
+          <section id="mutation-updateShipmentAddress" class="operation operation-mutation" data-traverse-target="mutation-updateShipmentAddress">
             <div class="operation-group-name">
               <a href="#group-Operations-Mutations">Mutations</a>
             </div>
-            <h2 class="operation-heading">
+            <h2 class="operation-heading ">
               <code>updateShipmentAddress</code>
             </h2>
             <div class="doc-row">
               <div class="doc-copy">
                 <div class="operation-response doc-copy-section">
                   <h5>Response</h5>
-                  <p>
-                    Returns a <a href="#definition-Shipment"><code>Shipment</code></a>
+                  <p> Returns a <a href="#definition-Shipment"><code>Shipment</code></a>
                   </p>
                 </div>
                 <div class="operation-arguments doc-copy-section">
@@ -1291,21 +1513,17 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>_id</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-ID"><code>ID!</code></a></span
-                          >
+                          <span class="property-name"><code>_id</code></span> - <span class="property-type"><a href="#definition-ID"><code>ID!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>address</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-AddressInput"><code>AddressInput!</code></a></span
-                          >
+                          <span class="property-name"><code>address</code></span> - <span class="property-type"><a href="#definition-AddressInput"><code>AddressInput!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -1317,8 +1535,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Query</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> UpdateShipmentAddress<span class="hljs-tag">(
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> UpdateShipmentAddress<span class="hljs-tag">(
   <span class="hljs-code">$_id</span>: ID!,
   <span class="hljs-code">$address</span>:<span class="hljs-type"> AddressInput!</span>
 )</span> <span class="hljs-tag">{
@@ -1354,8 +1571,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"address"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">AddressInput</span>
 <span class="hljs-punctuation">}</span>
@@ -1367,11 +1583,10 @@ http://51.21.145.183:5001/graphql
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"updateShipmentAddress"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"order_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"shipmentDate"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2007-12-03T10:15:30Z"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"shipmentStatus"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">"abc123"</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
@@ -1388,11 +1603,7 @@ http://51.21.145.183:5001/graphql
             </div>
           </section>
           <h1 id="group-Types" class="group-heading" data-traverse-target="group-Types">Types</h1>
-          <section
-            id="definition-Address"
-            class="definition definition-object"
-            data-traverse-target="definition-Address"
-          >
+          <section id="definition-Address" class="definition definition-object" data-traverse-target="definition-Address">
             <h2 class="definition-heading">Address</h2>
             <div class="doc-row">
               <div class="doc-copy">
@@ -1407,49 +1618,34 @@ http://51.21.145.183:5001/graphql
                     </thead>
                     <tbody>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>street</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>street</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>city</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>city</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>state</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>state</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>zipCode</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>zipCode</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>country</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>country</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -1460,13 +1656,12 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"street"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"city"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"state"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"zipCode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"country"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
+  <span class="hljs-attr">"country"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
@@ -1475,11 +1670,7 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="definition-AddressInput"
-            class="definition definition-input-object"
-            data-traverse-target="definition-AddressInput"
-          >
+          <section id="definition-AddressInput" class="definition definition-input-object" data-traverse-target="definition-AddressInput">
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
@@ -1498,48 +1689,38 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>street</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>street</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>city</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>city</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>state</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>state</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>zipCode</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>zipCode</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>country</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>country</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -1550,13 +1731,12 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"street"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"city"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"state"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"zipCode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"country"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
+  <span class="hljs-attr">"zipCode"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"country"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
@@ -1565,11 +1745,7 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="definition-AuthPayload"
-            class="definition definition-object"
-            data-traverse-target="definition-AuthPayload"
-          >
+          <section id="definition-AuthPayload" class="definition definition-object" data-traverse-target="definition-AuthPayload">
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
@@ -1587,22 +1763,16 @@ http://51.21.145.183:5001/graphql
                     </thead>
                     <tbody>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>token</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-Token"><code>Token!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>token</code></span> - <span class="property-type"><a href="#definition-Token"><code>Token!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>user</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-User"><code>User!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>user</code></span> - <span class="property-type"><a href="#definition-User"><code>User!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -1613,8 +1783,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"token"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Token</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"user"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">User</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"token"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Token</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"user"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">User</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -1622,11 +1791,7 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="definition-AuthorizeUser"
-            class="definition definition-input-object"
-            data-traverse-target="definition-AuthorizeUser"
-          >
+          <section id="definition-AuthorizeUser" class="definition definition-input-object" data-traverse-target="definition-AuthorizeUser">
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
@@ -1645,21 +1810,17 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>email</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>email</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>password</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>password</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -1670,10 +1831,9 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"password"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"password"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
@@ -1682,11 +1842,7 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="definition-Boolean"
-            class="definition definition-scalar"
-            data-traverse-target="definition-Boolean"
-          >
+          <section id="definition-Boolean" class="definition definition-scalar" data-traverse-target="definition-Boolean">
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
@@ -1699,24 +1855,10 @@ http://51.21.145.183:5001/graphql
                 </div>
               </div>
               <div class="doc-examples">
-                <div class="example-section example-section-is-code">
-                  <h5>Example</h5>
-                  <html>
-                    <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-literal"><span class="hljs-keyword">true</span></span>
-</code></pre>
-                    </body>
-                  </html>
-                </div>
               </div>
             </div>
           </section>
-          <section
-            id="definition-CreateAccount"
-            class="definition definition-input-object"
-            data-traverse-target="definition-CreateAccount"
-          >
+          <section id="definition-CreateAccount" class="definition definition-input-object" data-traverse-target="definition-CreateAccount">
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
@@ -1735,21 +1877,17 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>email</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>email</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>password</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>password</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -1760,8 +1898,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"password"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
 <span class="hljs-punctuation">}</span>
@@ -1772,24 +1909,90 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="definition-DateTime"
-            class="definition definition-scalar"
-            data-traverse-target="definition-DateTime"
-          >
+          <section id="definition-Customer" class="definition definition-object" data-traverse-target="definition-Customer">
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
-            <h2 class="definition-heading">DateTime</h2>
+            <h2 class="definition-heading">Customer</h2>
             <div class="doc-row">
-              <div class="doc-copy"></div>
+              <div class="doc-copy">
+                <div class="definition-properties doc-copy-section">
+                  <h5>Fields</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Field Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>email</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>customer_id</code></span> - <span class="property-type"><a href="#definition-ID"><code>ID!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>customer_name</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>icon_class</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>icon_label</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
               <div class="doc-examples">
                 <div class="example-section example-section-is-code">
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol">"2007-12-03T10:15:30Z"</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"customer_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"customer_name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"icon_class"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"icon_label"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-DateTime" class="definition definition-scalar" data-traverse-target="definition-DateTime">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">DateTime</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol">"2007-12-03T10:15:30Z"</span>
 </code></pre>
                     </body>
                   </html>
@@ -1806,10 +2009,7 @@ http://51.21.145.183:5001/graphql
               <div class="doc-copy">
                 <div class="definition-description doc-copy-section">
                   <h5>Description</h5>
-                  <p>
-                    The <code>Float</code> scalar type represents signed double-precision fractional values as specified
-                    by <a href="https://en.wikipedia.org/wiki/IEEE_floating_point">IEEE 754</a>.
-                  </p>
+                  <p>The <code>Float</code> scalar type represents signed double-precision fractional values as specified by <a href="https://en.wikipedia.org/wiki/IEEE_floating_point">IEEE 754</a>.</p>
                 </div>
               </div>
               <div class="doc-examples">
@@ -1817,8 +2017,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-number">123.45</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-number">123.45</span>
 </code></pre>
                     </body>
                   </html>
@@ -1835,13 +2034,7 @@ http://51.21.145.183:5001/graphql
               <div class="doc-copy">
                 <div class="definition-description doc-copy-section">
                   <h5>Description</h5>
-                  <p>
-                    The <code>ID</code> scalar type represents a unique identifier, often used to refetch an object or
-                    as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended
-                    to be human-readable. When expected as an input type, any string (such as
-                    <code>&quot;4&quot;</code>) or integer (such as <code>4</code>) input value will be accepted as an
-                    ID.
-                  </p>
+                  <p>The <code>ID</code> scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as <code>&quot;4&quot;</code>) or integer (such as <code>4</code>) input value will be accepted as an ID.</p>
                 </div>
               </div>
               <div class="doc-examples">
@@ -1849,8 +2042,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-number">4</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-number">4</span>
 </code></pre>
                     </body>
                   </html>
@@ -1876,22 +2068,16 @@ http://51.21.145.183:5001/graphql
                     </thead>
                     <tbody>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>publicKey</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>publicKey</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>privateKey</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>privateKey</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -1902,10 +2088,9 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"publicKey"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"privateKey"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
+  <span class="hljs-attr">"privateKey"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
@@ -1914,11 +2099,55 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="definition-Product"
-            class="definition definition-object"
-            data-traverse-target="definition-Product"
-          >
+          <section id="definition-Price" class="definition definition-input-object" data-traverse-target="definition-Price">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">Price</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-properties doc-copy-section">
+                  <h5>Fields</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Input Field</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>min</code></span> - <span class="property-type"><a href="#definition-Float"><code>Float!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>max</code></span> - <span class="property-type"><a href="#definition-Float"><code>Float!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"min"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"max"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-Product" class="definition definition-object" data-traverse-target="definition-Product">
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
@@ -1936,58 +2165,40 @@ http://51.21.145.183:5001/graphql
                     </thead>
                     <tbody>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>product_id</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-ID"><code>ID!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>product_id</code></span> - <span class="property-type"><a href="#definition-ID"><code>ID!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>product_name</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>product_name</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>price</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-Float"><code>Float!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>price</code></span> - <span class="property-type"><a href="#definition-Float"><code>Float!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>description</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>description</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>icon_class</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>icon_class</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>icon_label</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>icon_label</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -1998,13 +2209,12 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">"product_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"product_name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"icon_class"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"product_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"product_name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"price"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"icon_class"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"icon_label"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
@@ -2014,11 +2224,7 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="definition-ProductInput"
-            class="definition definition-input-object"
-            data-traverse-target="definition-ProductInput"
-          >
+          <section id="definition-ProductInput" class="definition definition-input-object" data-traverse-target="definition-ProductInput">
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
@@ -2037,48 +2243,38 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>product_name</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>product_name</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>price</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>price</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>description</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>description</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>icon_class</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>icon_class</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>icon_label</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>icon_label</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -2089,13 +2285,12 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">"product_name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"product_name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"price"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"icon_class"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"icon_label"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
+  <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"icon_class"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"icon_label"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
@@ -2122,22 +2317,16 @@ http://51.21.145.183:5001/graphql
                     </thead>
                     <tbody>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>id</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-ID"><code>ID!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>id</code></span> - <span class="property-type"><a href="#definition-ID"><code>ID!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>role</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>role</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -2148,8 +2337,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -2157,11 +2345,7 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="definition-RoleInput"
-            class="definition definition-input-object"
-            data-traverse-target="definition-RoleInput"
-          >
+          <section id="definition-RoleInput" class="definition definition-input-object" data-traverse-target="definition-RoleInput">
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
@@ -2180,12 +2364,10 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>role</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>role</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -2196,8 +2378,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -2205,11 +2386,7 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="definition-RoleInputById"
-            class="definition definition-input-object"
-            data-traverse-target="definition-RoleInputById"
-          >
+          <section id="definition-RoleInputById" class="definition definition-input-object" data-traverse-target="definition-RoleInputById">
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
@@ -2228,21 +2405,17 @@ http://51.21.145.183:5001/graphql
                     <tbody>
                       <tr>
                         <td>
-                          <span class="property-name"><code>id</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-ID"><code>ID!</code></a></span
-                          >
+                          <span class="property-name"><code>id</code></span> - <span class="property-type"><a href="#definition-ID"><code>ID!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>role</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                          <span class="property-name"><code>role</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -2253,11 +2426,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
-<span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -2265,11 +2434,7 @@ http://51.21.145.183:5001/graphql
               </div>
             </div>
           </section>
-          <section
-            id="definition-Shipment"
-            class="definition definition-object"
-            data-traverse-target="definition-Shipment"
-          >
+          <section id="definition-Shipment" class="definition definition-object" data-traverse-target="definition-Shipment">
             <div class="definition-group-name">
               <a href="#group-Types">Types</a>
             </div>
@@ -2287,58 +2452,40 @@ http://51.21.145.183:5001/graphql
                     </thead>
                     <tbody>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>_id</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-ID"><code>ID!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>_id</code></span> - <span class="property-type"><a href="#definition-ID"><code>ID!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>order_id</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>order_id</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>shipmentDate</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-DateTime"><code>DateTime!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>shipmentDate</code></span> - <span class="property-type"><a href="#definition-DateTime"><code>DateTime!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>shipmentStatus</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>[String!]!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>shipmentStatus</code></span> - <span class="property-type"><a href="#definition-String"><code>[String!]!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>address</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-Address"><code>Address!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>address</code></span> - <span class="property-type"><a href="#definition-Address"><code>Address!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>billingAddress</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-Address"><code>Address</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>billingAddress</code></span> - <span class="property-type"><a href="#definition-Address"><code>Address</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -2349,10 +2496,9 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"4"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"order_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"order_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"shipmentDate"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2007-12-03T10:15:30Z"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"shipmentStatus"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"address"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Address</span><span class="hljs-punctuation">,</span>
@@ -2374,10 +2520,7 @@ http://51.21.145.183:5001/graphql
               <div class="doc-copy">
                 <div class="definition-description doc-copy-section">
                   <h5>Description</h5>
-                  <p>
-                    The <code>String</code> scalar type represents textual data, represented as UTF-8 character
-                    sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
-                  </p>
+                  <p>The <code>String</code> scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.</p>
                 </div>
               </div>
               <div class="doc-examples">
@@ -2385,8 +2528,7 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-gql"><span class="hljs-symbol">"abc123"</span>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol">"abc123"</span>
 </code></pre>
                     </body>
                   </html>
@@ -2412,31 +2554,22 @@ http://51.21.145.183:5001/graphql
                     </thead>
                     <tbody>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>accessToken</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>accessToken</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>idToken</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>idToken</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>refreshToken</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>refreshToken</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -2447,11 +2580,10 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">"accessToken"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"idToken"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"refreshToken"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"accessToken"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"idToken"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"refreshToken"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
@@ -2478,22 +2610,16 @@ http://51.21.145.183:5001/graphql
                     </thead>
                     <tbody>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>email</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>email</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                       <tr>
-                        <td data-property-name="">
-                          <span class="property-name"><code>created</code></span> -
-                          <span class="property-type"
-                            ><a href="#definition-String"><code>String!</code></a></span
-                          >
+                        <td data-property-name=""><span class="property-name"><code>created</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
                         </td>
-                        <td></td>
+                        <td>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -2504,10 +2630,9 @@ http://51.21.145.183:5001/graphql
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body>
-                      <pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"created"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
+  <span class="hljs-attr">"created"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
@@ -2518,9 +2643,7 @@ http://51.21.145.183:5001/graphql
           </section>
           <div class="doc-row no-margin">
             <div class="doc-copy doc-separator">
-              <a class="powered-by" href="https://github.com/anvilco/spectaql"
-                >Documentation by <span>Anvil SpectaQL</span></a
-              >
+              <a class="powered-by" href="https://github.com/anvilco/spectaql">Documentation by <span>Anvil SpectaQL</span></a>
             </div>
           </div>
         </article>
