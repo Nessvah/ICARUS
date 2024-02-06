@@ -1,6 +1,6 @@
 // Import necessary modules from AWS SDK for Cognito Identity Provider
 import { AdminGetUserCommand, CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
-import { config } from '../../../aws/config.js';
+import { config } from '../../config/config.js';
 
 // Define an asynchronous function for user registration (sign-up)
 const getUser = async function (email) {

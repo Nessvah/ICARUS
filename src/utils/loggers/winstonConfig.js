@@ -68,8 +68,8 @@ const configureLogger = () => {
     colorize({ all: true }),
     // Define the format of the message showing the timestamp, the level and the message
     printf((info) => {
-      const { timestamp, level, message, ip, url, method, requestBody, responseBody } = info;
-      return `${timestamp} ${level}: ${message} - IP: ${ip}, URL: ${url}, Method: ${method}, Request Body: ${requestBody}, Response Body: ${responseBody}`;
+      const { timestamp, level, message, ip, url, method } = info;
+      return `${timestamp} ${level}: ${message} - IP: ${ip}, URL: ${url}, Method: ${method}.`;
     }),
   );
 
@@ -122,6 +122,7 @@ const configureMongoDBTransport = async (client) => {
  * This will initialize the logger when the module is imported to other parts.
  * @returns will return the logger ready for use otherwise will exit the process for misconfiguration
  */
+
 const initializeLogger = (async () => {
   // define max retires and counter
   const max_retries = 3;

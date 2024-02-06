@@ -1,4 +1,4 @@
-import { getSecrets } from '../infrastructure/auth/Cognito/userValidation/secretsManager.js';
+import { getSecrets } from '../aws/auth/Cognito/userValidation/secretsManager.js';
 import { SECRETS } from '../utils/enums/enums.js';
 
 // to ask Silvia later

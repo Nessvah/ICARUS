@@ -1,10 +1,7 @@
 import crypto from 'crypto';
 import { getSecrets } from './secretsManager.js';
 import { SECRETS } from '../../../../utils/enums/enums.js';
-//import { getSecrets } from './secretsManager.js';
-//import { SECRETS } from '../../../../utils/enums/enums.js';
 
-//const privateKey = process.env.privateKeyBackend;
 // Decrypting data from input
 const decryptingPassword = async function (input) {
   //console.log('input', input);

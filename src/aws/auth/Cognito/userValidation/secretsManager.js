@@ -1,10 +1,14 @@
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
-import { config } from '../../../../aws/config.js';
+import { config } from '../../../config/config.js';
 
 const { SECRET_NAME } = process.env;
 const client = new SecretsManagerClient(config);
 
-// function to get the public key to send to the FE client
+/**
+ *  This function will access secrets manager from aws to get the pub/private keys
+ * @param {string} key the type of key - public or private
+ * @returns the key already in a string format
+ */
 const getSecrets = async (key) => {
   const input = {
     SecretId: SECRET_NAME,
@@ -14,6 +18,7 @@ const getSecrets = async (key) => {
   let response;
 
   try {
+    // be default the aws secrets manager will send all the secrets in there
     const command = new GetSecretValueCommand(input);
     response = await client.send(command);
 
@@ -33,7 +38,7 @@ const getSecrets = async (key) => {
       throw new Error('An error occured on the server side.');
     }
 
-    throw new Error('aws shit');
+    throw new Error('Something went wrong with getting secrets');
   }
 };
 

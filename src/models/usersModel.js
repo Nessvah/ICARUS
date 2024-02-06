@@ -1,10 +1,13 @@
-import { getAllUsers, getUser, initiateAuth, signUp } from './Cognito/index.js';
-import { isValidEmail } from './Cognito/userValidation/emailValidation.js';
-import { decryptingPassword } from './Cognito/userValidation/decrypt.js';
-import { tokenVerifier } from './Cognito/userValidation/jwtVerifier.js';
-import { AuthorizationError } from '../../utils/error-handling/CustomErrors.js';
-import jwt from 'jsonwebtoken';
-import { logger } from '../server.js';
+import { decryptingPassword } from '../aws/auth/Cognito/userValidation/decrypt.js';
+import { isValidEmail } from '../aws/auth/Cognito/userValidation/emailValidation.js';
+import { signUp, getUser, getAllUsers } from '../aws/auth/Cognito/index.js';
+import { logger } from '../infrastructure/server.js';
+
+const roles = [
+  { id: '1', role: 'admin' },
+  { id: '2', role: 'manager' },
+  { id: '3', role: 'intern' },
+];
 
 export const users = [
   {
@@ -55,11 +58,9 @@ export const users = [
   },
 ];
 
-const roles = [
-  { id: '1', role: 'admin' },
-  { id: '2', role: 'manager' },
-  { id: '3', role: 'intern' },
-];
+const findAllRoles = () => {
+  return roles;
+};
 
 const createUser = async (input) => {
   try {
@@ -131,10 +132,6 @@ const findAllUsers = async () => {
   }
 };
 
-const findAllRoles = () => {
-  return roles;
-};
-
 const findCurrentUser = async (currentUser) => {
   // Getting current user information on user pool
   const loggedUser = await getUser(currentUser);
@@ -149,47 +146,6 @@ const findCurrentUser = async (currentUser) => {
     created: loggedUser.UserCreateDate,
   };
   return user;
-};
-
-const authLogin = async (input) => {
-  try {
-    //* I'm incrypting the information which comes from frontend here to test
-    //* but the encryptation is made on frontend
-    // const publicKey = process.env.publicKeyFrontend;
-    //const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password));
-
-    // Decrypting password which came from frontend
-    const decryptedData = await decryptingPassword(input);
-    const { email, password } = decryptedData;
-    // // Verifying password and email from frontend to see if they are standardized
-    //const verifyUserPassword = isValidPassword(password, email);
-    const verifyUserEmail = isValidEmail(email);
-
-    // If they are, it's time to call cognito function to initiate
-    // cognito authentication function with inputs
-    if (verifyUserEmail) {
-      const response = await initiateAuth({ email, password });
-      const token = {
-        idToken: response.AuthenticationResult.IdToken,
-        accessToken: response.AuthenticationResult.AccessToken,
-        refreshToken: response.AuthenticationResult.RefreshToken,
-      };
-      // Confirming if the response of the request was successfully
-      if (response.$metadata.httpStatusCode === 200) {
-        return {
-          token,
-          user: {
-            email,
-          },
-        };
-      } else {
-        return new Error('Server error');
-      }
-    }
-  } catch (e) {
-    logger.error('An error occurred during authentication:', e.message);
-    throw e; // Rethrow the error to propagate it up the call stack
-  }
 };
 
 const createNewRole = ({ role }) => {
@@ -216,57 +172,4 @@ const addRoleUser = (input) => {
   return userExist;
 };
 
-const auth = async (req) => {
-  //? Maybe it's not necessary if here, it's just return the functions
-  //? that don't need authorization
-  if (
-    req.body.operationName === 'Authorize' ||
-    req.body.operationName === 'CreateAccount' ||
-    req.body.operationName === 'IntrospectionQuery'
-  ) {
-    return {
-      createUser,
-      authLogin,
-    };
-  }
-  const token = req.headers.authorization;
-
-  if (!token) {
-    throw new AuthorizationError('Não tem autorização.');
-  }
-
-  const tokenWithoutPrefix = token.split(' ')[1]; // Bearer agsgsshjagsdhgahsd
-
-  try {
-    // Verifying AWS jwt to see if it is correct
-    const jwtResponse = await tokenVerifier(tokenWithoutPrefix);
-
-    // inserted in autohorization field
-    if (jwtResponse) {
-      try {
-        const { username } = jwt.decode(tokenWithoutPrefix);
-
-        // Calling getUserCognito function to compare the email
-        // inside the token with a Cognito user email
-        const currentUser = await getUser(username);
-
-        return {
-          currentUser,
-          createUser,
-          findAllUsers,
-          findAllRoles,
-          findCurrentUser,
-          createNewRole,
-          authLogin,
-          addRoleUser,
-        };
-      } catch (e) {
-        throw new Error('Error trying to decode');
-      }
-    }
-  } catch (error) {
-    logger.error(`invalid authorization token`);
-  }
-};
-
-export { auth };
+export { createUser, findAllUsers, findAllRoles, findCurrentUser, createNewRole, addRoleUser };

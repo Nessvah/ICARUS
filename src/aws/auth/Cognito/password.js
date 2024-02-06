@@ -1,10 +1,6 @@
 // Import necessary modules from AWS SDK for Cognito Identity Provider
 import { AdminSetUserPasswordCommand, CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
-// Import dotenv for loading environment variables from a .env file
-import dotenv from 'dotenv';
-dotenv.config();
-
-import { config } from '../../../aws/config.js';
+import { config } from '../../config/config.js';
 
 // Define an asynchronous function for user registration (sign-up)
 const resetUserPasswordCommand = async function ({ username }) {
