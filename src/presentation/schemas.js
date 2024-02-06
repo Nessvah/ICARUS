@@ -110,5 +110,25 @@ const typeDefs = gql`
     address: Address!
     billingAddress: Address
   }
+
+  #TEST PURPOSES - TO DELETE LATER
+  type Mutation {
+    testCreateUser(input: CreateUserInput!): User!
+  }
+
+  input CreateUserInput {
+    email: String!
+    password: String!
+    username: String!
+    phoneNumber: String!
+    # Include other fields as necessary
+  }
+
+  type User {
+    id: ID!
+    email: String!
+    username: String!
+    phoneNumber: String!
+  }
 `;
 export { typeDefs };
