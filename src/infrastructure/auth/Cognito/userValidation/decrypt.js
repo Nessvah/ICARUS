@@ -3,7 +3,8 @@ import { getSecrets } from './secretsManager.js';
 import { SECRETS } from '../../../../utils/enums/enums.js';
 
 // Decrypting data from input
-const decryptingPassword = async function (password, input) {
+const decryptingPassword = async function (input) {
+  const { password, email } = input;
   try {
     // get the privateKey from aws
 
@@ -13,11 +14,12 @@ const decryptingPassword = async function (password, input) {
     const decryptedPassword = crypto.privateDecrypt(
       {
         key: privateKey,
+        format: 'pem',
 
         // OAEP padding (RSA_PKCS1_OAEP_PADDING) is recommended for its enhanced security properties.
         // by incorporating additional randomness into the encryption process
-        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-        oaepHash: 'sha256',
+        /* padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+        oaepHash: 'sha256', */
       },
       password,
     );
@@ -25,7 +27,7 @@ const decryptingPassword = async function (password, input) {
     // Sending the correct object response with password decrypted
     // to verify the password and email
     const decryptedDataResponse = {
-      email: input.email,
+      email,
       password: decryptedPassword.toString('utf8'),
     };
     return decryptedDataResponse;
