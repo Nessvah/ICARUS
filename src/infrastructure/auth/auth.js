@@ -70,7 +70,7 @@ const createUser = async (input) => {
     const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password)); */
 
     // Decrypting password which came from frontend
-    const decryptedData = decryptingPassword(input);
+    const decryptedData = decryptingPassword(input.password);
 
     // Verifying password and email from frontend to see if they are standardized
     const verifyUserPassword = isValidPassword(decryptedData);
