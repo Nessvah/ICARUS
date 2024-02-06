@@ -1,7 +1,7 @@
-function isValidPassword(decryptedData) {
+function isValidPassword(password, email) {
   // Extracting password and email from decrypted data to add email as sensitive info
   // which is not allowed on password
-  const { password, email } = decryptedData;
+
   const sensitiveInfo = [email, 'admin', 'Admin'];
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[|"/(){}?'+!@#$%^&*_;¨-])(?=.{8,})/;
 

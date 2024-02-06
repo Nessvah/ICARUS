@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "start": "node ./infrastructure/server.js",
+    "start": "NODE_ENV=production node ./infrastructure/server.js",
     "dev": "nodemon ./infrastructure/server.js"
   },
   "keywords": [],
@@ -32,6 +32,7 @@
     "morgan": "^1.10.0",
     "mssql": "^10.0.2",
     "mysql2": "^3.9.1",
+    "prom-client": "^15.1.0",
     "winston": "^3.11.0",
     "winston-mongodb": "^5.1.1"
   },

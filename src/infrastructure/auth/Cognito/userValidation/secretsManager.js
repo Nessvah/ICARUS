@@ -1,14 +1,8 @@
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
+import { config } from '../../../../aws/config.js';
 
-const { SECRET_NAME, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION } = process.env;
-
-const client = new SecretsManagerClient({
-  region: REGION,
-  credentials: {
-    accessKeyId: AWS_ACCESS_KEY_ID,
-    secretAccessKey: AWS_SECRET_ACCESS_KEY,
-  },
-});
+const { SECRET_NAME } = process.env;
+const client = new SecretsManagerClient(config);
 
 // function to get the public key to send to the FE client
 const getSecrets = async (key) => {

@@ -1,28 +1,13 @@
 import { CognitoJwtVerifier } from 'aws-jwt-verify';
-import winston from 'winston/lib/winston/config';
+import { logger } from '../../../server.js';
 
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  defaultMeta: { service: 'user-service' },
-  transports: [
-    new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' }),
-  ],
-});
+const { USER_POOL_ID, CLIENT_ID } = process.env;
 
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    }),
-  );
-}
 const tokenVerifier = async function (accessToken) {
   const verifier = CognitoJwtVerifier.create({
-    userPoolId: process.env.UserPoolId,
+    userPoolId: USER_POOL_ID,
     tokenUse: 'access',
-    clientId: process.env.ClientId,
+    clientId: CLIENT_ID,
   });
 
   try {

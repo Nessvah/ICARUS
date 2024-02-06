@@ -9,6 +9,7 @@ const typeDefs = gql`
     accounts: [User!]!
     roles: [Role!]!
     products: [Product]
+    productById(product_id: ID!): Product
     getShipmentById(_id: ID!): Shipment
     getAllShipments: [Shipment]
     getShipmentsByOrderId(order_id: String!): [Shipment]
@@ -21,8 +22,7 @@ const typeDefs = gql`
 
   type User {
     email: String!
-    role: String
-    created: DateTime!
+    created: String!
   }
 
   type Role {
@@ -50,8 +50,14 @@ const typeDefs = gql`
   }
 
   type AuthPayload {
-    token: String!
+    token: Token!
     user: User!
+  }
+
+  type Token {
+    accessToken: String!
+    idToken: String!
+    refreshToken: String!
   }
 
   type Mutation {
@@ -60,17 +66,24 @@ const typeDefs = gql`
     createRole(input: RoleInput!): Role!
     addRoleToUSer(input: RoleInputById!): User!
     updateShipmentAddress(_id: ID!, address: AddressInput!): Shipment
+    createProduct(input: ProductInput): Product
   }
 
   type Product {
-    ProductId: Int
-    SKU: String!
-    Name: String!
-    Description: String
-    Price: Float
-    ImageUrl: String
-    StockLevel: Int
-    CategoryId: Int
+    product_id: ID!
+    product_name: String!
+    price: Float!
+    description: String!
+    icon_class: String!
+    icon_label: String!
+  }
+
+  input ProductInput {
+    product_name: String!
+    price: String!
+    description: String!
+    icon_class: String!
+    icon_label: String!
   }
 
   input AddressInput {
@@ -97,11 +110,5 @@ const typeDefs = gql`
     address: Address!
     billingAddress: Address
   }
-
-  #database error test - to delete later
-  # type Query {
-  #   testDatabaseError: String
-  # }
 `;
-
 export { typeDefs };

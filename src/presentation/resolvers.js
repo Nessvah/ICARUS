@@ -1,11 +1,14 @@
-import { getProducts } from '../app/productsUseCase.js';
 import { getSecrets } from '../infrastructure/auth/Cognito/userValidation/secretsManager.js';
 import { SECRETS } from '../utils/enums/enums.js';
+
 // to ask Silvia later
 // eslint-disable-next-line node/no-unpublished-import
 // import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js';
 
-import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
+//import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
+import { logger } from '../infrastructure/server.js';
+import { allProducts, productById } from '../models/productModel.js';
+
 //TESTING PURPOSES VARIABLES - TO DELETE LATER
 const shipments = [
   {
@@ -29,12 +32,6 @@ const shipments = [
     },
   },
 ];
-// eslint-disable-next-line no-unused-vars
-const orders = [
-  {
-    id: 'order1',
-  },
-];
 
 const resolvers = {
   // DateTime: DateTimeResolver,
@@ -48,16 +45,32 @@ const resolvers = {
         }
         return { publicKey: key };
       } catch (error) {
-        console.error('Error fetching public key:', error);
+        logger.error('Error fetching public key:', error);
         throw new Error('Failed to fetch public key.');
       }
     },
 
     me: (_, __, { currentUser, findCurrentUser }) => findCurrentUser(currentUser),
-    accounts: isAutenticated((_, __, { findAllUsers }) => findAllUsers()),
+    accounts: async (_, __, { findAllUsers }) => {
+      const users = await findAllUsers();
+
+      return users;
+    },
 
     roles: (_, __, { findAllRoles }) => findAllRoles(),
-    products: isAutenticated(async (_, __, { currentUser }) => await getProducts(currentUser)),
+    products: async () => {
+      try {
+        const results = await allProducts();
+        return results;
+      } catch (e) {
+        logger.error('Error while getting the products', e);
+      }
+    },
+
+    productById: async (_, { product_id }) => {
+      const productData = await productById(product_id);
+      return productData ? productData : '';
+    },
     //get shipment by id
     getShipmentById: (_, { _id }) => {
       const shipment = shipments.find((shipment) => shipment._id === _id);

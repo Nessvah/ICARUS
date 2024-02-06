@@ -5,6 +5,7 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
+import client from 'prom-client';
 import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
 import { resolvers } from '../presentation/resolvers.js';
@@ -12,6 +13,7 @@ import { typeDefs } from '../presentation/schemas.js';
 // import { auth } from './auth/auth.js';
 import { connectDB } from './db/mssql.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
+import { auth } from '../infrastructure/auth/auth.js';
 
 const app = express();
 
@@ -21,9 +23,20 @@ const app = express();
 
 const httpServer = http.createServer(app);
 
+// Create a Registry to register the metrics
+const register = new client.Registry();
+
+client.collectDefaultMetrics({
+  app: 'icarus-monitoring',
+  prefix: 'node_',
+  timeout: 10000,
+  gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5],
+  register,
+});
+
 // initialize winston before anything else
 export const logger = await initializeLogger;
-logger.info('Logger initialized correctly.');
+logger.debug('Logger initialized correctly.');
 
 // initialize apollo server but adding the drain plugin for out httpserver
 const server = new ApolloServer({
@@ -33,17 +46,21 @@ const server = new ApolloServer({
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
-// try to connect to the db
-try {
-  connectDB();
-} catch (e) {
-  //console.error('cant connect to dbs', e);
-}
-
 // setup express middleware for morgan http logs
 //* The order matters so this needs to be before starting apollo server
 app.use(morgan(':response-time ms :graphql', { stream: accessLogStream }));
 app.use(morgan(':response-time ms :graphql', { stream: morganMongoDBStream }));
+
+//* configuring cors before any route/endpoint
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+    credentials: true, // Allow credentials 'Bearer Token'
+    optionSuccessStatus: 200,
+  }),
+);
 
 // start our server and await for it to resolve
 await server.start();
@@ -52,17 +69,20 @@ await server.start();
 // and express middleware funtion
 
 app.use(
-  '/',
-  cors(),
+  '/graphql',
   express.json(),
-  // setup morgan middleware
-
   expressMiddleware(server, {
     context: ({ req }) => {
-      return req;
+      return auth(req);
     },
   }),
 );
+
+// Prometheus end point
+app.get('/metrics', async (req, res) => {
+  res.setHeader('Content-Type', register.contentType);
+  res.send(await register.metrics());
+});
 
 //testing middleware
 app.get('/test', async (req, res, next) => {
@@ -74,6 +94,7 @@ app.use((err, req, res, next) => {
 
   res.status(500).json({ error: 'Internal Server Error' });
 });
+
 connectDB().catch(() => {
   // throw new DatabaseError();
 });
