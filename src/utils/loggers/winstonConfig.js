@@ -12,6 +12,7 @@ const { printf, colorize, combine, timestamp } = format;
  * @returns {Array} an array containing all diferent ways of log
  */
 const configureTransports = () => {
+  //const consoleTransport = new winston.transports.Console();
   const consoleTransport = new winston.transports.Console();
   const errorFileTransport = new winston.transports.File({
     filename: 'logs/error.log',

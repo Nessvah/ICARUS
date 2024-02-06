@@ -56,7 +56,7 @@ morgan.token('graphql', (req, res) => {
 // Create a stream for Morgan to write logs to MongoDB
 const morganMongoDBStream = {
   write: (log) => {
-    logger.info(typeof log);
+    logger.info(log, 'to implement');
   },
 };
 
