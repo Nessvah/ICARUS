@@ -33,7 +33,7 @@ const getSecrets = async (key) => {
       throw new Error('An error occured on the server side.');
     }
 
-    throw new Error(e);
+    throw new Error('aws shit');
   }
 };
 
