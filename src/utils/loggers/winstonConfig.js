@@ -136,7 +136,7 @@ const initializeLogger = (async () => {
 
       // setup transport for mongodb
       const mongodbTransport = await configureMongoDBTransport(client);
-      logger.info('Connected successfully to mongodb');
+      logger.debug('Connected successfully to mongodb');
 
       /// add the mongo transport to the setup
       logger.add(mongodbTransport);

@@ -36,7 +36,7 @@ client.collectDefaultMetrics({
 
 // initialize winston before anything else
 export const logger = await initializeLogger;
-logger.info('Logger initialized correctly.');
+logger.debug('Logger initialized correctly.');
 
 // initialize apollo server but adding the drain plugin for out httpserver
 const server = new ApolloServer({
@@ -51,14 +51,14 @@ const server = new ApolloServer({
 app.use(morgan(':response-time ms :graphql', { stream: accessLogStream }));
 app.use(morgan(':response-time ms :graphql', { stream: morganMongoDBStream }));
 
-// configure cors
+//* configuring cors before any route/endpoint
 app.use(
   cors({
-    origin: true,
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Authorization', 'Origin', 'Content-Type'],
-    credentials: true,
-    optionsSuccessStatus: 204,
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+    credentials: true, // Allow credentials 'Bearer Token'
+    optionSuccessStatus: 200,
   }),
 );
 
