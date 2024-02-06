@@ -32,7 +32,7 @@
     "no-underscore-dangle": "off",
     "class-methods-use-this": "off",
     "prefer-destructuring": ["error", { "object": true, "array": false }],
-    "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }],
+    "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val|_|__" }],
     "no-duplicate-imports": "error",
     "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] }],
     "no-var": "error",
