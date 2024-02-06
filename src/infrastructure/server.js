@@ -5,7 +5,6 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import client from 'prom-client';
 import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
 import { resolvers } from '../presentation/resolvers.js';
@@ -14,6 +13,7 @@ import { typeDefs } from '../presentation/schemas.js';
 import { connectDB } from './db/mssql.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
 import { auth } from '../infrastructure/auth/auth.js';
+import { activeGauge, httpRequestCounter, register, startRequestTimer } from '../metrics/prometheus.js';
 
 const app = express();
 
@@ -22,17 +22,6 @@ const app = express();
 // allowing for our servers to shut down gracefully.
 
 const httpServer = http.createServer(app);
-
-// Create a Registry to register the metrics
-const register = new client.Registry();
-
-client.collectDefaultMetrics({
-  app: 'icarus-monitoring',
-  prefix: 'node_',
-  timeout: 10000,
-  gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5],
-  register,
-});
 
 // initialize winston before anything else
 export const logger = await initializeLogger;
@@ -44,6 +33,21 @@ const server = new ApolloServer({
   resolvers,
   formatError: customFormatError,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+
+  // context will run before each resolver
+  context: ({ req }) => {
+    // start the timer for the http request
+    const timer = startRequestTimer('http');
+
+    activeGauge.labels('http').inc();
+    httpRequestCounter.labels(req.method, req.route, 'pending').inc();
+
+    // this will be in the context
+    return {
+      req,
+      timer,
+    };
+  },
 });
 
 // setup express middleware for morgan http logs
@@ -77,6 +81,17 @@ app.use(
     },
   }),
 );
+
+app.use((req, res, next) => {
+  res.on('finish', () => {
+    const status = res.statusCode >= 200 && res.statusCode < 400 ? 'success' : 'error';
+
+    // increment the http req with those labels
+    httpRequestCounter.labels(req.method, req.route, status).inc();
+  });
+
+  next();
+});
 
 // Prometheus end point
 app.get('/metrics', async (req, res) => {

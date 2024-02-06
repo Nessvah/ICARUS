@@ -8,6 +8,7 @@ import { SECRETS } from '../utils/enums/enums.js';
 //import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
 import { logger } from '../infrastructure/server.js';
 import { allProducts, productById } from '../models/productModel.js';
+import { startRequestTimer } from '../metrics/prometheus.js';
 
 //TESTING PURPOSES VARIABLES - TO DELETE LATER
 const shipments = [
@@ -58,12 +59,20 @@ const resolvers = {
     },
 
     roles: (_, __, { findAllRoles }) => findAllRoles(),
-    products: async () => {
+
+    //! Testing metrics with prometheus
+    products: async (_, { ctx }, { req }) => {
+      // start timer
+      const timer = startRequestTimer('graphql - products');
+
       try {
         const results = await allProducts();
         return results;
       } catch (e) {
         logger.error('Error while getting the products', e);
+      } finally {
+        timer.done();
+        logger.info(ctx.timer);
       }
     },
 
