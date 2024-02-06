@@ -10,11 +10,17 @@ const typeDefs = gql`
     roles: [Role!]!
     products: [Product]
     productById(product_id: ID!): Product
+    productByName(product_name: String!): [Product]
+    productsByPrice(price: Price!): [Product]
     getShipmentById(_id: ID!): Shipment
     getAllShipments: [Shipment]
     getShipmentsByOrderId(order_id: String!): [Shipment]
   }
 
+  input Price {
+    min: Float!
+    max: Float!
+  }
   type Key {
     publicKey: String
     privateKey: String

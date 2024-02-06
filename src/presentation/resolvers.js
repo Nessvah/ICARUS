@@ -7,7 +7,7 @@ import { SECRETS } from '../utils/enums/enums.js';
 
 //import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
 import { logger } from '../infrastructure/server.js';
-import { allProducts, productById } from '../models/productModel.js';
+import { allProducts, productById, productByName, productsByPrice } from '../models/productModel.js';
 
 //TESTING PURPOSES VARIABLES - TO DELETE LATER
 const shipments = [
@@ -69,6 +69,15 @@ const resolvers = {
 
     productById: async (_, { product_id }) => {
       const productData = await productById(product_id);
+      return productData ? productData : '';
+    },
+    productByName: async (_, { product_name }) => {
+      const productData = await productByName(product_name);
+      return productData ? productData : '';
+    },
+    productsByPrice: async (_, { price }) => {
+      const { min, max } = price;
+      const productData = await productsByPrice(min, max);
       return productData ? productData : '';
     },
     //get shipment by id
