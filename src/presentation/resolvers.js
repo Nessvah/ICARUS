@@ -1,10 +1,5 @@
 import { getSecrets } from '../aws/auth/Cognito/userValidation/secretsManager.js';
 import { SECRETS } from '../utils/enums/enums.js';
-
-// to ask Silvia later
-// eslint-disable-next-line node/no-unpublished-import
-// import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js';
-
 //import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
 import { logger } from '../infrastructure/server.js';
 import { allProducts, productById, productByName, productsByPrice } from '../models/productModel.js';
