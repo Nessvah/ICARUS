@@ -4,6 +4,7 @@
     "es2022": true,
     "jest": true
   },
+
   "ignorePatterns": ["public/javascripts/*.min.js"],
   "extends": ["eslint:recommended", "plugin:node/recommended"], //coding rules - eslint
   "plugins": ["prettier"],

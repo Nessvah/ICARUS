@@ -64,7 +64,7 @@ const startRequestTimer = (type) => {
       const duration = end - start;
 
       // increment the http req counter
-      httpRequestCounter.labels(type, 'success').inc();
+      httpRequestCounter.labels(type).inc();
 
       // decrement the gauge
       activeGauge.labels(type).dec();
