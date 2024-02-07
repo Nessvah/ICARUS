@@ -21,13 +21,16 @@ Exports an object named validationRules that contains validation methods for dif
 - email: Validates email addresses.
 - password: Ensures passwords meet complexity requirements.
 - username: Validates usernames for alpha-numeric characters and length constraints.
-- address: Checks if an address object contains required fields with appropriate formats.
+- zipCode: Checks if an zipCode contains required format.
 - phoneNumber: Validates phone number formats.
 - URL: Ensures URLs follow http or https schemes.
 - Date: Validates date strings against the ISO 8601 format.
 - Number: Checks for numeric input.
+- Float: Validates that the input is a number. It does not differentiate between integers and float numbers.
+- Integers: validates that the input is an integer. This means the number must not have a fractional component.
 - String: Validates string inputs.
-- Each method returns a validation result, which can be either a success or an error message detailing why the validation failed.
+
+Each method returns a validation result, which can be either a success or an error message detailing why the validation failed.
 
 ## "validation.js" file
 
@@ -42,11 +45,14 @@ Example:
 ```bash
 import { validation } from '../utils/validation/validation.js';
 
-const myResolver = validation(async (root, args, context, info) => {
-  // resolver logic
-});
+testCreateUser: validation(async (_, { input }) => {
+      const newUser = {
+        id: 1,
+        ...input,
+      };
 
-export { myResolver };
+      return newUser;
+    }),
 
 ```
 
