@@ -25,4 +25,26 @@ const productById = async (id) => {
   }
 };
 
-export { allProducts, productById };
+const productByName = async (name) => {
+  const query = `SELECT * FROM products WHERE product_name = '${name}'`;
+  try {
+    const productsResponse = await pool.query(query, [name]);
+    const products = productsResponse[0];
+    return products;
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
+const productsByPrice = async (min, max) => {
+  const query = `SELECT * FROM products WHERE price > ${min} AND price < ${max}`;
+  try {
+    const productsResponse = await pool.query(query, [min, max]);
+    const products = productsResponse[0];
+    return products;
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
+export { allProducts, productById, productByName, productsByPrice };

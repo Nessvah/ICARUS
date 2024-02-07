@@ -1,8 +1,9 @@
-import { getSecrets } from '../infrastructure/auth/Cognito/userValidation/secretsManager.js';
+import { getSecrets } from '../aws/auth/Cognito/userValidation/secretsManager.js';
 import { SECRETS } from '../utils/enums/enums.js';
 //import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
 import { logger } from '../infrastructure/server.js';
-import { allProducts, productById } from '../models/productModel.js';
+import { allProducts, productById, productByName, productsByPrice } from '../models/productModel.js';
+import { allCustomers, customerById } from '../models/customersModel.js';
 
 //TESTING PURPOSES VARIABLES - TO DELETE LATER
 const shipments = [
@@ -61,9 +62,30 @@ const resolvers = {
         logger.error('Error while getting the products', e);
       }
     },
-
+    customers: async () => {
+      try {
+        const results = await allCustomers();
+        return results;
+      } catch (e) {
+        logger.error('Error getting customers ', e);
+      }
+    },
+    customerById: async (_, { customer_id }) => {
+      const customerData = await customerById(customer_id);
+      console.log(customerData[0]);
+      return customerData ? customerData[0] : '';
+    },
     productById: async (_, { product_id }) => {
       const productData = await productById(product_id);
+      return productData ? productData : '';
+    },
+    productByName: async (_, { product_name }) => {
+      const productData = await productByName(product_name);
+      return productData ? productData : '';
+    },
+    productsByPrice: async (_, { price }) => {
+      const { min, max } = price;
+      const productData = await productsByPrice(min, max);
       return productData ? productData : '';
     },
     //get shipment by id

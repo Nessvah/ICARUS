@@ -13,7 +13,7 @@ import { typeDefs } from '../presentation/schemas.js';
 // import { auth } from './auth/auth.js';
 import { connectDB } from './db/mssql.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
-import { auth } from '../infrastructure/auth/auth.js';
+import { auth } from '../aws/auth/auth.js';
 
 const app = express();
 

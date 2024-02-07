@@ -3,7 +3,7 @@ import {
   CognitoIdentityProviderClient,
   InitiateAuthCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
-import { logger } from '../../server.js';
+import { logger } from '../../../infrastructure/server.js';
 
 const { REGION, USER_POOL_ID, CLIENT_ID } = process.env;
 const initiateAuth = async function ({ email, password }) {
