@@ -16,7 +16,8 @@ const validation = (resolver) => async (root, args, context, info) => {
     if (validate) {
       const { error } = validate(value);
       if (error) {
-        throw new ValidationError(`Validation error on field ${key}: ${error.message}`);
+        throw new ValidationError(`Validation error on field ${key}. ${error.message}`); //this message will be complemented with the messages
+        //in the validationRules.js file
       }
     }
   }

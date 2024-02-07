@@ -7,10 +7,10 @@ const validationRules = {
     Joi.string()
       .email({ tlds: { allow: true } })
       //enables validation against a list of known TLDs recognized in the official list of internet - generic or country TLDs
-      .required()
+
       .messages({
-        'string.email': '"email" must be a valid email address',
-        'any.required': '"email" is required',
+        'string.email': 'It must be a valid email address.',
+        //the message is to complement the ValidationError in validation.js
       })
       .validate(value),
 
@@ -20,10 +20,10 @@ const validationRules = {
       .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'))
       //at least 1 uppercase, 1 lowercase, 1 number and one special character.
       .messages({
-        'string.min': '"password" should have a minimum length of {#limit}',
+        'string.min': 'It should have a minimum length of {#limit}.',
         'string.pattern.base':
-          '"password" must include at least one uppercase letter, one lowercase letter, one number, and one special character',
-        'any.required': '"password" is required',
+          'It must include at least one uppercase letter, one lowercase letter, one number, and one special character.',
+        'any.required': 'It is required.',
       })
       .validate(value),
 
@@ -33,29 +33,22 @@ const validationRules = {
       //A-Z and 0-9 - for instance no white spaces or _.
       .min(3)
       .max(15)
-      .required()
+
       .messages({
-        'string.alphanum': '"username" must only contain alpha-numeric characters',
-        'string.min': '"username" should have a minimum length of {#limit}',
-        'string.max': '"username" should have a maximum length of {#limit}',
-        'any.required': '"username" is required',
+        'string.alphanum': 'It must only contain alpha-numeric characters.',
+        'string.min': 'It should have a minimum length of {#limit}.',
+        'string.max': 'It should have a maximum length of {#limit}.',
       })
       .validate(value),
 
-  address: (value) =>
-    Joi.object({
-      street: Joi.string().required(),
-      city: Joi.string().required(),
-      state: Joi.string().length(2).required(),
-      zipcode: Joi.string()
-        .pattern(/^[A-Za-z0-9\s-]+$/)
-        //more permissive and can match a wide range of international ZIP code formats.
-        .required(),
-    })
+  zipCode: (value) =>
+    Joi.string()
+      .pattern(/^[A-Za-z0-9\s-]+$/)
+      //allows for a broad range of characters that can be included in a zipCode, accommodating
+      //various international zip/postal code formats which may include letters, digits, spaces, and hyphens.
       .messages({
-        'object.base': '"address" must be of type object',
-        'any.required': '"{#label}" is required',
-        'string.pattern.base': '"zipcode" must be a valid ZIP code',
+        'string.pattern.base': 'It must be a valid zip/postal code.',
+        'any.required': 'It is required.',
       })
       .validate(value),
 
@@ -66,10 +59,9 @@ const validationRules = {
       //4 digits (typically the country code) optionally followed by a space, and then followed by a sequence of 1 to
       //14 digits (the main part of the phone number). This pattern is quite flexible and could match many international
       //phone number formats.
-      .required()
+
       .messages({
-        'string.pattern.base': '"phoneNumber" must be a valid phone number',
-        'any.required': '"phoneNumber" is required',
+        'string.pattern.base': 'It must be a valid phone number.',
       })
       .validate(value),
 
@@ -77,10 +69,9 @@ const validationRules = {
   URL: (value) =>
     Joi.string()
       .uri({ scheme: ['http', 'https'] })
-      .required()
+
       .messages({
-        'string.uri': '"URL" must be a valid URI with a scheme of http or https',
-        'any.required': '"URL" is required',
+        'string.uri': 'It must be a valid URI with a scheme of http or https.',
       })
       .validate(value),
 
@@ -88,29 +79,25 @@ const validationRules = {
     Joi.date()
       .iso()
       //YYYY-MM-DD and time if needed ????
-      .required()
+
       .messages({
-        'date.format': '"Date" must be in ISO 8601 format: YYYY-MM-DD',
-        'any.required': '"Date" is required',
+        'date.format': 'It must be in ISO 8601 format: YYYY-MM-DD.',
       })
       .validate(value),
 
   Number: (value) =>
     Joi.number()
-      .required()
+
       .messages({
-        'number.base': '"{#label}" must be a number',
-        'any.required': '"{#label}" is required',
+        'number.base': 'It must be a number.',
       })
       .validate(value),
 
   String: (value) =>
     Joi.string()
-      .required()
+
       .messages({
-        'string.base': '"{#label}" must be a string',
-        //label will be replaced by the key (eg. username)
-        'any.required': '"{#label}" is required',
+        'string.base': 'It must be a string.',
       })
       .validate(value),
 };
