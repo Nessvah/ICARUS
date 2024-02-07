@@ -1,38 +1,104 @@
 import 'dotenv/config';
 import { ApolloServer } from '@apollo/server';
-import { startStandaloneServer } from '@apollo/server/standalone';
-
+import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import express from 'express';
+import http from 'http';
+import cors from 'cors';
+import client from 'prom-client';
+import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
+import initializeLogger from '../utils/loggers/winstonConfig.js';
 import { resolvers } from '../presentation/resolvers.js';
 import { typeDefs } from '../presentation/schemas.js';
-import { auth } from './auth/auth.js';
+// import { auth } from './auth/auth.js';
 import { connectDB } from './db/mssql.js';
-// to ask Silvia later
-// eslint-disable-next-line node/no-unpublished-import
-import { customFormatError } from '../../shared/utils/error-handling/formatError.js';
+import { customFormatError } from '../utils/error-handling/formatError.js';
+import { auth } from '../aws/auth/auth.js';
 
+const app = express();
+
+// the httpserver handles incoming requests to our express
+// this is telling apollo server to "drain" this httpserver,
+// allowing for our servers to shut down gracefully.
+
+const httpServer = http.createServer(app);
+
+// Create a Registry to register the metrics
+const register = new client.Registry();
+
+client.collectDefaultMetrics({
+  app: 'icarus-monitoring',
+  prefix: 'node_',
+  timeout: 10000,
+  gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5],
+  register,
+});
+
+// initialize winston before anything else
+export const logger = await initializeLogger;
+logger.debug('Logger initialized correctly.');
+
+// initialize apollo server but adding the drain plugin for out httpserver
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  //error-handling classes
   formatError: customFormatError,
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
-const startServer = async () => {
-  try {
-    connectDB();
-  } catch (e) {
-    //console.error('cant connect to dbs', e);
-  }
+// setup express middleware for morgan http logs
+//* The order matters so this needs to be before starting apollo server
+app.use(morgan(':response-time ms :graphql', { stream: accessLogStream }));
+app.use(morgan(':response-time ms :graphql', { stream: morganMongoDBStream }));
 
-  await startStandaloneServer(server, {
-    // Add context to the server options, which provides authentication for each request
-    context({ req }) {
+//* configuring cors before any route/endpoint
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+    credentials: true, // Allow credentials 'Bearer Token'
+    optionSuccessStatus: 200,
+  }),
+);
+
+// start our server and await for it to resolve
+await server.start();
+
+// setup express middleware to handle cors, body parsing,
+// and express middleware funtion
+
+app.use(
+  '/graphql',
+  express.json(),
+  expressMiddleware(server, {
+    context: ({ req }) => {
       return auth(req);
     },
-    // Specify the port to listen on from the environment variable
-    listen: { port: process.env.PORT || 5001 },
-  });
-  //console.log(`🚀  Server ready at ${process.env.PORT}`);
-};
+  }),
+);
 
-startServer();
+// Prometheus end point
+app.get('/metrics', async (req, res) => {
+  res.setHeader('Content-Type', register.contentType);
+  res.send(await register.metrics());
+});
+
+//testing middleware
+app.get('/test', async (req, res, next) => {
+  res.json({ test: 'Testing rest endpoint' });
+});
+
+app.use((err, req, res, next) => {
+  // Handle the error
+
+  res.status(500).json({ error: 'Internal Server Error' });
+});
+
+connectDB().catch(() => {
+  // throw new DatabaseError();
+});
+
+// modify server startup
+await new Promise((resolve) => httpServer.listen({ port: process.env.PORT || 5001 }, resolve));
+logger.info(`🚀  Server ready at ${process.env.PORT}`);

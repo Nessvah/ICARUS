@@ -1,7 +1,9 @@
-import { getProducts } from '../app/productsUseCase.js';
-// to ask Silvia later
-// eslint-disable-next-line node/no-unpublished-import
-import { DatabaseError } from '../../shared/utils/error-handling/CustomErrors.js';
+import { getSecrets } from '../aws/auth/Cognito/userValidation/secretsManager.js';
+import { SECRETS } from '../utils/enums/enums.js';
+//import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
+import { logger } from '../infrastructure/server.js';
+import { allProducts, productById, productByName, productsByPrice } from '../models/productModel.js';
+import { allCustomers, customerById } from '../models/customersModel.js';
 
 //TESTING PURPOSES VARIABLES - TO DELETE LATER
 const shipments = [
@@ -26,20 +28,66 @@ const shipments = [
     },
   },
 ];
-// eslint-disable-next-line no-unused-vars
-const orders = [
-  {
-    id: 'order1',
-  },
-];
 
 const resolvers = {
   // DateTime: DateTimeResolver,
   Query: {
+    secrets: async () => {
+      try {
+        const key = await getSecrets(SECRETS.PUBLIC_KEY);
+
+        if (!key) {
+          throw new Error('Public key not available.');
+        }
+        return { publicKey: key };
+      } catch (error) {
+        logger.error('Error fetching public key:', error);
+        throw new Error('Failed to fetch public key.');
+      }
+    },
+
     me: (_, __, { currentUser, findCurrentUser }) => findCurrentUser(currentUser),
-    accounts: (_, __, { findAllUsers }) => findAllUsers(),
+    accounts: async (_, __, { findAllUsers }) => {
+      const users = await findAllUsers();
+
+      return users;
+    },
+
     roles: (_, __, { findAllRoles }) => findAllRoles(),
-    products: async (_, __, { currentUser }) => await getProducts(currentUser),
+    products: async () => {
+      try {
+        const results = await allProducts();
+        return results;
+      } catch (e) {
+        logger.error('Error while getting the products', e);
+      }
+    },
+    customers: async () => {
+      try {
+        const results = await allCustomers();
+        return results;
+      } catch (e) {
+        logger.error('Error getting customers ', e);
+      }
+    },
+    customerById: async (_, { customer_id }) => {
+      const customerData = await customerById(customer_id);
+      console.log(customerData[0]);
+      return customerData ? customerData[0] : '';
+    },
+    productById: async (_, { product_id }) => {
+      const productData = await productById(product_id);
+      return productData ? productData : '';
+    },
+    productByName: async (_, { product_name }) => {
+      const productData = await productByName(product_name);
+      return productData ? productData : '';
+    },
+    productsByPrice: async (_, { price }) => {
+      const { min, max } = price;
+      const productData = await productsByPrice(min, max);
+      return productData ? productData : '';
+    },
     //get shipment by id
     getShipmentById: (_, { _id }) => {
       const shipment = shipments.find((shipment) => shipment._id === _id);
@@ -63,18 +111,15 @@ const resolvers = {
       }
       return matchingShipments;
     },
-    //TO TEST DATABASE ERROR... TO DELETE LATER
-    testDatabaseError: () => {
-      throw new DatabaseError();
-    },
   },
 
   Mutation: {
-    createAccount(_, { input }, { createUser }) {
-      return createUser(input);
+    async createAccount(_, { input }, { createUser }) {
+      const result = await createUser(input);
+      return result.user;
     },
-    authorize(_, { email, password }, { authLogin }) {
-      return authLogin(email, password);
+    async authorize(_, { input }, { authLogin }) {
+      return await authLogin(input);
     },
     createRole(_, { input }, { createNewRole }) {
       return createNewRole(input);

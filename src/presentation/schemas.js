@@ -4,21 +4,40 @@ const typeDefs = gql`
   scalar DateTime
 
   type Query {
-    me: User
+    secrets: Key!
+    me: User!
     accounts: [User!]!
     roles: [Role!]!
     products: [Product]
+    productById(product_id: ID!): [Product]
+    productByName(product_name: String!): [Product]
+    productsByPrice(price: Price!): [Product]
     getShipmentById(_id: ID!): Shipment
     getAllShipments: [Shipment]
     getShipmentsByOrderId(order_id: String!): [Shipment]
+    customers: [Customer]
+    customerById(customer_id: ID!): [Customer]
+  }
+
+  type Customer {
+    email: String!
+    customer_id: ID!
+    customer_name: String!
+    icon_class: String!
+    icon_label: String!
+  }
+  input Price {
+    min: Float!
+    max: Float!
+  }
+  type Key {
+    publicKey: String
+    privateKey: String
   }
 
   type User {
-    id: ID!
     email: String!
-    roles: [Role]
-    idCostumer: String
-    created: DateTime!
+    created: String!
   }
 
   type Role {
@@ -36,32 +55,50 @@ const typeDefs = gql`
     password: String!
   }
 
+  input AuthorizeUser {
+    email: String!
+    password: String!
+  }
+
   input RoleInput {
     role: String!
   }
 
   type AuthPayload {
-    token: String!
+    token: Token!
     user: User!
+  }
+
+  type Token {
+    accessToken: String!
+    idToken: String!
+    refreshToken: String!
   }
 
   type Mutation {
     createAccount(input: CreateAccount!): User!
-    authorize(email: String!, password: String!): AuthPayload!
+    authorize(input: AuthorizeUser!): AuthPayload!
     createRole(input: RoleInput!): Role!
     addRoleToUSer(input: RoleInputById!): User!
     updateShipmentAddress(_id: ID!, address: AddressInput!): Shipment
+    createProduct(input: ProductInput): Product
   }
 
   type Product {
-    ProductId: Int
-    SKU: String!
-    Name: String!
-    Description: String
-    Price: Float
-    ImageUrl: String
-    StockLevel: Int
-    CategoryId: Int
+    product_id: ID!
+    product_name: String!
+    price: Float!
+    description: String!
+    icon_class: String!
+    icon_label: String!
+  }
+
+  input ProductInput {
+    product_name: String!
+    price: String!
+    description: String!
+    icon_class: String!
+    icon_label: String!
   }
 
   input AddressInput {
@@ -88,11 +125,5 @@ const typeDefs = gql`
     address: Address!
     billingAddress: Address
   }
-
-  #database error test - to delete later
-  type Query {
-    testDatabaseError: String
-  }
 `;
-
 export { typeDefs };

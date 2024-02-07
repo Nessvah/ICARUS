@@ -1,28 +1,36 @@
-import sql from 'mssql';
+// Get the client
+import mysql from 'mysql2/promise';
 
-const sqlConfig = {
-  user: `${process.env.DB_USER}`,
-  password: `${process.env.DB_PWD}`,
-  server: `${process.env.DB_HOST}`,
-  database: `${process.env.DB_DATABASE}`,
-  pool: {
-    max: 10,
-    min: 0,
-    idleTimeoutMillis: 30000,
-  },
-  options: {
-    trustServerCertificate: true, // change to true for local dev / self-signed certs
-  },
-};
+const { MYSQL_HOST, MYSQL_USER, MYSQL_PWD, MYSQL_DATABASE, MYSQL_PORT } = process.env;
 
 async function connectDB() {
   try {
-    if (!sql.isConnected) {
-      await sql.connect(sqlConfig);
-      //console.log('connected to rds');
-    }
-  } catch (error) {
-    //console.error(error);
+    // Create the connection to database
+    const pool = mysql.createPool({
+      host: MYSQL_HOST,
+      user: MYSQL_USER,
+      database: MYSQL_DATABASE,
+      port: MYSQL_PORT,
+      password: MYSQL_PWD,
+      waitForConnections: true,
+      connectionLimit: 10,
+      maxIdle: 10, // max idle connections, the default value is the same as `connectionLimit`
+      idleTimeout: 60000, // idle connections timeout, in milliseconds, the default value 60000
+      queueLimit: 0,
+      enableKeepAlive: true,
+      keepAliveInitialDelay: 0,
+    });
+
+    console.log('connected to ec2 mysql ');
+
+    /*const queryTablesSchema =
+      "SELECT table_name, column_name, data_type, is_nullable, column_default FROM information_schema.columns WHERE table_schema = 'icarus' AND table_name = 'products'";
+
+    //const dbSchema = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'icarus';"; */
+
+    return pool;
+  } catch (err) {
+    console.error(err);
   }
 }
 
