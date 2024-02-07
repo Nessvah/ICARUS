@@ -77,12 +77,11 @@ const resolvers = {
     },
     customerById: async (_, { customer_id }) => {
       const customerData = await customerById(customer_id);
-      console.log(customerData[0]);
-      return customerData ? customerData[0] : '';
+      return customerData ? customerData[0][0] : '';
     },
     productById: async (_, { product_id }) => {
       const productData = await productById(product_id);
-      return productData ? productData : '';
+      return productData ? productData[0][0] : '';
     },
     productByName: async (_, { product_name }) => {
       const productData = await productByName(product_name);

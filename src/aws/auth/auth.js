@@ -76,7 +76,7 @@ const auth = async (req) => {
 
   try {
     // Verifying AWS jwt to see if it is correct
-    const jwtResponse = tokenVerifier(tokenWithoutPrefix);
+    const jwtResponse = await tokenVerifier(tokenWithoutPrefix);
 
     // inserted in autohorization field
     if (jwtResponse) {
