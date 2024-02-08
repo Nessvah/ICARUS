@@ -54,7 +54,11 @@ const resolvers = {
     },
 
     roles: (_, __, { findAllRoles }) => findAllRoles(),
-    products: async () => {
+
+    //! Testing metrics with prometheus
+    products: async (_, __, { req }) => {
+      // start timer
+
       try {
         const results = await allProducts();
         return results;
