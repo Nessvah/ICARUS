@@ -1,31 +1,17 @@
 //This file exports an object named validationRules that contains methods for validating different types of inputs using the
 //Joi validation library. Each method is designed to validate a specific type of input and returns the result of the validation or error.messages.
 import Joi from 'joi';
-import { parsePhoneNumberFromString } from 'libphonenumber-js';
-
-//CUSTOM VALIDATION RULES
-//Custom validatin rule for phoneNumber - basically it ensures that the phoneNumber has a correct format and returns proper error message if not.
-//uses libphonenumber library to check if the phone number it is valid.
-const phoneNumberValidation = (value, helpers) => {
-  const phoneNumber = parsePhoneNumberFromString(value);
-  if (!phoneNumber || !phoneNumber.isValid()) {
-    return helpers.message(
-      'Invalid phone number format. Please include country code (+XXX) followed by your number, up to 14 digits. Example: +351934955159.',
-    );
-  }
-  return value;
-};
 
 //VALIDATION RULES OBJECT
 const validationRules = {
   email: (value) =>
     Joi.string()
-      //it will only validate email addresses with generic top-level domains (e.g., .com, .net, .org)
-      //and not country-code top-level domains (e.g., .uk, .ca, .de).
-      .email({ tlds: { allow: false } })
-      //enables validation against a list of known TLDs recognized in the official list of internet - generic or country TLDs
-      //WE MIGHT NEED TO CHANGE AND SPECIFY WHICH ONES ARE ALLOWED LATER
-
+      //it will only validate email addresses with generic top-level domains and some country-code top-level domains.
+      .email({
+        tlds: {
+          allow: ['com', 'net', 'org', 'br', 'pt', 'uk', 'us'],
+        },
+      })
       .messages({
         'string.email': 'It must be a valid email address.',
         //the message is to complement the ValidationError in validation.js
@@ -53,7 +39,6 @@ const validationRules = {
       .trim(true)
       .min(3)
       .max(15)
-
       .messages({
         'string.alphanum': 'It must only contain alpha-numeric characters.',
         'string.min': 'It should have a minimum length of {#limit}.',
@@ -64,55 +49,47 @@ const validationRules = {
   zipCode: (value) =>
     Joi.string()
       .pattern(/^[A-Za-z0-9\s-]+$/)
-      //allows for a broad range of characters that can be included in a zipCode, accommodating
-      //various international zip/postal code formats which may include letters, digits, spaces, and hyphens.
-      //WE MIGHT NEED TO CHANGE DUE TO RISK OF INCORRECT ZIPCODE FORMAT INPUT - FOR NOW ALLOWING EVERYTHING. LATER LIBRARY TO DEAL WITH ZIPCODES ACCORDING WITH COUNTRY
-      .messages({
-        'string.pattern.base': 'It must be a valid zip/postal code.',
-        'any.required': 'It is required.',
-      })
+      //It might change later - not avoiding invalid zipCodes
+      .messages({ 'string.pattern.base': 'Please insert a valid zip/postal code.' })
       .validate(value),
 
   phoneNumber: (value) =>
     Joi.string()
-      .custom(phoneNumberValidation, 'custom phone number validation')
+      .pattern(/^\+\d{1,4}\s?\d{1,14}$/)
       //It's specifying that the string must start with an optional +, followed by an optional sequence of up to
       //4 digits (typically the country code) optionally followed by a space, and then followed by a sequence of 1 to
       //14 digits (the main part of the phone number). This pattern is quite flexible and could match many international
+      //phone number formats.
+      .min(9)
+      .max(14)
+      .messages({
+        'string.pattern.base':
+          'Please provide country code (+XXX) followed by your number, up to 14 digits. Example: +351934955159.',
+        'string.min':
+          'Please provide country code (+XXX) followed by your number, up to 14 digits. Example: +351934955159.',
+        'string.max':
+          'Please provide country code (+XXX) followed by your number, up to 14 digits. Example: +351934955159.',
+      })
       .validate(value),
 
-  // GENERIC RULES
-  URL: (value) =>
+  url: (value) =>
     Joi.string()
       .uri({ scheme: ['http', 'https'] })
-
       .messages({
-        'string.uri': 'It must be a valid URI with a scheme of http or https.',
+        'string.format': 'It must be a valid uri with a scheme of http or https. Example: "http://localt:5088825/"',
       })
       .validate(value),
 
-  Date: (value) =>
+  date: (value) =>
     Joi.date()
       .iso()
-      //YYYY-MM-DD and time if needed ????
-
       .messages({
-        'date.format': 'It must be in ISO 8601 format: YYYY-MM-DD.',
+        'date.format':
+          'It must be in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ for date and time or YYYY-MM-DD if date only.',
       })
       .validate(value),
 
-  //Validates that the input is a number. It does not differentiate between integers and float numbers.
-  //most general and it is suitable for cases where any numeric value is acceptable, regardless of whether it has a decimal component.
-  Number: (value) =>
-    Joi.number()
-
-      .messages({
-        'number.base': 'It must be a number.',
-      })
-      .validate(value),
-
-  //Specifically validates that the input is an integer. This means the number must not have a fractional component.
-  Integer: (value) =>
+  /* int: (value) =>
     Joi.number()
       .integer()
       .messages({
@@ -122,7 +99,7 @@ const validationRules = {
       .validate(value),
 
   //Validates that the input is a float number and optionally specifies the precision (number of decimal places).
-  Float: (value) =>
+  float: (value) =>
     Joi.number()
       .precision(2)
       .messages({
@@ -131,13 +108,12 @@ const validationRules = {
       })
       .validate(value),
 
-  String: (value) =>
+  string: (value) =>
     Joi.string()
-
       .messages({
         'string.base': 'It must be a string.',
       })
-      .validate(value),
+      .validate(value), */
 };
 
 export { validationRules };

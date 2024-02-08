@@ -16,6 +16,7 @@ const customFormatError = (error) => {
 
   // Check if it's an instance of customErrors or GraphQLError
   if (
+    error instanceof GraphQLError ||
     error instanceof AuthenticationError ||
     error instanceof AuthorizationError ||
     error instanceof DatabaseError ||
@@ -24,8 +25,7 @@ const customFormatError = (error) => {
     error instanceof RateLimitError ||
     error instanceof ServiceUnavailableError ||
     error instanceof UserInputError ||
-    error instanceof ValidationError ||
-    error instanceof GraphQLError
+    error instanceof ValidationError
   ) {
     // In development environment, show detailed error information - message, extensions, locations and path but not in production
     return {
