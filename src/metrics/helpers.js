@@ -31,6 +31,6 @@ export function createHistogram(name, help, labelNames, register) {
     help,
     labelNames,
     registers: [register],
-    buckets: [0.1, 5, 15, 50, 100, 500],
+    buckets: [0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 2, 5, 10, 20, 30, 60],
   });
 }

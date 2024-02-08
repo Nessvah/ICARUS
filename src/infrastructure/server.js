@@ -73,8 +73,6 @@ app.use(
 
 // Prometheus end point
 app.get('/metrics', async (req, res) => {
-  const metric = register.getMetricsAsArray();
-  logger.info(metric, ' ----- metriccccc');
   res.setHeader('Content-Type', register.contentType);
   res.send(await register.metrics());
 });
