@@ -50,15 +50,15 @@ export function createMetricsPlugin(register) {
       ['operationName', 'operation'],
       register,
     ),
-    resolverTime: createHistogram(
-      'graphql_resolver_time',
-      'The time to resolve a GraphQL field.',
-      ['parentType', 'fieldName', 'returnType'],
+    resolutionTime: createHistogram(
+      'graphql_resolution_time',
+      'The time taken to resolve a GraphQL query (in seconds).',
+      ['operationName', 'operation'],
       register,
     ),
-    totalRequestTime: createHistogram(
-      'graphql_total_request_time',
-      'The time to complete a GraphQL query.',
+    executionTime: createHistogram(
+      'graphql_execution_time',
+      'The overall time to execute a GraphQL query (in seconds)',
       ['operationName', 'operation'],
       register,
     ),
@@ -68,83 +68,87 @@ export function createMetricsPlugin(register) {
   // apollo have 9 steps in their whole lifecycle
 
   const metricsPlugin = {
-    requestDidStart() {
-      console.log('request started');
+    async requestDidStart() {
       return {
         parsingDidStart(parsingContext) {
-          console.log('...parsing');
-          const labels = filterUndefinedValues({
-            operationName: parsingContext.request.operationName || '',
-            operation: parsingContext.operation?.operation,
-          });
-          metrics.parsed.labels(labels).inc();
+          const { operationName } = parsingContext.request;
+          const isIntrospection = operationName.includes('IntrospectionQuery');
+
+          // remove introspection queries from prometheus data
+          if (!isIntrospection) {
+            const labels = filterUndefinedValues({
+              operationName: parsingContext.request.operationName || '',
+              operation: parsingContext.operation?.operation,
+            });
+            metrics.parsed.labels(labels).inc();
+          }
         },
-        validationDidStart(validationContext) {
-          console.log('validation starts');
-          console.log('****************', validationContext.request);
-          console.log('---------------', validationContext?.operation);
+        async validationDidStart(validationContext) {
           const labels = filterUndefinedValues({
             operationName: validationContext.request.operationName || '',
             operation: validationContext.operation?.operation,
           });
           metrics.validationStarted.labels(labels).inc();
         },
-        didResolveOperation(resolveContext) {
-          console.log('resolve starts');
-          console.log('****************', resolveContext.request);
-          console.log('---------------', resolveContext?.operation);
+        async didResolveOperation(resolveContext) {
+          logger.info('resolve starts');
+
           const labels = filterUndefinedValues({
             operationName: resolveContext.request.operationName || '',
             operation: resolveContext.operation.operation,
           });
           metrics.resolved.labels(labels).inc();
         },
-        executionDidStart(executingContext) {
-          console.log('execution starts');
-          console.log('****************', executingContext.request);
-          console.log('---------------', executingContext?.operation);
+        async executionDidStart(executingContext) {
+          logger.info('execution starts');
+          // track current time
+          const startTime = process.hrtime();
+
+          // attach the start time to the context in the req obj
+          executingContext.request.startTime = startTime;
+
           const labels = filterUndefinedValues({
             operationName: executingContext.request.operationName || '',
             operation: executingContext.operation.operation,
           });
           metrics.startedExecuting.inc(labels);
         },
-        didEncounterErrors(errorContext) {
-          console.log('error starts');
-          console.log('****************', errorContext.request);
-          console.log('---------------', errorContext?.operation);
+        async didEncounterErrors(errorContext) {
           const labels = filterUndefinedValues({
             operationName: errorContext.request.operationName || '',
             operation: errorContext.operation?.operation,
           });
           metrics.encounteredErrors.labels(labels).inc();
         },
-        willSendResponse(responseContext) {
-          console.log('response starts');
-          console.log('****************', responseContext.request);
-          console.log('---------------', responseContext?.operation);
-          const labels = filterUndefinedValues({
-            operationName: responseContext.request.operationName || '',
-            operation: responseContext.operation?.operation,
-          });
+        async willSendResponse(responseContext) {
+          // get the start time from request
+
+          const { startTime } = responseContext.request;
+
+          let labels;
+
+          if (startTime) {
+            try {
+              // calculate duration
+              const endTime = process.hrtime(startTime);
+              // it returns [seconds, nanoseconds]
+              const durationNanos = endTime[0] * 1e9 + endTime[1];
+
+              // convert from nanos to secs
+              const durationSecs = durationNanos / nanosToSec;
+
+              labels = filterUndefinedValues({
+                operationName: responseContext.request.operationName || '',
+                operation: responseContext.operation?.operation,
+              });
+              metrics.executionTime.observe(labels, durationSecs);
+              metrics.resolutionTime.observe(labels, durationSecs);
+            } catch (e) {
+              logger.error(e);
+            }
+          }
+
           metrics.responded.labels(labels).inc();
-
-          // const tracing = responseContext.response.extensions?.tracing;
-          console.log(responseContext.response?.extensions);
-          // if (tracing && tracing.version === 1) {
-          //   metrics.totalRequestTime.observe(labels, tracing.duration / nanosToSec);
-
-          //   tracing.execution.resolvers.forEach(({ parentType, fieldName, returnType, duration }) => {
-          //     metrics.resolverTime.observe(
-          //       {
-          //         parentType,
-          //         fieldName,
-          //         returnType,
-          //       },
-          //       duration / nanosToSec,
-          //     );
-          //   });
-          // }
         },
       };
     },

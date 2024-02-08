@@ -4,7 +4,7 @@ import { Counter, Histogram } from 'prom-client';
  * Creates a Prometheus counter metric with the specified name, help message, label names, and registry.
  * @param {string} name - name of counter metric
  * @param {string} help - help message describing the counter metrics
- * @param {string[]} label - an array of label names associated with the counter metric
+ * @param {string[]} labelNames - an array of label names associated with the counter metric
  * @param {Registry} register - The prometheus registry to register the counter metrics
  * @returns {Counter} - Returns a prometheus counter metrics instance.
  */
@@ -21,15 +21,16 @@ export function createCounter(name, help, labelNames, register) {
  * CCreates a Prometheus histogram metric with the specified name, help message, label names, and registry.
  * @param {string} name - name of counter metric
  * @param {string} help - help message describing the counter metrics
- * @param {string[]} label - an array of label names associated with the counter metric
+ * @param {string[]} labelNames - an array of label names associated with the counter metric
  * @param {Registry} register - The prometheus registry to register the counter metrics
- * @returns {Counter} - Returns a prometheus counter metrics instance.
+ * @returns {Histogram} - Returns a prometheus histogram metrics instance.
  */
-export function createHistogram(name, help, label, register) {
+export function createHistogram(name, help, labelNames, register) {
   return new Histogram({
     name,
     help,
-    label,
+    labelNames,
     registers: [register],
+    buckets: [0.1, 5, 15, 50, 100, 500],
   });
 }
