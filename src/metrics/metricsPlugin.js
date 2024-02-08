@@ -84,34 +84,46 @@ export function createMetricsPlugin(register) {
           }
         },
         async validationDidStart(validationContext) {
-          const labels = filterUndefinedValues({
-            operationName: validationContext.request.operationName || '',
-            operation: validationContext.operation?.operation,
-          });
-          metrics.validationStarted.labels(labels).inc();
+          const { operationName } = validationContext.request;
+          const isIntrospection = operationName.includes('IntrospectionQuery');
+
+          if (!isIntrospection) {
+            const labels = filterUndefinedValues({
+              operationName: validationContext.request.operationName || '',
+              operation: validationContext.operation?.operation,
+            });
+            metrics.validationStarted.labels(labels).inc();
+          }
         },
         async didResolveOperation(resolveContext) {
-          logger.info('resolve starts');
+          const { operationName } = resolveContext.request;
+          const isIntrospection = operationName.includes('IntrospectionQuery');
 
-          const labels = filterUndefinedValues({
-            operationName: resolveContext.request.operationName || '',
-            operation: resolveContext.operation.operation,
-          });
-          metrics.resolved.labels(labels).inc();
+          if (!isIntrospection) {
+            const labels = filterUndefinedValues({
+              operationName: resolveContext.request.operationName || '',
+              operation: resolveContext.operation.operation,
+            });
+            metrics.resolved.labels(labels).inc();
+          }
         },
         async executionDidStart(executingContext) {
-          logger.info('execution starts');
-          // track current time
-          const startTime = process.hrtime();
+          const { operationName } = executingContext.request;
+          const isIntrospection = operationName.includes('IntrospectionQuery');
 
-          // attach the start time to the context in the req obj
-          executingContext.request.startTime = startTime;
+          if (!isIntrospection) {
+            // track current time
+            const startTime = process.hrtime();
 
-          const labels = filterUndefinedValues({
-            operationName: executingContext.request.operationName || '',
-            operation: executingContext.operation.operation,
-          });
-          metrics.startedExecuting.inc(labels);
+            // attach the start time to the context in the req obj
+            executingContext.request.startTime = startTime;
+
+            const labels = filterUndefinedValues({
+              operationName: executingContext.request.operationName || '',
+              operation: executingContext.operation.operation,
+            });
+            metrics.startedExecuting.inc(labels);
+          }
         },
         async didEncounterErrors(errorContext) {
           const labels = filterUndefinedValues({
@@ -121,34 +133,39 @@ export function createMetricsPlugin(register) {
           metrics.encounteredErrors.labels(labels).inc();
         },
         async willSendResponse(responseContext) {
-          // get the start time from request
+          const { operationName } = responseContext.request;
+          const isIntrospection = operationName.includes('IntrospectionQuery');
 
-          const { startTime } = responseContext.request;
+          if (!isIntrospection) {
+            // get the start time from request
 
-          let labels;
+            const { startTime } = responseContext.request;
 
-          if (startTime) {
-            try {
-              // calculate duration
-              const endTime = process.hrtime(startTime);
-              // it returns [seconds, nanoseconds]
-              const durationNanos = endTime[0] * 1e9 + endTime[1];
+            let labels;
 
-              // convert from nanos to secs
-              const durationSecs = durationNanos / nanosToSec;
+            if (startTime) {
+              try {
+                // calculate duration
+                const endTime = process.hrtime(startTime);
+                // it returns [seconds, nanoseconds]
+                const durationNanos = endTime[0] * 1e9 + endTime[1];
 
-              labels = filterUndefinedValues({
-                operationName: responseContext.request.operationName || '',
-                operation: responseContext.operation?.operation,
-              });
-              metrics.executionTime.observe(labels, durationSecs);
-              metrics.resolutionTime.observe(labels, durationSecs);
-            } catch (e) {
-              logger.error(e);
+                // convert from nanos to secs
+                const durationSecs = durationNanos / nanosToSec;
+
+                labels = filterUndefinedValues({
+                  operationName: responseContext.request.operationName || '',
+                  operation: responseContext.operation?.operation,
+                });
+                metrics.executionTime.observe(labels, durationSecs);
+                metrics.resolutionTime.observe(labels, durationSecs);
+              } catch (e) {
+                logger.error(e);
+              }
             }
-          }
 
-          metrics.responded.labels(labels).inc();
+            metrics.responded.labels(labels).inc();
+          }
         },
       };
     },
