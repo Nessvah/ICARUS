@@ -12,38 +12,38 @@
 		"columns": [
 			{
 				"name": "category_id",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": true,
 				"nullable": false,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": "auto_increment"
 			},
 			{
 				"name": "category_name",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "varchar(50)",
+				"columnType": "VARCHAR(50)",
 				"extra": ""
 			},
 			{
 				"name": "icon_class",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'FaTags'",
-				"columnType": "varchar(50)",
+				"columnType": "VARCHAR(50)",
 				"extra": ""
 			},
 			{
 				"name": "icon_label",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'Category'",
-				"columnType": "varchar(100)",
+				"columnType": "VARCHAR(100)",
 				"extra": ""
 			}
 		]
@@ -61,47 +61,47 @@
 		"columns": [
 			{
 				"name": "customer_id",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": true,
 				"nullable": false,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": "auto_increment"
 			},
 			{
 				"name": "customer_name",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "varchar(100)",
+				"columnType": "VARCHAR(100)",
 				"extra": ""
 			},
 			{
 				"name": "email",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "varchar(100)",
+				"columnType": "VARCHAR(100)",
 				"extra": ""
 			},
 			{
 				"name": "icon_class",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'FaUsers'",
-				"columnType": "varchar(50)",
+				"columnType": "VARCHAR(50)",
 				"extra": ""
 			},
 			{
 				"name": "icon_label",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'Customer'",
-				"columnType": "varchar(100)",
+				"columnType": "VARCHAR(100)",
 				"extra": ""
 			}
 		]
@@ -119,65 +119,65 @@
 		"columns": [
 			{
 				"name": "order_item_id",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": true,
 				"nullable": false,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": "auto_increment"
 			},
 			{
 				"name": "order_id",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": ""
 			},
 			{
 				"name": "product_id",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": ""
 			},
 			{
 				"name": "quantity",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": ""
 			},
 			{
 				"name": "price",
-				"type": "decimal",
+				"type": "DECIMAL",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "decimal(10,2)",
+				"columnType": "DECIMAL(10,2)",
 				"extra": ""
 			},
 			{
 				"name": "icon_class",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'FaBasketShopping'",
-				"columnType": "varchar(50)",
+				"columnType": "VARCHAR(50)",
 				"extra": ""
 			},
 			{
 				"name": "icon_label",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'Order Item'",
-				"columnType": "varchar(100)",
+				"columnType": "VARCHAR(100)",
 				"extra": ""
 			}
 		]
@@ -195,47 +195,47 @@
 		"columns": [
 			{
 				"name": "order_id",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": true,
 				"nullable": false,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": "auto_increment"
 			},
 			{
 				"name": "order_date",
-				"type": "timestamp",
+				"type": "TIMESTAMP",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'CURRENT_TIMESTAMP'",
-				"columnType": "timestamp",
+				"columnType": "TIMESTAMP",
 				"extra": "DEFAULT_GENERATED"
 			},
 			{
 				"name": "customer_id",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": "MUL"
 			},
 			{
 				"name": "icon_class",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'FaCartShopping'",
-				"columnType": "varchar(50)",
+				"columnType": "VARCHAR(50)",
 				"extra": ""
 			},
 			{
 				"name": "icon_label",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'Order'",
-				"columnType": "varchar(100)",
+				"columnType": "VARCHAR(100)",
 				"extra": ""
 			}
 		]
@@ -288,43 +288,43 @@
 		"columns": [
 			{
 				"name": "review_id",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": true,
 				"nullable": false,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": "auto_increment"
 			},
 			{
 				"name": "product_id",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": "MUL"
 			},
 			{
 				"name": "customer_id",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": "MUL"
 			},
 			{
 				"name": "rating",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": ""
 			},
 			{
 				"name": "review_text",
-				"type": "text",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
@@ -333,29 +333,29 @@
 			},
 			{
 				"name": "review_date",
-				"type": "timestamp",
+				"type": "TIMESTAMP",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'CURRENT_TIMESTAMP'",
-				"columnType": "timestamp",
+				"columnType": "TIMESTAMP",
 				"extra": "DEFAULT_GENERATED"
 			},
 			{
 				"name": "icon_class",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'FaFaceGrinStars'",
-				"columnType": "varchar(50)",
+				"columnType": "VARCHAR(50)",
 				"extra": ""
 			},
 			{
 				"name": "icon_label",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'Product Review'",
-				"columnType": "varchar(100)",
+				"columnType": "VARCHAR(100)",
 				"extra": ""
 			}
 		]
@@ -373,29 +373,29 @@
 		"columns": [
 			{
 				"name": "product_id",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": true,
 				"nullable": false,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": "auto_increment"
 			},
 			{
 				"name": "product_name",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "varchar(100)",
+				"columnType": "VARCHAR(100)",
 				"extra": ""
 			},
 			{
 				"name": "price",
-				"type": "decimal",
+				"type": "DECIMAL",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "decimal(10,2)",
+				"columnType": "DECIMAL(10,2)",
 				"extra": ""
 			},
 			{
@@ -409,20 +409,20 @@
 			},
 			{
 				"name": "icon_class",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'FaBoxOpen'",
-				"columnType": "varchar(50)",
+				"columnType": "VARCHAR(50)",
 				"extra": ""
 			},
 			{
 				"name": "icon_label",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'Product'",
-				"columnType": "varchar(100)",
+				"columnType": "VARCHAR(100)",
 				"extra": ""
 			}
 		]
@@ -440,56 +440,56 @@
 		"columns": [
 			{
 				"name": "shipment_id",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": true,
 				"nullable": false,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": "auto_increment"
 			},
 			{
 				"name": "order_id",
-				"type": "int",
+				"type": "INT",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "int",
+				"columnType": "INT",
 				"extra": "MUL"
 			},
 			{
 				"name": "shipment_date",
-				"type": "timestamp",
+				"type": "TIMESTAMP",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'CURRENT_TIMESTAMP'",
-				"columnType": "timestamp",
+				"columnType": "TIMESTAMP",
 				"extra": "DEFAULT_GENERATED"
 			},
 			{
 				"name": "tracking_number",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": null,
-				"columnType": "varchar(50)",
+				"columnType": "VARCHAR(50)",
 				"extra": ""
 			},
 			{
 				"name": "icon_class",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'FaTruckFast'",
-				"columnType": "varchar(50)",
+				"columnType": "VARCHAR(50)",
 				"extra": ""
 			},
 			{
 				"name": "icon_label",
-				"type": "varchar",
+				"type": "VARCHAR",
 				"primaryKey": false,
 				"nullable": true,
 				"defaultValue": "'Shipment'",
-				"columnType": "varchar(100)",
+				"columnType": "VARCHAR(100)",
 				"extra": ""
 			}
 		]
