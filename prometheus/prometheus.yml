@@ -1,0 +1,21 @@
+global:
+  scrape_interval: '1m'
+  scrape_timeout: '10s'
+  evaluation_interval: '1m'
+
+# Scrape config files specifies a list of globs. Scrape configs are read from
+# all matching files and appended to the list of scrape configs.
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['192.168.1.7:9090']
+
+  - job_name: 'icarus-monitoring'
+    metrics_path: /metrics
+    honor_labels: false
+    honor_timestamps: true
+    scheme: http
+    follow_redirects: true
+    static_configs:
+      - targets: ['icarus-api:5001']

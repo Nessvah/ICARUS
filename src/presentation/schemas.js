@@ -9,14 +9,14 @@ const typeDefs = gql`
     accounts: [User!]!
     roles: [Role!]!
     products: [Product]
-    productById(product_id: ID!): [Product]
+    productById(product_id: ID!): Product
     productByName(product_name: String!): [Product]
     productsByPrice(price: Price!): [Product]
     getShipmentById(_id: ID!): Shipment
     getAllShipments: [Shipment]
     getShipmentsByOrderId(order_id: String!): [Shipment]
     customers: [Customer]
-    customerById(customer_id: ID!): [Customer]
+    customerById(customer_id: ID!): Customer
   }
 
   type Customer {
