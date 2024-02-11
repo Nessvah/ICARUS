@@ -9,6 +9,9 @@
     "start": "node ./infrastructure/server.js",
     "dev": "nodemon ./infrastructure/server.js"
   },
+  "engines": {
+    "node": ">=20 <21"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

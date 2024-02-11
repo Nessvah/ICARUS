@@ -14,6 +14,7 @@ import { typeDefs } from '../presentation/schemas.js';
 import { connectDB } from './db/mssql.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
 import { auth } from '../aws/auth/auth.js';
+import { createMetricsPlugin } from '../metrics/metricsPlugin.js';
 
 const app = express();
 
@@ -23,27 +24,19 @@ const app = express();
 
 const httpServer = http.createServer(app);
 
-// Create a Registry to register the metrics
-const register = new client.Registry();
-
-client.collectDefaultMetrics({
-  app: 'icarus-monitoring',
-  prefix: 'node_',
-  timeout: 10000,
-  gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5],
-  register,
-});
-
 // initialize winston before anything else
 export const logger = await initializeLogger;
 logger.debug('Logger initialized correctly.');
+
+const register = new client.Registry();
+const metricsPlugin = await createMetricsPlugin(register);
 
 // initialize apollo server but adding the drain plugin for out httpserver
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   formatError: customFormatError,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer }), metricsPlugin],
 });
 
 // setup express middleware for morgan http logs

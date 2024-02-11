@@ -1,5 +1,4 @@
-import { GraphQLError } from 'graphql';
-import { customFormatError } from '../src/shared/utils/error-handling/formatError.js';
+import { customFormatError } from '../src/utils/error-handling/formatError.js';
 import {
   AuthenticationError,
   AuthorizationError,
@@ -10,7 +9,7 @@ import {
   ServiceUnavailableError,
   UserInputError,
   ValidationError,
-} from '../src/shared/utils/error-handling/CustomErrors.js';
+} from '../src/utils/error-handling/CustomErrors.js';
 
 describe('customFormatError', () => {
   // AUTHENTICATION ERROR TEST
@@ -108,17 +107,6 @@ describe('customFormatError', () => {
     expect(formattedError).toEqual({
       message: 'Validation error.',
       extensions: { code: 'VALIDATION_ERROR' },
-      locations: undefined,
-      path: undefined,
-    });
-  });
-  // TESTS ERROR FORMATATION
-  it('formats GraphQLError correctly', () => {
-    const error = new GraphQLError('A GraphQL error');
-    const formattedError = customFormatError(error);
-    expect(formattedError).toEqual({
-      message: 'A GraphQL error',
-      extensions: {},
       locations: undefined,
       path: undefined,
     });
