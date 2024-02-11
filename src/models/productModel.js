@@ -18,7 +18,7 @@ const productById = async (id) => {
   const query = `SELECT * FROM products WHERE product_id = ${id}`;
   try {
     const product = await pool.query(query, [id]);
-    logger.info(product[0]);
+    //logger.info(product[0]);
     return product;
   } catch (e) {
     throw new Error(e);
@@ -47,4 +47,18 @@ const productsByPrice = async (min, max) => {
   }
 };
 
-export { allProducts, productById, productByName, productsByPrice };
+const createProduct = async (input) => {
+  const { description, icon_class, icon_label, price, product_name } = input;
+  const query = `INSERT INTO products (description, icon_class, icon_label, price, product_name) VALUES (?, ?, ?, ?, ?)`;
+  const values = [description, icon_class, icon_label, price, product_name];
+  try {
+    const productCreationResponse = await pool.query(query, values);
+    const insertedProduct = productCreationResponse[0].insertId;
+    const productData = await pool.query('SELECT * FROM products WHERE product_id = ?', [insertedProduct]);
+    return productData[0];
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
+export { allProducts, productById, productByName, productsByPrice, createProduct };

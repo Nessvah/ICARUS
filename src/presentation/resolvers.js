@@ -3,7 +3,19 @@ import { SECRETS } from '../utils/enums/enums.js';
 //import { isAutenticated } from '../infrastructure/auth/AuthResolver.js';
 import { logger } from '../infrastructure/server.js';
 import { allProducts, productById, productByName, productsByPrice } from '../models/productModel.js';
-import { allCustomers, customerById } from '../models/customersModel.js';
+import { allCustomers, customerById, customerByEmail } from '../models/customersModel.js';
+import { allTables } from '../models/tablesInformation.js';
+import { allOrderItems, orderItemsById } from '../models/orderItemsMode.js';
+import {
+  categoriesProperties,
+  customersProperties,
+  orderItemsProperties,
+  ordersProperties,
+  productReviewsProperties,
+  productsProperties,
+  shipmentsProperties,
+} from '../models/columnsProperties.js';
+import { ordersById, allOrders } from '../models/ordersModel.js';
 
 //TESTING PURPOSES VARIABLES - TO DELETE LATER
 const shipments = [
@@ -87,6 +99,10 @@ const resolvers = {
       const productData = await productsByPrice(min, max);
       return productData ? productData : '';
     },
+    customerByEmail: async (_, { email }) => {
+      const customerData = await customerByEmail(email);
+      return customerData ? customerData[0][0] : '';
+    },
     //get shipment by id
     getShipmentById: (_, { _id }) => {
       const shipment = shipments.find((shipment) => shipment._id === _id);
@@ -110,8 +126,211 @@ const resolvers = {
       }
       return matchingShipments;
     },
+    allTables: async () => {
+      try {
+        const tablesResponse = await allTables();
+        const tables = tablesResponse[0].map((table) => {
+          return table.Tables_in_icarus;
+        });
+        return tables;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    allOrders: async () => {
+      try {
+        const orders = await allOrders();
+        return orders;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    allOrderItems: async () => {
+      try {
+        const allOrders = await allOrderItems();
+        return allOrders;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    categoriesProperties: async () => {
+      try {
+        const columnsInfo = await categoriesProperties();
+        const properties = {};
+        columnsInfo.forEach((column) => {
+          properties[column.Field] = {
+            Field: column.Field,
+            Type: column.Type,
+            Null: column.Null,
+            Key: column.Key,
+            Default: column.Default,
+            Extra: column.Extra,
+          };
+        });
+        return properties;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    customersProperties: async () => {
+      try {
+        const columnsInfo = await customersProperties();
+        const properties = {};
+        columnsInfo.forEach((column) => {
+          properties[column.Field] = {
+            Field: column.Field,
+            Type: column.Type,
+            Null: column.Null,
+            Key: column.Key,
+            Default: column.Default,
+            Extra: column.Extra,
+          };
+        });
+        return properties;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    orderItemsProperties: async () => {
+      try {
+        const columnsInfo = await orderItemsProperties();
+        const properties = {};
+        columnsInfo.forEach((column) => {
+          properties[column.Field] = {
+            Field: column.Field,
+            Type: column.Type,
+            Null: column.Null,
+            Key: column.Key,
+            Default: column.Default,
+            Extra: column.Extra,
+          };
+        });
+        return properties;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    ordersProperties: async () => {
+      try {
+        const columnsInfo = await ordersProperties();
+        const properties = {};
+        columnsInfo.forEach((column) => {
+          properties[column.Field] = {
+            Field: column.Field,
+            Type: column.Type,
+            Null: column.Null,
+            Key: column.Key,
+            Default: column.Default,
+            Extra: column.Extra,
+          };
+        });
+        return properties;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    productReviewsProperties: async () => {
+      try {
+        const columnsInfo = await productReviewsProperties();
+        const properties = {};
+        columnsInfo.forEach((column) => {
+          properties[column.Field] = {
+            Field: column.Field,
+            Type: column.Type,
+            Null: column.Null,
+            Key: column.Key,
+            Default: column.Default,
+            Extra: column.Extra,
+          };
+        });
+        return properties;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    productsProperties: async () => {
+      try {
+        const columnsInfo = await productsProperties();
+        const properties = {};
+        columnsInfo.forEach((column) => {
+          properties[column.Field] = {
+            Field: column.Field,
+            Type: column.Type,
+            Null: column.Null,
+            Key: column.Key,
+            Default: column.Default,
+            Extra: column.Extra,
+          };
+        });
+        return properties;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    shipmentsProperties: async () => {
+      try {
+        const columnsInfo = await shipmentsProperties();
+        const properties = {};
+        columnsInfo.forEach((column) => {
+          properties[column.Field] = {
+            Field: column.Field,
+            Type: column.Type,
+            Null: column.Null,
+            Key: column.Key,
+            Default: column.Default,
+            Extra: column.Extra,
+          };
+        });
+        return properties;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    orderItemsById: async (_, { order_item_id }) => {
+      try {
+        const response = await orderItemsById(order_item_id);
+        return response;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    ordersById: async (_, { order_id }) => {
+      try {
+        const response = await ordersById(order_id);
+        return response;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
   },
-
+  Order: {
+    customer: async (parent) => {
+      try {
+        const customers = await allCustomers();
+        return customers.find((customer) => customer.customer_id === parent.customer_id);
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+  },
+  OrderItems: {
+    order: async (parent) => {
+      try {
+        const orders = await allOrders();
+        return orders.find((order) => order.order_id === parent.order_id);
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    product: async (parent) => {
+      try {
+        const products = await allProducts();
+        return products.find((product) => product.product_id === parent.product_id);
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+  },
   Mutation: {
     async createAccount(_, { input }, { createUser }) {
       const result = await createUser(input);
@@ -138,7 +357,22 @@ const resolvers = {
 
       return shipment;
     },
+    async createCustomer(_, { input }, { createNewCustomer }) {
+      const result = await createNewCustomer(input);
+      return result[0];
+    },
+    async updateCustomer(_, { id, input }, { updateCustomer }) {
+      const result = await updateCustomer(id, input);
+      return result[0];
+    },
+    async deleteCustomer(_, { id }, { deleteCustomer }) {
+      const result = await deleteCustomer(id);
+      return result;
+    },
+    async createProduct(_, { input }, { createProduct }) {
+      const result = await createProduct(input);
+      return result[0];
+    },
   },
 };
-
 export { resolvers };
