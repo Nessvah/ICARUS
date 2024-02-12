@@ -1,4 +1,5 @@
 import { Counter, Histogram } from 'prom-client';
+import { filterUndefinedValues } from '../utils/filter.js';
 
 /**
  * Creates a Prometheus counter metric with the specified name, help message, label names, and registry.
@@ -32,5 +33,17 @@ export function createHistogram(name, help, labelNames, register) {
     labelNames,
     registers: [register],
     buckets: [0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 2, 5, 10, 20, 30, 60],
+  });
+}
+
+/**
+ * Creates labels for a GraphQL context.
+ * @param {Object} context - The GraphQL context object.
+ * @returns {Object} - Labels for the GraphQL context.
+ */
+export function createLabels(context) {
+  return filterUndefinedValues({
+    operationName: context.request.operationName || '',
+    operation: context.operation?.operation,
   });
 }
