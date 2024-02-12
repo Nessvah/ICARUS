@@ -1,9 +1,5 @@
-import { createCounter, createHistogram } from './helpers.js';
-import { filterUndefinedValues } from '../utils/filter.js';
-import { logger } from '../infrastructure/server.js';
-
-// nano to sec so that its easier for us to know the time that it took
-const nanosToSec = 1_000_000_000;
+import { createCounter, createHistogram, createLabels } from './helpers.js';
+import { getDurationInSecs, startTimer } from '../utils/timers.js';
 
 /**
  * Creates a metrics plugin for tracking GraphQL query metrics using Prometheus.
@@ -71,101 +67,48 @@ export function createMetricsPlugin(register) {
     async requestDidStart() {
       return {
         parsingDidStart(parsingContext) {
-          const { operationName } = parsingContext.request;
-          const isIntrospection = operationName.includes('IntrospectionQuery');
-
-          // remove introspection queries from prometheus data
-          if (!isIntrospection) {
-            const labels = filterUndefinedValues({
-              operationName: parsingContext.request.operationName || '',
-              operation: parsingContext.operation?.operation,
-            });
-            metrics.parsed.labels(labels).inc();
-          }
+          const labels = createLabels(parsingContext);
+          metrics.parsed.labels(labels).inc();
         },
         async validationDidStart(validationContext) {
-          const { operationName } = validationContext.request;
-          const isIntrospection = operationName.includes('IntrospectionQuery');
-
-          if (!isIntrospection) {
-            const labels = filterUndefinedValues({
-              operationName: validationContext.request.operationName || '',
-              operation: validationContext.operation?.operation,
-            });
-            metrics.validationStarted.labels(labels).inc();
-          }
+          const labels = createLabels(validationContext);
+          metrics.validationStarted.labels(labels).inc();
         },
         async didResolveOperation(resolveContext) {
-          const { operationName } = resolveContext.request;
-          const isIntrospection = operationName.includes('IntrospectionQuery');
+          // record start time for resolving the operation
+          resolveContext.request.resolveStartTime = startTimer();
 
-          if (!isIntrospection) {
-            const labels = filterUndefinedValues({
-              operationName: resolveContext.request.operationName || '',
-              operation: resolveContext.operation.operation,
-            });
-            metrics.resolved.labels(labels).inc();
-          }
+          const labels = createLabels(resolveContext);
+          metrics.resolved.labels(labels).inc();
         },
         async executionDidStart(executingContext) {
-          const { operationName } = executingContext.request;
-          const isIntrospection = operationName.includes('IntrospectionQuery');
+          // track current time for the execution and
+          // attach the start time to the context in the req obj
+          executingContext.request.startTime = startTimer();
 
-          if (!isIntrospection) {
-            // track current time
-            const startTime = process.hrtime();
-
-            // attach the start time to the context in the req obj
-            executingContext.request.startTime = startTime;
-
-            const labels = filterUndefinedValues({
-              operationName: executingContext.request.operationName || '',
-              operation: executingContext.operation.operation,
-            });
-            metrics.startedExecuting.inc(labels);
-          }
+          const labels = createLabels(executingContext);
+          metrics.startedExecuting.inc(labels);
         },
         async didEncounterErrors(errorContext) {
-          const labels = filterUndefinedValues({
-            operationName: errorContext.request.operationName || '',
-            operation: errorContext.operation?.operation,
-          });
+          const labels = createLabels(errorContext);
           metrics.encounteredErrors.labels(labels).inc();
         },
         async willSendResponse(responseContext) {
-          const { operationName } = responseContext.request;
-          const isIntrospection = operationName.includes('IntrospectionQuery');
+          // get the start time from request
 
-          if (!isIntrospection) {
-            // get the start time from request
+          const { startTime, resolveStartTime } = responseContext.request;
 
-            const { startTime } = responseContext.request;
+          // get current time
+          const endTime = startTimer();
+          const executionTime = getDurationInSecs(startTime, endTime);
+          const resolutionTime = getDurationInSecs(resolveStartTime, endTime);
 
-            let labels;
+          const labels = createLabels(responseContext);
 
-            if (startTime) {
-              try {
-                // calculate duration
-                const endTime = process.hrtime(startTime);
-                // it returns [seconds, nanoseconds]
-                const durationNanos = endTime[0] * 1e9 + endTime[1];
+          metrics.executionTime.observe(labels, executionTime);
+          metrics.resolutionTime.observe(labels, resolutionTime);
 
-                // convert from nanos to secs
-                const durationSecs = durationNanos / nanosToSec;
-
-                labels = filterUndefinedValues({
-                  operationName: responseContext.request.operationName || '',
-                  operation: responseContext.operation?.operation,
-                });
-                metrics.executionTime.observe(labels, durationSecs);
-                metrics.resolutionTime.observe(labels, durationSecs);
-              } catch (e) {
-                logger.error(e);
-              }
-            }
-
-            metrics.responded.labels(labels).inc();
-          }
+          metrics.responded.labels(labels).inc();
         },
       };
     },

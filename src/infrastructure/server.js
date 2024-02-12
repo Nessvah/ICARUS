@@ -12,6 +12,8 @@ import { resolvers } from '../presentation/resolvers.js';
 import { readConfigFile } from '../presentation/generateTypeDefs.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
 import { auth } from '../aws/auth/auth.js';
+import { createMetricsPlugin } from '../metrics/metricsPlugin.js';
+
 import fs from 'fs';
 import { createDbPool } from './db/connector.js';
 const app = express();
@@ -29,6 +31,9 @@ const httpServer = http.createServer(app);
 // initialize winston before anything else
 export const logger = await initializeLogger;
 logger.debug('Logger initialized correctly.');
+
+const register = new client.Registry();
+const metricsPlugin = await createMetricsPlugin(register);
 
 let typeDefs;
 try {
@@ -85,7 +90,9 @@ app.get('/metrics', async (req, res) => {
 
 //testing middleware
 app.get('/test', async (req, res, next) => {
-  res.json({ test: 'Testing rest endpoint' });
+  const metrics = register.getMetricsAsArray();
+  logger.info('metrics -', metrics);
+  res.json({ test: 'Testing rest endpoint', metricas: metrics });
 });
 
 app.use((err, req, res, next) => {

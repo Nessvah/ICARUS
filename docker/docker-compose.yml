@@ -2,53 +2,38 @@ version: '3.2'
 
 services:
   api:
-    container_name: icarus-api
-    restart: unless-stopped
-    env_file:
-      - ../src/.env
-    build:
-      context: ../src
-      dockerfile: Dockerfile
+    image: 352074856451.dkr.ecr.eu-north-1.amazonaws.com/icarus-fast-api:latest
+    environment:
+      - NODE_ENV=production
     ports:
       - 5001:5001
-    expose:
-      - 5001
     networks:
-      - monitoring
+      - icarus-stack_monitoring
 
   prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
-    restart: unless-stopped
     volumes:
-      - ../prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
     ports:
       - 9090:9090
-    expose:
-      - 9090
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     networks:
-      - monitoring
+      - icarus-stack_monitoring
 
   grafana:
     image: grafana/grafana:latest
-    container_name: grafana
-    restart: unless-stopped
     volumes:
       - grafana-data:/var/lib/grafana
-      - ../grafana/provisioning:/etc/grafana/provisioning
     ports:
       - 3000:3000
-    expose:
-      - 3000
     networks:
-      - monitoring
+      - icarus-stack_monitoring
 
 networks:
-  monitoring:
-    driver: bridge
+  icarus-stack_monitoring:
+    driver: overlay
 
 volumes:
   prometheus-data: {}
