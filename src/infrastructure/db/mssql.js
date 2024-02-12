@@ -23,6 +23,10 @@ async function connectDB() {
 
     console.log('connected to ec2 mysql ');
 
+    /* const connection = await pool.getConnection();
+    const [tables] = await connection.execute('SELECT * FROM order_items', [MYSQL_DATABASE]); */
+
+    //console.log(tables);
     /*const queryTablesSchema =
       "SELECT table_name, column_name, data_type, is_nullable, column_default FROM information_schema.columns WHERE table_schema = 'icarus' AND table_name = 'products'";
 

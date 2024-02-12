@@ -14,15 +14,9 @@ import { logger } from '../../infrastructure/server.js';
 
 const authLogin = async (input) => {
   try {
-    //* I'm incrypting the information which comes from frontend here to test
-    //* but the encryptation is made on frontend
-    // const publicKey = process.env.publicKeyFrontend;
-    //const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password));
-
     // Decrypting password which came from frontend
     const decryptedData = await decryptingPassword(input);
     const { email, password } = decryptedData;
-    // // Verifying password and email from frontend to see if they are standardized
     //const verifyUserPassword = isValidPassword(password, email);
     const verifyUserEmail = isValidEmail(email);
 
