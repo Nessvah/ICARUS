@@ -250,7 +250,7 @@
       },
       "columns": [
         {
-          "name": "payment_id",
+          "name": "id",
           "type": "string",
           "primaryKey": true
         },
@@ -504,7 +504,7 @@
       },
       "columns": [
         {
-          "name": "user_id",
+          "name": "id",
           "type": "string",
           "primaryKey": true
         },
@@ -539,7 +539,7 @@
       },
       "columns": [
         {
-          "name": "userRole_id",
+          "name": "id",
           "type": "string",
           "primaryKey": true
         },

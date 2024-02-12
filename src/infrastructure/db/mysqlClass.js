@@ -27,18 +27,22 @@ export class MySQLConnection {
       connection.release();
     }
   }
+
   /**
-   * * Executes a SQL query with optional parameter values.
-   * @param {string} sql - The SQL query to execute.
-   * @param {Array} values - Optional parameter values for the query.
-   * @returns {Promise<Array>} - A promise that resolves to the result rows of the query.
-   * @throws {Error} - If an error occurs during the query execution.
+   * * Finds records in the specified table based on the specified filter criteria.
+   * @param {string} tableName - The name of the table to find records in.
+   * @param {{ input: { filter: Array<Object> } }} data - The input data for the find operation.
+   * @returns {Promise<Array<Object> | null>} - A promise that resolves to the found records or null if there was an error.
    */
-  async find(tableName, { input }) {
+  async findMany(tableName, { input }) {
     const { filter } = input;
-    const keys = Object.keys(filter);
-    const values = Object.values(filter);
-    const where = keys.map((key) => `${key} = ?`).join(' AND ');
+    const where = filter
+      .map((item) => {
+        const keys = Object.keys(item);
+        return keys.map((key) => `${key} = ?`).join(' AND ');
+      })
+      .join(' OR ');
+    const values = filter.flatMap((item) => Object.values(item));
     const sql = `SELECT * FROM ${tableName} WHERE ${where}`;
     try {
       const res = await this.query(sql, values);
@@ -48,7 +52,6 @@ export class MySQLConnection {
       return null; // Return null if there's an error
     }
   }
-
   /**
    * * Creates a new record in the specified table.
    * @param {string} tableName - The name of the table to create a record in.
@@ -58,12 +61,12 @@ export class MySQLConnection {
   async create(tableName, { input }) {
     const { create } = input;
     const keys = Object.keys(create[0]);
-    const values = create.map((item) => Object.values(item));
+    const values = create.flatMap((item) => Object.values(item));
     const fields = keys.join(', ');
     const placeholders = keys.map(() => '?').join(', ');
     const sql = `INSERT INTO ${tableName} (${fields}) VALUES (${placeholders})`;
     try {
-      const res = await this.query(sql, values.flat()); // for debugging purposes if needed
+      const res = await this.query(sql, values); // for debugging purposes if needed
       logger.info(res);
       return { created: create };
     } catch (error) {
@@ -90,7 +93,7 @@ export class MySQLConnection {
     try {
       const res = await this.query(sql, [...Object.values(update), ...values]); // for debugging purposes if needed
       logger.info(res);
-      return { updated: await this.find(tableName, { input }) };
+      return { updated: await this.findMany(tableName, { input }) };
     } catch (error) {
       logger.error('Error:', error);
       return null; // Return null if there's an error
@@ -109,7 +112,7 @@ export class MySQLConnection {
     const where = keys.map((key) => `${key} = ?`).join(' AND ');
     const sql = `DELETE FROM ${tableName} WHERE ${where}`;
     try {
-      const res = await this.query(sql, values);
+      const res = await this.query(sql, [values]);
       return { deleted: res.affectedRows };
     } catch (error) {
       logger.error('Error:', error);
