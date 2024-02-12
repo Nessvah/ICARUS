@@ -3,9 +3,6 @@ version: '3.2'
 services:
   api:
     image: 352074856451.dkr.ecr.eu-north-1.amazonaws.com/icarus-fast-api:latest
-    build:
-      context: ../src
-      dockerfile: Dockerfile
     ports:
       - 5001:5001
     networks:

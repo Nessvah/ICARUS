@@ -21,9 +21,9 @@ WORKDIR /usr/src
 COPY package*.json ./
 
 # install its dependencies
-# run npm ci -> continuous integration for production
-RUN npm install
-RUN npm install -g nodemon
+# RUN npm install
+# Install dependencies for production
+RUN npm ci --only=production
 
 # now we need to copy all the files into
 # our container so we can run the app
@@ -35,7 +35,10 @@ COPY . .
 
 EXPOSE 5001
 
+# Set NODE_ENV to 'production'
+ENV NODE_ENV=production
+
 # -L will allow for nodemon to reload
 # --inspect-brk=0.0.0.0 is needed for
 # debugging containerized apps
-CMD ["npm","run", "dev"]
+CMD ["npm", "start"]
