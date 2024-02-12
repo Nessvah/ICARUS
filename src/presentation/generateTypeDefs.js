@@ -75,7 +75,6 @@ type Query {
   // Define the Mutation type
   typeDefs.push(`
 type Mutation {
-  createAccount(input: CreateAccount!): User!
   authorize(input: AuthorizeUser!): AuthPayload!
     ${config.tables
       .map((table) => {
@@ -192,7 +191,6 @@ input RoleInput {
   typeDefs.push(`
 type AuthPayload {
   token: Token!
-  user: User
 }`);
   typeDefs.push(`
 type Token {

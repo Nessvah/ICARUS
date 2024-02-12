@@ -13,7 +13,6 @@ userRole(input: ResolversUserRole): [UserRole]
 }
 
 type Mutation {
-  createAccount(input: CreateAccount!): User!
   authorize(input: AuthorizeUser!): AuthPayload!
     categories(input: ResolversCategories): CategoriesOutput
 customers(input: ResolversCustomers): CustomersOutput
@@ -527,7 +526,6 @@ input RoleInput {
 
 type AuthPayload {
   token: Token!
-  user: User
 }
 
 type Token {
