@@ -1,14 +1,12 @@
 import { ObjectId } from 'mongodb';
 import { logger } from '../server.js';
-//class that will control the database that the user are accessing and transport
-//the functions that will be use in the Resolvers file.
 
+//class that will control the table info and function that will be made in a mongodb database.
 class MongoDBConnection {
   constructor(currentTableInfo) {
     this.tableData = currentTableInfo;
-    this.dbName = currentTableInfo.databaseName; //save the database name
-    this.client = currentTableInfo.pool; //create a mongoClient connection, passing the url.
-    //this.tablesNames = data.map((table) => table.name); //save the tables name.
+    this.dbName = currentTableInfo.databaseName; //save the database name.
+    this.client = currentTableInfo.pool; //the poll connection to the current database.
   }
 
   //connect to the database.
@@ -26,6 +24,7 @@ class MongoDBConnection {
     logger.info('Connection closed.');
   }
 
+  //organize de filter in a mongodb filter structure, that will be use in the crud functions.
   filterController(input) {
     let query = {};
     this.tableData.columns.forEach((colum) => {
@@ -107,10 +106,11 @@ class MongoDBConnection {
     if (!res) {
       return false;
     }
-    const updated = await collection.find(filter).toArray();
+    const updated = await collection.find(update).toArray();
     if (!updated) {
       return false;
     }
+    console.log('---------------------------', updated);
 
     updated.forEach((element) => {
       if (element._id) {
@@ -129,7 +129,7 @@ class MongoDBConnection {
     const db = this.client.db(this.dbName);
     const collection = db.collection(table);
     const filter = this.filterController(input);
-    if (Object.keys(filter).length) {
+    if (Object.keys(filter).length <= 0) {
       return false;
     }
     const res = await collection.deleteMany(filter);
