@@ -179,6 +179,17 @@ input RoleInput {
 }`);
 
   typeDefs.push(`
+input AuthorizeUser {
+  email: String!
+  password: String!
+}`);
+
+  typeDefs.push(`
+input RoleInput {
+  role: String!
+}`);
+
+  typeDefs.push(`
 type AuthPayload {
   token: Token!
   user: User

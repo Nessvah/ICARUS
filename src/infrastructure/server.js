@@ -9,17 +9,17 @@ import client from 'prom-client';
 import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
 import { resolvers } from '../presentation/resolvers.js';
-//import { typeDefs } from '../presentation/schemas.js';
-// import { auth } from './auth/auth.js';
-//import { connectDB } from './db/mssql.js';
 import { readConfigFile } from '../presentation/generateTypeDefs.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
 import { auth } from '../aws/auth/auth.js';
 import fs from 'fs';
 import { createDbPool } from './db/connector.js';
 const app = express();
+//create a new typedef file.
 await readConfigFile();
+// create a database pool connection.
 await createDbPool();
+
 // the httpserver handles incoming requests to our express
 // this is telling apollo server to "drain" this httpserver,
 // allowing for our servers to shut down gracefully.

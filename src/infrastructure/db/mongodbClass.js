@@ -1,14 +1,12 @@
 import { ObjectId } from 'mongodb';
 import { logger } from '../server.js';
-//class that will control the database that the user are accessing and transport
-//the functions that will be use in the Resolvers file.
 
+//class that will control the table info and function that will be made in a mongodb database.
 class MongoDBConnection {
   constructor(currentTableInfo) {
-    this.tableData = currentTableInfo;
-    this.dbName = currentTableInfo.databaseName; //save the database name
-    this.client = currentTableInfo.pool; //create a mongoClient connection, passing the url.
-    //this.tablesNames = data.map((table) => table.name); //save the tables name.
+    this.tableData = currentTableInfo; //  {table: table Name, type: database type, databaseName: database name, columns: table structure, pool: connection to the database}
+    this.dbName = currentTableInfo.databaseName; //save the database name.
+    this.client = currentTableInfo.pool; //the poll connection to the current database.
   }
 
   //connect to the database.
@@ -26,6 +24,7 @@ class MongoDBConnection {
     logger.info('Connection closed.');
   }
 
+  //organize de filter in a mongodb filter structure, that will be use in the crud functions.
   filterController(input) {
     let query = {};
     this.tableData.columns.forEach((colum) => {
@@ -44,14 +43,14 @@ class MongoDBConnection {
     return query;
   }
 
-  //find a specific value in a document, in a specific table. Return a array of objects [{document}, {document}]
-  //here the input have a "id" to find a specific document or the attributes used to filter the database for many documents.
-  // input:{filter: _id:["id", "id"]} ou input:{filter:{keys and values}}
+  //find a specific value or a array of values in a document, in a specific table. Return a array of objects fonded [{document}, {document}]
+  // input:{filter: _id:["id", "id"]} or input:{filter:{keys and values}}
   async find(table, { input }) {
     const db = this.client.db(this.dbName);
     const collection = db.collection(table);
     let res;
 
+    //call the filter function to reorganize que filter parameter to a more readable one.
     const query = this.filterController(input);
 
     if (query) {
@@ -60,6 +59,7 @@ class MongoDBConnection {
     if (!res) {
       return false;
     }
+    // this transform the "_id" key in a "id" key, to follow the schema graphql definition, that have to be equal to all databases.
     res.forEach((element) => {
       if (element._id) {
         const id = element._id;
@@ -71,9 +71,8 @@ class MongoDBConnection {
     return res;
   }
 
-  //insert a new document(input) in a specific table. Return a objects {document}
-  //here the input just have the attributes to be added to the table.
-  //input:[{keys and values},{keys and values}]
+  //insert a new document or a array of new documents, in a specific table. Return a array of objects [{document}, {document}]
+  //input:{create:[{keys and values}, {keys and values}]}
   async create(table, { input }) {
     const db = this.client.db(this.dbName);
     //insert the input to the table
@@ -82,6 +81,7 @@ class MongoDBConnection {
     if (!res) {
       return false;
     }
+    // this transform the "_id" key in a "id" key, to follow the schema graphql definition, that have to be equal to all databases.
     input.create.forEach((element) => {
       if (element._id) {
         const id = element._id;
@@ -93,10 +93,12 @@ class MongoDBConnection {
     return { created: input.create };
   }
 
-  //insert a new document(input) in a specific table. Return a object {document}
-  // the input have two variables {filter:{}, update:{}}, and filter can have a "id" key that will be a array of strings {filter:{id:["id", "id"]}}
+  //update a document or a array of documents in a specific table. Return a array of objects [{document}, {document}]
+  //the input have two variables {filter:{}, update:{}}, filter will be a object, and will be use to find the documents to be updated,
+  //and update will be a object with the new document values.
   async update(table, { input }) {
     const db = this.client.db(this.dbName);
+    //call the filter function to reorganize que filter parameter to a more readable one.
     const filter = this.filterController(input);
     const { update } = input;
 
@@ -107,11 +109,12 @@ class MongoDBConnection {
     if (!res) {
       return false;
     }
-    const updated = await collection.find(filter).toArray();
+    //find all the files that match the updated parameter.
+    const updated = await collection.find(update).toArray();
     if (!updated) {
       return false;
     }
-
+    // this transform the "_id" key in a "id" key, to follow the schema graphql definition, that have to be equal to all databases.
     updated.forEach((element) => {
       if (element._id) {
         const id = element._id;
@@ -122,14 +125,16 @@ class MongoDBConnection {
     return { updated: updated };
   }
 
-  //delete one document by id.
-  // the input variable is a {id:[ids]} or a {filter:{keys and values}}
+  //delete one or more documents by any value passed in a filter.
+  //will not accept empty filter to prevent delete all the database.
+  //return a Count of deleted documents
   async delete(table, { input }) {
     //input have to be a object if {id:[array of string ids] or filter: {object values}}
     const db = this.client.db(this.dbName);
     const collection = db.collection(table);
     const filter = this.filterController(input);
-    if (Object.keys(filter).length) {
+    //verify if filter have any kay values to filter and made the delete, to avoid delete all the database by mistake.
+    if (Object.keys(filter).length <= 0) {
       return false;
     }
     const res = await collection.deleteMany(filter);
@@ -137,10 +142,9 @@ class MongoDBConnection {
     if (!res) {
       return false;
     }
+    //return a count of all files deleted.
     return { deleted: res.deletedCount };
   }
 }
 
 export { MongoDBConnection };
-
-//mongodb+srv://icarus-user:veryGoodPassword@cluster0.hxbgjxm.mongodb.net/
