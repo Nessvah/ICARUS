@@ -11,15 +11,17 @@ try {
 } catch (error) {
   logger.error('error to read file');
 }
+
+//a pool of many different database connections.
 const pools = [];
 
-//Get the reference name off the user service, verify what database type, create a url, transform the "connection" variable
-//to the MongoDBConnection class, start the connection to the database, and start the connection.
-
+//this function will be called in the resolvers, and will filter the requests to all databases and response properly.
 async function controller(table, args) {
   let connection;
+  //find the right database in the pool, base on table name.
   let currentTable = await pools.find((db) => db.table === table);
 
+  //create a connection class to the specific database type, that will have all the CRUD functions to be use.
   try {
     switch (currentTable.type) {
       case 'mongodb':
@@ -30,6 +32,7 @@ async function controller(table, args) {
         break;
     }
 
+    //filter the CRUD function passed in the action input.
     switch (args.input.action) {
       case 'find':
         return await connection.find(table, args);
@@ -47,6 +50,7 @@ async function controller(table, args) {
   }
 }
 
+//create a pool connection to many databases, based on the config files in the "data" variable.
 async function createDbPool() {
   data.tables.forEach(async (table) => {
     let client;

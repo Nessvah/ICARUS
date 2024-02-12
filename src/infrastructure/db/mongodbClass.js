@@ -4,7 +4,7 @@ import { logger } from '../server.js';
 //class that will control the table info and function that will be made in a mongodb database.
 class MongoDBConnection {
   constructor(currentTableInfo) {
-    this.tableData = currentTableInfo;
+    this.tableData = currentTableInfo; //  {table: table Name, type: database type, databaseName: database name, columns: table structure, pool: connection to the database}
     this.dbName = currentTableInfo.databaseName; //save the database name.
     this.client = currentTableInfo.pool; //the poll connection to the current database.
   }
@@ -71,9 +71,8 @@ class MongoDBConnection {
     return res;
   }
 
-  //insert a new document(input) in a specific table. Return a objects {document}
-  //here the input just have the attributes to be added to the table.
-  //input:[{keys and values},{keys and values}]
+  //insert a new document or a array of new documents, in a specific table. Return a array of objects [{document}, {document}]
+  //input:{create:[{keys and values}, {keys and values}]}
   async create(table, { input }) {
     const db = this.client.db(this.dbName);
     //insert the input to the table
@@ -94,8 +93,9 @@ class MongoDBConnection {
     return { created: input.create };
   }
 
-  //insert a new document(input) in a specific table. Return a object {document}
-  // the input have two variables {filter:{}, update:{}}, and filter can have a "id" key that will be a array of strings {filter:{id:["id", "id"]}}
+  //update a document or a array of documents in a specific table. Return a array of objects [{document}, {document}]
+  //the input have two variables {filter:{}, update:{}}, filter will be a object, and will be use to find the documents to be updated,
+  //and update will be a object with the new document values.
   async update(table, { input }) {
     const db = this.client.db(this.dbName);
     //call the filter function to reorganize que filter parameter to a more readable one.
@@ -125,8 +125,9 @@ class MongoDBConnection {
     return { updated: updated };
   }
 
-  //delete one document by id.
-  // the input variable is a {id:[ids]} or a {filter:{keys and values}}
+  //delete one or more documents by any value passed in a filter.
+  //will not accept empty filter to prevent delete all the database.
+  //return a Count of deleted documents
   async delete(table, { input }) {
     //input have to be a object if {id:[array of string ids] or filter: {object values}}
     const db = this.client.db(this.dbName);
@@ -147,5 +148,3 @@ class MongoDBConnection {
 }
 
 export { MongoDBConnection };
-
-//mongodb+srv://icarus-user:veryGoodPassword@cluster0.hxbgjxm.mongodb.net/
