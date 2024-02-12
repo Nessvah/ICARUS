@@ -1,16 +1,6 @@
 import fs from 'fs';
 //import { logger } from '../infrastructure/server.js';
-import {
-  //GraphQLObjectType,
-  GraphQLString,
-  GraphQLInt,
-  GraphQLFloat,
-  //GraphQLList,
-  GraphQLNonNull,
-  // GraphQLInputObjectType,
-  // GraphQLEnumType,
-  GraphQLBoolean,
-} from 'graphql';
+import { GraphQLString, GraphQLInt, GraphQLFloat, GraphQLNonNull, GraphQLBoolean } from 'graphql';
 
 /**
  * Reads a JSON file and returns the parsed data.
@@ -40,7 +30,7 @@ const capitalize = (str) => {
  */
 const mapColumnTypeToGraphQLType = (columnType) => {
   switch (columnType) {
-    case 'INTEGER':
+    case 'INT':
       return GraphQLInt;
     case 'VARCHAR':
       return GraphQLString;
@@ -52,6 +42,8 @@ const mapColumnTypeToGraphQLType = (columnType) => {
       return GraphQLBoolean;
     case 'string':
       return GraphQLString;
+    case 'number':
+      return GraphQLInt;
     case 'float':
       return GraphQLFloat;
     case 'int':
@@ -83,7 +75,7 @@ type Query {
   // Define the Mutation type
   typeDefs.push(`
 type Mutation {
-	authorize(email: String!, password: String!): AuthPayload!
+  authorize(input: AuthorizeUser!): AuthPayload!
     ${config.tables
       .map((table) => {
         const tableName = table.name;
@@ -173,10 +165,27 @@ enum Operators {
     GT
     LT
 }`);
-  //Define auth type
+
+  typeDefs.push(`
+input AuthorizeUser {
+  email: String!
+  password: String!
+}`);
+
+  typeDefs.push(`
+input RoleInput {
+  role: String!
+}`);
+
   typeDefs.push(`
 type AuthPayload {
-	token: String!
+  token: Token!
+}`);
+  typeDefs.push(`
+type Token {
+  accessToken: String!
+  idToken: String!
+  refreshToken: String!
 }`);
 
   return typeDefs.join('\n');
@@ -197,7 +206,7 @@ if (config) {
    * @param {string} filePath - The path to the file.
    * @param {string} typeDefsString - The type definitions.
    */
-  fs.writeFileSync('./presentation/typeDefs.graphql', typeDefsString);
+  fs.writeFileSync('../src/presentation/typeDefs.graphql', typeDefsString);
 
   console.log('Type definitions generated successfully.');
 } else {
