@@ -79,7 +79,9 @@ app.get('/metrics', async (req, res) => {
 
 //testing middleware
 app.get('/test', async (req, res, next) => {
-  res.json({ test: 'Testing rest endpoint' });
+  const metrics = register.getMetricsAsArray();
+  logger.info('metrics -', metrics);
+  res.json({ test: 'Testing rest endpoint', metricas: metrics });
 });
 
 app.use((err, req, res, next) => {
