@@ -9,7 +9,7 @@ import { GraphQLString, GraphQLInt, GraphQLFloat, GraphQLNonNull, GraphQLBoolean
  */
 const readConfigFile = () => {
   try {
-    return JSON.parse(fs.readFileSync('./src/config.json', 'utf8'));
+    return JSON.parse(fs.readFileSync('../src/config.json', 'utf8'));
   } catch (error) {
     console.error('Error reading config file:', error);
     return null;
@@ -219,7 +219,7 @@ if (config) {
    * @param {string} filePath - The path to the file.
    * @param {string} typeDefsString - The type definitions.
    */
-  fs.writeFileSync('./src/presentation/typeDefs.graphql', typeDefsString);
+  fs.writeFileSync('../src/presentation/typeDefs.graphql', typeDefsString);
 
   console.log('Type definitions generated successfully.');
 } else {
