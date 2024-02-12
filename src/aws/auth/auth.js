@@ -1,14 +1,14 @@
 import { getUser, initiateAuth } from './Cognito/index.js';
 import { isValidEmail, decryptingPassword, tokenVerifier } from './Cognito/userValidation/index.js';
-import {
-  createUser,
-  findAllRoles,
-  findAllUsers,
-  findCurrentUser,
-  createNewRole,
-  addRoleUser,
-} from '../../models/usersModel.js';
-import { AuthorizationError } from '../../utils/error-handling/CustomErrors.js';
+// import {
+//   createUser,
+//   findAllRoles,
+//   findAllUsers,
+//   findCurrentUser,
+//   createNewRole,
+//   addRoleUser,
+// } from '../../models/usersModel.js';
+//import { AuthorizationError } from '../../utils/error-handling/CustomErrors.js';
 import jwt from 'jsonwebtoken';
 import { logger } from '../../infrastructure/server.js';
 
@@ -55,21 +55,12 @@ const authLogin = async (input) => {
 
 //TODO: This can be improved
 const auth = async (req) => {
-  //? Maybe it's not necessary if here, it's just return the functions
-  //? that don't need authorization
-  if (
-    req.body.operationName === 'Authorize' ||
-    req.body.operationName === 'CreateAccount' ||
-    req.body.operationName === 'IntrospectionQuery'
-  ) {
-    return {
-      authLogin,
-    };
-  }
   const token = req.headers.authorization;
 
   if (!token) {
-    throw new AuthorizationError('Não tem autorização.');
+    return {
+      authLogin,
+    };
   }
 
   const tokenWithoutPrefix = token.split(' ')[1]; // Bearer agsgsshjagsdhgahsd
@@ -89,13 +80,6 @@ const auth = async (req) => {
 
         return {
           currentUser,
-          createUser,
-          findAllUsers,
-          findAllRoles,
-          findCurrentUser,
-          createNewRole,
-          authLogin,
-          addRoleUser,
         };
       } catch (e) {
         throw new Error('Error trying to decode');

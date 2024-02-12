@@ -9,14 +9,17 @@ import client from 'prom-client';
 import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
 import { resolvers } from '../presentation/resolvers.js';
-import { typeDefs } from '../presentation/schemas.js';
+//import { typeDefs } from '../presentation/schemas.js';
 // import { auth } from './auth/auth.js';
-import { connectDB } from './db/mssql.js';
+//import { connectDB } from './db/mssql.js';
+import { readConfigFile } from '../presentation/generateTypeDefs.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
 import { auth } from '../aws/auth/auth.js';
-
+import fs from 'fs';
+import { createDbPool } from './db/connector.js';
 const app = express();
-
+await readConfigFile();
+await createDbPool();
 // the httpserver handles incoming requests to our express
 // this is telling apollo server to "drain" this httpserver,
 // allowing for our servers to shut down gracefully.
@@ -38,9 +41,16 @@ client.collectDefaultMetrics({
 export const logger = await initializeLogger;
 logger.debug('Logger initialized correctly.');
 
+let typeDefs;
+try {
+  typeDefs = fs.readFileSync('./presentation/typeDefs.graphql', 'utf8');
+} catch (e) {
+  logger.error(e);
+}
+
 // initialize apollo server but adding the drain plugin for out httpserver
 const server = new ApolloServer({
-  typeDefs,
+  typeDefs: typeDefs,
   resolvers,
   formatError: customFormatError,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
@@ -93,10 +103,6 @@ app.use((err, req, res, next) => {
   // Handle the error
 
   res.status(500).json({ error: 'Internal Server Error' });
-});
-
-connectDB().catch(() => {
-  // throw new DatabaseError();
 });
 
 // modify server startup

@@ -1,0 +1,114 @@
+{
+  "tables": [
+    {   
+        "name": "user",
+        "database": {
+          "type": "mongodb",
+          "uri": "mongodb://127.0.0.1:27017/store",
+          "databaseName": "store"
+        },
+      "columns": [
+        {
+          "name": "id",
+          "type": "string",
+          "primaryKey": true,
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "database": {
+          "type": "mongodb",
+          "uri": "mongodb+srv://icarus-user:veryGoodPassword@cluster0.hxbgjxm.mongodb.net/",
+          "databaseName": "store"
+      },
+      "columns": [
+        {
+          "name": "id",
+          "type": "string",
+          "primaryKey": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "price",
+          "type": "float",
+          "nullable": false
+        }
+      ]
+    },{
+			"name": "categories",
+			"database": {
+				"type": "mysql",
+				"host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+				"port": 3306,
+				"user": "root",
+				"password": "admin123",
+				"databaseName": "icarus"
+			},
+			"columns": [
+				{
+					"name": "category_id",
+					"type": "INTEGER",
+					"primaryKey": true
+				},
+				{
+					"name": "category_name",
+					"type": "VARCHAR",
+					"nullable": false
+				},
+				{
+					"name": "icon_class",
+					"type": "VARCHAR",
+					"nullable": false
+				},
+        {
+					"name": "icon_label",
+					"type": "VARCHAR",
+					"nullable": false
+				}
+			]
+		},{
+			"name": "customers",
+			"database": {
+				"type": "mysql",
+				"host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+				"port": 3306,
+				"user": "root",
+				"password": "admin123",
+				"databaseName": "icarus"
+			},
+			"columns": [
+				{
+					"name": "customer_id",
+					"type": "INTEGER",
+					"primaryKey": true
+				},
+				{
+					"name": "customer_name",
+					"type": "VARCHAR",
+					"nullable": false
+				},
+				{
+					"name": "email",
+					"type": "VARCHAR",
+					"nullable": false
+				}
+			]
+		}
+  ]
+}
