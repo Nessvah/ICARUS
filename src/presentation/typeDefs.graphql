@@ -1,178 +1,179 @@
+
 type Query {
-  user(input: ResolversUser): [User]
-  products(input: ResolversProducts): [Products]
-  categories(input: ResolversCategories): [Categories]
-  customers(input: ResolversCustomers): [Customers]
+    user(input: ResolversUser): [User]
+products(input: ResolversProducts): [Products]
+categories(input: ResolversCategories): [Categories]
+customers(input: ResolversCustomers): [Customers]
 }
 
 type Mutation {
-  authorize(email: String!, password: String!): AuthPayload!
-  user(input: ResolversUser): UserOutput
-  products(input: ResolversProducts): ProductsOutput
-  categories(input: ResolversCategories): CategoriesOutput
-  customers(input: ResolversCustomers): CustomersOutput
+	authorize(email: String!, password: String!): AuthPayload!
+    user(input: ResolversUser): UserOutput
+products(input: ResolversProducts): ProductsOutput
+categories(input: ResolversCategories): CategoriesOutput
+customers(input: ResolversCustomers): CustomersOutput
 }
 
 input ResolversUser {
-  filter: UserFilter
-  action: String
-  create: [UserInput]
-  update: UserUpdate
-  operators: Operators
+    filter: UserFilter
+	action: String
+    create: [UserInput]
+	update: UserUpdate
+    operators: Operators
 }
 
 type User {
-  id: String!
-  name: String!
-  email: String!
+    id: String!
+name: String!
+email: String!
 }
 
 input UserInput {
-  name: String!
-  email: String!
+    name: String!
+email: String!
 }
 
 input UserFilter {
-  id: [String]
-  name: [String]
-  email: [String]
+    id: [String]
+name: [String]
+email: [String]
 }
 
 input UserUpdate {
-  id: String
-  name: String
-  email: String
+    id: String
+name: String
+email: String
 }
 
 type UserOutput {
-  created: [User]!
-  updated: [User]!
-  deleted: Int
+	created: [User]!
+	updated: [User]!
+	deleted: Int
 }
 
 input ResolversProducts {
-  filter: ProductsFilter
-  action: String
-  create: [ProductsInput]
-  update: ProductsUpdate
-  operators: Operators
+    filter: ProductsFilter
+	action: String
+    create: [ProductsInput]
+	update: ProductsUpdate
+    operators: Operators
 }
 
 type Products {
-  id: String!
-  name: String!
-  price: Float!
+    id: String!
+name: String!
+price: Float!
 }
 
 input ProductsInput {
-  name: String!
-  price: Float!
+    name: String!
+price: Float!
 }
 
 input ProductsFilter {
-  id: [String]
-  name: [String]
-  price: [Float]
+    id: [String]
+name: [String]
+price: [Float]
 }
 
 input ProductsUpdate {
-  id: String
-  name: String
-  price: Float
+    id: String
+name: String
+price: Float
 }
 
 type ProductsOutput {
-  created: [Products]!
-  updated: [Products]!
-  deleted: Int
+	created: [Products]!
+	updated: [Products]!
+	deleted: Int
 }
 
 input ResolversCategories {
-  filter: CategoriesFilter
-  action: String
-  create: [CategoriesInput]
-  update: CategoriesUpdate
-  operators: Operators
+    filter: CategoriesFilter
+	action: String
+    create: [CategoriesInput]
+	update: CategoriesUpdate
+    operators: Operators
 }
 
 type Categories {
-  category_id: Int!
-  category_name: String!
-  icon_class: String!
-  icon_label: String!
+    category_id: Int!
+category_name: String!
+icon_class: String!
+icon_label: String!
 }
 
 input CategoriesInput {
-  category_id: Int!
-  category_name: String!
-  icon_class: String!
-  icon_label: String!
+    category_id: Int!
+category_name: String!
+icon_class: String!
+icon_label: String!
 }
 
 input CategoriesFilter {
-  category_id: [Int]
-  category_name: [String]
-  icon_class: [String]
-  icon_label: [String]
+    category_id: [Int]
+category_name: [String]
+icon_class: [String]
+icon_label: [String]
 }
 
 input CategoriesUpdate {
-  category_id: Int
-  category_name: String
-  icon_class: String
-  icon_label: String
+    category_id: Int
+category_name: String
+icon_class: String
+icon_label: String
 }
 
 type CategoriesOutput {
-  created: [Categories]!
-  updated: [Categories]!
-  deleted: Int
+	created: [Categories]!
+	updated: [Categories]!
+	deleted: Int
 }
 
 input ResolversCustomers {
-  filter: CustomersFilter
-  action: String
-  create: [CustomersInput]
-  update: CustomersUpdate
-  operators: Operators
+    filter: CustomersFilter
+	action: String
+    create: [CustomersInput]
+	update: CustomersUpdate
+    operators: Operators
 }
 
 type Customers {
-  customer_id: Int!
-  customer_name: String!
-  email: String!
+    customer_id: Int!
+customer_name: String!
+email: String!
 }
 
 input CustomersInput {
-  customer_id: Int!
-  customer_name: String!
-  email: String!
+    customer_id: Int!
+customer_name: String!
+email: String!
 }
 
 input CustomersFilter {
-  customer_id: [Int]
-  customer_name: [String]
-  email: [String]
+    customer_id: [Int]
+customer_name: [String]
+email: [String]
 }
 
 input CustomersUpdate {
-  customer_id: Int
-  customer_name: String
-  email: String
+    customer_id: Int
+customer_name: String
+email: String
 }
 
 type CustomersOutput {
-  created: [Customers]!
-  updated: [Customers]!
-  deleted: Int
+	created: [Customers]!
+	updated: [Customers]!
+	deleted: Int
 }
 
 enum Operators {
-  EQ
-  GT
-  LT
+    EQ
+    GT
+    LT
 }
 
 type AuthPayload {
-  token: String!
+	token: String!
 }

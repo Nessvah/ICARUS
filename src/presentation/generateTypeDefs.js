@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { logger } from '../infrastructure/server.js';
+//import { logger } from '../infrastructure/server.js';
 import {
   //GraphQLObjectType,
   GraphQLString,
@@ -21,7 +21,7 @@ const readConfigFile = () => {
   try {
     return JSON.parse(fs.readFileSync('../src/config.json', 'utf8'));
   } catch (error) {
-    logger.error('Error reading config file:', error);
+    console.error('Error reading config file:', error);
     return null;
   }
 };
@@ -199,9 +199,9 @@ if (config) {
    */
   fs.writeFileSync('./presentation/typeDefs.graphql', typeDefsString);
 
-  logger.info('Type definitions generated successfully.');
+  console.log('Type definitions generated successfully.');
 } else {
-  logger.error('Unable to generate type definitions. Check the configuration file.');
+  console.error('Unable to generate type definitions. Check the configuration file.');
 }
 
 export { readConfigFile };
