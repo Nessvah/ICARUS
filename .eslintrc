@@ -4,6 +4,8 @@
     "es2022": true,
     "jest": true
   },
+
+  "ignorePatterns": ["public/javascripts/*.min.js"],
   "extends": ["eslint:recommended", "plugin:node/recommended"], //coding rules - eslint
   "plugins": ["prettier"],
   "parserOptions": {
@@ -11,6 +13,14 @@
     "sourceType": "module",
     "allowImportExportEverywhere": true
   },
+  "overrides": [
+    {
+      "files": ["public/javascripts/*.min.js", "public/stylesheets/*.min.css"],
+      "rules": {
+        "eslint-disable": "off"
+      }
+    }
+  ],
   "rules": {
     "spaced-comment": "off",
     "no-console": "warn",
@@ -23,11 +33,11 @@
     "no-underscore-dangle": "off",
     "class-methods-use-this": "off",
     "prefer-destructuring": ["error", { "object": true, "array": false }],
-    "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }],
+    "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val|_|__" }],
     "no-duplicate-imports": "error",
     "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] }],
     "no-var": "error",
     "eqeqeq": "warn",
-    "prettier/prettier": ["error", { "singleQuote": true, "parser": "flow", "endOfLine": "auto" }]
+    "prettier/prettier": ["error", { "singleQuote": true, "endOfLine": "auto" }]
   }
 }

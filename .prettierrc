@@ -6,5 +6,6 @@
   "useTabs": false,
   "endOfLine": "lf",
   "trailingComma": "all",
-  "arrowParens": "always"
+  "arrowParens": "always",
+  "ignore": ["public/javascripts/spectaql.min.js", "public/stylesheets/spectaql.min.css"]
 }

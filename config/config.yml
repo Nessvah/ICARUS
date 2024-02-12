@@ -1,0 +1,32 @@
+spectaql:
+  logoFile: ../api/src/docs/images/icarus_logo.jpeg
+  preserveLogoName: true
+  logoHeightPx: 200
+  faviconFile: ../api/src/docs/images/favicon.ico
+  displayAllServers: true
+
+introspection:
+  url: http://127.0.0.1:5001/graphql
+  removeTrailingPeriodFromDescriptions: false
+  queryNameStrategy: capitalizeFirst
+  fieldExpansionDepth: 3
+
+  # Hide any Types that are not used anywhere in your schema after other things have been hidden.
+  # Default: true
+  hideUnusedTypes: false
+
+info:
+  title: Icarus API Documentation
+  description: Welcome to the Icarus API Reference. This reference includes the complete set of GraphQL types, queries, mutations, and their parametes. Learn how to authenticate to the api in the Getting Started.
+  termsOfService: https://www.icarus.com/terms
+  contact:
+    name: API Support
+    url: http://www.icarus.com/support
+    email: support@icarus.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+servers:
+  - url: http://51.21.145.183:5001/graphql
+    description: Development
