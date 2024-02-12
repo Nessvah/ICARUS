@@ -1,4 +1,3 @@
-# THIS DOCKERFILE IS NOT ADAPTED TO PRODUCTION
 
 # Set node version
 FROM node:20.10-bookworm
@@ -21,9 +20,10 @@ WORKDIR /usr/src
 COPY package*.json ./
 
 # install its dependencies
+
 # RUN npm install
 # Install dependencies for production
-RUN npm ci --only=production
+RUN npm install
 
 # now we need to copy all the files into
 # our container so we can run the app
@@ -35,8 +35,6 @@ COPY . .
 
 EXPOSE 5001
 
-# Set NODE_ENV to 'production'
-ENV NODE_ENV=production
 
 # -L will allow for nodemon to reload
 # --inspect-brk=0.0.0.0 is needed for

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "start": "node ./infrastructure/server.js",
+    "start": "NODE_ENV=production node ./infrastructure/server.js",
     "dev": "nodemon ./infrastructure/server.js"
   },
   "engines": {
