@@ -28,21 +28,25 @@ export class MySQLConnection {
     }
   }
 
-  /**
-   * * Finds records in the specified table based on the specified filter criteria.
-   * @param {string} tableName - The name of the table to find records in.
-   * @param {{ input: { filter: Array<Object> } }} data - The input data for the find operation.
-   * @returns {Promise<Array<Object> | null>} - A promise that resolves to the found records or null if there was an error.
-   */
-  async findMany(tableName, { input }) {
+  async find(tableName, { input }) {
     const { filter } = input;
-    const where = filter
-      .map((item) => {
-        const keys = Object.keys(item);
-        return keys.map((key) => `${key} = ?`).join(' AND ');
-      })
-      .join(' OR ');
-    const values = filter.flatMap((item) => Object.values(item));
+
+    // If no filter is provided, return all rows from the table
+    if (!filter || Object.keys(filter).length === 0) {
+      const sql = `SELECT * FROM ${tableName}`;
+      try {
+        const res = await this.query(sql);
+        return res; // Return all rows from the table
+      } catch (error) {
+        logger.error('Error:', error);
+        return null; // Return null if there's an error
+      }
+    }
+
+    // If a filter is provided, proceed with the original logic
+    const keys = Object.keys(filter);
+    const values = Object.values(filter);
+    const where = keys.map((key) => `${key} = ?`).join(' AND ');
     const sql = `SELECT * FROM ${tableName} WHERE ${where}`;
     try {
       const res = await this.query(sql, values);
@@ -52,6 +56,7 @@ export class MySQLConnection {
       return null; // Return null if there's an error
     }
   }
+
   /**
    * * Creates a new record in the specified table.
    * @param {string} tableName - The name of the table to create a record in.
