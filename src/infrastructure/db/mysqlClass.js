@@ -88,7 +88,7 @@ export class MySQLConnection {
     try {
       await Promise.all(valuesArray.map((values) => this.query(sql, values)));
       logger.info(`Create operation executed successfully.`);
-      return { created: create };
+      return { created: create.map((item) => ({ ...item })) };
     } catch (error) {
       logger.error(`Error executing create operation: ${error}`);
       return null;
@@ -137,7 +137,7 @@ export class MySQLConnection {
 
       // Return the updated records
       const updatedRecords = await this.find(tableName, { input });
-      return { updated: updatedRecords };
+      return { updated: await this.find(tableName, { input }) };
     } catch (error) {
       logger.error('Error:', error);
       return null;
