@@ -18,11 +18,13 @@ export class MySQLConnection {
   async query(sql, values) {
     const connection = await this.getConnection();
     try {
-      logger.info('Connection successful!');
+      logger.info('Executing SQL query:', sql);
+      logger.info('SQL query values:', values);
       const [rows] = await connection.query(sql, values);
       return rows;
     } catch (error) {
-      throw new Error('error find sql');
+      logger.error('Error executing SQL query:', error);
+      throw new Error('Error executing SQL query');
     } finally {
       connection.release();
     }
@@ -77,18 +79,19 @@ export class MySQLConnection {
    */
   async create(tableName, { input }) {
     const { create } = input;
+    const valuesArray = create.map((item) => Object.values(item));
     const keys = Object.keys(create[0]);
-    const values = create.flatMap((item) => Object.values(item));
     const fields = keys.join(', ');
     const placeholders = keys.map(() => '?').join(', ');
-    const sql = `INSERT INTO ${tableName} (${fields}) VALUES (${placeholders})`;
+    const sql = `INSERT INTO ${tableName} (${fields}) VALUES ${valuesArray.map(() => `(${placeholders})`).join(', ')}`;
+
     try {
-      const res = await this.query(sql, values); // for debugging purposes if needed
-      logger.info(res);
+      await Promise.all(valuesArray.map((values) => this.query(sql, values)));
+      logger.info(`Create operation executed successfully.`);
       return { created: create };
     } catch (error) {
-      logger.error('Error:', error);
-      return null; // Return null if there's an error
+      logger.error(`Error executing create operation: ${error}`);
+      return null;
     }
   }
 
@@ -100,22 +103,47 @@ export class MySQLConnection {
    */
   async update(tableName, { input }) {
     const { filter, update } = input;
-    const keys = Object.keys(filter);
-    const values = Object.values(filter);
-    const where = keys.map((key) => `${key} = ?`).join(' AND ');
-    const set = Object.entries(update)
-      .map(([key]) => `${key} = ?`)
-      .join(', ');
-    const sql = `UPDATE ${tableName} SET ${set} WHERE ${where}`;
+
+    // Extract filter keys and values
+    const filterKeys = Object.keys(filter);
+    const filterValues = Object.values(filter);
+
+    // Construct WHERE clause for filtering
+    const whereConditions = filterKeys.map((key) => `${key} = ?`).join(' AND ');
+
+    // Initialize an array to hold the SET clauses
+    const setClauses = [];
+
+    // Extract update keys and values and construct SET clauses
+    for (const item of update) {
+      const setClause = Object.keys(item)
+        .map((key) => `${key} = ?`)
+        .join(', ');
+      setClauses.push(setClause);
+    }
+
+    // Construct the SET part of the SQL query
+    const setPart = setClauses.join(', ');
+
+    // Construct the SQL query
+    const sql = `UPDATE ${tableName} SET ${setPart} WHERE ${whereConditions}`;
+
     try {
-      const res = await this.query(sql, [...Object.values(update), ...values]); // for debugging purposes if needed
-      logger.info(res);
-      return { updated: await this.findMany(tableName, { input }) };
+      // Extract update values
+      const updateValues = update.flatMap((item) => Object.values(item));
+
+      // Execute the update query
+      await this.query(sql, [...updateValues, ...filterValues]);
+
+      // Return the updated records
+      const updatedRecords = await this.find(tableName, { input });
+      return { updated: updatedRecords };
     } catch (error) {
       logger.error('Error:', error);
-      return null; // Return null if there's an error
+      return null;
     }
   }
+
   /**
    * * Deletes a record from the specified table based on the specified filter.
    * @param {string} tableName - The name of the table from which to delete a record.
