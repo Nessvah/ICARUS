@@ -31,28 +31,40 @@ export class MySQLConnection {
   async find(tableName, { input }) {
     const { filter } = input;
 
-    // If no filter is provided, return all rows from the table
+    // If no filters are provided, return all rows from the table
     if (!filter || Object.keys(filter).length === 0) {
       const sql = `SELECT * FROM ${tableName}`;
       try {
         const res = await this.query(sql);
         return res; // Return all rows from the table
       } catch (error) {
-        logger.error('Error:', error);
+        console.error('Error:', error);
         return null; // Return null if there's an error
       }
     }
 
-    // If a filter is provided, proceed with the original logic
-    const keys = Object.keys(filter);
-    const values = Object.values(filter);
-    const where = keys.map((key) => `${key} = ?`).join(' AND ');
-    const sql = `SELECT * FROM ${tableName} WHERE ${where}`;
+    // Construct WHERE clause with only relevant filters
+    const whereConditions = [];
+    const values = [];
+
+    Object.entries(filter).forEach(([column, columnValues]) => {
+      if (Array.isArray(columnValues) && columnValues.length > 0) {
+        const placeholders = columnValues.map(() => '?').join(', ');
+        whereConditions.push(`${column} IN (${placeholders})`);
+        values.push(...columnValues);
+      }
+    });
+
+    const whereClause = whereConditions.join(' AND ');
+
+    // Construct SQL query with WHERE clause
+    const sql = `SELECT * FROM ${tableName} WHERE ${whereClause}`;
+
     try {
       const res = await this.query(sql, values);
       return res; // Return the result of the query
     } catch (error) {
-      logger.error('Error:', error);
+      console.error('Error:', error);
       return null; // Return null if there's an error
     }
   }
