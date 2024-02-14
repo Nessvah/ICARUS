@@ -154,23 +154,16 @@ const findCurrentUser = async (currentUser) => {
 
 const authLogin = async (input) => {
   try {
-    const { email, password } = input;
-    //* I'm incrypting the information which comes from frontend here to test
-    //* but the encryptation is made on frontend
-    // const publicKey = process.env.publicKeyFrontend;
-
-    //const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(input.password));
-
     // Decrypting password which came from frontend
-    //  const decryptedData = await decryptingPassword(input.password, input);
+    const decryptedData = await decryptingPassword(input);
 
-    // // Verifying password and email from frontend to see if they are standardized
     //const verifyUserPassword = isValidPassword(password, email);
-    const verifygUserEmail = isValidEmail(email);
+    const verifygUserEmail = isValidEmail(input.email);
 
     // If they are, it's time to call cognito function to initiate
     // cognito authentication function with inputs
-    if (password && verifygUserEmail) {
+    if (decryptedData.password && verifygUserEmail) {
+      const { email, password } = decryptedData;
       const response = await initiateAuth({ email, password });
 
       const token = {
