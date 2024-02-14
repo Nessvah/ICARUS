@@ -6,7 +6,14 @@ let data = JSON.parse(fs.readFileSync(`../src/config.json`, 'utf8'));
 
 //a pre version of the resolvers, with same static Query and Mutation.
 const preResolvers = {
-  Query: {},
+  Query: {
+    tables: (parents, args, context, info) => {
+      let tablesInfo = data.tables.map((table) => {
+        return { table: table.name, structure: JSON.stringify(table.columns) };
+      });
+      return tablesInfo;
+    },
+  },
   Mutation: {
     authorize: (parents, { input }, { authLogin }, info) => authLogin(input),
   },

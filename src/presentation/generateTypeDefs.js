@@ -63,6 +63,7 @@ const generateTypeDefinitions = (config) => {
   // Define the Query type
   typeDefs.push(`
 type Query {
+  tables: [TableInfo]
     ${config.tables
       .map((table) => {
         const tableName = table.name;
@@ -199,6 +200,11 @@ type Token {
   refreshToken: String!
 }`);
 
+  typeDefs.push(`
+  type TableInfo {
+    table: String
+    structure: String
+  }`);
   return typeDefs.join('\n');
 };
 
