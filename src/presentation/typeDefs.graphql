@@ -1,5 +1,6 @@
 
 type Query {
+  tables: [TableInfo]
     categories(input: ResolversCategories): [Categories]
 customers(input: ResolversCustomers): [Customers]
 order_items(input: ResolversOrder_items): [Order_items]
@@ -9,7 +10,7 @@ product_reviews(input: ResolversProduct_reviews): [Product_reviews]
 products(input: ResolversProducts): [Products]
 shipments(input: ResolversShipments): [Shipments]
 users(input: ResolversUsers): [Users]
-userRole(input: ResolversUserRole): [UserRole]
+use_role(input: ResolversUse_role): [Use_role]
 }
 
 type Mutation {
@@ -23,7 +24,7 @@ product_reviews(input: ResolversProduct_reviews): Product_reviewsOutput
 products(input: ResolversProducts): ProductsOutput
 shipments(input: ResolversShipments): ShipmentsOutput
 users(input: ResolversUsers): UsersOutput
-userRole(input: ResolversUserRole): UserRoleOutput
+use_role(input: ResolversUse_role): Use_roleOutput
 }
 
 input ResolversCategories {
@@ -391,7 +392,7 @@ type Shipments {
     shipment_id: Int!
 order_id: Int
 shipment_date: String
-tracking_number: String
+tracking_int: String
 icon_class: String
 icon_label: String
 }
@@ -400,7 +401,7 @@ input ShipmentsInput {
     shipment_id: Int!
 order_id: Int
 shipment_date: String
-tracking_number: String
+tracking_int: String
 icon_class: String
 icon_label: String
 }
@@ -409,7 +410,7 @@ input ShipmentsFilter {
     shipment_id: [Int]
 order_id: [Int]
 shipment_date: [String]
-tracking_number: [String]
+tracking_int: [String]
 icon_class: [String]
 icon_label: [String]
 }
@@ -418,7 +419,7 @@ input ShipmentsUpdate {
     shipment_id: Int
 order_id: Int
 shipment_date: String
-tracking_number: String
+tracking_int: String
 icon_class: String
 icon_label: String
 }
@@ -439,18 +440,18 @@ input ResolversUsers {
 
 type Users {
     id: String!
-email: String!
-role_id: Int!
-customer_id: Int!
-created_at: String!
+email: String
+role_id: Int
+customer_id: Int
+created_at: String
 }
 
 input UsersInput {
-    password: String!
-email: String!
-role_id: Int!
-customer_id: Int!
-created_at: String!
+    password: String
+email: String
+role_id: Int
+customer_id: Int
+created_at: String
 }
 
 input UsersFilter {
@@ -475,36 +476,36 @@ type UsersOutput {
 	deleted: Int
 }
 
-input ResolversUserRole {
-    filter: UserRoleFilter
+input ResolversUse_role {
+    filter: Use_roleFilter
 	action: String
-    create: [UserRoleInput]
-	update: UserRoleUpdate
+    create: [Use_roleInput]
+	update: Use_roleUpdate
     operators: Operators
 }
 
-type UserRole {
+type Use_role {
     id: String!
 role_name: String!
 }
 
-input UserRoleInput {
+input Use_roleInput {
     role_name: String!
 }
 
-input UserRoleFilter {
+input Use_roleFilter {
     id: [String]
 role_name: [String]
 }
 
-input UserRoleUpdate {
+input Use_roleUpdate {
     id: String
 role_name: String
 }
 
-type UserRoleOutput {
-	created: [UserRole]!
-	updated: [UserRole]!
+type Use_roleOutput {
+	created: [Use_role]!
+	updated: [Use_role]!
 	deleted: Int
 }
 
@@ -541,3 +542,8 @@ type Token {
   idToken: String!
   refreshToken: String!
 }
+
+  type TableInfo {
+    table: String
+    structure: String
+  }
