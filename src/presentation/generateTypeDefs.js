@@ -1,6 +1,6 @@
 import fs from 'fs';
 //import { logger } from '../infrastructure/server.js';
-import { GraphQLString, GraphQLInt, GraphQLFloat, GraphQLNonNull, GraphQLBoolean } from 'graphql';
+import { GraphQLString, GraphQLInt, GraphQLFloat, GraphQLNonNull, GraphQLBoolean, GraphQLID } from 'graphql';
 
 /**
  * Reads a JSON file and returns the parsed data.
@@ -48,6 +48,8 @@ const mapColumnTypeToGraphQLType = (columnType) => {
       return GraphQLFloat;
     case 'int':
       return GraphQLInt;
+    case 'id':
+      return GraphQLID;
     default:
       throw new Error(`Unsupported column type: ${columnType}`);
   }

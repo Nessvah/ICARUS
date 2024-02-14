@@ -511,7 +511,7 @@
       "columns": [
         {
           "name": "id",
-          "type": "string",
+          "type": "id",
           "primaryKey": true,
           "nullable": false
         },
@@ -552,7 +552,7 @@
       "columns": [
         {
           "name": "id",
-          "type": "string",
+          "type": "id",
           "primaryKey": true,
           "nullable": false
         },
