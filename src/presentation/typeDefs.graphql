@@ -128,6 +128,7 @@ order_id: Int
 product_id: Int
 quantity: Int
 price: Float
+currency_type: String
 icon_class: String
 icon_label: String
 }
@@ -138,6 +139,7 @@ order_id: Int
 product_id: Int
 quantity: Int
 price: Float
+currency_type: String
 icon_class: String
 icon_label: String
 }
@@ -148,6 +150,7 @@ order_id: [Int]
 product_id: [Int]
 quantity: [Int]
 price: [Float]
+currency_type: [String]
 icon_class: [String]
 icon_label: [String]
 }
@@ -158,6 +161,7 @@ order_id: Int
 product_id: Int
 quantity: Int
 price: Float
+currency_type: String
 icon_class: String
 icon_label: String
 }
@@ -333,6 +337,7 @@ type Products {
     product_id: Int!
 product_name: String
 price: Float
+currency_type: String
 description: String
 icon_class: String
 icon_label: String
@@ -342,6 +347,7 @@ input ProductsInput {
     product_id: Int!
 product_name: String
 price: Float
+currency_type: String
 description: String
 icon_class: String
 icon_label: String
@@ -351,6 +357,7 @@ input ProductsFilter {
     product_id: [Int]
 product_name: [String]
 price: [Float]
+currency_type: [String]
 description: [String]
 icon_class: [String]
 icon_label: [String]
@@ -360,6 +367,7 @@ input ProductsUpdate {
     product_id: Int
 product_name: String
 price: Float
+currency_type: String
 description: String
 icon_class: String
 icon_label: String
