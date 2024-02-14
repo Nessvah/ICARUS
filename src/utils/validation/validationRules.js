@@ -14,7 +14,7 @@ const validationRules = {
       })
       .messages({
         'string.email': 'It must be a valid email address.',
-        //the message is to complement the ValidationError in validation.js
+        //the message is to complement the UserInputError in validation.js
       })
       .validate(value),
 

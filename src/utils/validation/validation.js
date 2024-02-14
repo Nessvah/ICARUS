@@ -1,10 +1,10 @@
 //This file defines a system for dynamically applying the validation rules based on the field names of the input data. It exports a
 //function named applyDynamicValidation that enhances a given resolver function with validation logic.
-import { ValidationError } from '../error-handling/CustomErrors.js';
+import { UserInputError } from '../error-handling/CustomErrors.js';
 import { validationRules } from './validationRules.js';
 
 //For each field in the input, it retrieves the appropriate validation function from validationRules and applies it to the field value.
-//If the validation fails (indicated by an error), a ValidationError is thrown with details about the failure.
+//If the validation fails (indicated by an error), a UserInputError is thrown with details about the failure.
 const validation = (resolver) => async (root, args, context, info) => {
   // Determine if args have 'input' object or individual fields
   const argsToValidate = args.input || args;
@@ -16,7 +16,7 @@ const validation = (resolver) => async (root, args, context, info) => {
     if (validate) {
       const { error } = validate(value);
       if (error) {
-        throw new ValidationError(`Validation error on field ${key}. ${error.message}`); //this message will be complemented with the messages
+        throw new UserInputError(`User input error on field ${key}. ${error.message}`); //this message will be complemented with the messages
         //in the validationRules.js file
       }
     }
