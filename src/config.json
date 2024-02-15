@@ -4,10 +4,10 @@
       "name": "categories",
       "database": {
         "type": "mysql",
-        "host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+        "host": "16.171.102.168",
         "port": 3306,
-        "user": "root",
-        "password": "admin123",
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
         "databaseName": "icarus"
       },
       "columns": [
@@ -53,10 +53,10 @@
       "name": "customers",
       "database": {
         "type": "mysql",
-        "host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+        "host": "16.171.102.168",
         "port": 3306,
-        "user": "root",
-        "password": "admin123",
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
         "databaseName": "icarus"
       },
       "columns": [
@@ -111,10 +111,10 @@
       "name": "order_items",
       "database": {
         "type": "mysql",
-        "host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+        "host": "16.171.102.168",
         "port": 3306,
-        "user": "root",
-        "password": "admin123",
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
         "databaseName": "icarus"
       },
       "columns": [
@@ -164,6 +164,15 @@
           "extra": ""
         },
         {
+          "name": "currency_type",
+          "type": "VARCHAR",
+          "primaryKey": false,
+          "nullable": true,
+          "defaultValue": "EUR",
+          "columnType": "VARCHAR",
+          "extra": ""
+        },
+        {
           "name": "icon_class",
           "type": "string",
           "primaryKey": false,
@@ -187,10 +196,10 @@
       "name": "orders",
       "database": {
         "type": "mysql",
-        "host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+        "host": "16.171.102.168",
         "port": 3306,
-        "user": "root",
-        "password": "admin123",
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
         "databaseName": "icarus"
       },
       "columns": [
@@ -286,10 +295,10 @@
       "name": "product_reviews",
       "database": {
         "type": "mysql",
-        "host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+        "host": "16.171.102.168",
         "port": 3306,
-        "user": "root",
-        "password": "admin123",
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
         "databaseName": "icarus"
       },
       "columns": [
@@ -371,10 +380,10 @@
       "name": "products",
       "database": {
         "type": "mysql",
-        "host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+        "host": "16.171.102.168",
         "port": 3306,
-        "user": "root",
-        "password": "admin123",
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
         "databaseName": "icarus"
       },
       "columns": [
@@ -403,6 +412,15 @@
           "nullable": true,
           "defaultValue": null,
           "columnType": "float",
+          "extra": ""
+        },
+        {
+          "name": "currency_type",
+          "type": "VARCHAR",
+          "primaryKey": false,
+          "nullable": true,
+          "defaultValue": "EUR",
+          "columnType": "VARCHAR",
           "extra": ""
         },
         {
@@ -438,10 +456,10 @@
       "name": "shipments",
       "database": {
         "type": "mysql",
-        "host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+        "host": "16.171.102.168",
         "port": 3306,
-        "user": "root",
-        "password": "admin123",
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
         "databaseName": "icarus"
       },
       "columns": [
