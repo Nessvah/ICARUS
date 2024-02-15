@@ -110,15 +110,15 @@ type ${tableName} {
 }`;
     //Define the entities input
     const tableInputTypeDef = `
-input ${tableName}Input {
-    ${table.columns
-      .filter((column) => column.name !== 'id')
-      .map((column) => {
-        const type = mapColumnTypeToGraphQLType(column.type);
-        return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
-      })
-      .join('\n')}
-}`;
+    input ${tableName}Input {
+        ${table.columns
+          .filter((column) => column.primaryKey !== true)
+          .map((column) => {
+            const type = mapColumnTypeToGraphQLType(column.type);
+            return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
+          })
+          .join('\n')}
+    }`;
     //Define the Filter entities input
     const tableFilters = `
 input ${tableName}Filter {
@@ -135,7 +135,7 @@ input ${tableName}Filter {
     const update = `
 input ${tableName}Update {
     ${table.columns
-      .filter((column) => column.name !== 'password')
+      .filter((column) => column.primaryKey !== true)
       .map((column) => {
         const type = mapColumnTypeToGraphQLType(column.type);
         return `${column.name}: ${type}`;

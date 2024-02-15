@@ -41,12 +41,11 @@ icon_class: String
 icon_label: String
 }
 
-input CategoriesInput {
-    category_id: Int!
-category_name: String
+    input CategoriesInput {
+        category_name: String
 icon_class: String
 icon_label: String
-}
+    }
 
 input CategoriesFilter {
     category_id: [Int]
@@ -56,8 +55,7 @@ icon_label: [String]
 }
 
 input CategoriesUpdate {
-    category_id: Int
-category_name: String
+    category_name: String
 icon_class: String
 icon_label: String
 }
@@ -84,13 +82,12 @@ icon_class: String
 icon_label: String
 }
 
-input CustomersInput {
-    customer_id: Int!
-customer_name: String
+    input CustomersInput {
+        customer_name: String
 email: String
 icon_class: String
 icon_label: String
-}
+    }
 
 input CustomersFilter {
     customer_id: [Int]
@@ -101,8 +98,7 @@ icon_label: [String]
 }
 
 input CustomersUpdate {
-    customer_id: Int
-customer_name: String
+    customer_name: String
 email: String
 icon_class: String
 icon_label: String
@@ -132,15 +128,14 @@ icon_class: String
 icon_label: String
 }
 
-input Order_itemsInput {
-    order_item_id: Int!
-order_id: Int
+    input Order_itemsInput {
+        order_id: Int
 product_id: Int
 quantity: Int
 price: Float
 icon_class: String
 icon_label: String
-}
+    }
 
 input Order_itemsFilter {
     order_item_id: [Int]
@@ -153,8 +148,7 @@ icon_label: [String]
 }
 
 input Order_itemsUpdate {
-    order_item_id: Int
-order_id: Int
+    order_id: Int
 product_id: Int
 quantity: Int
 price: Float
@@ -184,13 +178,12 @@ icon_class: String
 icon_label: String
 }
 
-input OrdersInput {
-    order_id: Int!
-order_date: String
+    input OrdersInput {
+        order_date: String
 customer_id: Int
 icon_class: String
 icon_label: String
-}
+    }
 
 input OrdersFilter {
     order_id: [Int]
@@ -201,8 +194,7 @@ icon_label: [String]
 }
 
 input OrdersUpdate {
-    order_id: Int
-order_date: String
+    order_date: String
 customer_id: Int
 icon_class: String
 icon_label: String
@@ -231,13 +223,13 @@ amount: Int!
 payment_status: String!
 }
 
-input PaymentInput {
-    order_id: Int!
+    input PaymentInput {
+        order_id: Int!
 payment_method: String!
 payment_date: String!
 amount: Int!
 payment_status: String!
-}
+    }
 
 input PaymentFilter {
     id: [String]
@@ -249,8 +241,7 @@ payment_status: [String]
 }
 
 input PaymentUpdate {
-    id: String
-order_id: Int
+    order_id: Int
 payment_method: String
 payment_date: String
 amount: Int
@@ -282,16 +273,15 @@ icon_class: String
 icon_label: String
 }
 
-input Product_reviewsInput {
-    review_id: Int!
-product_id: Int
+    input Product_reviewsInput {
+        product_id: Int
 customer_id: Int
 rating: Int
 review_text: String
 review_date: String
 icon_class: String
 icon_label: String
-}
+    }
 
 input Product_reviewsFilter {
     review_id: [Int]
@@ -305,8 +295,7 @@ icon_label: [String]
 }
 
 input Product_reviewsUpdate {
-    review_id: Int
-product_id: Int
+    product_id: Int
 customer_id: Int
 rating: Int
 review_text: String
@@ -338,14 +327,13 @@ icon_class: String
 icon_label: String
 }
 
-input ProductsInput {
-    product_id: Int!
-product_name: String
+    input ProductsInput {
+        product_name: String
 price: Float
 description: String
 icon_class: String
 icon_label: String
-}
+    }
 
 input ProductsFilter {
     product_id: [Int]
@@ -357,8 +345,7 @@ icon_label: [String]
 }
 
 input ProductsUpdate {
-    product_id: Int
-product_name: String
+    product_name: String
 price: Float
 description: String
 icon_class: String
@@ -388,14 +375,13 @@ icon_class: String
 icon_label: String
 }
 
-input ShipmentsInput {
-    shipment_id: Int!
-order_id: Int
+    input ShipmentsInput {
+        order_id: Int
 shipment_date: String
 tracking_number: String
 icon_class: String
 icon_label: String
-}
+    }
 
 input ShipmentsFilter {
     shipment_id: [Int]
@@ -407,8 +393,7 @@ icon_label: [String]
 }
 
 input ShipmentsUpdate {
-    shipment_id: Int
-order_id: Int
+    order_id: Int
 shipment_date: String
 tracking_number: String
 icon_class: String
@@ -437,13 +422,13 @@ customer_id: Int!
 created_at: String!
 }
 
-input UsersInput {
-    password: String!
+    input UsersInput {
+        password: String!
 email: String!
 role_id: Int!
 customer_id: Int!
 created_at: String!
-}
+    }
 
 input UsersFilter {
     id: [String]
@@ -454,7 +439,7 @@ created_at: [String]
 }
 
 input UsersUpdate {
-    id: String
+    password: String
 email: String
 role_id: Int
 customer_id: Int
@@ -480,9 +465,9 @@ type UserRole {
 role_name: String!
 }
 
-input UserRoleInput {
-    role_name: String!
-}
+    input UserRoleInput {
+        role_name: String!
+    }
 
 input UserRoleFilter {
     id: [String]
@@ -490,8 +475,7 @@ role_name: [String]
 }
 
 input UserRoleUpdate {
-    id: String
-role_name: String
+    role_name: String
 }
 
 type UserRoleOutput {
