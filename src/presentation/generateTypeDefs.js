@@ -29,25 +29,19 @@ const capitalize = (str) => {
  * @returns {GraphQLType} The GraphQL type.
  */
 const mapColumnTypeToGraphQLType = (columnType) => {
-  switch (columnType) {
-    case 'INT':
-      return GraphQLInt;
-    case 'VARCHAR':
-      return GraphQLString;
-    case 'DECIMAL':
-      return GraphQLFloat;
-    case 'TIMESTAMP':
-      return GraphQLString;
-    case 'BOOLEAN':
-      return GraphQLBoolean;
-    case 'string':
-      return GraphQLString;
+  switch (columnType.toLowerCase()) {
+    case 'int':
     case 'number':
       return GraphQLInt;
+    case 'varchar':
+    case 'string':
+    case 'timestamp': // create scalar type for timestamps
+      return GraphQLString;
+    case 'decimal':
     case 'float':
       return GraphQLFloat;
-    case 'int':
-      return GraphQLInt;
+    case 'boolean':
+      return GraphQLBoolean;
     case 'id':
       return GraphQLID;
     default:
