@@ -1,6 +1,6 @@
 import fs from 'fs';
 //import { logger } from '../infrastructure/server.js';
-import { GraphQLString, GraphQLInt, GraphQLFloat, GraphQLNonNull, GraphQLBoolean } from 'graphql';
+import { GraphQLString, GraphQLInt, GraphQLFloat, GraphQLNonNull, GraphQLBoolean, GraphQLID } from 'graphql';
 
 /**
  * Reads a JSON file and returns the parsed data.
@@ -48,6 +48,8 @@ const mapColumnTypeToGraphQLType = (columnType) => {
       return GraphQLFloat;
     case 'int':
       return GraphQLInt;
+    case 'id':
+      return GraphQLID;
     default:
       throw new Error(`Unsupported column type: ${columnType}`);
   }
@@ -63,6 +65,7 @@ const generateTypeDefinitions = (config) => {
   // Define the Query type
   typeDefs.push(`
 type Query {
+  tables: [TableInfo]
     ${config.tables
       .map((table) => {
         const tableName = table.name;
@@ -93,8 +96,8 @@ type Mutation {
 input Resolvers${tableName} {
     filter: ${tableName}Filter
 	action: String
-    createInput: [${tableName}Input]
-	updateInput: ${tableName}Update
+    create: [${tableName}Input]
+	update: ${tableName}Update
     operators: Operators
 }`;
     //Define the entities type
@@ -199,6 +202,11 @@ type Token {
   refreshToken: String!
 }`);
 
+  typeDefs.push(`
+  type TableInfo {
+    table: String
+    structure: String
+  }`);
   return typeDefs.join('\n');
 };
 

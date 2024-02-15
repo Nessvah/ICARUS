@@ -20,7 +20,6 @@ async function controller(table, args) {
   let connection;
   //find the right database in the pool, base on table name.
   let currentTable = await pools.find((db) => db.table === table);
-
   //create a connection class to the specific database type, that will have all the CRUD functions to be use.
   try {
     switch (currentTable.type) {

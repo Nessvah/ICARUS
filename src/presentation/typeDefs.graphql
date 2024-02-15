@@ -1,5 +1,6 @@
 
 type Query {
+  tables: [TableInfo]
     categories(input: ResolversCategories): [Categories]
 customers(input: ResolversCustomers): [Customers]
 order_items(input: ResolversOrder_items): [Order_items]
@@ -29,8 +30,8 @@ user_role(input: ResolversUser_role): User_roleOutput
 input ResolversCategories {
     filter: CategoriesFilter
 	action: String
-    createInput: [CategoriesInput]
-	updateInput: CategoriesUpdate
+    create: [CategoriesInput]
+	update: CategoriesUpdate
     operators: Operators
 }
 
@@ -71,8 +72,8 @@ type CategoriesOutput {
 input ResolversCustomers {
     filter: CustomersFilter
 	action: String
-    createInput: [CustomersInput]
-	updateInput: CustomersUpdate
+    create: [CustomersInput]
+	update: CustomersUpdate
     operators: Operators
 }
 
@@ -117,8 +118,8 @@ type CustomersOutput {
 input ResolversOrder_items {
     filter: Order_itemsFilter
 	action: String
-    createInput: [Order_itemsInput]
-	updateInput: Order_itemsUpdate
+    create: [Order_itemsInput]
+	update: Order_itemsUpdate
     operators: Operators
 }
 
@@ -128,6 +129,7 @@ order_id: Int
 product_id: Int
 quantity: Int
 price: Float
+currency_type: String
 icon_class: String
 icon_label: String
 }
@@ -138,6 +140,7 @@ order_id: Int
 product_id: Int
 quantity: Int
 price: Float
+currency_type: String
 icon_class: String
 icon_label: String
 }
@@ -148,6 +151,7 @@ order_id: [Int]
 product_id: [Int]
 quantity: [Int]
 price: [Float]
+currency_type: [String]
 icon_class: [String]
 icon_label: [String]
 }
@@ -158,6 +162,7 @@ order_id: Int
 product_id: Int
 quantity: Int
 price: Float
+currency_type: String
 icon_class: String
 icon_label: String
 }
@@ -171,8 +176,8 @@ type Order_itemsOutput {
 input ResolversOrders {
     filter: OrdersFilter
 	action: String
-    createInput: [OrdersInput]
-	updateInput: OrdersUpdate
+    create: [OrdersInput]
+	update: OrdersUpdate
     operators: Operators
 }
 
@@ -217,8 +222,8 @@ type OrdersOutput {
 input ResolversPayment {
     filter: PaymentFilter
 	action: String
-    createInput: [PaymentInput]
-	updateInput: PaymentUpdate
+    create: [PaymentInput]
+	update: PaymentUpdate
     operators: Operators
 }
 
@@ -266,8 +271,8 @@ type PaymentOutput {
 input ResolversProduct_reviews {
     filter: Product_reviewsFilter
 	action: String
-    createInput: [Product_reviewsInput]
-	updateInput: Product_reviewsUpdate
+    create: [Product_reviewsInput]
+	update: Product_reviewsUpdate
     operators: Operators
 }
 
@@ -324,42 +329,45 @@ type Product_reviewsOutput {
 input ResolversProducts {
     filter: ProductsFilter
 	action: String
-    createInput: [ProductsInput]
-	updateInput: ProductsUpdate
+    create: [ProductsInput]
+	update: ProductsUpdate
     operators: Operators
 }
 
 type Products {
-    product_id: Int!
+    id: ID!
 product_name: String
 price: Float
+currency_type: String
 description: String
 icon_class: String
 icon_label: String
 }
 
 input ProductsInput {
-    product_id: Int!
-product_name: String
+    product_name: String
 price: Float
+currency_type: String
 description: String
 icon_class: String
 icon_label: String
 }
 
 input ProductsFilter {
-    product_id: [Int]
+    id: [ID]
 product_name: [String]
 price: [Float]
+currency_type: [String]
 description: [String]
 icon_class: [String]
 icon_label: [String]
 }
 
 input ProductsUpdate {
-    product_id: Int
+    id: ID
 product_name: String
 price: Float
+currency_type: String
 description: String
 icon_class: String
 icon_label: String
@@ -374,8 +382,8 @@ type ProductsOutput {
 input ResolversShipments {
     filter: ShipmentsFilter
 	action: String
-    createInput: [ShipmentsInput]
-	updateInput: ShipmentsUpdate
+    create: [ShipmentsInput]
+	update: ShipmentsUpdate
     operators: Operators
 }
 
@@ -383,7 +391,7 @@ type Shipments {
     shipment_id: Int!
 order_id: Int
 shipment_date: String
-tracking_number: String
+tracking_int: String
 icon_class: String
 icon_label: String
 }
@@ -392,7 +400,7 @@ input ShipmentsInput {
     shipment_id: Int!
 order_id: Int
 shipment_date: String
-tracking_number: String
+tracking_int: String
 icon_class: String
 icon_label: String
 }
@@ -401,7 +409,7 @@ input ShipmentsFilter {
     shipment_id: [Int]
 order_id: [Int]
 shipment_date: [String]
-tracking_number: [String]
+tracking_int: [String]
 icon_class: [String]
 icon_label: [String]
 }
@@ -410,7 +418,7 @@ input ShipmentsUpdate {
     shipment_id: Int
 order_id: Int
 shipment_date: String
-tracking_number: String
+tracking_int: String
 icon_class: String
 icon_label: String
 }
@@ -424,29 +432,29 @@ type ShipmentsOutput {
 input ResolversUsers {
     filter: UsersFilter
 	action: String
-    createInput: [UsersInput]
-	updateInput: UsersUpdate
+    create: [UsersInput]
+	update: UsersUpdate
     operators: Operators
 }
 
 type Users {
-    id: String!
-email: String!
-role_id: Int!
-customer_id: Int!
-created_at: String!
+    id: ID!
+email: String
+role_id: Int
+customer_id: Int
+created_at: String
 }
 
 input UsersInput {
-    password: String!
-email: String!
-role_id: Int!
-customer_id: Int!
-created_at: String!
+    password: String
+email: String
+role_id: Int
+customer_id: Int
+created_at: String
 }
 
 input UsersFilter {
-    id: [String]
+    id: [ID]
 email: [String]
 role_id: [Int]
 customer_id: [Int]
@@ -454,7 +462,7 @@ created_at: [String]
 }
 
 input UsersUpdate {
-    id: String
+    id: ID
 email: String
 role_id: Int
 customer_id: Int
@@ -470,13 +478,13 @@ type UsersOutput {
 input ResolversUser_role {
     filter: User_roleFilter
 	action: String
-    createInput: [User_roleInput]
-	updateInput: User_roleUpdate
+    create: [User_roleInput]
+	update: User_roleUpdate
     operators: Operators
 }
 
 type User_role {
-    id: String!
+    id: ID!
 role_name: String!
 }
 
@@ -485,12 +493,12 @@ input User_roleInput {
 }
 
 input User_roleFilter {
-    id: [String]
+    id: [ID]
 role_name: [String]
 }
 
 input User_roleUpdate {
-    id: String
+    id: ID
 role_name: String
 }
 
@@ -533,3 +541,8 @@ type Token {
   idToken: String!
   refreshToken: String!
 }
+
+  type TableInfo {
+    table: String
+    structure: String
+  }

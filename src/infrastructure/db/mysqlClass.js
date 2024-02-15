@@ -104,44 +104,19 @@ export class MySQLConnection {
    */
   async update(tableName, { input }) {
     const { filter, update } = input;
-
-    // Extract filter keys and values
-    const filterKeys = Object.keys(filter);
-    const filterValues = Object.values(filter);
-
-    // Construct WHERE clause for filtering
-    const whereConditions = filterKeys.map((key) => `${key} = ?`).join(' AND ');
-
-    // Initialize an array to hold the SET clauses
-    const setClauses = [];
-
-    // Extract update keys and values and construct SET clauses
-    for (const item of update) {
-      const setClause = Object.keys(item)
-        .map((key) => `${key} = ?`)
-        .join(', ');
-      setClauses.push(setClause);
-    }
-
-    // Construct the SET part of the SQL query
-    const setPart = setClauses.join(', ');
-
-    // Construct the SQL query
-    const sql = `UPDATE ${tableName} SET ${setPart} WHERE ${whereConditions}`;
-
+    const keys = Object.keys(filter);
+    const values = Object.values(filter);
+    const where = keys.map((key) => `${key} = ?`).join(' AND ');
+    const set = Object.entries(update)
+      .map(([key]) => `${key} = ?`)
+      .join(', ');
+    const sql = `UPDATE ${tableName} SET ${set} WHERE ${where}`;
     try {
-      // Extract update values
-      const updateValues = update.flatMap((item) => Object.values(item));
-
-      // Execute the update query
-      await this.query(sql, [...updateValues, ...filterValues]);
-
-      // Return the updated records
-      const updatedRecords = await this.find(tableName, { input });
+      const res = await this.query(sql, [...Object.values(update), ...values]); // for debugging purposes if needed
       return { updated: await this.find(tableName, { input }) };
     } catch (error) {
-      logger.error('Error:', error);
-      return null;
+      console.error('Error:', error);
+      return null; // Return null if there's an error
     }
   }
 
