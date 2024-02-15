@@ -169,32 +169,26 @@ enum Operators {
     LT
 }`);
 
+  // Redefinition of the input type for authorizing a user, possibly a duplication error.
   typeDefs.push(`
 input AuthorizeUser {
   email: String!
   password: String!
 }`);
 
+  // Redefinition of the input type for specifying a role, possibly a duplication error.
   typeDefs.push(`
 input RoleInput {
   role: String!
 }`);
 
-  typeDefs.push(`
-input AuthorizeUser {
-  email: String!
-  password: String!
-}`);
-
-  typeDefs.push(`
-input RoleInput {
-  role: String!
-}`);
-
+  // Define a type for the authentication payload, which includes a token.
   typeDefs.push(`
 type AuthPayload {
   token: Token!
 }`);
+
+  // Define a type for a token, which includes access, identity, and refresh tokens.
   typeDefs.push(`
 type Token {
   accessToken: String!
@@ -202,6 +196,7 @@ type Token {
   refreshToken: String!
 }`);
 
+  // Define a type for providing information about a database table, including its name and structure.
   typeDefs.push(`
   type TableInfo {
     table: String
