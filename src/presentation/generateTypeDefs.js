@@ -95,7 +95,7 @@ type Mutation {
     const resolvers = `
 input Resolvers${tableName} {
     filter: ${tableName}Filter
-	action: String
+	action: ActionType!
     create: [${tableName}Input]
 	update: ${tableName}Update
     operators: Operators
@@ -163,41 +163,40 @@ type ${tableName}Output {
 
   // Define the operators enum
   typeDefs.push(`
-enum Operators {
-    EQ
-    GT
-    LT
-}`);
+enum ActionType {
+  FIND
+  CREATE
+  UPDATE
+  DELETE
+}
 
-  // Redefinition of the input type for authorizing a user, possibly a duplication error.
-  typeDefs.push(`
+enum Operators {
+  EQ
+  GT
+  LT
+}
+
 input AuthorizeUser {
   email: String!
   password: String!
-}`);
+}
 
-  // Redefinition of the input type for specifying a role, possibly a duplication error.
-  typeDefs.push(`
 input RoleInput {
   role: String!
-}`);
+}
 
-  // Define a type for the authentication payload, which includes a token.
-  typeDefs.push(`
 type AuthPayload {
   token: Token!
-}`);
+}
 
-  // Define a type for a token, which includes access, identity, and refresh tokens.
-  typeDefs.push(`
+
 type Token {
   accessToken: String!
   idToken: String!
   refreshToken: String!
-}`);
 
-  // Define a type for providing information about a database table, including its name and structure.
-  typeDefs.push(`
+}
+
   type TableInfo {
     table: String
     structure: String

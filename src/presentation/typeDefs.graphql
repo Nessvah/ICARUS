@@ -29,7 +29,7 @@ user_role(input: ResolversUser_role): User_roleOutput
 
 input ResolversCategories {
     filter: CategoriesFilter
-	action: String
+	action: ActionType!
     create: [CategoriesInput]
 	update: CategoriesUpdate
     operators: Operators
@@ -69,7 +69,7 @@ type CategoriesOutput {
 
 input ResolversCustomers {
     filter: CustomersFilter
-	action: String
+	action: ActionType!
     create: [CustomersInput]
 	update: CustomersUpdate
     operators: Operators
@@ -113,7 +113,7 @@ type CustomersOutput {
 
 input ResolversOrder_items {
     filter: Order_itemsFilter
-	action: String
+	action: ActionType!
     create: [Order_itemsInput]
 	update: Order_itemsUpdate
     operators: Operators
@@ -169,7 +169,7 @@ type Order_itemsOutput {
 
 input ResolversOrders {
     filter: OrdersFilter
-	action: String
+	action: ActionType!
     create: [OrdersInput]
 	update: OrdersUpdate
     operators: Operators
@@ -213,7 +213,7 @@ type OrdersOutput {
 
 input ResolversPayment {
     filter: PaymentFilter
-	action: String
+	action: ActionType!
     create: [PaymentInput]
 	update: PaymentUpdate
     operators: Operators
@@ -261,7 +261,7 @@ type PaymentOutput {
 
 input ResolversProduct_reviews {
     filter: Product_reviewsFilter
-	action: String
+	action: ActionType!
     create: [Product_reviewsInput]
 	update: Product_reviewsUpdate
     operators: Operators
@@ -317,7 +317,7 @@ type Product_reviewsOutput {
 
 input ResolversProducts {
     filter: ProductsFilter
-	action: String
+	action: ActionType!
     create: [ProductsInput]
 	update: ProductsUpdate
     operators: Operators
@@ -369,7 +369,7 @@ type ProductsOutput {
 
 input ResolversShipments {
     filter: ShipmentsFilter
-	action: String
+	action: ActionType!
     create: [ShipmentsInput]
 	update: ShipmentsUpdate
     operators: Operators
@@ -417,7 +417,7 @@ type ShipmentsOutput {
 
 input ResolversUsers {
     filter: UsersFilter
-	action: String
+	action: ActionType!
     create: [UsersInput]
 	update: UsersUpdate
     operators: Operators
@@ -463,7 +463,7 @@ type UsersOutput {
 
 input ResolversUser_role {
     filter: User_roleFilter
-	action: String
+	action: ActionType!
     create: [User_roleInput]
 	update: User_roleUpdate
     operators: Operators
@@ -493,10 +493,17 @@ type User_roleOutput {
 	deleted: Int
 }
 
+enum ActionType {
+  FIND
+  CREATE
+  UPDATE
+  DELETE
+}
+
 enum Operators {
-    EQ
-    GT
-    LT
+  EQ
+  GT
+  LT
 }
 
 input AuthorizeUser {
@@ -512,10 +519,12 @@ type AuthPayload {
   token: Token!
 }
 
+
 type Token {
   accessToken: String!
   idToken: String!
   refreshToken: String!
+
 }
 
   type TableInfo {
