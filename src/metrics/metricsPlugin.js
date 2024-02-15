@@ -76,7 +76,7 @@ export function createMetricsPlugin(register) {
         },
         async didResolveOperation(resolveContext) {
           // record start time for resolving the operation
-          resolveContext.request.resolveStartTime = startTimer();
+          // resolveContext.request.resolveStartTime = startTimer();
 
           const labels = createLabels(resolveContext);
           metrics.resolved.labels(labels).inc();
@@ -84,7 +84,7 @@ export function createMetricsPlugin(register) {
         async executionDidStart(executingContext) {
           // track current time for the execution and
           // attach the start time to the context in the req obj
-          executingContext.request.startTime = startTimer();
+          // executingContext.request.startTime = startTimer();
 
           const labels = createLabels(executingContext);
           metrics.startedExecuting.inc(labels);
@@ -95,20 +95,15 @@ export function createMetricsPlugin(register) {
         },
         async willSendResponse(responseContext) {
           // get the start time from request
-
-          const { startTime, resolveStartTime } = responseContext.request;
-
-          // get current time
-          const endTime = startTimer();
-          const executionTime = getDurationInSecs(startTime, endTime);
-          const resolutionTime = getDurationInSecs(resolveStartTime, endTime);
-
-          const labels = createLabels(responseContext);
-
-          metrics.executionTime.observe(labels, executionTime);
-          metrics.resolutionTime.observe(labels, resolutionTime);
-
-          metrics.responded.labels(labels).inc();
+          // const { startTime, resolveStartTime } = responseContext.request;
+          // // get current time
+          // const endTime = startTimer();
+          // const executionTime = getDurationInSecs(startTime, endTime);
+          // const resolutionTime = getDurationInSecs(resolveStartTime, endTime);
+          // const labels = createLabels(responseContext);
+          // metrics.executionTime.observe(labels, executionTime);
+          // metrics.resolutionTime.observe(labels, resolutionTime);
+          // metrics.responded.labels(labels).inc();
         },
       };
     },
