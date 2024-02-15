@@ -93,8 +93,8 @@ type Mutation {
 input Resolvers${tableName} {
     filter: ${tableName}Filter
 	action: String
-    create: [${tableName}Input]
-	update: ${tableName}Update
+    createInput: [${tableName}Input]
+	updateInput: ${tableName}Update
     operators: Operators
 }`;
     //Define the entities type

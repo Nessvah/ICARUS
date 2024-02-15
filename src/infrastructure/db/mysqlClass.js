@@ -31,6 +31,7 @@ export class MySQLConnection {
   }
 
   async find(tableName, { input }) {
+    console.log({ tableName, input });
     const { filter } = input;
 
     // If no filters are provided, return all rows from the table

@@ -9,7 +9,7 @@ product_reviews(input: ResolversProduct_reviews): [Product_reviews]
 products(input: ResolversProducts): [Products]
 shipments(input: ResolversShipments): [Shipments]
 users(input: ResolversUsers): [Users]
-userRole(input: ResolversUserRole): [UserRole]
+user_role(input: ResolversUser_role): [User_role]
 }
 
 type Mutation {
@@ -23,14 +23,14 @@ product_reviews(input: ResolversProduct_reviews): Product_reviewsOutput
 products(input: ResolversProducts): ProductsOutput
 shipments(input: ResolversShipments): ShipmentsOutput
 users(input: ResolversUsers): UsersOutput
-userRole(input: ResolversUserRole): UserRoleOutput
+user_role(input: ResolversUser_role): User_roleOutput
 }
 
 input ResolversCategories {
     filter: CategoriesFilter
 	action: String
-    create: [CategoriesInput]
-	update: CategoriesUpdate
+    createInput: [CategoriesInput]
+	updateInput: CategoriesUpdate
     operators: Operators
 }
 
@@ -71,8 +71,8 @@ type CategoriesOutput {
 input ResolversCustomers {
     filter: CustomersFilter
 	action: String
-    create: [CustomersInput]
-	update: CustomersUpdate
+    createInput: [CustomersInput]
+	updateInput: CustomersUpdate
     operators: Operators
 }
 
@@ -117,8 +117,8 @@ type CustomersOutput {
 input ResolversOrder_items {
     filter: Order_itemsFilter
 	action: String
-    create: [Order_itemsInput]
-	update: Order_itemsUpdate
+    createInput: [Order_itemsInput]
+	updateInput: Order_itemsUpdate
     operators: Operators
 }
 
@@ -171,8 +171,8 @@ type Order_itemsOutput {
 input ResolversOrders {
     filter: OrdersFilter
 	action: String
-    create: [OrdersInput]
-	update: OrdersUpdate
+    createInput: [OrdersInput]
+	updateInput: OrdersUpdate
     operators: Operators
 }
 
@@ -217,8 +217,8 @@ type OrdersOutput {
 input ResolversPayment {
     filter: PaymentFilter
 	action: String
-    create: [PaymentInput]
-	update: PaymentUpdate
+    createInput: [PaymentInput]
+	updateInput: PaymentUpdate
     operators: Operators
 }
 
@@ -266,8 +266,8 @@ type PaymentOutput {
 input ResolversProduct_reviews {
     filter: Product_reviewsFilter
 	action: String
-    create: [Product_reviewsInput]
-	update: Product_reviewsUpdate
+    createInput: [Product_reviewsInput]
+	updateInput: Product_reviewsUpdate
     operators: Operators
 }
 
@@ -324,8 +324,8 @@ type Product_reviewsOutput {
 input ResolversProducts {
     filter: ProductsFilter
 	action: String
-    create: [ProductsInput]
-	update: ProductsUpdate
+    createInput: [ProductsInput]
+	updateInput: ProductsUpdate
     operators: Operators
 }
 
@@ -374,8 +374,8 @@ type ProductsOutput {
 input ResolversShipments {
     filter: ShipmentsFilter
 	action: String
-    create: [ShipmentsInput]
-	update: ShipmentsUpdate
+    createInput: [ShipmentsInput]
+	updateInput: ShipmentsUpdate
     operators: Operators
 }
 
@@ -424,8 +424,8 @@ type ShipmentsOutput {
 input ResolversUsers {
     filter: UsersFilter
 	action: String
-    create: [UsersInput]
-	update: UsersUpdate
+    createInput: [UsersInput]
+	updateInput: UsersUpdate
     operators: Operators
 }
 
@@ -467,36 +467,36 @@ type UsersOutput {
 	deleted: Int
 }
 
-input ResolversUserRole {
-    filter: UserRoleFilter
+input ResolversUser_role {
+    filter: User_roleFilter
 	action: String
-    create: [UserRoleInput]
-	update: UserRoleUpdate
+    createInput: [User_roleInput]
+	updateInput: User_roleUpdate
     operators: Operators
 }
 
-type UserRole {
+type User_role {
     id: String!
 role_name: String!
 }
 
-input UserRoleInput {
+input User_roleInput {
     role_name: String!
 }
 
-input UserRoleFilter {
+input User_roleFilter {
     id: [String]
 role_name: [String]
 }
 
-input UserRoleUpdate {
+input User_roleUpdate {
     id: String
 role_name: String
 }
 
-type UserRoleOutput {
-	created: [UserRole]!
-	updated: [UserRole]!
+type User_roleOutput {
+	created: [User_role]!
+	updated: [User_role]!
 	deleted: Int
 }
 

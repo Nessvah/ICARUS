@@ -531,7 +531,7 @@
       ]
     },
     {
-      "name": "userRole",
+      "name": "user_role",
       "database": {
         "type": "mongodb",
         "uri": "mongodb+srv://icarus-user:veryGoodPassword@cluster0.hxbgjxm.mongodb.net/",
