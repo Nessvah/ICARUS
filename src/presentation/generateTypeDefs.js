@@ -115,7 +115,7 @@ type ${tableName} {
     const tableInputTypeDef = `
 input ${tableName}Input {
     ${table.columns
-      .filter((column) => column.name !== 'id')
+      .filter((column) => column.primaryKey !== true)
       .map((column) => {
         const type = mapColumnTypeToGraphQLType(column.type);
         return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
@@ -138,7 +138,7 @@ input ${tableName}Filter {
     const update = `
 input ${tableName}Update {
     ${table.columns
-      .filter((column) => column.name !== 'password')
+      .filter((column) => column.primaryKey !== true)
       .map((column) => {
         const type = mapColumnTypeToGraphQLType(column.type);
         return `${column.name}: ${type}`;
