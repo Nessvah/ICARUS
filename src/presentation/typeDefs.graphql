@@ -508,15 +508,6 @@ input RoleInput {
   role: String!
 }
 
-input AuthorizeUser {
-  email: String!
-  password: String!
-}
-
-input RoleInput {
-  role: String!
-}
-
 type AuthPayload {
   token: Token!
 }
