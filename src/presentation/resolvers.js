@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { controller } from '../infrastructure/db/connector.js';
+import { validation } from '../utils/validation/validation.js';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 
 let data = JSON.parse(fs.readFileSync(`../src/config.json`, 'utf8'));
@@ -33,6 +34,8 @@ async function autoResolvers() {
       // if (!context.currentUser) {
       //   throw new AuthenticationError();
       // }
+      await validation(args.input); // it validates mutation inputs
+      await validation(args.input, 'update'); // it validates update inputs;
       return await controller(table.name, args);
     };
   });
