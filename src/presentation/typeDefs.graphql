@@ -43,8 +43,7 @@ icon_label: String
 }
 
 input CategoriesInput {
-    category_id: Int!
-category_name: String
+    category_name: String
 icon_class: String
 icon_label: String
 }
@@ -57,8 +56,7 @@ icon_label: [String]
 }
 
 input CategoriesUpdate {
-    category_id: Int
-category_name: String
+    category_name: String
 icon_class: String
 icon_label: String
 }
@@ -86,8 +84,7 @@ icon_label: String
 }
 
 input CustomersInput {
-    customer_id: Int!
-customer_name: String
+    customer_name: String
 email: String
 icon_class: String
 icon_label: String
@@ -102,8 +99,7 @@ icon_label: [String]
 }
 
 input CustomersUpdate {
-    customer_id: Int
-customer_name: String
+    customer_name: String
 email: String
 icon_class: String
 icon_label: String
@@ -135,8 +131,7 @@ icon_label: String
 }
 
 input Order_itemsInput {
-    order_item_id: Int!
-order_id: Int
+    order_id: Int
 product_id: Int
 quantity: Int
 price: Float
@@ -157,8 +152,7 @@ icon_label: [String]
 }
 
 input Order_itemsUpdate {
-    order_item_id: Int
-order_id: Int
+    order_id: Int
 product_id: Int
 quantity: Int
 price: Float
@@ -190,8 +184,7 @@ icon_label: String
 }
 
 input OrdersInput {
-    order_id: Int!
-order_date: String
+    order_date: String
 customer_id: Int
 icon_class: String
 icon_label: String
@@ -206,8 +199,7 @@ icon_label: [String]
 }
 
 input OrdersUpdate {
-    order_id: Int
-order_date: String
+    order_date: String
 customer_id: Int
 icon_class: String
 icon_label: String
@@ -254,8 +246,7 @@ payment_status: [String]
 }
 
 input PaymentUpdate {
-    id: String
-order_id: Int
+    order_id: Int
 payment_method: String
 payment_date: String
 amount: Int
@@ -288,8 +279,7 @@ icon_label: String
 }
 
 input Product_reviewsInput {
-    review_id: Int!
-product_id: Int
+    product_id: Int
 customer_id: Int
 rating: Int
 review_text: String
@@ -310,8 +300,7 @@ icon_label: [String]
 }
 
 input Product_reviewsUpdate {
-    review_id: Int
-product_id: Int
+    product_id: Int
 customer_id: Int
 rating: Int
 review_text: String
@@ -364,8 +353,7 @@ icon_label: [String]
 }
 
 input ProductsUpdate {
-    id: ID
-product_name: String
+    product_name: String
 price: Float
 currency_type: String
 description: String
@@ -397,8 +385,7 @@ icon_label: String
 }
 
 input ShipmentsInput {
-    shipment_id: Int!
-order_id: Int
+    order_id: Int
 shipment_date: String
 tracking_int: String
 icon_class: String
@@ -415,8 +402,7 @@ icon_label: [String]
 }
 
 input ShipmentsUpdate {
-    shipment_id: Int
-order_id: Int
+    order_id: Int
 shipment_date: String
 tracking_int: String
 icon_class: String
@@ -462,7 +448,7 @@ created_at: [String]
 }
 
 input UsersUpdate {
-    id: ID
+    password: String
 email: String
 role_id: Int
 customer_id: Int
@@ -498,8 +484,7 @@ role_name: [String]
 }
 
 input User_roleUpdate {
-    id: ID
-role_name: String
+    role_name: String
 }
 
 type User_roleOutput {
