@@ -102,9 +102,10 @@ const validationRules = {
   price: (value) =>
     Joi.number()
       .precision(2)
+      .strict()
       .messages({
         'number.base': 'It must be a number.',
-        'number.price': 'It must be a float with up to 2 decimal places.',
+        'number.precision': 'It must be a float with up to 2 decimal places.',
       })
       .validate(value),
 
