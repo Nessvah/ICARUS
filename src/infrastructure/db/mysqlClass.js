@@ -31,6 +31,7 @@ export class MySQLConnection {
   }
 
   async find(tableName, { input }) {
+    console.log({ tableName, input });
     const { filter } = input;
 
     // If no filters are provided, return all rows from the table
@@ -129,18 +130,11 @@ export class MySQLConnection {
     const sql = `UPDATE ${tableName} SET ${setPart} WHERE ${whereConditions}`;
 
     try {
-      // Extract update values
-      const updateValues = update.flatMap((item) => Object.values(item));
-
-      // Execute the update query
-      await this.query(sql, [...updateValues, ...filterValues]);
-
-      // Return the updated records
-      const updatedRecords = await this.find(tableName, { input });
+      const res = await this.query(sql, [...Object.values(update), ...values]); // for debugging purposes if needed
       return { updated: await this.find(tableName, { input }) };
     } catch (error) {
-      logger.error('Error:', error);
-      return null;
+      console.error('Error:', error);
+      return null; // Return null if there's an error
     }
   }
 

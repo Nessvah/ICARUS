@@ -1,4 +1,4 @@
-import { validationRules } from '../src/utils/validation/validationRules.js';
+import { validationRules } from '../../src/utils/validation/validationRules.js';
 
 //UNIT TESTS FOR VALIDATION RULES - ONE BY ONE
 describe('Validation Rules', () => {

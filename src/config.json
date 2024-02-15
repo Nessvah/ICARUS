@@ -4,47 +4,47 @@
       "name": "categories",
       "database": {
         "type": "mysql",
-        "host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+        "host": "16.171.102.168",
         "port": 3306,
-        "user": "root",
-        "password": "admin123",
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
         "databaseName": "icarus"
       },
       "columns": [
         {
           "name": "category_id",
-          "type": "INT",
+          "type": "int",
           "primaryKey": true,
           "nullable": false,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": "auto_increment"
         },
         {
           "name": "category_name",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         },
         {
           "name": "icon_class",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": "'FaTags'",
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         },
         {
           "name": "icon_label",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": "'Category'",
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         }
       ]
@@ -53,56 +53,56 @@
       "name": "customers",
       "database": {
         "type": "mysql",
-        "host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+        "host": "16.171.102.168",
         "port": 3306,
-        "user": "root",
-        "password": "admin123",
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
         "databaseName": "icarus"
       },
       "columns": [
         {
           "name": "customer_id",
-          "type": "INT",
+          "type": "int",
           "primaryKey": true,
           "nullable": false,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": "auto_increment"
         },
         {
           "name": "customer_name",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         },
         {
           "name": "email",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         },
         {
           "name": "icon_class",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": "'FaUsers'",
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         },
         {
           "name": "icon_label",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": "'Customer'",
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         }
       ]
@@ -111,74 +111,83 @@
       "name": "order_items",
       "database": {
         "type": "mysql",
-        "host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+        "host": "16.171.102.168",
         "port": 3306,
-        "user": "root",
-        "password": "admin123",
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
         "databaseName": "icarus"
       },
       "columns": [
         {
           "name": "order_item_id",
-          "type": "INT",
+          "type": "int",
           "primaryKey": true,
           "nullable": false,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": "auto_increment"
         },
         {
           "name": "order_id",
-          "type": "INT",
+          "type": "int",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": ""
         },
         {
           "name": "product_id",
-          "type": "INT",
+          "type": "int",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": ""
         },
         {
           "name": "quantity",
-          "type": "INT",
+          "type": "int",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": ""
         },
         {
           "name": "price",
-          "type": "DECIMAL",
+          "type": "float",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "DECIMAL",
+          "columnType": "float",
+          "extra": ""
+        },
+        {
+          "name": "currency_type",
+          "type": "VARCHAR",
+          "primaryKey": false,
+          "nullable": true,
+          "defaultValue": "EUR",
+          "columnType": "VARCHAR",
           "extra": ""
         },
         {
           "name": "icon_class",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": "'FaBasketShopping'",
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         },
         {
           "name": "icon_label",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": "'Order Item'",
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         }
       ]
@@ -187,56 +196,56 @@
       "name": "orders",
       "database": {
         "type": "mysql",
-        "host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+        "host": "16.171.102.168",
         "port": 3306,
-        "user": "root",
-        "password": "admin123",
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
         "databaseName": "icarus"
       },
       "columns": [
         {
           "name": "order_id",
-          "type": "INT",
+          "type": "int",
           "primaryKey": true,
           "nullable": false,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": "auto_increment"
         },
         {
           "name": "order_date",
-          "type": "TIMESTAMP",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
-          "defaultValue": "'CURRENT_TIMESTAMP'",
-          "columnType": "TIMESTAMP",
+          "defaultValue": "'CURRENT_string'",
+          "columnType": "string",
           "extra": "DEFAULT_GENERATED"
         },
         {
           "name": "customer_id",
-          "type": "INT",
+          "type": "int",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": "MUL"
         },
         {
           "name": "icon_class",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": "'FaCartShopping'",
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         },
         {
           "name": "icon_label",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": "'Order'",
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         }
       ]
@@ -256,23 +265,28 @@
         },
         {
           "name": "order_id",
-          "type": "number"
+          "type": "int",
+          "nullable": false
         },
         {
           "name": "payment_method",
-          "type": "string"
+          "type": "string",
+          "nullable": false
         },
         {
           "name": "payment_date",
-          "type": "string"
+          "type": "string",
+          "nullable": false
         },
         {
           "name": "amount",
-          "type": "number"
+          "type": "int",
+          "nullable": false
         },
         {
           "name": "payment_status",
-          "type": "string"
+          "type": "string",
+          "nullable": false
         }
       ]
     },
@@ -280,83 +294,83 @@
       "name": "product_reviews",
       "database": {
         "type": "mysql",
-        "host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+        "host": "16.171.102.168",
         "port": 3306,
-        "user": "root",
-        "password": "admin123",
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
         "databaseName": "icarus"
       },
       "columns": [
         {
           "name": "review_id",
-          "type": "INT",
+          "type": "int",
           "primaryKey": true,
           "nullable": false,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": "auto_increment"
         },
         {
           "name": "product_id",
-          "type": "INT",
+          "type": "int",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": "MUL"
         },
         {
           "name": "customer_id",
-          "type": "INT",
+          "type": "int",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": "MUL"
         },
         {
           "name": "rating",
-          "type": "INT",
+          "type": "int",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": ""
         },
         {
           "name": "review_text",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         },
         {
           "name": "review_date",
-          "type": "TIMESTAMP",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
-          "defaultValue": "'CURRENT_TIMESTAMP'",
-          "columnType": "TIMESTAMP",
+          "defaultValue": "'CURRENT_string'",
+          "columnType": "string",
           "extra": "DEFAULT_GENERATED"
         },
         {
           "name": "icon_class",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": "'FaFaceGrinStars'",
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         },
         {
           "name": "icon_label",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": "'Product Review'",
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         }
       ]
@@ -364,66 +378,72 @@
     {
       "name": "products",
       "database": {
-        "type": "mysql",
-        "host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
-        "port": 3306,
-        "user": "root",
-        "password": "admin123",
-        "databaseName": "icarus"
+        "type": "mongodb",
+        "uri": "mongodb+srv://icarus-user:veryGoodPassword@cluster0.hxbgjxm.mongodb.net/",
+        "databaseName": "icarus-test"
       },
       "columns": [
         {
-          "name": "product_id",
-          "type": "INT",
+          "name": "id",
+          "type": "id",
           "primaryKey": true,
           "nullable": false,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": "auto_increment"
         },
         {
           "name": "product_name",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         },
         {
           "name": "price",
-          "type": "DECIMAL",
+          "type": "float",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "DECIMAL",
+          "columnType": "float",
+          "extra": ""
+        },
+        {
+          "name": "currency_type",
+          "type": "VARCHAR",
+          "primaryKey": false,
+          "nullable": true,
+          "defaultValue": "EUR",
+          "columnType": "VARCHAR",
           "extra": ""
         },
         {
           "name": "description",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         },
         {
           "name": "icon_class",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": "'FaBoxOpen'",
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         },
         {
           "name": "icon_label",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": "'Product'",
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         }
       ]
@@ -432,65 +452,65 @@
       "name": "shipments",
       "database": {
         "type": "mysql",
-        "host": "ec2-16-171-244-15.eu-north-1.compute.amazonaws.com",
+        "host": "16.171.102.168",
         "port": 3306,
-        "user": "root",
-        "password": "admin123",
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
         "databaseName": "icarus"
       },
       "columns": [
         {
           "name": "shipment_id",
-          "type": "INT",
+          "type": "int",
           "primaryKey": true,
           "nullable": false,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": "auto_increment"
         },
         {
           "name": "order_id",
-          "type": "INT",
+          "type": "int",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "INT",
+          "columnType": "int",
           "extra": "MUL"
         },
         {
           "name": "shipment_date",
-          "type": "TIMESTAMP",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
-          "defaultValue": "'CURRENT_TIMESTAMP'",
-          "columnType": "TIMESTAMP",
+          "defaultValue": "'CURRENT_string'",
+          "columnType": "string",
           "extra": "DEFAULT_GENERATED"
         },
         {
-          "name": "tracking_number",
-          "type": "VARCHAR",
+          "name": "tracking_int",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         },
         {
           "name": "icon_class",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": "'FaTruckFast'",
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         },
         {
           "name": "icon_label",
-          "type": "VARCHAR",
+          "type": "string",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": "'Shipment'",
-          "columnType": "VARCHAR",
+          "columnType": "string",
           "extra": ""
         }
       ]
@@ -505,8 +525,9 @@
       "columns": [
         {
           "name": "id",
-          "type": "string",
-          "primaryKey": true
+          "type": "id",
+          "primaryKey": true,
+          "nullable": false
         },
         {
           "name": "password",
@@ -518,11 +539,13 @@
         },
         {
           "name": "role_id",
-          "type": "number"
+          "type": "int",
+          "nullable": true
         },
         {
           "name": "customer_id",
-          "type": "number"
+          "type": "int",
+          "nullable": true
         },
         {
           "name": "created_at",
@@ -540,12 +563,14 @@
       "columns": [
         {
           "name": "id",
-          "type": "string",
-          "primaryKey": true
+          "type": "id",
+          "primaryKey": true,
+          "nullable": false
         },
         {
           "name": "role_name",
-          "type": "string"
+          "type": "string",
+          "nullable": false
         }
       ]
     }

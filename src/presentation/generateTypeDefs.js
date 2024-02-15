@@ -1,6 +1,6 @@
 import fs from 'fs';
 //import { logger } from '../infrastructure/server.js';
-import { GraphQLString, GraphQLInt, GraphQLFloat, GraphQLNonNull, GraphQLBoolean } from 'graphql';
+import { GraphQLString, GraphQLInt, GraphQLFloat, GraphQLNonNull, GraphQLBoolean, GraphQLID } from 'graphql';
 
 /**
  * Reads a JSON file and returns the parsed data.
@@ -48,6 +48,8 @@ const mapColumnTypeToGraphQLType = (columnType) => {
       return GraphQLFloat;
     case 'int':
       return GraphQLInt;
+    case 'id':
+      return GraphQLID;
     default:
       throw new Error(`Unsupported column type: ${columnType}`);
   }
@@ -63,6 +65,7 @@ const generateTypeDefinitions = (config) => {
   // Define the Query type
   typeDefs.push(`
 type Query {
+  tables: [TableInfo]
     ${config.tables
       .map((table) => {
         const tableName = table.name;
@@ -110,15 +113,15 @@ type ${tableName} {
 }`;
     //Define the entities input
     const tableInputTypeDef = `
-    input ${tableName}Input {
-        ${table.columns
-          .filter((column) => column.primaryKey !== true)
-          .map((column) => {
-            const type = mapColumnTypeToGraphQLType(column.type);
-            return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
-          })
-          .join('\n')}
-    }`;
+input ${tableName}Input {
+    ${table.columns
+      .filter((column) => column.primaryKey !== true)
+      .map((column) => {
+        const type = mapColumnTypeToGraphQLType(column.type);
+        return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
+      })
+      .join('\n')}
+}`;
     //Define the Filter entities input
     const tableFilters = `
 input ${tableName}Filter {
@@ -166,32 +169,26 @@ enum Operators {
     LT
 }`);
 
+  // Redefinition of the input type for authorizing a user, possibly a duplication error.
   typeDefs.push(`
 input AuthorizeUser {
   email: String!
   password: String!
 }`);
 
+  // Redefinition of the input type for specifying a role, possibly a duplication error.
   typeDefs.push(`
 input RoleInput {
   role: String!
 }`);
 
-  typeDefs.push(`
-input AuthorizeUser {
-  email: String!
-  password: String!
-}`);
-
-  typeDefs.push(`
-input RoleInput {
-  role: String!
-}`);
-
+  // Define a type for the authentication payload, which includes a token.
   typeDefs.push(`
 type AuthPayload {
   token: Token!
 }`);
+
+  // Define a type for a token, which includes access, identity, and refresh tokens.
   typeDefs.push(`
 type Token {
   accessToken: String!
@@ -199,6 +196,12 @@ type Token {
   refreshToken: String!
 }`);
 
+  // Define a type for providing information about a database table, including its name and structure.
+  typeDefs.push(`
+  type TableInfo {
+    table: String
+    structure: String
+  }`);
   return typeDefs.join('\n');
 };
 

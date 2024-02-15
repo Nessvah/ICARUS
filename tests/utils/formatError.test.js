@@ -1,4 +1,4 @@
-import { customFormatError } from '../src/utils/error-handling/formatError.js';
+import { customFormatError } from '../../src/utils/error-handling/formatError.js';
 import {
   AuthenticationError,
   AuthorizationError,
@@ -9,7 +9,7 @@ import {
   ServiceUnavailableError,
   UserInputError,
   ValidationError,
-} from '../src/utils/error-handling/CustomErrors.js';
+} from '../../src/utils/error-handling/CustomErrors.js';
 
 describe('customFormatError', () => {
   // AUTHENTICATION ERROR TEST
