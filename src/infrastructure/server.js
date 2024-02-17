@@ -16,6 +16,7 @@ import { createMetricsPlugin } from '../metrics/metricsPlugin.js';
 
 import fs from 'fs';
 import { createDbPool } from './db/connector.js';
+import { schema } from '../graphql/typedefs.js';
 const app = express();
 //create a new typedef file.
 await readConfigFile();
@@ -35,17 +36,16 @@ logger.debug('Logger initialized correctly.');
 const register = new client.Registry();
 const metricsPlugin = await createMetricsPlugin(register);
 
-let typeDefs;
-try {
-  typeDefs = fs.readFileSync('./presentation/typeDefs.graphql', 'utf8');
-} catch (e) {
-  logger.error(e);
-}
+// let typeDefs;
+// try {
+//   typeDefs = fs.readFileSync('./presentation/typeDefs.graphql', 'utf8');
+// } catch (e) {
+//   logger.error(e);
+// }
 
 // initialize apollo server but adding the drain plugin for out httpserver
 const server = new ApolloServer({
-  typeDefs: typeDefs,
-  resolvers,
+  schema,
   formatError: customFormatError,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer }), metricsPlugin],
 });
