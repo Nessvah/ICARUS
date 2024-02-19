@@ -123,8 +123,8 @@ input ${tableName}Input {
     //Define the Filter entities input
     const tableFilters = `
 input ${tableName}Filter {
-  _and: [NestedFiltering]
-  _or:NestedFiltering
+  _and: [ ${tableName}Filter]
+  _or: [ ${tableName}Filter]
     ${table.columns
       .map((column) => {
         const type = mapColumnTypeToGraphQLType(column.type);
@@ -244,7 +244,7 @@ if (config) {
    * @param {string} filePath - The path to the file.
    * @param {string} typeDefsString - The type definitions.
    */
-  fs.writeFileSync('../src/presentation/typeDefs.graphql', typeDefsString);
+  fs.writeFileSync('../src/graphql/typeDefs.graphql', typeDefsString);
 
   console.log('Type definitions generated successfully.');
 } else {

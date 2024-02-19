@@ -26,6 +26,7 @@ async function autoResolvers() {
       // if (!context.currentUser) {
       //   throw new AuthenticationError();
       // }
+      console.log(args);
       return await controller(table.name, args);
     };
 
