@@ -1,16 +1,12 @@
 import {
   GraphQLString,
   GraphQLInt,
-  GraphQLFloat,
-  GraphQLBoolean,
   GraphQLID,
   GraphQLObjectType,
   GraphQLInputObjectType,
   GraphQLList,
   GraphQLNonNull,
   GraphQLSchema,
-  GraphQLEnumType,
-  execute,
 } from 'graphql';
 
 import { capitalize, mapColumnTypeToGraphQLType, readConfigFile } from '../presentation/generateTypeDefs.js';
@@ -48,7 +44,7 @@ function generateTypes(configFile) {
 
     // get the entity name for the type
     entityTypes[`${capitalize(table.name)}`] = new GraphQLObjectType({
-      name: table.name,
+      name: `${table.name}Type`,
       description: 'something description if we want to appear in docs',
       fields,
     });
@@ -87,9 +83,42 @@ function generateEntityFields(columns) {
 
 generateTypes(configFile);
 
+//TODO: Generate operators
+const OperatorsInputType = new GraphQLInputObjectType({
+  name: 'OperatorsInput',
+  fields: () => ({
+    _eq: { type: GraphQLString },
+    _neq: { type: GraphQLString },
+    _lt: { type: GraphQLString },
+    _lte: { type: GraphQLString },
+    _gt: { type: GraphQLString },
+    _gte: { type: GraphQLString },
+    _like: { type: GraphQLString },
+    _and: { type: new GraphQLList(OperatorsInputType) },
+    _or: { type: new GraphQLList(OperatorsInputType) },
+    _not: { type: OperatorsInputType },
+  }),
+});
+
 // //TODO: Generate filters
 // ex: {filter: {name: {_eq: 50}}} or {filter: {_and: {age: {_lte: 15}} {name: {_eq: "joana"}}}}
 
+const FilterInputType = new GraphQLInputObjectType({
+  name: 'FilterInput',
+  fields: () => ({
+    _and: { type: new GraphQLList(OperatorsInputType) },
+    _or: { type: new GraphQLList(OperatorsInputType) },
+  }),
+});
+
+// TODO: Generate skip/take as input types
+
+function generatePaginationInput() {
+  return {
+    skip: { type: GraphQLInt },
+    take: { type: GraphQLInt },
+  };
+}
 // //TODO: Generate the overall query
 
 /**
@@ -104,16 +133,29 @@ function generateQuery(configFile) {
     Categories: [Categories]!
   }
  */
-  // Initialize the fields object
-  const fields = {};
 
-  // Append each entity to the fields object
+  // filter
+  // skip
+  // take
+
+  // Initialize the fields object
+
+  const pagination = generatePaginationInput();
+
+  const fields = {};
+  // Create fields for each entity dynamically
   Object.keys(entities).forEach((entityName) => {
     fields[entityName] = {
       type: new GraphQLList(entities[entityName]),
-      resolve: () => {
-        // for now return just an empty array
-        return ['yee'];
+      args: {
+        skip: { type: GraphQLInt },
+        take: { type: GraphQLInt },
+        filter: { type: FilterInputType },
+      },
+      resolve: (_parent, args, ctx) => {
+        // Implement data fetching logic using args.skip and args.take
+        console.log(_parent, args, ctx);
+        return [entityName];
       },
     };
   });
