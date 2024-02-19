@@ -48,51 +48,54 @@ const mapColumnTypeToGraphQLType = (columnType) => {
       throw new Error(`Unsupported column type: ${columnType}`);
   }
 };
+
+const typeDefs = [];
 /**
  * Generates the type definitions for the GraphQL schema.
  * @param {object} config - The configuration data.
  * @returns {string} The type definitions.
  */
 const generateTypeDefinitions = (config) => {
-  const typeDefs = [];
+  if (!config || !config.tables || config.tables.length === 0) {
+    throw new Error('Invalid or empty configuration provided.');
+  }
 
   // Define the Query type
   typeDefs.push(`
+# define the root Query
 type Query {
   tables: [TableInfo]
     ${config.tables
       .map((table) => {
         const tableName = table.name;
         const capitalizedTableName = capitalize(table.name);
-        return `${tableName}(input: Resolvers${capitalizedTableName}): [${capitalizedTableName}]`;
+        return `${tableName}(input: ${capitalizedTableName}ListOptions): [${capitalizedTableName}]`;
       })
       .join('\n')}
-}`);
+}
 
-  // Define the Mutation type
-  typeDefs.push(`
+# define the root Muation
 type Mutation {
   authorize(input: AuthorizeUser!): AuthPayload!
     ${config.tables
       .map((table) => {
         const tableName = table.name;
         const capitalizedTableName = capitalize(table.name);
-        const resolvers = `Resolvers${capitalizedTableName}`;
+        const resolvers = `${capitalizedTableName}ListOptions`;
         return `${tableName}(input: ${resolvers}): ${capitalizedTableName}Output`;
       })
       .join('\n')}
 }`);
 
+  // start creating all the schemas
   config.tables.forEach((table) => {
     const tableName = capitalize(table.name);
     //Define the Resolvers input
-    const resolvers = `
-input Resolvers${tableName} {
+    const queryOptions = `
+input ${tableName}ListOptions {
     filter: ${tableName}Filter
-	action: ActionType!
-    create: [${tableName}Input]
-	update: ${tableName}Update
-    operators: Operators
+    skip: Int
+    take: Int
 }`;
     //Define the entities type
     const tableTypeDef = `
@@ -116,17 +119,35 @@ input ${tableName}Input {
       })
       .join('\n')}
 }`;
+
     //Define the Filter entities input
     const tableFilters = `
 input ${tableName}Filter {
+  _and: [NestedFiltering]
+  _or:NestedFiltering
     ${table.columns
-      .filter((column) => column.name !== 'password')
       .map((column) => {
         const type = mapColumnTypeToGraphQLType(column.type);
-        return `${column.name}: [${type}]`;
+        return `${column.name}: ComparisonOperators`;
       })
       .join('\n')}
+
 }`;
+
+    const nestedFiltering = `
+  input NestedFiltering {
+    _and: [NestedFiltering]
+    _or: [NestedFiltering]
+     ${table.columns
+       .map((column) => {
+         const type = mapColumnTypeToGraphQLType(column.type);
+         return `${column.name}: ComparisonOperators`;
+       })
+       .join('\n')}
+  }
+`;
+
+    typeDefs.push(nestedFiltering);
 
     //Define the Update entities input
     const update = `
@@ -147,7 +168,7 @@ type ${tableName}Output {
 	deleted: Int
 }`;
 
-    typeDefs.push(resolvers);
+    typeDefs.push(queryOptions);
     typeDefs.push(tableTypeDef);
     typeDefs.push(tableInputTypeDef);
     typeDefs.push(tableFilters);
@@ -158,17 +179,11 @@ type ${tableName}Output {
   // Define the operators enum
   typeDefs.push(`
 enum ActionType {
-  FIND
   CREATE
   UPDATE
   DELETE
 }
 
-enum Operators {
-  EQ
-  GT
-  LT
-}
 
 input AuthorizeUser {
   email: String!
@@ -198,6 +213,22 @@ type Token {
   return typeDefs.join('\n');
 };
 
+function generateOperators(operators) {
+  const operatorsStr = operators.map((operator) => {
+    return `${operator}: String`;
+  });
+
+  return `
+    input ComparisonOperators {
+      ${operatorsStr.join('\n')}
+    }
+`;
+}
+
+const allowedOps = ['_eq', '_neq', '_lt', '_lte', '_gt', '_gte', '_in', '_nin'];
+
+const operators = generateOperators(allowedOps);
+typeDefs.push(operators);
 /**
  * The path to the configuration file.
  */
