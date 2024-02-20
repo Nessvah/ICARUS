@@ -57,19 +57,14 @@ async function autoResolvers() {
 const createRelations = async (table, column) => {
   const name = column.type === 'int' || column.type === 'object' ? column.foreignEntity : column.name;
   nestedObject[name] = async (parent) => {
-    console.log(parent);
-    const args = { input: { action: 'find' } };
+    const args = { input: { action: 'find', filter: { [column.foreignKey]: [parent[column.foreignKey]] } } };
+    console.log(parent[column.foreignKey]);
     const entity = await controller(column.foreignEntity, args);
-    let res = entity.filter((entit) => {
-      if (entit[column.foreignKey] === parent[column.foreignKey]) {
-        console.log('-----------------------', entit[column.foreignKey], parent[column.foreignKey]);
-        return entit;
-      }
-    });
+
     if (column.relationType[2] === 'n') {
-      return res;
+      return entity;
     }
-    return res[0];
+    return entity[0];
   };
 
   let tableName = capitalize(table.name);
