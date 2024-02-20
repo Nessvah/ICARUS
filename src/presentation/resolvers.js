@@ -3,8 +3,12 @@ import { controller } from '../infrastructure/db/connector.js';
 import { validation } from '../utils/validation/validation.js';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 
-let data = JSON.parse(fs.readFileSync(`../src/config.json`, 'utf8'));
+const capitalize = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
+let data = JSON.parse(fs.readFileSync(`../src/config.json`, 'utf8'));
+let nestedObject = {};
 //a pre version of the resolvers, with same static Query and Mutation.
 const preResolvers = {
   Query: {
@@ -38,8 +42,40 @@ async function autoResolvers() {
       await validation(args.input, 'update'); // it validates update inputs;
       return await controller(table.name, args);
     };
+
+    nestedObject = {};
+
+    // To create the relations based on the column key "isObject"
+    table.columns.forEach((column) => {
+      if (column.isObject) {
+        createRelations(table, column);
+      }
+    });
   });
 }
+
+const createRelations = async (table, column) => {
+  const name = column.type === 'int' || column.type === 'object' ? column.foreignEntity : column.name;
+  nestedObject[name] = async (parent) => {
+    console.log(parent);
+    const args = { input: { action: 'find' } };
+    const entity = await controller(column.foreignEntity, args);
+    let res = entity.filter((entit) => {
+      if (entit[column.foreignKey] === parent[column.foreignKey]) {
+        console.log('-----------------------', entit[column.foreignKey], parent[column.foreignKey]);
+        return entit;
+      }
+    });
+    if (column.relationType[2] === 'n') {
+      return res;
+    }
+    return res[0];
+  };
+
+  let tableName = capitalize(table.name);
+  preResolvers[tableName] = nestedObject;
+  //console.log(preResolvers);
+};
 
 autoResolvers();
 

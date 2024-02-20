@@ -33,6 +33,8 @@ input ResolversCategories {
     create: [CategoriesInput]
 	update: CategoriesUpdate
     operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Categories {
@@ -40,6 +42,7 @@ type Categories {
 category_name: String
 icon_class: String
 icon_label: String
+
 }
 
 input CategoriesInput {
@@ -73,6 +76,8 @@ input ResolversCustomers {
     create: [CustomersInput]
 	update: CustomersUpdate
     operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Customers {
@@ -81,6 +86,8 @@ customer_name: String
 email: String
 icon_class: String
 icon_label: String
+orders: [Orders]
+
 }
 
 input CustomersInput {
@@ -88,6 +95,7 @@ input CustomersInput {
 email: String
 icon_class: String
 icon_label: String
+
 }
 
 input CustomersFilter {
@@ -96,6 +104,7 @@ customer_name: [String]
 email: [String]
 icon_class: [String]
 icon_label: [String]
+
 }
 
 input CustomersUpdate {
@@ -103,6 +112,7 @@ input CustomersUpdate {
 email: String
 icon_class: String
 icon_label: String
+
 }
 
 type CustomersOutput {
@@ -117,17 +127,20 @@ input ResolversOrder_items {
     create: [Order_itemsInput]
 	update: Order_itemsUpdate
     operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Order_items {
     order_item_id: Int!
-order_id: Int
-product_id: Int
+orders: Orders
+products: Products
 quantity: Int
 price: Float
 currency_type: String
 icon_class: String
 icon_label: String
+
 }
 
 input Order_itemsInput {
@@ -173,14 +186,20 @@ input ResolversOrders {
     create: [OrdersInput]
 	update: OrdersUpdate
     operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Orders {
     order_id: Int!
 order_date: String
-customer_id: Int
+customers: Customers
 icon_class: String
 icon_label: String
+order_items: [Order_items]
+shipments: Shipments
+payment: Payment
+
 }
 
 input OrdersInput {
@@ -188,6 +207,9 @@ input OrdersInput {
 customer_id: Int
 icon_class: String
 icon_label: String
+
+
+
 }
 
 input OrdersFilter {
@@ -196,6 +218,9 @@ order_date: [String]
 customer_id: [Int]
 icon_class: [String]
 icon_label: [String]
+
+
+
 }
 
 input OrdersUpdate {
@@ -203,6 +228,9 @@ input OrdersUpdate {
 customer_id: Int
 icon_class: String
 icon_label: String
+
+
+
 }
 
 type OrdersOutput {
@@ -217,40 +245,43 @@ input ResolversPayment {
     create: [PaymentInput]
 	update: PaymentUpdate
     operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Payment {
     id: String!
-order_id: Int!
 payment_method: String!
 payment_date: String!
-amount: Int!
+amount: Float!
 payment_status: String!
+orders: Orders
+
 }
 
 input PaymentInput {
-    order_id: Int!
-payment_method: String!
+    payment_method: String!
 payment_date: String!
-amount: Int!
+amount: Float!
 payment_status: String!
+order_id: Int
 }
 
 input PaymentFilter {
     id: [String]
-order_id: [Int]
 payment_method: [String]
 payment_date: [String]
-amount: [Int]
+amount: [Float]
 payment_status: [String]
+order_id: [Int]
 }
 
 input PaymentUpdate {
-    order_id: Int
-payment_method: String
+    payment_method: String
 payment_date: String
-amount: Int
+amount: Float
 payment_status: String
+order_id: Int
 }
 
 type PaymentOutput {
@@ -265,17 +296,20 @@ input ResolversProduct_reviews {
     create: [Product_reviewsInput]
 	update: Product_reviewsUpdate
     operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Product_reviews {
     review_id: Int!
-product_id: Int
-customer_id: Int
+products: Products
+customers: Customers
 rating: Int
 review_text: String
 review_date: String
 icon_class: String
 icon_label: String
+
 }
 
 input Product_reviewsInput {
@@ -321,16 +355,20 @@ input ResolversProducts {
     create: [ProductsInput]
 	update: ProductsUpdate
     operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Products {
-    id: ID!
+    product_id: Int!
 product_name: String
 price: Float
 currency_type: String
 description: String
 icon_class: String
 icon_label: String
+order_items: [Order_items]
+
 }
 
 input ProductsInput {
@@ -340,16 +378,18 @@ currency_type: String
 description: String
 icon_class: String
 icon_label: String
+
 }
 
 input ProductsFilter {
-    id: [ID]
+    product_id: [Int]
 product_name: [String]
 price: [Float]
 currency_type: [String]
 description: [String]
 icon_class: [String]
 icon_label: [String]
+
 }
 
 input ProductsUpdate {
@@ -359,6 +399,7 @@ currency_type: String
 description: String
 icon_class: String
 icon_label: String
+
 }
 
 type ProductsOutput {
@@ -373,15 +414,18 @@ input ResolversShipments {
     create: [ShipmentsInput]
 	update: ShipmentsUpdate
     operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Shipments {
     shipment_id: Int!
-order_id: Int
+orders: Orders
 shipment_date: String
 tracking_int: String
 icon_class: String
 icon_label: String
+
 }
 
 input ShipmentsInput {
@@ -421,6 +465,8 @@ input ResolversUsers {
     create: [UsersInput]
 	update: UsersUpdate
     operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Users {
@@ -429,6 +475,7 @@ email: String
 role_id: Int
 customer_id: Int
 created_at: String
+
 }
 
 input UsersInput {
@@ -467,11 +514,14 @@ input ResolversUser_role {
     create: [User_roleInput]
 	update: User_roleUpdate
     operators: Operators
+    take: Int
+    skip: Int
 }
 
 type User_role {
     id: ID!
 role_name: String!
+
 }
 
 input User_roleInput {
