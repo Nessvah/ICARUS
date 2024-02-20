@@ -272,7 +272,8 @@
           "defaultValue": "'Order'",
           "columnType": "string",
           "extra": ""
-        },{
+        },
+        {
           "name": "order_items",
           "type": "object",
           "primaryKey": false,
