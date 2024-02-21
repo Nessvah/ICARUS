@@ -27,18 +27,18 @@ type Mutation {
 }
 
 input ResolversCategories {
-    filter: CategoriesFilter
-	action: String
-    create: [CategoriesInput]
-	update: CategoriesUpdate
-    operators: Operators
+  filter: CategoriesFilter
+  action: String
+  create: [CategoriesInput]
+  update: CategoriesUpdate
+  operators: Operators
 }
 
 type Categories {
-    category_id: Int!
-category_name: String
-icon_class: String
-icon_label: String
+  category_id: Int!
+  category_name: String
+  icon_class: String
+  icon_label: String
 }
 
 input CategoriesInput {
@@ -67,41 +67,41 @@ type CategoriesOutput {
 }
 
 input ResolversCustomers {
-    filter: CustomersFilter
-	action: String
-    create: [CustomersInput]
-	update: CustomersUpdate
-    operators: Operators
+  filter: CustomersFilter
+  action: String
+  create: [CustomersInput]
+  update: CustomersUpdate
+  operators: Operators
 }
 
 type Customers {
-    customer_id: Int!
-customer_name: String
-email: String
-icon_class: String
-icon_label: String
+  customer_id: Int!
+  customer_name: String
+  email: String
+  icon_class: String
+  icon_label: String
 }
 
 input CustomersInput {
-    customer_name: String
-email: String
-icon_class: String
-icon_label: String
+  customer_name: String
+  email: String
+  icon_class: String
+  icon_label: String
 }
 
 input CustomersFilter {
-    customer_id: [Int]
-customer_name: [String]
-email: [String]
-icon_class: [String]
-icon_label: [String]
+  customer_id: [Int]
+  customer_name: [String]
+  email: [String]
+  icon_class: [String]
+  icon_label: [String]
 }
 
 input CustomersUpdate {
-    customer_name: String
-email: String
-icon_class: String
-icon_label: String
+  customer_name: String
+  email: String
+  icon_class: String
+  icon_label: String
 }
 
 type CustomersOutput {
@@ -111,22 +111,22 @@ type CustomersOutput {
 }
 
 input ResolversOrder_items {
-    filter: Order_itemsFilter
-	action: String
-    create: [Order_itemsInput]
-	update: Order_itemsUpdate
-    operators: Operators
+  filter: Order_itemsFilter
+  action: String
+  create: [Order_itemsInput]
+  update: Order_itemsUpdate
+  operators: Operators
 }
 
 type Order_items {
-    order_item_id: Int!
-order_id: Int
-product_id: Int
-quantity: Int
-price: Float
-currency_type: String
-icon_class: String
-icon_label: String
+  order_item_id: Int!
+  order_id: Int
+  product_id: Int
+  quantity: Int
+  price: Float
+  currency_type: String
+  icon_class: String
+  icon_label: String
 }
 
 input Order_itemsInput {
@@ -167,41 +167,41 @@ type Order_itemsOutput {
 }
 
 input ResolversOrders {
-    filter: OrdersFilter
-	action: String
-    create: [OrdersInput]
-	update: OrdersUpdate
-    operators: Operators
+  filter: OrdersFilter
+  action: String
+  create: [OrdersInput]
+  update: OrdersUpdate
+  operators: Operators
 }
 
 type Orders {
-    order_id: Int!
-order_date: String
-customer_id: Int
-icon_class: String
-icon_label: String
+  order_id: Int!
+  order_date: String
+  customer_id: Int
+  icon_class: String
+  icon_label: String
 }
 
 input OrdersInput {
-    order_date: String
-customer_id: Int
-icon_class: String
-icon_label: String
+  order_date: String
+  customer_id: Int
+  icon_class: String
+  icon_label: String
 }
 
 input OrdersFilter {
-    order_id: [Int]
-order_date: [String]
-customer_id: [Int]
-icon_class: [String]
-icon_label: [String]
+  order_id: [Int]
+  order_date: [String]
+  customer_id: [Int]
+  icon_class: [String]
+  icon_label: [String]
 }
 
 input OrdersUpdate {
-    order_date: String
-customer_id: Int
-icon_class: String
-icon_label: String
+  order_date: String
+  customer_id: Int
+  icon_class: String
+  icon_label: String
 }
 
 type OrdersOutput {
@@ -211,45 +211,45 @@ type OrdersOutput {
 }
 
 input ResolversPayment {
-    filter: PaymentFilter
-	action: String
-    create: [PaymentInput]
-	update: PaymentUpdate
-    operators: Operators
+  filter: PaymentFilter
+  action: String
+  create: [PaymentInput]
+  update: PaymentUpdate
+  operators: Operators
 }
 
 type Payment {
-    id: String!
-order_id: Int!
-payment_method: String!
-payment_date: String!
-amount: Int!
-payment_status: String!
+  id: String!
+  order_id: Int!
+  payment_method: String!
+  payment_date: String!
+  amount: Int!
+  payment_status: String!
 }
 
 input PaymentInput {
-    order_id: Int!
-payment_method: String!
-payment_date: String!
-amount: Int!
-payment_status: String!
+  order_id: Int!
+  payment_method: String!
+  payment_date: String!
+  amount: Int!
+  payment_status: String!
 }
 
 input PaymentFilter {
-    id: [String]
-order_id: [Int]
-payment_method: [String]
-payment_date: [String]
-amount: [Int]
-payment_status: [String]
+  id: [String]
+  order_id: [Int]
+  payment_method: [String]
+  payment_date: [String]
+  amount: [Int]
+  payment_status: [String]
 }
 
 input PaymentUpdate {
-    order_id: Int
-payment_method: String
-payment_date: String
-amount: Int
-payment_status: String
+  order_id: Int
+  payment_method: String
+  payment_date: String
+  amount: Int
+  payment_status: String
 }
 
 type PaymentOutput {
@@ -259,22 +259,22 @@ type PaymentOutput {
 }
 
 input ResolversProduct_reviews {
-    filter: Product_reviewsFilter
-	action: String
-    create: [Product_reviewsInput]
-	update: Product_reviewsUpdate
-    operators: Operators
+  filter: Product_reviewsFilter
+  action: String
+  create: [Product_reviewsInput]
+  update: Product_reviewsUpdate
+  operators: Operators
 }
 
 type Product_reviews {
-    review_id: Int!
-product_id: Int
-customer_id: Int
-rating: Int
-review_text: String
-review_date: String
-icon_class: String
-icon_label: String
+  review_id: Int!
+  product_id: Int
+  customer_id: Int
+  rating: Int
+  review_text: String
+  review_date: String
+  icon_class: String
+  icon_label: String
 }
 
 input Product_reviewsInput {
@@ -315,49 +315,49 @@ type Product_reviewsOutput {
 }
 
 input ResolversProducts {
-    filter: ProductsFilter
-	action: String
-    create: [ProductsInput]
-	update: ProductsUpdate
-    operators: Operators
+  filter: ProductsFilter
+  action: String
+  create: [ProductsInput]
+  update: ProductsUpdate
+  operators: Operators
 }
 
 type Products {
-    id: ID!
-product_name: String
-price: Float
-currency_type: String
-description: String
-icon_class: String
-icon_label: String
+  id: ID!
+  product_name: String
+  price: Float
+  currency_type: String
+  description: String
+  icon_class: String
+  icon_label: String
 }
 
 input ProductsInput {
-    product_name: String
-price: Float
-currency_type: String
-description: String
-icon_class: String
-icon_label: String
+  product_name: String
+  price: Float
+  currency_type: String
+  description: String
+  icon_class: String
+  icon_label: String
 }
 
 input ProductsFilter {
-    id: [ID]
-product_name: [String]
-price: [Float]
-currency_type: [String]
-description: [String]
-icon_class: [String]
-icon_label: [String]
+  id: [ID]
+  product_name: [String]
+  price: [Float]
+  currency_type: [String]
+  description: [String]
+  icon_class: [String]
+  icon_label: [String]
 }
 
 input ProductsUpdate {
-    product_name: String
-price: Float
-currency_type: String
-description: String
-icon_class: String
-icon_label: String
+  product_name: String
+  price: Float
+  currency_type: String
+  description: String
+  icon_class: String
+  icon_label: String
 }
 
 type ProductsOutput {
@@ -367,20 +367,20 @@ type ProductsOutput {
 }
 
 input ResolversShipments {
-    filter: ShipmentsFilter
-	action: String
-    create: [ShipmentsInput]
-	update: ShipmentsUpdate
-    operators: Operators
+  filter: ShipmentsFilter
+  action: String
+  create: [ShipmentsInput]
+  update: ShipmentsUpdate
+  operators: Operators
 }
 
 type Shipments {
-    shipment_id: Int!
-order_id: Int
-shipment_date: String
-tracking_int: String
-icon_class: String
-icon_label: String
+  shipment_id: Int!
+  order_id: Int
+  shipment_date: String
+  tracking_int: String
+  icon_class: String
+  icon_label: String
 }
 
 input ShipmentsInput {
@@ -415,19 +415,19 @@ type ShipmentsOutput {
 }
 
 input ResolversUsers {
-    filter: UsersFilter
-	action: String
-    create: [UsersInput]
-	update: UsersUpdate
-    operators: Operators
+  filter: UsersFilter
+  action: String
+  create: [UsersInput]
+  update: UsersUpdate
+  operators: Operators
 }
 
 type Users {
-    id: ID!
-email: String
-role_id: Int
-customer_id: Int
-created_at: String
+  id: ID!
+  email: String
+  role_id: Int
+  customer_id: Int
+  created_at: String
 }
 
 input UsersInput {
@@ -461,16 +461,16 @@ type UsersOutput {
 }
 
 input ResolversUser_role {
-    filter: User_roleFilter
-	action: String
-    create: [User_roleInput]
-	update: User_roleUpdate
-    operators: Operators
+  filter: User_roleFilter
+  action: String
+  create: [User_roleInput]
+  update: User_roleUpdate
+  operators: Operators
 }
 
 type User_role {
-    id: ID!
-role_name: String!
+  id: ID!
+  role_name: String!
 }
 
 input User_roleInput {
