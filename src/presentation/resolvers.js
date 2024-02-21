@@ -43,6 +43,7 @@ async function autoResolvers() {
       await validation(args.input, 'update'); // it validates update inputs;
       return await controller(table.name, args);
     };
+    nestedObject = {};
 
     // To create the relations based on the column key "isObject"
     table.columns.forEach((column) => {
@@ -57,7 +58,6 @@ const createRelations = async (table, column) => {
   const name = column.isObject ? column.foreignEntity : column.name;
   nestedObject[name] = async (parent) => {
     const args = { input: { action: 'find', filter: { [column.foreignKey]: [parent[column.foreignKey]] } } };
-    console.log(parent[column.foreignKey]);
     const entity = await controller(column.foreignEntity, args);
 
     if (column.relationType[2] === 'n') {
@@ -68,7 +68,7 @@ const createRelations = async (table, column) => {
 
   let tableName = capitalize(table.name);
   preResolvers[tableName] = nestedObject;
-  //console.log(preResolvers);
+  console.log(preResolvers);
 };
 
 autoResolvers();
