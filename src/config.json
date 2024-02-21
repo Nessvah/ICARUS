@@ -300,7 +300,7 @@
           "foreignKey": "order_id"
         },
         {
-          "name": "payment",
+          "name": "payment_id",
           "type": "object",
           "primaryKey": false,
           "nullable": true,
@@ -394,7 +394,7 @@
           "isObject": true,
           "relationType": "n:1",
           "foreignEntity": "products",
-          "foreignKey": "id"
+          "foreignKey": "product_id"
         },
         {
           "name": "customer_id",
@@ -407,7 +407,7 @@
           "isObject": true,
           "relationType": "n:1",
           "foreignEntity": "customers",
-          "foreignKey": "costumer_id"
+          "foreignKey": "customer_id"
         },
         {
           "name": "rating",
