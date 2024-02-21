@@ -107,7 +107,7 @@
         },
         {
           "name": "orders",
-          "type": "object",
+          "type": "int",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
@@ -275,7 +275,7 @@
         },
         {
           "name": "order_items",
-          "type": "object",
+          "type": "int",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
@@ -288,7 +288,7 @@
         },
         {
           "name": "shipments",
-          "type": "object",
+          "type": "int",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
@@ -301,7 +301,7 @@
         },
         {
           "name": "payment",
-          "type": "object",
+          "type": "int",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
@@ -529,7 +529,7 @@
         },
         {
           "name": "order_items",
-          "type": "object",
+          "type": "int",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,

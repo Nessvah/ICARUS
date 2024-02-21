@@ -58,13 +58,9 @@ const createRelations = async (table, column) => {
   const name = column.isObject ? column.foreignEntity : column.name;
   nestedObject[name] = async (parent) => {
     const args = { input: { action: 'find', filter: { [column.foreignKey]: [parent[column.foreignKey]] } } };
-    console.log(parent[column.foreignKey]);
-    const entity = await controller(column.foreignEntity, args);
+    const relatedObjects = await controller(column.foreignEntity, args);
 
-    if (column.relationType[2] === 'n') {
-      return entity;
-    }
-    return entity[0];
+    return column.relationType[2] === 'n' ? relatedObjects : relatedObjects[0];
   };
 
   let tableName = capitalize(table.name);
