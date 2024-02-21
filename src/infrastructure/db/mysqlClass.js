@@ -31,7 +31,7 @@ export class MySQLConnection {
   }
 
   async find(tableName, { input }) {
-    console.log({ tableName, input });
+    //console.log({ tableName, input });
     const { filter } = input;
 
     // If no filters are provided, return all rows from the table
@@ -43,6 +43,18 @@ export class MySQLConnection {
       } catch (error) {
         console.error('Error:', error);
         return null; // Return null if there's an error
+      }
+      //
+    } else {
+      const keyName = Object.keys(filter)[0];
+      const sql = `SELECT * FROM ${tableName} WHERE ${keyName} = ?`;
+      const params = [filter[keyName]];
+      try {
+        const res = await this.query(sql, params);
+        return res;
+      } catch (e) {
+        console.error('Error: ', e);
+        return null;
       }
     }
 

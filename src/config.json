@@ -104,6 +104,19 @@
           "defaultValue": "'Customer'",
           "columnType": "string",
           "extra": ""
+        },
+        {
+          "name": "orders",
+          "type": "int",
+          "primaryKey": false,
+          "nullable": true,
+          "defaultValue": null,
+          "columnType": "object",
+          "extra": "MUL",
+          "isObject": true,
+          "relationType": "1:n",
+          "foreignEntity": "orders",
+          "foreignKey": "customer_id"
         }
       ]
     },
@@ -133,8 +146,12 @@
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "int",
-          "extra": ""
+          "columnType": "object",
+          "extra": "MUL",
+          "isObject": true,
+          "relationType": "n:1",
+          "foreignEntity": "orders",
+          "foreignKey": "order_id"
         },
         {
           "name": "product_id",
@@ -142,8 +159,12 @@
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "int",
-          "extra": ""
+          "columnType": "object",
+          "extra": "MUL",
+          "isObject": true,
+          "relationType": "n:1",
+          "foreignEntity": "products",
+          "foreignKey": "product_id"
         },
         {
           "name": "quantity",
@@ -227,8 +248,12 @@
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "int",
-          "extra": "MUL"
+          "columnType": "object",
+          "extra": "MUL",
+          "isObject": true,
+          "relationType": "n:1",
+          "foreignEntity": "customers",
+          "foreignKey": "customer_id"
         },
         {
           "name": "icon_class",
@@ -247,6 +272,45 @@
           "defaultValue": "'Order'",
           "columnType": "string",
           "extra": ""
+        },
+        {
+          "name": "order_items",
+          "type": "int",
+          "primaryKey": false,
+          "nullable": true,
+          "defaultValue": null,
+          "columnType": "object",
+          "extra": "MUL",
+          "isObject": true,
+          "relationType": "1:n",
+          "foreignEntity": "order_items",
+          "foreignKey": "order_id"
+        },
+        {
+          "name": "shipments",
+          "type": "int",
+          "primaryKey": false,
+          "nullable": true,
+          "defaultValue": null,
+          "columnType": "object",
+          "extra": "MUL",
+          "isObject": true,
+          "relationType": "1:1",
+          "foreignEntity": "shipments",
+          "foreignKey": "order_id"
+        },
+        {
+          "name": "payment",
+          "type": "int",
+          "primaryKey": false,
+          "nullable": true,
+          "defaultValue": null,
+          "columnType": "object",
+          "extra": "MUL",
+          "isObject": true,
+          "relationType": "1:1",
+          "foreignEntity": "payment",
+          "foreignKey": "order_id"
         }
       ]
     },
@@ -265,11 +329,6 @@
           "nullable": false
         },
         {
-          "name": "order_id",
-          "type": "int",
-          "nullable": false
-        },
-        {
           "name": "payment_method",
           "type": "string",
           "nullable": false
@@ -281,13 +340,26 @@
         },
         {
           "name": "amount",
-          "type": "int",
+          "type": "float",
           "nullable": false
         },
         {
           "name": "payment_status",
           "type": "string",
           "nullable": false
+        },
+        {
+          "name": "order_id",
+          "type": "int",
+          "primaryKey": false,
+          "nullable": true,
+          "defaultValue": null,
+          "columnType": "object",
+          "extra": "MUL",
+          "isObject": true,
+          "relationType": "1:1",
+          "foreignEntity": "orders",
+          "foreignKey": "order_id"
         }
       ]
     },
@@ -317,8 +389,12 @@
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "int",
-          "extra": "MUL"
+          "columnType": "object",
+          "extra": "MUL",
+          "isObject": true,
+          "relationType": "n:1",
+          "foreignEntity": "products",
+          "foreignKey": "id"
         },
         {
           "name": "customer_id",
@@ -326,8 +402,12 @@
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "int",
-          "extra": "MUL"
+          "columnType": "object",
+          "extra": "MUL",
+          "isObject": true,
+          "relationType": "n:1",
+          "foreignEntity": "customers",
+          "foreignKey": "customer_id"
         },
         {
           "name": "rating",
@@ -446,6 +526,19 @@
           "defaultValue": "'Product'",
           "columnType": "string",
           "extra": ""
+        },
+        {
+          "name": "order_items",
+          "type": "int",
+          "primaryKey": false,
+          "nullable": true,
+          "defaultValue": null,
+          "columnType": "object",
+          "extra": "MUL",
+          "isObject": true,
+          "relationType": "1:n",
+          "foreignEntity": "order_items",
+          "foreignKey": "product_id"
         }
       ]
     },
@@ -475,8 +568,12 @@
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
-          "columnType": "int",
-          "extra": "MUL"
+          "columnType": "object",
+          "extra": "MUL",
+          "isObject": true,
+          "relationType": "1:1",
+          "foreignEntity": "orders",
+          "foreignKey": "order_id"
         },
         {
           "name": "shipment_date",

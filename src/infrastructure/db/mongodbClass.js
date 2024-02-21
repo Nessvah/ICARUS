@@ -49,7 +49,7 @@ class MongoDBConnection {
     const db = this.client.db(this.dbName);
     const collection = db.collection(table);
     let res;
-
+    console.log(input);
     //call the filter function to reorganize que filter parameter to a more readable one.
     const query = this.filterController(input);
 

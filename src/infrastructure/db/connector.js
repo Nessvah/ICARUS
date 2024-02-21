@@ -9,7 +9,7 @@ let data;
 try {
   data = JSON.parse(fs.readFileSync('../src/config.json', 'utf8'));
 } catch (error) {
-  logger.error('error to read file');
+  logger.error('error to read file: ', error);
 }
 
 //a pool of many different database connections.
