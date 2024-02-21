@@ -8,6 +8,7 @@ const capitalize = (str) => {
 };
 
 let data = JSON.parse(fs.readFileSync(`../src/config.json`, 'utf8'));
+let nestedObject = {};
 
 //a pre version of the resolvers, with same static Query and Mutation.
 const preResolvers = {
@@ -27,8 +28,6 @@ const preResolvers = {
 // this function use the "data" parameter and create the resolvers dynamically.
 async function autoResolvers() {
   data.tables.forEach((table) => {
-    let nestedObject = {};
-
     preResolvers.Query[table.name] = async (parent, args, context, info) => {
       // if (!context.currentUser) {
       //   throw new AuthenticationError();
@@ -54,36 +53,24 @@ async function autoResolvers() {
   });
 }
 
-const createRelations = async (table, column, nestedObject) => {
-  const name = column.type === 'int' ? column.foreignEntity : column.name;
-  // Naming child relations with entity name
-  //const name = column.foreignEntity;
-  const { foreignKey } = column;
-
-  // Creating the field for each parent inside nestedObject (ie: "Customer")
+const createRelations = async (table, column) => {
+  const name = column.isObject ? column.foreignEntity : column.name;
   nestedObject[name] = async (parent) => {
-    const argss = { input: { action: 'find', filter: { [foreignKey]: parent[foreignKey] } } };
+    const args = { input: { action: 'find', filter: { [column.foreignKey]: [parent[column.foreignKey]] } } };
+    console.log(parent[column.foreignKey]);
+    const entity = await controller(column.foreignEntity, args);
 
-    // Calling the query to solve the parent field with the
-    // name of the table and the argss with foreignKey
-    const entity = await controller(column.foreignEntity, argss);
-    let res = entity.filter((entit) => {
-      if (entit[column.foreignKey] === parent[column.foreignKey]) {
-        return entit;
-      }
-    });
-    // If the relation is "1xn", return the entire array with the objects [{}, {}...]
-    // else "nx1" or "1x1", return just the first object inside the array
     if (column.relationType[2] === 'n') {
-      return res;
-    } else {
-      return res[0];
+      return entity;
     }
+    return entity[0];
   };
 
   let tableName = capitalize(table.name);
   preResolvers[tableName] = nestedObject;
+  //console.log(preResolvers);
 };
+
 autoResolvers();
 
 const resolvers = preResolvers;

@@ -36,7 +36,16 @@ export class MySQLConnection {
 
     // If no filters are provided, return all rows from the table
     if (!filter || Object.keys(filter).length === 0) {
-      const sql = `SELECT * FROM ${tableName}`;
+      let sql;
+      if (input.take && input.skip) {
+        sql = `SELECT * FROM ${tableName} LIMIT ${input.take} OFFSET ${input.skip}`;
+      } else if (input.take) {
+        sql = `SELECT * FROM ${tableName} LIMIT ${input.take}`;
+      } else if (input.skip) {
+        sql = `SELECT * FROM ${tableName} LIMIT 50000 OFFSET ${input.skip}`;
+      } else {
+        sql = `SELECT * FROM ${tableName}`;
+      }
       try {
         const res = await this.query(sql);
         return res; // Return all rows from the table
@@ -73,7 +82,16 @@ export class MySQLConnection {
     const whereClause = whereConditions.join(' AND ');
 
     // Construct SQL query with WHERE clause
-    const sql = `SELECT * FROM ${tableName} WHERE ${whereClause}`;
+    let sql;
+    if (input.take && input.skip) {
+      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT ${input.take} OFFSET ${input.skip}`;
+    } else if (input.take) {
+      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT ${input.take}`;
+    } else if (input.skip) {
+      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT 50000 OFFSET ${input.skip}`;
+    } else {
+      sql = `SELECT * FROM ${tableName} WHERE ${whereClause}`;
+    }
 
     try {
       const res = await this.query(sql, values);
@@ -92,19 +110,18 @@ export class MySQLConnection {
    */
   async create(tableName, { input }) {
     const { create } = input;
-    const valuesArray = create.map((item) => Object.values(item));
     const keys = Object.keys(create[0]);
+    const values = create.map((item) => Object.values(item));
+    console.log(values);
     const fields = keys.join(', ');
-    const placeholders = keys.map(() => '?').join(', ');
-    const sql = `INSERT INTO ${tableName} (${fields}) VALUES ${valuesArray.map(() => `(${placeholders})`).join(', ')}`;
-
+    const sql = `INSERT INTO ${tableName} (${fields}) VALUES ${values.map(() => `(?)`).join(', ')}`;
+    console.log(sql);
     try {
-      await Promise.all(valuesArray.map((values) => this.query(sql, values)));
-      logger.info(`Create operation executed successfully.`);
-      return { created: create.map((item) => ({ ...item })) };
+      const res = await this.query(sql, values); // for debugging purposes if needed
+      return { created: create };
     } catch (error) {
-      logger.error(`Error executing create operation: ${error}`);
-      return null;
+      console.error('Error:', error);
+      return null; // Return null if there's an error
     }
   }
 
@@ -118,11 +135,12 @@ export class MySQLConnection {
     const { filter, update } = input;
     const keys = Object.keys(filter);
     const values = Object.values(filter);
-    const where = keys.map((key) => `${key} = ?`).join(' AND ');
+    const where = keys.map((key) => `${key} IN (?)`).join(' AND ');
     const set = Object.entries(update)
       .map(([key]) => `${key} = ?`)
       .join(', ');
     const sql = `UPDATE ${tableName} SET ${set} WHERE ${where}`;
+    console.log(sql);
     try {
       const res = await this.query(sql, [...Object.values(update), ...values]); // for debugging purposes if needed
       return { updated: await this.find(tableName, { input }) };
@@ -142,13 +160,18 @@ export class MySQLConnection {
     const { filter } = input;
     const keys = Object.keys(filter);
     const values = Object.values(filter);
-    const where = keys.map((key) => `${key} = ?`).join(' AND ');
+    const where = keys.map((key) => `${key} IN (?)`).join(' AND ');
     const sql = `DELETE FROM ${tableName} WHERE ${where}`;
     try {
-      const res = await this.query(sql, [values]);
+      // Execute the first query to disable foreign key checks
+      await this.query('SET FOREIGN_KEY_CHECKS=0;');
+      // Execute the second query to delete the records
+      const res = await this.query(sql, values);
+      // Execute the third query to enable foreign key checks
+      await this.query('SET FOREIGN_KEY_CHECKS=1;');
       return { deleted: res.affectedRows };
     } catch (error) {
-      logger.error('Error:', error);
+      console.error('Error:', error);
       return null; // Return null if there's an error
     }
   }
