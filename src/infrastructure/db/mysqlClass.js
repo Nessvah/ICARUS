@@ -29,7 +29,7 @@ export class MySQLConnection {
    */
   async query(sql, values) {
     const connection = await this.getConnection();
-
+    console.log(sql, '---', values);
     try {
       logger.info('Executing SQL query:', sql);
       logger.info('SQL query values:', values);
@@ -111,20 +111,32 @@ export class MySQLConnection {
 
     if (input.hasOwnProperty('skip') || input.hasOwnProperty('take')) {
       logger.warn('inside skip and take');
-      const skip = input.hasOwnProperty('skip') ? 'OFFSET ?' : '';
-      const take = input.hasOwnProperty('take') ? 'LIMIT ?' : '';
 
-      logger.warn(Object.keys(input));
-      // add limit and offeset to query and push the values to the array
-      sql += ` ${skip} ${take}`;
-      values.push(input.skip, input.take);
+      const take = input.hasOwnProperty('take') ? 'LIMIT ?' : '';
+      const skip = input.hasOwnProperty('skip') ? ', ?' : '';
+
+      if (take && skip) {
+        console.log('both');
+        // add limit and offeset to query and push the values to the array
+        sql += ` ${take} ${skip}`;
+        values.push(input.skip, input.take);
+      } else if (skip) {
+        // if they only provide the take and no skip we need to put limit
+        // as a huge number otherwise it will not work and we need to specify offset
+        sql += ` LIMIT 99999999999999 OFFSET ?`;
+        values.push(input.skip);
+      } else {
+        sql += ` ${take}`;
+        values.push(input.take);
+      }
     }
 
-    logger.warn(sql);
-
+    logger.warn(sql + ';');
     try {
-      //const res = await this.query(sql);
-      //return res; // Return all rows from the table
+      const res = await this.query(sql, values);
+
+      console.log(res);
+      return res; // Return all rows from the table
     } catch (error) {
       console.error('Error:', error);
       return null; // Return null if there's an error
@@ -227,12 +239,10 @@ export class MySQLConnection {
     }
   }
   0;
-  async count(tableName, { input }) {
+  async count(tableName, { _ }) {
     const sql = `SELECT COUNT(*) AS ${tableName} FROM ${tableName}`;
     try {
       const res = await this.query(sql);
-      console.log(res[0]);
-      console.log(typeof res[0][tableName]);
       return res[0][tableName];
     } catch (error) {
       logger.error('Error:', error);
