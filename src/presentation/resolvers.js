@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { controller } from '../infrastructure/db/connector.js';
 import { validation } from '../utils/validation/validation.js';
+import { ObjectId } from 'mongodb';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 
 const capitalize = (str) => {
@@ -14,7 +15,9 @@ const preResolvers = {
   Query: {
     tables: (parents, args, context, info) => {
       let tablesInfo = data.tables.map((table) => {
-        return { table: table.name, structure: JSON.stringify(table.columns) };
+        const columns = table.columns.map((column) => column);
+        console.log({ table: table.name, structure: JSON.stringify(columns) });
+        return { table: table.name, structure: JSON.stringify(columns) };
       });
       return tablesInfo;
     },
@@ -57,7 +60,15 @@ async function autoResolvers() {
 const createRelations = async (table, column) => {
   const name = column.isObject ? column.foreignEntity : column.name;
   nestedObject[name] = async (parent) => {
-    const args = { input: { action: 'find', filter: { [column.foreignKey]: [parent[column.foreignKey]] } } };
+    let args;
+    // for mongodb searching parents
+    if (table.database.type === 'mongodb') {
+      const idValue = ObjectId.isValid(parent[column.name]) ? parent[column.name].toString() : parent[column.name];
+      args = { input: { action: 'find', filter: { [column.foreignKey]: [idValue] } } };
+      // for MySQL searching parents
+    } else {
+      args = { input: { action: 'find', filter: { [column.foreignKey]: [parent[column.foreignKey]] } } };
+    }
     const relatedObjects = await controller(column.foreignEntity, args);
 
     return column.relationType[2] === 'n' ? relatedObjects : relatedObjects[0];

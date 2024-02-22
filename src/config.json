@@ -107,7 +107,7 @@
         },
         {
           "name": "orders",
-          "type": "int",
+          "type": "object",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
@@ -275,7 +275,7 @@
         },
         {
           "name": "order_items",
-          "type": "int",
+          "type": "object",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
@@ -288,7 +288,7 @@
         },
         {
           "name": "shipments",
-          "type": "int",
+          "type": "object",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
@@ -301,7 +301,7 @@
         },
         {
           "name": "payment",
-          "type": "int",
+          "type": "object",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
@@ -459,14 +459,17 @@
     {
       "name": "products",
       "database": {
-        "type": "mongodb",
-        "uri": "mongodb+srv://icarus-user:veryGoodPassword@cluster0.hxbgjxm.mongodb.net/",
-        "databaseName": "icarus-test"
+        "type": "mysql",
+        "host": "16.171.102.168",
+        "port": 3306,
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
+        "databaseName": "icarus"
       },
       "columns": [
         {
-          "name": "id",
-          "type": "id",
+          "name": "product_id",
+          "type": "int",
           "primaryKey": true,
           "nullable": false,
           "defaultValue": null,
@@ -529,7 +532,7 @@
         },
         {
           "name": "order_items",
-          "type": "int",
+          "type": "object",
           "primaryKey": false,
           "nullable": true,
           "defaultValue": null,
@@ -639,8 +642,12 @@
         },
         {
           "name": "role_id",
-          "type": "int",
-          "nullable": true
+          "type": "string",
+          "nullable": false,
+          "isObject": true,
+          "relationType": "n:1",
+          "foreignEntity": "user_role",
+          "foreignKey": "id"
         },
         {
           "name": "customer_id",
@@ -648,7 +655,7 @@
           "nullable": true
         },
         {
-          "name": "created_at",
+          "name": "created_t",
           "type": "string",
           "nullable": true
         }
@@ -672,6 +679,15 @@
           "name": "role_name",
           "type": "string",
           "nullable": false
+        },
+        {
+          "name": "id",
+          "type": "object",
+          "nullable": false,
+          "isObject": true,
+          "relationType": "1:n",
+          "foreignEntity": "users",
+          "foreignKey": "role_id"
         }
       ]
     }
