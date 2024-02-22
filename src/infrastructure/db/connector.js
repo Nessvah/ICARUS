@@ -31,10 +31,11 @@ async function controller(table, args) {
         break;
     }
 
-    const { action } = args.input;
+    const action = args.input.action || 'filter';
+
     //filter the CRUD function passed in the action input.
     switch (action) {
-      case 'FIND':
+      case 'filter':
         return await connection.find(table, args);
       case 'CREATE':
         return await connection.create(table, args);

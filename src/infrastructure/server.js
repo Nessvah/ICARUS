@@ -9,14 +9,14 @@ import client from 'prom-client';
 import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
 import { resolvers } from '../presentation/resolvers.js';
-import { readConfigFile } from '../presentation/generateTypeDefs.js';
+import { readConfigFile } from '../graphql/generateTypeDefs.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
 import { auth } from '../aws/auth/auth.js';
 import { createMetricsPlugin } from '../metrics/metricsPlugin.js';
 
 import fs from 'fs';
 import { createDbPool } from './db/connector.js';
-import { schema } from '../graphql/typedefs.js';
+
 const app = express();
 //create a new typedef file.
 await readConfigFile();
@@ -36,24 +36,25 @@ logger.debug('Logger initialized correctly.');
 const register = new client.Registry();
 const metricsPlugin = await createMetricsPlugin(register);
 
-// let typeDefs;
-// try {
-//   typeDefs = fs.readFileSync('./presentation/typeDefs.graphql', 'utf8');
-// } catch (e) {
-//   logger.error(e);
-// }
+let typeDefs;
+try {
+  typeDefs = fs.readFileSync('./graphql/typeDefs.graphql', 'utf8');
+} catch (e) {
+  logger.error(e);
+}
 
 // initialize apollo server but adding the drain plugin for out httpserver
 const server = new ApolloServer({
-  schema,
+  typeDefs,
+  resolvers,
   formatError: customFormatError,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer }), metricsPlugin],
 });
 
 // setup express middleware for morgan http logs
 //* The order matters so this needs to be before starting apollo server
-app.use(morgan(':response-time ms :graphql', { stream: accessLogStream }));
-app.use(morgan(':response-time ms :graphql', { stream: morganMongoDBStream }));
+// app.use(morgan(':response-time ms :graphql', { stream: accessLogStream }));
+// app.use(morgan(':response-time ms :graphql', { stream: morganMongoDBStream }));
 
 //* configuring cors before any route/endpoint
 app.use(
@@ -77,7 +78,7 @@ app.use(
   express.json(),
   expressMiddleware(server, {
     context: ({ req }) => {
-      return auth(req);
+      return { req };
     },
   }),
 );

@@ -410,7 +410,7 @@ type Product_reviewsOutput {
   input NestedFiltering {
     _and: [NestedFiltering]
     _or: [NestedFiltering]
-     id: ComparisonOperators
+     product_id: ComparisonOperators
 product_name: ComparisonOperators
 price: ComparisonOperators
 currency_type: ComparisonOperators
@@ -427,7 +427,7 @@ input ProductsListOptions {
 }
 
 type Products {
-    id: ID!
+    product_id: ID!
 product_name: String
 price: Float
 currency_type: String
@@ -448,7 +448,7 @@ icon_label: String
 input ProductsFilter {
   _and: [ ProductsFilter]
   _or: [ ProductsFilter]
-    id: ComparisonOperators
+    product_id: ComparisonOperators
 product_name: ComparisonOperators
 price: ComparisonOperators
 currency_type: ComparisonOperators

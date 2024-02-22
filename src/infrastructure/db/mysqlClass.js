@@ -1,11 +1,23 @@
+/* eslint-disable no-prototype-builtins */
 import { logger } from '../server.js';
 export class MySQLConnection {
   constructor(currentTableInfo) {
     this.pool = currentTableInfo.pool;
+    this.operatorsMap = {
+      _eq: '=',
+      _lt: '<',
+      _lte: '<=',
+      _gt: '>',
+      _gte: '>=',
+      _neq: '<>',
+      _and: 'AND',
+      _or: 'OR',
+    };
   }
 
   async getConnection() {
-    return this.pool.getConnection();
+    logger.warn('getting mysql conn from pool...');
+    return await this.pool.getConnection();
   }
 
   /**
@@ -17,9 +29,11 @@ export class MySQLConnection {
    */
   async query(sql, values) {
     const connection = await this.getConnection();
+
     try {
       logger.info('Executing SQL query:', sql);
       logger.info('SQL query values:', values);
+      // get only the rows with the info and not the schema
       const [rows] = await connection.query(sql, values);
       return rows;
     } catch (error) {
@@ -31,44 +45,115 @@ export class MySQLConnection {
   }
 
   async find(tableName, { input }) {
-    console.log({ tableName, input });
-    const { filter } = input;
+    // start constructing the sql query
+    let sql = `SELECT * FROM ${tableName}`;
 
-    // If no filters are provided, return all rows from the table
-    if (!filter || Object.keys(filter).length === 0) {
-      const sql = `SELECT * FROM ${tableName}`;
-      try {
-        const res = await this.query(sql);
-        return res; // Return all rows from the table
-      } catch (error) {
-        console.error('Error:', error);
-        return null; // Return null if there's an error
-      }
+    // array to save the values
+    const values = [];
+    const columns = [];
+    const whereConditions = [];
+    let logicalOperator;
+    // Construct WHERE clause with only relevant filters
+    /*
+    SELECT column1, column2, ...
+    FROM table_name
+    WHERE condition;
+
+    SELECT * FROM `movies` WHERE `category_id` = 1 OR `category_id` = 2;
+    */
+
+    if (!input.hasOwnProperty('filter') && (input.hasOwnProperty('skip') || input.hasOwnProperty('take'))) {
+      logger.warn('Inside skip/take condition');
+      logger.warn('input.filter:', input.filter);
+      // ... (handle skip/take conditions)
     }
 
-    // Construct WHERE clause with only relevant filters
-    const whereConditions = [];
-    const values = [];
+    // check if the filter options is present
+    if (input.filter) {
+      logger.warn('inside filter');
+      const { filter } = input;
 
-    Object.entries(filter).forEach(([column, columnValues]) => {
-      if (Array.isArray(columnValues) && columnValues.length > 0) {
-        const placeholders = columnValues.map(() => '?').join(', ');
-        whereConditions.push(`${column} IN (${placeholders})`);
-        values.push(...columnValues);
-      }
-    });
+      logicalOperator = input.filter._or ? ' OR ' : ' AND ';
+      logger.warn(logicalOperator);
+      // check for the logical operators if present
+      Object.keys(filter).forEach((key) => {
+        // check for the logical operators
+        if (key === '_and' || key === '_or') {
+          // handle those operations
+          filter[key].forEach((logOperator) => {
+            // check for the values of that operation
 
-    const whereClause = whereConditions.join(' AND ');
+            logger.warn(logOperator);
+            Object.keys(logOperator).forEach((column) => {
+              columns.push(column);
+              const condition = logOperator[column];
 
-    // Construct SQL query with WHERE clause
-    const sql = `SELECT * FROM ${tableName} WHERE ${whereClause}`;
+              // todo: handle nested logical operations
+              // recursive logic to handle nested structures
+
+              if (Array.isArray(condition[key])) {
+                console.log('nested condition');
+              }
+
+              logger.warn(condition);
+              // get the operator and value to process
+              processFilterItem.call(this, column, condition, logicalOperator);
+            });
+          });
+        }
+
+        processFilterItem.call(this, key, filter[key], logicalOperator);
+      });
+    }
+
+    // If no logical operators are provided, return all rows from the table
+    // or the input doesnt have the filter property
+
+    if (input.hasOwnProperty('skip') || input.hasOwnProperty('take')) {
+      logger.warn('inside skip and take');
+      const skip = input.hasOwnProperty('skip') ? 'OFFSET ?' : '';
+      const take = input.hasOwnProperty('take') ? 'LIMIT ?' : '';
+
+      // add limit and offeset to query and push the values to the array
+      sql += ` ${skip} ${take}`;
+      values.push(input.skip, input.take);
+    }
+
+    logger.warn(sql);
 
     try {
-      const res = await this.query(sql, values);
-      return res; // Return the result of the query
+      //const res = await this.query(sql);
+      //return res; // Return all rows from the table
     } catch (error) {
       console.error('Error:', error);
       return null; // Return null if there's an error
+    }
+
+    function processFilterItem(columnName, cond, logicalOp) {
+      // condition is going to come as an array with the field, operator, and value
+      Object.entries(cond).forEach(([operator, value]) => {
+        // Check if the operator is supported
+        //todo: try to see a fix without disabling rule
+        // eslint-disable-next-line no-prototype-builtins
+        if (!this.operatorsMap.hasOwnProperty(operator)) {
+          throw new Error('Not supported operator');
+        }
+
+        // get the matching operator for this db
+        const sqlOperator = this.operatorsMap[operator];
+        const placeholder = '?';
+
+        // construct the string for this operation with the parameterized value
+        const conditionStr = `${columnName} ${sqlOperator} ${placeholder}`;
+
+        console.log(conditionStr);
+        whereConditions.push(conditionStr);
+
+        const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(logicalOp)}` : '';
+        sql += ` ${whereClause}`;
+        // save the actual values in an array
+        values.push(value);
+      });
     }
   }
 

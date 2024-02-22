@@ -379,13 +379,16 @@
     {
       "name": "products",
       "database": {
-        "type": "mongodb",
-        "uri": "mongodb+srv://icarus-user:veryGoodPassword@cluster0.hxbgjxm.mongodb.net/",
-        "databaseName": "icarus-test"
+        "type": "mysql",
+        "host": "16.171.102.168",
+        "port": 3306,
+        "user": "icarus_devs",
+        "password": "YP6w@gsuJLe^kS",
+        "databaseName": "icarus"
       },
       "columns": [
         {
-          "name": "id",
+          "name": "product_id",
           "type": "id",
           "primaryKey": true,
           "nullable": false,
