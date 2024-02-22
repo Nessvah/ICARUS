@@ -72,6 +72,14 @@ type Query {
         return `${tableName}(input: ${capitalizedTableName}ListOptions): [${capitalizedTableName}]`;
       })
       .join('\n')}
+    ${config.tables
+      .map((table) => {
+        const tableName = table.name;
+        const capitalizedTableName = capitalize(table.name);
+        return `${tableName}Count(input: ${capitalizedTableName}Count): ${capitalizedTableName}CountResult`;
+      })
+      .join('\n')}
+
 }
 
 # define the root Muation
@@ -96,7 +104,8 @@ input ${tableName}ListOptions {
     filter: ${tableName}Filter
     skip: Int
     take: Int
-}`;
+
+    }`;
     //Define the entities type
     const tableTypeDef = `
 type ${tableName} {
@@ -147,7 +156,18 @@ input ${tableName}Filter {
   }
 `;
 
-    typeDefs.push(nestedFiltering);
+    const ordersCountInput = `
+  input ${tableName}Count {
+    action: ActionType!
+  } \n
+
+  type ${tableName}CountResult {
+    action: String
+    count: Int!
+  }
+`;
+
+    typeDefs.push(nestedFiltering, ordersCountInput);
 
     //Define the Update entities input
     const update = `
@@ -179,6 +199,7 @@ type ${tableName}Output {
   // Define the operators enum
   typeDefs.push(`
 enum ActionType {
+  COUNT
   CREATE
   UPDATE
   DELETE

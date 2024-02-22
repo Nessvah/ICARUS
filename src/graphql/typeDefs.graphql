@@ -24,6 +24,17 @@ products(input: ProductsListOptions): [Products]
 shipments(input: ShipmentsListOptions): [Shipments]
 users(input: UsersListOptions): [Users]
 user_role(input: User_roleListOptions): [User_role]
+    categoriesCount(input: CategoriesCount): CategoriesCountResult
+customersCount(input: CustomersCount): CustomersCountResult
+order_itemsCount(input: Order_itemsCount): Order_itemsCountResult
+ordersCount(input: OrdersCount): OrdersCountResult
+paymentCount(input: PaymentCount): PaymentCountResult
+product_reviewsCount(input: Product_reviewsCount): Product_reviewsCountResult
+productsCount(input: ProductsCount): ProductsCountResult
+shipmentsCount(input: ShipmentsCount): ShipmentsCountResult
+usersCount(input: UsersCount): UsersCountResult
+user_roleCount(input: User_roleCount): User_roleCountResult
+
 }
 
 # define the root Muation
@@ -51,11 +62,23 @@ icon_label: ComparisonOperators
   }
 
 
+  input CategoriesCount {
+    action: ActionType!
+  } 
+
+
+  type CategoriesCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input CategoriesListOptions {
     filter: CategoriesFilter
     skip: Int
     take: Int
-}
+
+    }
 
 type Categories {
     category_id: Int!
@@ -103,11 +126,23 @@ icon_label: ComparisonOperators
   }
 
 
+  input CustomersCount {
+    action: ActionType!
+  } 
+
+
+  type CustomersCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input CustomersListOptions {
     filter: CustomersFilter
     skip: Int
     take: Int
-}
+
+    }
 
 type Customers {
     customer_id: Int!
@@ -162,11 +197,23 @@ icon_label: ComparisonOperators
   }
 
 
+  input Order_itemsCount {
+    action: ActionType!
+  } 
+
+
+  type Order_itemsCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input Order_itemsListOptions {
     filter: Order_itemsFilter
     skip: Int
     take: Int
-}
+
+    }
 
 type Order_items {
     order_item_id: Int!
@@ -230,11 +277,23 @@ icon_label: ComparisonOperators
   }
 
 
+  input OrdersCount {
+    action: ActionType!
+  } 
+
+
+  type OrdersCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input OrdersListOptions {
     filter: OrdersFilter
     skip: Int
     take: Int
-}
+
+    }
 
 type Orders {
     order_id: Int!
@@ -287,11 +346,23 @@ payment_status: ComparisonOperators
   }
 
 
+  input PaymentCount {
+    action: ActionType!
+  } 
+
+
+  type PaymentCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input PaymentListOptions {
     filter: PaymentFilter
     skip: Int
     take: Int
-}
+
+    }
 
 type Payment {
     id: String!
@@ -350,11 +421,23 @@ icon_label: ComparisonOperators
   }
 
 
+  input Product_reviewsCount {
+    action: ActionType!
+  } 
+
+
+  type Product_reviewsCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input Product_reviewsListOptions {
     filter: Product_reviewsFilter
     skip: Int
     take: Int
-}
+
+    }
 
 type Product_reviews {
     review_id: Int!
@@ -420,11 +503,23 @@ icon_label: ComparisonOperators
   }
 
 
+  input ProductsCount {
+    action: ActionType!
+  } 
+
+
+  type ProductsCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ProductsListOptions {
     filter: ProductsFilter
     skip: Int
     take: Int
-}
+
+    }
 
 type Products {
     product_id: ID!
@@ -485,11 +580,23 @@ icon_label: ComparisonOperators
   }
 
 
+  input ShipmentsCount {
+    action: ActionType!
+  } 
+
+
+  type ShipmentsCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ShipmentsListOptions {
     filter: ShipmentsFilter
     skip: Int
     take: Int
-}
+
+    }
 
 type Shipments {
     shipment_id: Int!
@@ -546,11 +653,23 @@ created_at: ComparisonOperators
   }
 
 
+  input UsersCount {
+    action: ActionType!
+  } 
+
+
+  type UsersCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input UsersListOptions {
     filter: UsersFilter
     skip: Int
     take: Int
-}
+
+    }
 
 type Users {
     id: ID!
@@ -602,11 +721,23 @@ role_name: ComparisonOperators
   }
 
 
+  input User_roleCount {
+    action: ActionType!
+  } 
+
+
+  type User_roleCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input User_roleListOptions {
     filter: User_roleFilter
     skip: Int
     take: Int
-}
+
+    }
 
 type User_role {
     id: ID!
@@ -636,6 +767,7 @@ type User_roleOutput {
 }
 
 enum ActionType {
+  COUNT
   CREATE
   UPDATE
   DELETE

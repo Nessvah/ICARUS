@@ -8,7 +8,7 @@ import cors from 'cors';
 import client from 'prom-client';
 import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
-import { resolvers } from '../presentation/resolvers.js';
+import { resolvers } from '../graphql/resolvers.js';
 import { readConfigFile } from '../graphql/generateTypeDefs.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
 import { auth } from '../aws/auth/auth.js';
@@ -42,6 +42,8 @@ try {
 } catch (e) {
   logger.error(e);
 }
+
+console.log(resolvers);
 
 // initialize apollo server but adding the drain plugin for out httpserver
 const server = new ApolloServer({

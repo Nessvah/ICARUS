@@ -53,21 +53,19 @@ export class MySQLConnection {
     const columns = [];
     const whereConditions = [];
     let logicalOperator;
-    // Construct WHERE clause with only relevant filters
-    /*
-    SELECT column1, column2, ...
-    FROM table_name
-    WHERE condition;
 
-    SELECT * FROM `movies` WHERE `category_id` = 1 OR `category_id` = 2;
-    */
-
+    //* Scenario 1: They can send a query with a limit or a offset or both
+    //* but WITHOUT the filter option
+    // ex: { take: 10, quantity: 5, price: 10 }
+    // ex: { skip: 10, take: 10, quantity: 5, price: 10 }
     if (!input.hasOwnProperty('filter') && (input.hasOwnProperty('skip') || input.hasOwnProperty('take'))) {
       logger.warn('Inside skip/take condition');
       logger.warn('input.filter:', input.filter);
       // ... (handle skip/take conditions)
     }
 
+    //* Scenario 2: They can send a query with a filter option
+    //* this includes having a skip/take or none
     // check if the filter options is present
     if (input.filter) {
       logger.warn('inside filter');
@@ -102,6 +100,8 @@ export class MySQLConnection {
           });
         }
 
+        //* Scenario 3: They can send a query with a filter option but
+        //* without specifing the logical condition so we assume and 'AND' operation
         processFilterItem.call(this, key, filter[key], logicalOperator);
       });
     }
@@ -114,6 +114,7 @@ export class MySQLConnection {
       const skip = input.hasOwnProperty('skip') ? 'OFFSET ?' : '';
       const take = input.hasOwnProperty('take') ? 'LIMIT ?' : '';
 
+      logger.warn(Object.keys(input));
       // add limit and offeset to query and push the values to the array
       sql += ` ${skip} ${take}`;
       values.push(input.skip, input.take);
@@ -220,6 +221,19 @@ export class MySQLConnection {
     try {
       const res = await this.query(sql, [values]);
       return { deleted: res.affectedRows };
+    } catch (error) {
+      logger.error('Error:', error);
+      return null; // Return null if there's an error
+    }
+  }
+  0;
+  async count(tableName, { input }) {
+    const sql = `SELECT COUNT(*) AS ${tableName} FROM ${tableName}`;
+    try {
+      const res = await this.query(sql);
+      console.log(res[0]);
+      console.log(typeof res[0][tableName]);
+      return res[0][tableName];
     } catch (error) {
       logger.error('Error:', error);
       return null; // Return null if there's an error

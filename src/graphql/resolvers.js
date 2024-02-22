@@ -6,7 +6,7 @@ import { controller } from '../infrastructure/db/connector.js';
 let data = JSON.parse(fs.readFileSync(`../src/config.json`, 'utf8'));
 
 //a pre version of the resolvers, with same static Query and Mutation.
-const preResolvers = {
+export const resolvers = {
   Query: {
     tables: () => {
       let tablesInfo = data.tables.map((table) => {
@@ -23,7 +23,9 @@ const preResolvers = {
 // this function use the "data" parameter and create the resolvers dynamically.
 async function autoResolvers() {
   data.tables.forEach((table) => {
-    preResolvers.Query[table.name] = async (_, args) => {
+    const countName = `${table.name}Count`;
+
+    resolvers.Query[table.name] = async (parent, args, context, info) => {
       // if (!context.currentUser) {
       //   throw new AuthenticationError();
       // }
@@ -32,7 +34,17 @@ async function autoResolvers() {
       return results;
     };
 
-    preResolvers.Mutation[table.name] = async (_, args) => {
+    resolvers.Query[countName] = async (parent, args, context, info) => {
+      // if (!context.currentUser) {
+      //   throw new AuthenticationError();
+      // }
+
+      const result = await controller(table.name, args);
+      console.log('res', result);
+      return { count: result };
+    };
+
+    resolvers.Mutation[table.name] = async (parent, args, context, info) => {
       // if (!context.currentUser) {
       //   throw new AuthenticationError();
       // }
@@ -41,8 +53,4 @@ async function autoResolvers() {
   });
 }
 
-autoResolvers();
-
-const resolvers = preResolvers;
-
-export { resolvers, autoResolvers };
+await autoResolvers();
