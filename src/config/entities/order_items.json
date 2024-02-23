@@ -1,80 +1,80 @@
 {
-	"tables": {
-		"name": "order_items",
-		"database": "mysql",
-		"columns": [
-			{
-				"name": "order_item_id",
-				"type": "int",
-				"primaryKey": true,
-				"nullable": false,
-				"defaultValue": null,
-				"extra": "auto_increment"
-			},
-			{
-				"name": "order_id",
-				"type": "int",
-				"primaryKey": false,
-				"nullable": true,
-				"defaultValue": null,
-				"extra": "MUL",
-				"isObject": true,
-				"relationType": "n:1",
-				"foreignEntity": "orders",
-				"foreignKey": "order_id"
-			},
-			{
-				"name": "product_id",
-				"type": "int",
-				"primaryKey": false,
-				"nullable": true,
-				"defaultValue": null,
-				"extra": "MUL",
-				"isObject": true,
-				"relationType": "n:1",
-				"foreignEntity": "products",
-				"foreignKey": "product_id"
-			},
-			{
-				"name": "quantity",
-				"type": "int",
-				"primaryKey": false,
-				"nullable": true,
-				"defaultValue": null,
-				"extra": ""
-			},
-			{
-				"name": "price",
-				"type": "float",
-				"primaryKey": false,
-				"nullable": true,
-				"defaultValue": null,
-				"extra": ""
-			},
-			{
-				"name": "currency_type",
-				"type": "VARCHAR",
-				"primaryKey": false,
-				"nullable": true,
-				"defaultValue": "EUR",
-				"extra": ""
-			},
-			{
-				"name": "icon_class",
-				"type": "string",
-				"primaryKey": false,
-				"nullable": true,
-				"defaultValue": "'FaBasketShopping'",
-				"extra": ""
-			},
-			{
-				"name": "icon_label",
-				"type": "string",
-				"primaryKey": false,
-				"nullable": true,
-				"defaultValue": "'Order Item'",
-				"extra": ""
-			}
-		]
-	}
+  "tables": {
+    "name": "order_items",
+    "database": "mysql",
+    "columns": [
+      {
+        "name": "order_item_id",
+        "type": "int",
+        "primaryKey": true,
+        "nullable": false,
+        "defaultValue": null,
+        "extra": "auto_increment"
+      },
+      {
+        "name": "order_id",
+        "type": "int",
+        "primaryKey": false,
+        "nullable": true,
+        "defaultValue": null,
+        "extra": "MUL",
+        "isObject": true,
+        "relationType": "n:1",
+        "foreignEntity": "orders",
+        "foreignKey": "order_id"
+      },
+      {
+        "name": "product_id",
+        "type": "int",
+        "primaryKey": false,
+        "nullable": true,
+        "defaultValue": null,
+        "extra": "MUL",
+        "isObject": true,
+        "relationType": "n:1",
+        "foreignEntity": "products",
+        "foreignKey": "product_id"
+      },
+      {
+        "name": "quantity",
+        "type": "int",
+        "primaryKey": false,
+        "nullable": true,
+        "defaultValue": null,
+        "extra": ""
+      },
+      {
+        "name": "price",
+        "type": "float",
+        "primaryKey": false,
+        "nullable": true,
+        "defaultValue": null,
+        "extra": ""
+      },
+      {
+        "name": "currency_type",
+        "type": "VARCHAR",
+        "primaryKey": false,
+        "nullable": true,
+        "defaultValue": "EUR",
+        "extra": ""
+      },
+      {
+        "name": "icon_class",
+        "type": "string",
+        "primaryKey": false,
+        "nullable": true,
+        "defaultValue": "'FaBasketShopping'",
+        "extra": ""
+      },
+      {
+        "name": "icon_label",
+        "type": "string",
+        "primaryKey": false,
+        "nullable": true,
+        "defaultValue": "'Order Item'",
+        "extra": ""
+      }
+    ]
+  }
 }

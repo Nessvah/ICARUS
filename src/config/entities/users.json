@@ -1,39 +1,39 @@
 {
-	"tables": {
-		"name": "users",
-		"database": "mongodb",
-		"columns": [
-			{
-				"name": "id",
-				"type": "id",
-				"primaryKey": true,
-				"nullable": false
-			},
-			{
-				"name": "password",
-				"type": "string",
-				"nullable": true
-			},
-			{
-				"name": "email",
-				"type": "string",
-				"nullable": true
-			},
-			{
-				"name": "role_id",
-				"type": "int",
-				"nullable": true
-			},
-			{
-				"name": "customer_id",
-				"type": "int",
-				"nullable": true
-			},
-			{
-				"name": "created_at",
-				"type": "string",
-				"nullable": true
-			}
-		]
-	}
+  "tables": {
+    "name": "users",
+    "database": "mongodb",
+    "columns": [
+      {
+        "name": "id",
+        "type": "id",
+        "primaryKey": true,
+        "nullable": false
+      },
+      {
+        "name": "password",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "role_id",
+        "type": "int",
+        "nullable": true
+      },
+      {
+        "name": "customer_id",
+        "type": "int",
+        "nullable": true
+      },
+      {
+        "name": "created_at",
+        "type": "string",
+        "nullable": true
+      }
+    ]
+  }
 }

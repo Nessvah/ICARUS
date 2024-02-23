@@ -1,19 +1,19 @@
 {
-	"tables": {
-		"name": "userRole",
-		"database": "mongodb",
-		"columns": [
-			{
-				"name": "id",
-				"type": "id",
-				"primaryKey": true,
-				"nullable": false
-			},
-			{
-				"name": "role_name",
-				"type": "string",
-				"nullable": false
-			}
-		]
-	}
+  "tables": {
+    "name": "userRole",
+    "database": "mongodb",
+    "columns": [
+      {
+        "name": "id",
+        "type": "id",
+        "primaryKey": true,
+        "nullable": false
+      },
+      {
+        "name": "role_name",
+        "type": "string",
+        "nullable": false
+      }
+    ]
+  }
 }
