@@ -43,8 +43,6 @@ try {
   logger.error(e);
 }
 
-console.log(resolvers);
-
 // initialize apollo server but adding the drain plugin for out httpserver
 const server = new ApolloServer({
   typeDefs,

@@ -1,18 +1,21 @@
 /* eslint-disable no-prototype-builtins */
+
 import { logger } from '../server.js';
+
+const operatorsMap = {
+  _eq: '=',
+  _lt: '<',
+  _lte: '<=',
+  _gt: '>',
+  _gte: '>=',
+  _neq: '<>',
+  _and: 'AND',
+  _or: 'OR',
+};
+
 export class MySQLConnection {
   constructor(currentTableInfo) {
     this.pool = currentTableInfo.pool;
-    this.operatorsMap = {
-      _eq: '=',
-      _lt: '<',
-      _lte: '<=',
-      _gt: '>',
-      _gte: '>=',
-      _neq: '<>',
-      _and: 'AND',
-      _or: 'OR',
-    };
   }
 
   async getConnection() {
@@ -51,44 +54,106 @@ export class MySQLConnection {
     // array to save the values
     const values = [];
     const columns = [];
-    const whereConditions = [];
     let logicalOperator;
 
-    //* Scenario 2: They can send a query with a filter option
-    //* this includes having a skip/take or none
     // check if the filter options is present
     if (input.filter) {
       logger.warn('inside filter');
-      const { filter } = input;
+
+      // afther this we have two possible scenarios,
+      // an object with nested objects or
+      // an array with an object with some nested objects
 
       logicalOperator = input.filter._or ? ' OR ' : ' AND ';
-      logger.warn(logicalOperator);
+
+      const { filter } = input;
       // check for the logical operators if present
+
       Object.keys(filter).forEach((key) => {
         // check for the logical operators
         if (key === '_and' || key === '_or') {
-          // handle those operations
-          filter[key].forEach((logOperator) => {
-            // check for the values of that operation
+          // if we have logical operators we expect an array
+          // with some nested ojects or just objects
 
-            logger.warn(logOperator);
-            Object.keys(logOperator).forEach((column) => {
-              columns.push(column);
-              const condition = logOperator[column];
-
-              // todo: handle nested logical operations
-              // recursive logic to handle nested structures
-
-              // get the operator and value to process
-              processFilterItem.call(this, column, condition, logicalOperator);
-            });
-          });
+          const { whereSql, values } = buildWhereClause(filter[key], logicalOperator);
+        } else {
+          // in this scenario the user didnt provide an 'and' or 'or' logical operator
+          // so we can assume that its an and. so we can expect only objects
+          columns.push(key); // save the property
+          buildWhereClause(filter, logicalOperator);
         }
-
-        //* Scenario 3: They can send a query with a filter option but
-        //* without specifing the logical condition so we assume and 'AND' operation
-        processFilterItem.call(this, key, filter[key], logicalOperator);
       });
+    }
+
+    function buildWhereClause(filter, logicalOp) {
+      // Check if the filter is an array with nested objects
+      const values = [];
+      const whereConditions = [];
+      let sql = '';
+
+      if (Array.isArray(filter)) {
+        filter.forEach((obj) => {
+          // iterate through each object to get the vale wich is the op and value
+          Object.entries(obj).forEach(([value, condition]) => {
+            values.push(value);
+
+            // iterate throught the condition object
+            for (const operator in condition) {
+              // eslint-disable-next-line no-prototype-builtins
+              if (!operatorsMap.hasOwnProperty(operator)) {
+                throw new Error('Not supported operator');
+              }
+
+              // get the matching operator for this db
+              const sqlOperator = operatorsMap[operator];
+              const placeholder = '?';
+
+              // construct the string for this operation with the parameterized value
+              const conditionStr = `${value} ${sqlOperator} ${placeholder}`;
+
+              if (whereConditions.length === 0) {
+                sql += ` WHERE ${conditionStr}`;
+                whereConditions.push(conditionStr);
+              } else {
+                sql += ` ${operatorsMap[logicalOp]} ${conditionStr}`;
+              }
+            }
+          });
+        });
+
+        return { whereSql: sql, values };
+      } else {
+        // if its not an array we can assyme its an object
+        // iterate through each object to get the vale wich is the op and value
+        // iterate throught the condition object
+        // iterate through each object to get the vale wich is the op and value
+        console.log('inside', filter);
+        Object.entries(filter).forEach(([value, condition]) => {
+          values.push(value);
+
+          // iterate throught the condition object
+          for (const operator in condition) {
+            // eslint-disable-next-line no-prototype-builtins
+            if (!operatorsMap.hasOwnProperty(operator)) {
+              throw new Error('Not supported operator');
+            }
+
+            // get the matching operator for this db
+            const sqlOperator = operatorsMap[operator];
+            const placeholder = '?';
+
+            // construct the string for this operation with the parameterized value
+            const conditionStr = `${value} ${sqlOperator} ${placeholder}`;
+
+            if (whereConditions.length === 0) {
+              sql += ` WHERE ${conditionStr}`;
+              whereConditions.push(conditionStr);
+            } else {
+              sql += ` ${operatorsMap[logicalOp]} ${conditionStr}`;
+            }
+          }
+        });
+      }
     }
 
     // If no logical operators are provided, return all rows from the table
@@ -123,40 +188,6 @@ export class MySQLConnection {
     } catch (error) {
       console.error('Error:', error);
       return null; // Return null if there's an error
-    }
-
-    function processFilterItem(columnName, cond, logicalOp) {
-      if (Array.isArray(cond)) {
-        console.log('Array', cond);
-        return;
-      }
-
-      Object.entries(cond).forEach((condition) => {
-        console.log(condition);
-        const [operator, value] = condition;
-
-        // Check if the operator is supported
-        //todo: try to see a fix without disabling rule
-        // eslint-disable-next-line no-prototype-builtins
-        if (!this.operatorsMap.hasOwnProperty(operator)) {
-          throw new Error('Not supported operator');
-        }
-
-        // get the matching operator for this db
-        const sqlOperator = this.operatorsMap[operator];
-        const placeholder = '?';
-
-        // construct the string for this operation with the parameterized value
-        const conditionStr = `${columnName} ${sqlOperator} ${placeholder}`;
-
-        console.log('---sql', conditionStr);
-        whereConditions.push(conditionStr);
-
-        const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(logicalOp)}` : '';
-        sql += ` ${whereClause}`;
-        // save the actual values in an array
-        values.push(value);
-      });
     }
   }
 
