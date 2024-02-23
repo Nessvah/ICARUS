@@ -54,16 +54,6 @@ export class MySQLConnection {
     const whereConditions = [];
     let logicalOperator;
 
-    //* Scenario 1: They can send a query with a limit or a offset or both
-    //* but WITHOUT the filter option
-    // ex: { take: 10, quantity: 5, price: 10 }
-    // ex: { skip: 10, take: 10, quantity: 5, price: 10 }
-    if (!input.hasOwnProperty('filter') && (input.hasOwnProperty('skip') || input.hasOwnProperty('take'))) {
-      logger.warn('Inside skip/take condition');
-      logger.warn('input.filter:', input.filter);
-      // ... (handle skip/take conditions)
-    }
-
     //* Scenario 2: They can send a query with a filter option
     //* this includes having a skip/take or none
     // check if the filter options is present
@@ -89,11 +79,6 @@ export class MySQLConnection {
               // todo: handle nested logical operations
               // recursive logic to handle nested structures
 
-              if (Array.isArray(condition[key])) {
-                console.log('nested condition');
-              }
-
-              logger.warn(condition);
               // get the operator and value to process
               processFilterItem.call(this, column, condition, logicalOperator);
             });
@@ -131,11 +116,9 @@ export class MySQLConnection {
       }
     }
 
-    logger.warn(sql + ';');
+    logger.warn(sql);
     try {
       const res = await this.query(sql, values);
-
-      console.log(res);
       return res; // Return all rows from the table
     } catch (error) {
       console.error('Error:', error);
@@ -143,8 +126,15 @@ export class MySQLConnection {
     }
 
     function processFilterItem(columnName, cond, logicalOp) {
-      // condition is going to come as an array with the field, operator, and value
-      Object.entries(cond).forEach(([operator, value]) => {
+      if (Array.isArray(cond)) {
+        console.log('Array', cond);
+        return;
+      }
+
+      Object.entries(cond).forEach((condition) => {
+        console.log(condition);
+        const [operator, value] = condition;
+
         // Check if the operator is supported
         //todo: try to see a fix without disabling rule
         // eslint-disable-next-line no-prototype-builtins
@@ -159,7 +149,7 @@ export class MySQLConnection {
         // construct the string for this operation with the parameterized value
         const conditionStr = `${columnName} ${sqlOperator} ${placeholder}`;
 
-        console.log(conditionStr);
+        console.log('---sql', conditionStr);
         whereConditions.push(conditionStr);
 
         const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(logicalOp)}` : '';
