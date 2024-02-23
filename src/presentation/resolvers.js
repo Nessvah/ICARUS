@@ -76,7 +76,7 @@ const createRelations = async (table, column) => {
 
   let tableName = capitalize(table.name);
   preResolvers[tableName] = nestedObject;
-  //console.log(preResolvers);
+  console.log(preResolvers);
 };
 
 autoResolvers();

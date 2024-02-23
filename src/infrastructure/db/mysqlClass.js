@@ -20,6 +20,7 @@ export class MySQLConnection {
     try {
       logger.info('Executing SQL query:', sql);
       logger.info('SQL query values:', values);
+      console.log('----- aqui', values, sql);
       const [rows] = await connection.query(sql, values);
       return rows;
     } catch (error) {
