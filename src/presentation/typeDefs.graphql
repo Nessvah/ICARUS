@@ -95,7 +95,7 @@ input CustomersInput {
 email: String
 icon_class: String
 icon_label: String
-orders: Int
+
 }
 
 input CustomersFilter {
@@ -104,7 +104,7 @@ customer_name: [String]
 email: [String]
 icon_class: [String]
 icon_label: [String]
-orders: [Int]
+
 }
 
 input CustomersUpdate {
@@ -112,7 +112,7 @@ input CustomersUpdate {
 email: String
 icon_class: String
 icon_label: String
-orders: Int
+
 }
 
 type CustomersOutput {
@@ -207,9 +207,9 @@ input OrdersInput {
 customer_id: Int
 icon_class: String
 icon_label: String
-order_items: Int
-shipments: Int
-payment: Int
+
+
+
 }
 
 input OrdersFilter {
@@ -218,9 +218,9 @@ order_date: [String]
 customer_id: [Int]
 icon_class: [String]
 icon_label: [String]
-order_items: [Int]
-shipments: [Int]
-payment: [Int]
+
+
+
 }
 
 input OrdersUpdate {
@@ -228,9 +228,9 @@ input OrdersUpdate {
 customer_id: Int
 icon_class: String
 icon_label: String
-order_items: Int
-shipments: Int
-payment: Int
+
+
+
 }
 
 type OrdersOutput {
@@ -360,7 +360,7 @@ input ResolversProducts {
 }
 
 type Products {
-    id: ID!
+    product_id: Int!
 product_name: String
 price: Float
 currency_type: String
@@ -378,18 +378,18 @@ currency_type: String
 description: String
 icon_class: String
 icon_label: String
-order_items: Int
+
 }
 
 input ProductsFilter {
-    id: [ID]
+    product_id: [Int]
 product_name: [String]
 price: [Float]
 currency_type: [String]
 description: [String]
 icon_class: [String]
 icon_label: [String]
-order_items: [Int]
+
 }
 
 input ProductsUpdate {
@@ -399,7 +399,7 @@ currency_type: String
 description: String
 icon_class: String
 icon_label: String
-order_items: Int
+
 }
 
 type ProductsOutput {
@@ -472,34 +472,34 @@ input ResolversUsers {
 type Users {
     id: ID!
 email: String
-role_id: Int
+user_role: User_role
 customer_id: Int
-created_at: String
+created_t: String
 
 }
 
 input UsersInput {
     password: String
 email: String
-role_id: Int
+role_id: String!
 customer_id: Int
-created_at: String
+created_t: String
 }
 
 input UsersFilter {
     id: [ID]
 email: [String]
-role_id: [Int]
+role_id: [String]
 customer_id: [Int]
-created_at: [String]
+created_t: [String]
 }
 
 input UsersUpdate {
     password: String
 email: String
-role_id: Int
+role_id: String
 customer_id: Int
-created_at: String
+created_t: String
 }
 
 type UsersOutput {
@@ -521,20 +521,24 @@ input ResolversUser_role {
 type User_role {
     id: ID!
 role_name: String!
+users: [Users]
 
 }
 
 input User_roleInput {
     role_name: String!
+
 }
 
 input User_roleFilter {
     id: [ID]
 role_name: [String]
+
 }
 
 input User_roleUpdate {
     role_name: String
+
 }
 
 type User_roleOutput {

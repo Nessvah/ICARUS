@@ -5,7 +5,7 @@
   "main": "./infrastructure/server.js",
   "type": "module",
   "scripts": {
-    "start": "NODE_ENV=production node ./infrastructure/server.js",
+    "start": "node ./infrastructure/server.js",
     "dev": "nodemon ./infrastructure/server.js"
   },
   "engines": {
