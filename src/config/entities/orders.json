@@ -1,0 +1,88 @@
+{
+	"tables": {
+		"name": "orders",
+		"database": "mysql",
+		"columns": [
+			{
+				"name": "order_id",
+				"type": "int",
+				"primaryKey": true,
+				"nullable": false,
+				"defaultValue": null,
+				"extra": "auto_increment"
+			},
+			{
+				"name": "order_date",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": "'CURRENT_string'",
+				"extra": "DEFAULT_GENERATED"
+			},
+			{
+				"name": "customer_id",
+				"type": "int",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": "MUL",
+				"isObject": true,
+				"relationType": "n:1",
+				"foreignEntity": "customers",
+				"foreignKey": "customer_id"
+			},
+			{
+				"name": "icon_class",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": "'FaCartShopping'",
+				"extra": ""
+			},
+			{
+				"name": "icon_label",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": "'Order'",
+				"extra": ""
+			},
+			{
+				"name": "order_items",
+				"type": "object",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": "MUL",
+				"isObject": true,
+				"relationType": "1:n",
+				"foreignEntity": "order_items",
+				"foreignKey": "order_id"
+			},
+			{
+				"name": "shipments",
+				"type": "object",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": "MUL",
+				"isObject": true,
+				"relationType": "1:1",
+				"foreignEntity": "shipments",
+				"foreignKey": "order_id"
+			},
+			{
+				"name": "payment",
+				"type": "object",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": "MUL",
+				"isObject": true,
+				"relationType": "1:1",
+				"foreignEntity": "payment",
+				"foreignKey": "order_id"
+			}
+		]
+	}
+}

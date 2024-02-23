@@ -1,0 +1,8 @@
+{
+  "type": "mysql",
+  "host": "16.171.102.168",
+  "port": 3306,
+  "user": "icarus_devs",
+  "password": "YP6w@gsuJLe^kS",
+  "databaseName": "icarus"
+}

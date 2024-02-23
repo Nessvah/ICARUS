@@ -1,0 +1,80 @@
+{
+	"tables": {
+		"name": "product_reviews",
+		"database": "mysql",
+		"columns": [
+			{
+				"name": "review_id",
+				"type": "int",
+				"primaryKey": true,
+				"nullable": false,
+				"defaultValue": null,
+				"extra": "auto_increment"
+			},
+			{
+				"name": "product_id",
+				"type": "int",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": "MUL",
+				"isObject": true,
+				"relationType": "n:1",
+				"foreignEntity": "products",
+				"foreignKey": "id"
+			},
+			{
+				"name": "customer_id",
+				"type": "int",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": "MUL",
+				"isObject": true,
+				"relationType": "n:1",
+				"foreignEntity": "customers",
+				"foreignKey": "customer_id"
+			},
+			{
+				"name": "rating",
+				"type": "int",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": ""
+			},
+			{
+				"name": "review_text",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": ""
+			},
+			{
+				"name": "review_date",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": "'CURRENT_string'",
+				"extra": "DEFAULT_GENERATED"
+			},
+			{
+				"name": "icon_class",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": "'FaFaceGrinStars'",
+				"extra": ""
+			},
+			{
+				"name": "icon_label",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": "'Product Review'",
+				"extra": ""
+			}
+		]
+	}
+}

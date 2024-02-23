@@ -13,11 +13,14 @@ import { readConfigFile } from '../presentation/generateTypeDefs.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
 import { auth } from '../aws/auth/auth.js';
 import { createMetricsPlugin } from '../metrics/metricsPlugin.js';
+import { ImportThemTities } from '../config/importDemTities.js';
 
 import fs from 'fs';
 import { createDbPool } from './db/connector.js';
 const app = express();
 //create a new typedef file.
+new ImportThemTities();
+
 await readConfigFile();
 // create a database pool connection.
 await createDbPool();

@@ -1,0 +1,76 @@
+{
+	"tables": {
+		"name": "products",
+		"database": "mongodb",
+		"columns": [
+			{
+				"name": "id",
+				"type": "id",
+				"primaryKey": true,
+				"nullable": false,
+				"defaultValue": null,
+				"extra": "auto_increment"
+			},
+			{
+				"name": "product_name",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": ""
+			},
+			{
+				"name": "price",
+				"type": "float",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": ""
+			},
+			{
+				"name": "currency_type",
+				"type": "VARCHAR",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": "EUR",
+				"extra": ""
+			},
+			{
+				"name": "description",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": ""
+			},
+			{
+				"name": "icon_class",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": "'FaBoxOpen'",
+				"extra": ""
+			},
+			{
+				"name": "icon_label",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": "'Product'",
+				"extra": ""
+			},
+			{
+				"name": "order_items",
+				"type": "object",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": "MUL",
+				"isObject": true,
+				"relationType": "1:n",
+				"foreignEntity": "order_items",
+				"foreignKey": "product_id"
+			}
+		]
+	}
+}

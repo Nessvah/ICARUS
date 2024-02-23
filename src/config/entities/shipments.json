@@ -1,0 +1,60 @@
+{
+	"tables": {
+		"name": "shipments",
+		"database": "mysql",
+		"columns": [
+			{
+				"name": "shipment_id",
+				"type": "int",
+				"primaryKey": true,
+				"nullable": false,
+				"defaultValue": null,
+				"extra": "auto_increment"
+			},
+			{
+				"name": "order_id",
+				"type": "int",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": "MUL",
+				"isObject": true,
+				"relationType": "1:1",
+				"foreignEntity": "orders",
+				"foreignKey": "order_id"
+			},
+			{
+				"name": "shipment_date",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": "'CURRENT_string'",
+				"extra": "DEFAULT_GENERATED"
+			},
+			{
+				"name": "tracking_int",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": ""
+			},
+			{
+				"name": "icon_class",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": "'FaTruckFast'",
+				"extra": ""
+			},
+			{
+				"name": "icon_label",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": "'Shipment'",
+				"extra": ""
+			}
+		]
+	}
+}

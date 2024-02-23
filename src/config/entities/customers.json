@@ -1,0 +1,60 @@
+{
+	"tables": {
+		"name": "customers",
+		"database": "mysql",
+		"columns": [
+			{
+				"name": "customer_id",
+				"type": "int",
+				"primaryKey": true,
+				"nullable": false,
+				"defaultValue": null,
+				"extra": "auto_increment"
+			},
+			{
+				"name": "customer_name",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": ""
+			},
+			{
+				"name": "email",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": ""
+			},
+			{
+				"name": "icon_class",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": "'FaUsers'",
+				"extra": ""
+			},
+			{
+				"name": "icon_label",
+				"type": "string",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": "'Customer'",
+				"extra": ""
+			},
+			{
+				"name": "orders",
+				"type": "object",
+				"primaryKey": false,
+				"nullable": true,
+				"defaultValue": null,
+				"extra": "MUL",
+				"isObject": true,
+				"relationType": "1:n",
+				"foreignEntity": "orders",
+				"foreignKey": "customer_id"
+			}
+		]
+	}
+}

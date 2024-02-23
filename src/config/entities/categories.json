@@ -1,0 +1,40 @@
+{
+  "tables": {
+    "name": "categories",
+    "database": "mysql",
+    "columns": [
+      {
+        "name": "category_id",
+        "type": "int",
+        "primaryKey": true,
+        "nullable": false,
+        "defaultValue": null,
+        "extra": "auto_increment"
+      },
+      {
+        "name": "category_name",
+        "type": "string",
+        "primaryKey": false,
+        "nullable": true,
+        "defaultValue": null,
+        "extra": ""
+      },
+      {
+        "name": "icon_class",
+        "type": "string",
+        "primaryKey": false,
+        "nullable": true,
+        "defaultValue": "'FaTags'",
+        "extra": ""
+      },
+      {
+        "name": "icon_label",
+        "type": "string",
+        "primaryKey": false,
+        "nullable": true,
+        "defaultValue": "'Category'",
+        "extra": ""
+      }
+    ]
+  }
+}
