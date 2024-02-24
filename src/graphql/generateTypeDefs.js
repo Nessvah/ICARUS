@@ -69,7 +69,7 @@ type Query {
       .map((table) => {
         const tableName = table.name;
         const capitalizedTableName = capitalize(table.name);
-        return `${tableName}(input: ${capitalizedTableName}ListOptions): [${capitalizedTableName}]`;
+        return `${tableName}(input: ${capitalizedTableName}ListOptions = {}): [${capitalizedTableName}]`;
       })
       .join('\n')}
     ${config.tables
@@ -143,7 +143,7 @@ input ${tableName}Filter {
     ${table.columns
       .map((column) => {
         const type = mapColumnTypeToGraphQLType(column.type);
-        return `${column.name}: [ComparisonOperators]`;
+        return `${column.name}: ComparisonOperators`;
       })
       .join('\n')}
 
