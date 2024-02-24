@@ -1,17 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 
+import { buildSkipAndTakeClause, processFilter } from '../../utils/sqlQueries.js';
 import { logger } from '../server.js';
-
-const operatorsMap = {
-  _eq: '=',
-  _lt: '<',
-  _lte: '<=',
-  _gt: '>',
-  _gte: '>=',
-  _neq: '<>',
-  _and: 'AND',
-  _or: 'OR',
-};
 
 export class MySQLConnection {
   constructor(currentTableInfo) {
@@ -32,7 +22,7 @@ export class MySQLConnection {
    */
   async query(sql, values) {
     const connection = await this.getConnection();
-    console.log(sql, '---', values);
+
     try {
       logger.info('Executing SQL query:', sql);
       logger.info('SQL query values:', values);
@@ -53,108 +43,30 @@ export class MySQLConnection {
 
     // array to save the values
     const values = [];
-    const columns = [];
-    const whereConditions = [];
-    let logicalOperator;
 
-    // check if the filter options is present
+    // check if the filter options is present and if it is
+    // take all the nested information and construct a sql query to filter
     if (input.filter) {
-      logger.warn('inside filter');
+      const { processedSql, processedValues } = processFilter(input);
 
-      // afther this we have two possible scenarios,
-      // an object with nested objects or
-      // an array with an object with some nested objects
-
-      logicalOperator = input.filter._or ? ' OR ' : ' AND ';
-
-      const { filter } = input;
-      // check for the logical operators if present
-
-      Object.keys(filter).forEach((key) => {
-        // check for the logical operators
-        if (key === '_and' || key === '_or') {
-          // if we have logical operators we expect an array
-          // with some nested ojects or just objects
-
-          const { whereSql, values } = buildWhereClause(filter[key], logicalOperator);
-          sql += whereSql;
-          console.log(values);
-        } else {
-          // in this scenario the user didnt provide an 'and' or 'or' logical operator
-          // so we can assume that its an and. so we can expect only objects
-          columns.push(key); // save the property
-          buildWhereClause(filter, logicalOperator);
-        }
-      });
+      // append values from filters and the where sql string
+      values.push(...processedValues);
+      sql += processedSql;
     }
 
-    function buildWhereClause(filter, logicalOp) {
-      // Check if the filter is an array with nested objects
-      let sql = '';
-
-      if (Array.isArray(filter)) {
-        console.log('----- im inside filter');
-        filter.forEach((obj) => {
-          console.log({ obj });
-          // iterate through each object to get the vale wich is the op and value
-          Object.entries(obj).forEach(([column, condition]) => {
-            columns.push(column);
-
-            console.log({ column, condition, values });
-            // iterate throught the condition object
-            for (const [operator, field] of Object.entries(condition)) {
-              // eslint-disable-next-line no-prototype-builtins
-
-              if (!operatorsMap.hasOwnProperty(operator)) {
-                throw new Error('Not supported operator');
-              }
-
-              values.push(field);
-
-              // get the matching operator for this db
-              const sqlOperator = operatorsMap[operator];
-              const placeholder = '?';
-
-              // construct the string for this operation with the parameterized value
-              const conditionStr = `${column} ${sqlOperator} ${placeholder}`;
-
-              if (whereConditions.length === 0) {
-                sql += ` WHERE ${conditionStr}`;
-                whereConditions.push(conditionStr);
-              } else {
-                sql += ` ${logicalOp} ${conditionStr}`;
-              }
-            }
-          });
-        });
-
-        return { whereSql: sql, values };
-      }
-    }
-
-    // If no logical operators are provided, return all rows from the table
-    // or the input doesnt have the filter property
+    // if in the input we have find and/or take in our filters, we need
+    // to make pagination and construct the sql query
 
     if (input.hasOwnProperty('skip') || input.hasOwnProperty('take')) {
       logger.warn('inside skip and take');
 
-      const take = input.hasOwnProperty('take') ? 'LIMIT ?' : '';
-      const skip = input.hasOwnProperty('skip') ? ', ?' : '';
+      const { paginationSql, paginationValues } = buildSkipAndTakeClause(input);
 
-      if (take && skip) {
-        console.log('both');
-        // add limit and offeset to query and push the values to the array
-        sql += ` ${take} ${skip}`;
-        values.push(input.skip, input.take);
-      } else if (skip) {
-        // if they only provide the take and no skip we need to put limit
-        // as a huge number otherwise it will not work and we need to specify offset
-        sql += ` LIMIT 99999999999999 OFFSET ?`;
-        values.push(input.skip);
-      } else {
-        sql += ` ${take}`;
-        values.push(input.take);
-      }
+      sql += paginationSql;
+      values.push(...paginationValues);
+
+      // If no logical operators are provided, return all rows from the table
+      // or the input doesnt have the filter property
     }
 
     logger.warn(sql);
