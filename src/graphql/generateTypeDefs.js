@@ -103,7 +103,13 @@ type Mutation {
 input ${tableName}ListOptions {
     filter: ${tableName}Filter
     skip: Int
-    take: Int
+    take: Int = 15
+    ${table.columns
+      .map((column) => {
+        const type = mapColumnTypeToGraphQLType(column.type);
+        return `${column.name}: ${type}`;
+      })
+      .join('\n')}
 
     }`;
     //Define the entities type
@@ -137,7 +143,7 @@ input ${tableName}Filter {
     ${table.columns
       .map((column) => {
         const type = mapColumnTypeToGraphQLType(column.type);
-        return `${column.name}: ComparisonOperators`;
+        return `${column.name}: [ComparisonOperators]`;
       })
       .join('\n')}
 

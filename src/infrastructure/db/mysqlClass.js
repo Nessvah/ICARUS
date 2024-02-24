@@ -57,7 +57,7 @@ export class MySQLConnection {
     // if in the input we have find and/or take in our filters, we need
     // to make pagination and construct the sql query
 
-    if (input.hasOwnProperty('skip') || input.hasOwnProperty('take')) {
+    if (input.skip || input.take) {
       logger.warn('inside skip and take');
 
       const { paginationSql, paginationValues } = buildSkipAndTakeClause(input);
