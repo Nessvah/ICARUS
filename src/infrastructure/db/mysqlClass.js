@@ -54,6 +54,7 @@ export class MySQLConnection {
     // array to save the values
     const values = [];
     const columns = [];
+    const whereConditions = [];
     let logicalOperator;
 
     // check if the filter options is present
@@ -76,6 +77,8 @@ export class MySQLConnection {
           // with some nested ojects or just objects
 
           const { whereSql, values } = buildWhereClause(filter[key], logicalOperator);
+          sql += whereSql;
+          console.log(values);
         } else {
           // in this scenario the user didnt provide an 'and' or 'or' logical operator
           // so we can assume that its an and. so we can expect only objects
@@ -87,72 +90,45 @@ export class MySQLConnection {
 
     function buildWhereClause(filter, logicalOp) {
       // Check if the filter is an array with nested objects
-      const values = [];
-      const whereConditions = [];
       let sql = '';
 
       if (Array.isArray(filter)) {
+        console.log('----- im inside filter');
         filter.forEach((obj) => {
+          console.log({ obj });
           // iterate through each object to get the vale wich is the op and value
-          Object.entries(obj).forEach(([value, condition]) => {
-            values.push(value);
+          Object.entries(obj).forEach(([column, condition]) => {
+            columns.push(column);
 
+            console.log({ column, condition, values });
             // iterate throught the condition object
-            for (const operator in condition) {
+            for (const [operator, field] of Object.entries(condition)) {
               // eslint-disable-next-line no-prototype-builtins
+
               if (!operatorsMap.hasOwnProperty(operator)) {
                 throw new Error('Not supported operator');
               }
+
+              values.push(field);
 
               // get the matching operator for this db
               const sqlOperator = operatorsMap[operator];
               const placeholder = '?';
 
               // construct the string for this operation with the parameterized value
-              const conditionStr = `${value} ${sqlOperator} ${placeholder}`;
+              const conditionStr = `${column} ${sqlOperator} ${placeholder}`;
 
               if (whereConditions.length === 0) {
                 sql += ` WHERE ${conditionStr}`;
                 whereConditions.push(conditionStr);
               } else {
-                sql += ` ${operatorsMap[logicalOp]} ${conditionStr}`;
+                sql += ` ${logicalOp} ${conditionStr}`;
               }
             }
           });
         });
 
         return { whereSql: sql, values };
-      } else {
-        // if its not an array we can assyme its an object
-        // iterate through each object to get the vale wich is the op and value
-        // iterate throught the condition object
-        // iterate through each object to get the vale wich is the op and value
-        console.log('inside', filter);
-        Object.entries(filter).forEach(([value, condition]) => {
-          values.push(value);
-
-          // iterate throught the condition object
-          for (const operator in condition) {
-            // eslint-disable-next-line no-prototype-builtins
-            if (!operatorsMap.hasOwnProperty(operator)) {
-              throw new Error('Not supported operator');
-            }
-
-            // get the matching operator for this db
-            const sqlOperator = operatorsMap[operator];
-            const placeholder = '?';
-
-            // construct the string for this operation with the parameterized value
-            const conditionStr = `${value} ${sqlOperator} ${placeholder}`;
-
-            if (whereConditions.length === 0) {
-              sql += ` WHERE ${conditionStr}`;
-              whereConditions.push(conditionStr);
-            } else {
-              sql += ` ${operatorsMap[logicalOp]} ${conditionStr}`;
-            }
-          }
-        });
       }
     }
 
