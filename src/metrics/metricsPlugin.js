@@ -11,6 +11,12 @@ import { logger } from '../infrastructure/server.js';
 export function createMetricsPlugin(register) {
   // here we can define the metrics we want for prometheus
   const metrics = {
+    parsingStarted: createCounter(
+      'graphql_queries_parsing_started_count',
+      'The amount of GraphQL queries that have started parsing.',
+      ['operationName', 'operation'],
+      register,
+    ),
     validationStarted: createCounter(
       'graphql_queries_validation_started',
       'The amount of GraphQL queries that have started validation.',
@@ -35,6 +41,12 @@ export function createMetricsPlugin(register) {
       ['operationName', 'operation'],
       register,
     ),
+    responded: createCounter(
+      'graphql_queries_responded_count',
+      'The amount of GraphQL queries that received a response.',
+      ['operationName', 'operation'],
+      register,
+    ),
     resolutionTime: createHistogram(
       'graphql_resolution_time',
       'The time taken to resolve a GraphQL query (in seconds).',
@@ -51,7 +63,10 @@ export function createMetricsPlugin(register) {
       const isIntrospection = checkForIntrospection(requestContext);
       if (!isIntrospection) {
         return {
-          parsingDidStart() {},
+          parsingDidStart(parsingContext) {
+            const labels = createLabels(parsingContext);
+            metrics.parsingStarted.labels(labels).inc();
+          },
           async validationDidStart(validationContext) {
             const labels = createLabels(validationContext);
             metrics.validationStarted.labels(labels).inc();
