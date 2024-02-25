@@ -11,12 +11,6 @@ import { logger } from '../infrastructure/server.js';
 export function createMetricsPlugin(register) {
   // here we can define the metrics we want for prometheus
   const metrics = {
-    parsed: createCounter(
-      'graphql_queries_parsed',
-      'The amount of GraphQL queries that have been parsed.',
-      ['operationName', 'operation'],
-      register,
-    ),
     validationStarted: createCounter(
       'graphql_queries_validation_started',
       'The amount of GraphQL queries that have started validation.',
@@ -24,19 +18,19 @@ export function createMetricsPlugin(register) {
       register,
     ),
     resolved: createCounter(
-      'graphql_queries_resolved',
+      'graphql_queries_resolved_count',
       'The amount of GraphQL queries that have had their operation resolved.',
       ['operationName', 'operation'],
       register,
     ),
     startedExecuting: createCounter(
-      'graphql_queries_execution_started',
+      'graphql_queries_execution_started_count',
       'The amount of GraphQL queries that have started executing.',
       ['operationName', 'operation'],
       register,
     ),
     encounteredErrors: createCounter(
-      'graphql_queries_errored',
+      'graphql_queries_errored_count',
       'The amount of GraphQL queries that have encountered errors.',
       ['operationName', 'operation'],
       register,
@@ -44,12 +38,6 @@ export function createMetricsPlugin(register) {
     resolutionTime: createHistogram(
       'graphql_resolution_time',
       'The time taken to resolve a GraphQL query (in seconds).',
-      ['operationName', 'operation'],
-      register,
-    ),
-    executionTime: createHistogram(
-      'graphql_execution_time',
-      'The overall time to execute a GraphQL query (in seconds)',
       ['operationName', 'operation'],
       register,
     ),
@@ -63,7 +51,7 @@ export function createMetricsPlugin(register) {
       const isIntrospection = checkForIntrospection(requestContext);
       if (!isIntrospection) {
         return {
-          parsingDidStart(_) {},
+          parsingDidStart() {},
           async validationDidStart(validationContext) {
             const labels = createLabels(validationContext);
             metrics.validationStarted.labels(labels).inc();
@@ -93,7 +81,6 @@ export function createMetricsPlugin(register) {
             const end = startTimer();
             try {
               const labels = createLabels(responseContext);
-              console.log(labels);
               const duration = getDurationInSecs(startTime, end);
               logger.warn('will send response 6');
               metrics.resolutionTime.observe(labels, duration);
