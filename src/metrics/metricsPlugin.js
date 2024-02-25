@@ -1,5 +1,6 @@
 import { createCounter, createHistogram, createLabels } from './helpers.js';
 import { getDurationInSecs, startTimer } from '../utils/timers.js';
+import { logger } from '../infrastructure/server.js';
 
 /**
  * Creates a metrics plugin for tracking GraphQL query metrics using Prometheus.
@@ -69,10 +70,12 @@ export function createMetricsPlugin(register) {
         parsingDidStart(parsingContext) {
           const labels = createLabels(parsingContext);
           metrics.parsed.labels(labels).inc();
+          if (parsingContext.request.operationName !== 'IntrospectionQuery') logger.warn('parsing started 1');
         },
         async validationDidStart(validationContext) {
           const labels = createLabels(validationContext);
           metrics.validationStarted.labels(labels).inc();
+          if (validationContext.request.operationName !== 'IntrospectionQuery') logger.warn('validation started 2');
         },
         async didResolveOperation(resolveContext) {
           // record start time for resolving the operation
@@ -80,27 +83,45 @@ export function createMetricsPlugin(register) {
 
           const labels = createLabels(resolveContext);
           metrics.resolved.labels(labels).inc();
+          if (resolveContext.request.operationName !== 'IntrospectionQuery') logger.warn('did resolve started 3');
         },
         async executionDidStart(executingContext) {
           // track current time for the execution and
           // attach the start time to the context in the req obj
-          // executingContext.request.startTime = startTimer();
+
+          executingContext.request.startTime = startTimer();
 
           const labels = createLabels(executingContext);
           metrics.startedExecuting.inc(labels);
+          if (executingContext.request.operationName !== 'IntrospectionQuery') logger.warn('execution did started 4');
         },
         async didEncounterErrors(errorContext) {
           const labels = createLabels(errorContext);
           metrics.encounteredErrors.labels(labels).inc();
+          if (errorContext.request.operationName !== 'IntrospectionQuery') logger.warn('did encountered errors 5');
         },
         async willSendResponse(responseContext) {
+          if (responseContext.request.operationName !== 'IntrospectionQuery') {
+            const { startTime } = responseContext.request;
+            const end = startTimer();
+            try {
+              const labels = createLabels(responseContext);
+              console.log(labels);
+              const duration = getDurationInSecs(startTime, end);
+              logger.warn('will send response 6');
+              metrics.resolutionTime.observe(labels, duration);
+            } catch (err) {
+              console.log(err, 'error');
+            }
+          }
+
           // get the start time from request
           // const { startTime, resolveStartTime } = responseContext.request;
           // // get current time
           // const endTime = startTimer();
           // const executionTime = getDurationInSecs(startTime, endTime);
           // const resolutionTime = getDurationInSecs(resolveStartTime, endTime);
-          // const labels = createLabels(responseContext);
+
           // metrics.executionTime.observe(labels, executionTime);
           // metrics.resolutionTime.observe(labels, resolutionTime);
           // metrics.responded.labels(labels).inc();

@@ -34,6 +34,7 @@ async function autoResolvers() {
       // if (!context.currentUser) {
       //   throw new AuthenticationError();
       // }
+      console.log('query started');
       return await controller(table.name, args);
     };
 
@@ -43,6 +44,7 @@ async function autoResolvers() {
       // }
       await validation(args.input); // it validates mutation inputs
       await validation(args.input, 'update'); // it validates update inputs;
+      console.log('mutation started');
       return await controller(table.name, args);
     };
 
@@ -76,7 +78,6 @@ const createRelations = async (table, column) => {
 
   let tableName = capitalize(table.name);
   preResolvers[tableName] = nestedObject;
-  console.log(preResolvers);
 };
 
 autoResolvers();
