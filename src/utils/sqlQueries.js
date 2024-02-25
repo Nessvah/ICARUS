@@ -78,7 +78,6 @@ function buildWhereClause(filter, logicalOp, columns) {
 }
 
 export function buildSkipAndTakeClause(input) {
-  const values = [];
   const clauses = [];
   let sql = '';
 
@@ -86,18 +85,17 @@ export function buildSkipAndTakeClause(input) {
   const skip = input['skip'] ? ', ?' : '';
 
   if (take && skip) {
-    console.log('both');
     // add limit and offeset to query and push the values to the array
     sql += ` ${take} ${skip}`;
-    values.push(input.skip, input.take);
+    clauses.push(input.skip, input.take);
   } else if (skip) {
     // if they only provide the take and no skip we need to put limit
     // as a huge number otherwise it will not work and we need to specify offset
     sql += ` LIMIT 99999999999999 OFFSET ?`;
-    values.push(input.skip);
+    clauses.push(input.skip);
   } else {
     sql += ` ${take}`;
-    values.push(input.take);
+    clauses.push(input.take);
   }
-  return { paginationSql: sql, paginationValues: values };
+  return { paginationSql: sql, paginationValues: clauses };
 }

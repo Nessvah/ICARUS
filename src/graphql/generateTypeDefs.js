@@ -104,13 +104,6 @@ input ${tableName}ListOptions {
     filter: ${tableName}Filter
     skip: Int
     take: Int = 15
-    ${table.columns
-      .map((column) => {
-        const type = mapColumnTypeToGraphQLType(column.type);
-        return `${column.name}: ${type}`;
-      })
-      .join('\n')}
-
     }`;
     //Define the entities type
     const tableTypeDef = `
@@ -138,15 +131,20 @@ input ${tableName}Input {
     //Define the Filter entities input
     const tableFilters = `
 input ${tableName}Filter {
-  _and: [ ${tableName}Filter]
-  _or: [ ${tableName}Filter]
-    ${table.columns
-      .map((column) => {
-        const type = mapColumnTypeToGraphQLType(column.type);
-        return `${column.name}: ComparisonOperators`;
-      })
-      .join('\n')}
+  _and: [ ${tableName}LogicalOp]
+  _or: [ ${tableName}LogicalOp]
+}`;
 
+    const logicalOperations = `
+input ${tableName}LogicalOp {
+  _and: [ ${tableName}LogicalOp]
+  _or: [ ${tableName}LogicalOp]
+   ${table.columns
+     .map((column) => {
+       const type = mapColumnTypeToGraphQLType(column.type);
+       return `${column.name}: ComparisonOperators`;
+     })
+     .join('\n')}
 }`;
 
     const nestedFiltering = `
@@ -173,7 +171,7 @@ input ${tableName}Filter {
   }
 `;
 
-    typeDefs.push(nestedFiltering, ordersCountInput);
+    typeDefs.push(nestedFiltering, ordersCountInput, logicalOperations);
 
     //Define the Update entities input
     const update = `
