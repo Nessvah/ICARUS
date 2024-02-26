@@ -65,6 +65,7 @@ export function createMetricsPlugin(register) {
         return {
           parsingDidStart(parsingContext) {
             const labels = createLabels(parsingContext);
+
             metrics.parsingStarted.labels(labels).inc();
           },
           async validationDidStart(validationContext) {
