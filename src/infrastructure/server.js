@@ -5,14 +5,12 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import client from 'prom-client';
 import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
 import { resolvers } from '../presentation/resolvers.js';
 import { readConfigFile } from '../presentation/generateTypeDefs.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
 import { auth } from '../aws/auth/auth.js';
-import { createMetricsPlugin } from '../metrics/metricsPlugin.js';
 
 import fs from 'fs';
 import { createDbPool } from './db/connector.js';
@@ -32,8 +30,8 @@ const httpServer = http.createServer(app);
 export const logger = await initializeLogger;
 logger.debug('Logger initialized correctly.');
 
-const register = new client.Registry();
-const metricsPlugin = await createMetricsPlugin(register);
+// const register = new client.Registry();
+//const metricsPlugin = await createMetricsPlugin(register);
 
 let typeDefs;
 try {
@@ -47,7 +45,7 @@ const server = new ApolloServer({
   typeDefs: typeDefs,
   resolvers,
   formatError: customFormatError,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer }), metricsPlugin],
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
 // setup express middleware for morgan http logs
@@ -83,16 +81,15 @@ app.use(
 );
 
 // Prometheus end point
-app.get('/metrics', async (req, res) => {
-  res.setHeader('Content-Type', register.contentType);
-  res.send(await register.metrics());
-});
+// app.get('/metrics', async (req, res) => {
+//   res.setHeader('Content-Type', register.contentType);
+//   res.send(await register.metrics());
+// });
 
 //testing middleware
 app.get('/test', async (req, res, next) => {
-  const metrics = register.getMetricsAsArray();
-  logger.info('metrics -', metrics);
-  res.json({ test: 'Testing rest endpoint', metricas: metrics });
+  res.statusCode(200);
+  res.json({ test: 'Testing rest endpoint', status: 200 });
 });
 
 app.use((err, req, res, next) => {
