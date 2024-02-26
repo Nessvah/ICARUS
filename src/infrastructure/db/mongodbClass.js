@@ -47,6 +47,7 @@ class MongoDBConnection {
   // input:{filter: _id:["id", "id"]} or input:{filter:{keys and values}}
   async find(table, { input }) {
     const db = this.client.db(this.dbName);
+    //console.log(table, input);
     const collection = db.collection(table);
     let res;
 
@@ -61,7 +62,9 @@ class MongoDBConnection {
       } else if (input.take) {
         res = await collection.find(filter).sort({ _id: 1 }).limit(input.take).toArray();
       } else {
+        //console.log(filter);
         res = await collection.find(filter).sort({ _id: 1 }).toArray();
+        console.log('------------', res);
       }
     }
 
