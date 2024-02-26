@@ -87,7 +87,6 @@ export function createMetricsPlugin(register) {
             metrics.startedExecuting.labels(labels).inc();
           },
           async didEncounterErrors(errorContext) {
-            console.log('error context', errorContext.operation.operation);
             const labels = createLabels(errorContext);
             metrics.encounteredErrors.labels(labels).inc();
           },
