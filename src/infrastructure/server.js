@@ -5,6 +5,7 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
+import client from 'prom-client';
 import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
 import { resolvers } from '../presentation/resolvers.js';
@@ -12,6 +13,7 @@ import { readConfigFile } from '../presentation/generateTypeDefs.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
 import { auth } from '../aws/auth/auth.js';
 import { ImportThemTities } from '../config/importDemTities.js';
+import { createMetricsPlugin } from '../metrics/metricsPlugin.js';
 
 import fs from 'fs';
 import { createDbPool } from './db/connector.js';
@@ -35,8 +37,8 @@ const httpServer = http.createServer(app);
 export const logger = await initializeLogger;
 logger.debug('Logger initialized correctly.');
 
-// const register = new client.Registry();
-//const metricsPlugin = await createMetricsPlugin(register);
+const register = new client.Registry();
+const metricsPlugin = await createMetricsPlugin(register);
 
 let typeDefs;
 try {
@@ -47,17 +49,17 @@ try {
 
 // initialize apollo server but adding the drain plugin for out httpserver
 const server = new ApolloServer({
-  typeDefs: typeDefs,
+  typeDefs,
   resolvers,
   formatError: customFormatError,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   validationRules: [depthLimit(3)],
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer }), metricsPlugin],
 });
 
 // setup express middleware for morgan http logs
 //* The order matters so this needs to be before starting apollo server
-app.use(morgan(':response-time ms :graphql', { stream: accessLogStream }));
-app.use(morgan(':response-time ms :graphql', { stream: morganMongoDBStream }));
+// app.use(morgan(':response-time ms :graphql', { stream: accessLogStream }));
+// app.use(morgan(':response-time ms :graphql', { stream: morganMongoDBStream }));
 
 //* configuring cors before any route/endpoint
 app.use(
@@ -79,20 +81,18 @@ await server.start();
 app.use(
   '/graphql',
   express.json(),
-  expressMiddleware(
-    server /* {
+  expressMiddleware(server, {
     context: ({ req }) => {
       return auth(req);
     },
-  } */,
-  ),
+  }),
 );
 
 // Prometheus end point
-// app.get('/metrics', async (req, res) => {
-//   res.setHeader('Content-Type', register.contentType);
-//   res.send(await register.metrics());
-// });
+app.get('/metrics', async (req, res) => {
+  res.setHeader('Content-Type', register.contentType);
+  res.send(await register.metrics());
+});
 
 //testing middleware
 app.get('/test', async (req, res, next) => {

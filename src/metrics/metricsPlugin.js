@@ -1,5 +1,6 @@
 import { createCounter, createHistogram, createLabels } from './helpers.js';
 import { getDurationInSecs, startTimer } from '../utils/timers.js';
+import { logger } from '../infrastructure/server.js';
 
 /**
  * Creates a metrics plugin for tracking GraphQL query metrics using Prometheus.
@@ -10,9 +11,9 @@ import { getDurationInSecs, startTimer } from '../utils/timers.js';
 export function createMetricsPlugin(register) {
   // here we can define the metrics we want for prometheus
   const metrics = {
-    parsed: createCounter(
-      'graphql_queries_parsed',
-      'The amount of GraphQL queries that have been parsed.',
+    parsingStarted: createCounter(
+      'graphql_queries_parsing_started_count',
+      'The amount of GraphQL queries that have started parsing.',
       ['operationName', 'operation'],
       register,
     ),
@@ -23,26 +24,26 @@ export function createMetricsPlugin(register) {
       register,
     ),
     resolved: createCounter(
-      'graphql_queries_resolved',
+      'graphql_queries_resolved_count',
       'The amount of GraphQL queries that have had their operation resolved.',
       ['operationName', 'operation'],
       register,
     ),
     startedExecuting: createCounter(
-      'graphql_queries_execution_started',
+      'graphql_queries_execution_started_count',
       'The amount of GraphQL queries that have started executing.',
       ['operationName', 'operation'],
       register,
     ),
     encounteredErrors: createCounter(
-      'graphql_queries_errored',
+      'graphql_queries_errored_count',
       'The amount of GraphQL queries that have encountered errors.',
       ['operationName', 'operation'],
       register,
     ),
     responded: createCounter(
-      'graphql_queries_responded',
-      'The amount of GraphQL queries that have been executed and been attempted to send to the client. This includes requests with errors.',
+      'graphql_queries_responded_count',
+      'The amount of GraphQL queries that received a response.',
       ['operationName', 'operation'],
       register,
     ),
@@ -52,62 +53,66 @@ export function createMetricsPlugin(register) {
       ['operationName', 'operation'],
       register,
     ),
-    executionTime: createHistogram(
-      'graphql_execution_time',
-      'The overall time to execute a GraphQL query (in seconds)',
-      ['operationName', 'operation'],
-      register,
-    ),
   };
 
   // define the metrics plugin for apollo
   // apollo have 9 steps in their whole lifecycle
 
   const metricsPlugin = {
-    async requestDidStart() {
-      return {
-        parsingDidStart(parsingContext) {
-          const labels = createLabels(parsingContext);
-          metrics.parsed.labels(labels).inc();
-        },
-        async validationDidStart(validationContext) {
-          const labels = createLabels(validationContext);
-          metrics.validationStarted.labels(labels).inc();
-        },
-        async didResolveOperation(resolveContext) {
-          // record start time for resolving the operation
-          // resolveContext.request.resolveStartTime = startTimer();
+    async requestDidStart(requestContext) {
+      const isIntrospection = checkForIntrospection(requestContext);
+      if (!isIntrospection) {
+        return {
+          parsingDidStart(parsingContext) {
+            const labels = createLabels(parsingContext);
 
-          const labels = createLabels(resolveContext);
-          metrics.resolved.labels(labels).inc();
-        },
-        async executionDidStart(executingContext) {
-          // track current time for the execution and
-          // attach the start time to the context in the req obj
-          // executingContext.request.startTime = startTimer();
+            metrics.parsingStarted.labels(labels).inc();
+          },
+          async validationDidStart(validationContext) {
+            const labels = createLabels(validationContext);
+            metrics.validationStarted.labels(labels).inc();
+          },
+          async didResolveOperation(resolveContext) {
+            // record start time for resolving the operation
+            // resolveContext.request.resolveStartTime = startTimer();
 
-          const labels = createLabels(executingContext);
-          metrics.startedExecuting.inc(labels);
-        },
-        async didEncounterErrors(errorContext) {
-          const labels = createLabels(errorContext);
-          metrics.encounteredErrors.labels(labels).inc();
-        },
-        async willSendResponse(responseContext) {
-          // get the start time from request
-          // const { startTime, resolveStartTime } = responseContext.request;
-          // // get current time
-          // const endTime = startTimer();
-          // const executionTime = getDurationInSecs(startTime, endTime);
-          // const resolutionTime = getDurationInSecs(resolveStartTime, endTime);
-          // const labels = createLabels(responseContext);
-          // metrics.executionTime.observe(labels, executionTime);
-          // metrics.resolutionTime.observe(labels, resolutionTime);
-          // metrics.responded.labels(labels).inc();
-        },
-      };
+            const labels = createLabels(resolveContext);
+            metrics.resolved.labels(labels).inc();
+          },
+          async executionDidStart(executingContext) {
+            // track current time for the execution and
+            // attach the start time to the context in the req obj
+            executingContext.request.startTime = startTimer();
+
+            const labels = createLabels(executingContext);
+            metrics.startedExecuting.labels(labels).inc();
+          },
+          async didEncounterErrors(errorContext) {
+            const labels = createLabels(errorContext);
+            metrics.encounteredErrors.labels(labels).inc();
+          },
+          async willSendResponse(responseContext) {
+            const { startTime } = responseContext.request;
+            const end = startTimer();
+            try {
+              const labels = createLabels(responseContext);
+              const duration = getDurationInSecs(startTime, end);
+
+              metrics.resolutionTime.observe(labels, duration);
+              metrics.responded.labels(labels).inc();
+            } catch (err) {
+              logger.error(err);
+            }
+          },
+        };
+      }
     },
   };
   // return the plugin to integrate with apollo
   return metricsPlugin;
 }
+
+const checkForIntrospection = (context) => {
+  if (context.request.operationName === 'IntrospectionQuery') return true;
+  return false;
+};
