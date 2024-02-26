@@ -26,21 +26,8 @@
       },
       {
         "name": "products",
-        "type": "string",
-        "nullable": true,
-        "fields": {
-          "type": "object",
-          "columns": [
-            {
-              "name": "name",
-              "type": "string"
-            },
-            {
-              "name": "price",
-              "type": "float"
-            }
-          ]
-        }
+        "type": "array",
+        "nullable": false
       }
     ],
     "backoffice": {

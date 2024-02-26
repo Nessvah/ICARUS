@@ -25,12 +25,8 @@
       },
       {
         "name": "content",
-        "type": "string",
-        "nullable": true,
-        "fields": {
-          "type": "string",
-          "column": []
-        }
+        "type": "array",
+        "nullable": false
       },
       {
         "name": "publish_date",
