@@ -7,5 +7,9 @@
   "endOfLine": "lf",
   "trailingComma": "all",
   "arrowParens": "always",
-  "ignore": ["public/javascripts/spectaql.min.js", "public/stylesheets/spectaql.min.css"]
+  "ignore": [
+    "public/javascripts/spectaql.min.js",
+    "public/stylesheets/spectaql.min.css",
+    "src/presentation/typeDefs.graphql"
+  ]
 }
