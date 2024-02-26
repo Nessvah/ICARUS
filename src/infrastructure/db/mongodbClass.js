@@ -47,6 +47,7 @@ class MongoDBConnection {
   // input:{filter: _id:["id", "id"]} or input:{filter:{keys and values}}
   async find(table, { input }) {
     const db = this.client.db(this.dbName);
+    //console.log(table, input);
     const collection = db.collection(table);
     let res;
 

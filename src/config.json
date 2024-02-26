@@ -690,6 +690,219 @@
           "foreignKey": "role_id"
         }
       ]
+    },
+    {
+      "name": "authors",
+      "database": {
+        "type": "mongodb",
+        "uri": "mongodb+srv://icarus-user:veryGoodPassword@cluster0.hxbgjxm.mongodb.net/",
+        "databaseName": "icarus-test"
+      },
+      "columns": [
+        {
+          "name": "id",
+          "type": "id",
+          "primaryKey": true,
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "id",
+          "type": "object",
+          "nullable": false,
+          "isObject": true,
+          "relationType": "1:n",
+          "foreignEntity": "blog_posts",
+          "foreignKey": "author_id"
+        }
+      ]
+    },
+    {
+      "name": "blog_posts",
+      "database": {
+        "type": "mongodb",
+        "uri": "mongodb+srv://icarus-user:veryGoodPassword@cluster0.hxbgjxm.mongodb.net/",
+        "databaseName": "icarus-test"
+      },
+      "columns": [
+        {
+          "name": "id",
+          "type": "id",
+          "primaryKey": true,
+          "nullable": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "author_id",
+          "type": "id",
+          "nullable": false,
+          "isObject": true,
+          "relationType": "n:1",
+          "foreignEntity": "authors",
+          "foreignKey": "id"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "nullable": true,
+          "fields": {
+            "type": "string",
+            "column": []
+          }
+        },
+        {
+          "name": "publish_date",
+          "type": "string",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "name": "brands",
+      "database": {
+        "type": "mongodb",
+        "uri": "mongodb+srv://icarus-user:veryGoodPassword@cluster0.hxbgjxm.mongodb.net/",
+        "databaseName": "icarus-test"
+      },
+      "columns": [
+        {
+          "name": "id",
+          "type": "id",
+          "primaryKey": true,
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "founded_year",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "products",
+          "type": "string",
+          "nullable": true,
+          "fields": {
+            "type": "object",
+            "columns": [
+              {
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "name": "price",
+                "type": "float"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "coupons",
+      "database": {
+        "type": "mongodb",
+        "uri": "mongodb+srv://icarus-user:veryGoodPassword@cluster0.hxbgjxm.mongodb.net/",
+        "databaseName": "icarus-test"
+      },
+      "columns": [
+        {
+          "name": "id",
+          "type": "id",
+          "primaryKey": true,
+          "nullable": false
+        },
+        {
+          "name": "code",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "discount_percent",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "expiration_date",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "promotion_id",
+          "type": "id",
+          "nullable": false,
+          "isObject": true,
+          "relationType": "1:1",
+          "foreignEntity": "promotions",
+          "foreignKey": "id"
+        }
+      ]
+    },
+    {
+      "name": "promotions",
+      "database": {
+        "type": "mongodb",
+        "uri": "mongodb+srv://icarus-user:veryGoodPassword@cluster0.hxbgjxm.mongodb.net/",
+        "databaseName": "icarus-test"
+      },
+      "columns": [
+        {
+          "name": "id",
+          "type": "id",
+          "primaryKey": true,
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "start_date",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "end_date",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "id",
+          "type": "object",
+          "nullable": false,
+          "isObject": true,
+          "relationType": "1:1",
+          "foreignEntity": "coupons",
+          "foreignKey": "promotion_id"
+        }
+      ]
     }
   ]
 }
