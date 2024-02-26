@@ -41,9 +41,11 @@ export function createHistogram(name, help, labelNames, register) {
  * @param {Object} context - The GraphQL context object.
  * @returns {Object} - Labels for the GraphQL context.
  */
+// ... previous code
+
 export function createLabels(context) {
   return filterUndefinedValues({
-    operationName: context.request.operationName || '',
+    operationName: context.request.operationName?.toLowerCase() || '', // Use toLowerCase() to convert to lowercase
     operation: context.operation?.operation,
   });
 }

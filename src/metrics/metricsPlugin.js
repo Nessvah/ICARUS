@@ -85,6 +85,7 @@ export function createMetricsPlugin(register) {
             executingContext.request.startTime = startTimer();
 
             const labels = createLabels(executingContext);
+
             metrics.startedExecuting.labels(labels).inc();
           },
           async didEncounterErrors(errorContext) {
