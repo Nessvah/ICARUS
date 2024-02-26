@@ -159,7 +159,6 @@ const initializeLogger = (async () => {
 
   //? ask for victors opinion on explicitly exiting app
   // the 1 + code means that the app stoped due to an error
-  process.exit(1);
 })();
 
 export default initializeLogger;

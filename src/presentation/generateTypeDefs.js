@@ -118,6 +118,8 @@ input Resolvers${tableName} {
     create: [${tableName}Input]
 	update: ${tableName}Update
     operators: Operators
+    take: Int
+    skip: Int
 }`;
     //Define the entities type
     const tableTypeDef = `
@@ -125,10 +127,18 @@ type ${tableName} {
     ${table.columns
       .filter((column) => column.name !== 'password')
       .map((column) => {
-        const type = mapColumnTypeToGraphQLType(column.type);
-        return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
+        let type;
+        if (!column.isObject) {
+          type = mapColumnTypeToGraphQLType(column.type);
+          return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
+        }
+        let columnForeignEntityCapitalize = capitalize(column.foreignEntity);
+        return `${column.foreignEntity}: ${
+          column.relationType[2] === 'n' ? `[${columnForeignEntityCapitalize}]` : columnForeignEntityCapitalize
+        }`;
       })
       .join('\n')}
+
 }`;
     //Define the entities input
     const tableInputTypeDef = `
@@ -136,6 +146,9 @@ input ${tableName}Input {
     ${table.columns
       .filter((column) => column.primaryKey !== true)
       .map((column) => {
+        if (column.type === 'object') {
+          return '';
+        }
         const type = mapColumnTypeToGraphQLType(column.type);
         return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
       })
@@ -147,6 +160,9 @@ input ${tableName}Filter {
     ${table.columns
       .filter((column) => column.name !== 'password')
       .map((column) => {
+        if (column.type === 'object') {
+          return '';
+        }
         const type = mapColumnTypeToGraphQLType(column.type);
         return `${column.name}: [${type}]`;
       })
@@ -159,6 +175,9 @@ input ${tableName}Update {
     ${table.columns
       .filter((column) => column.primaryKey !== true)
       .map((column) => {
+        if (column.type === 'object') {
+          return '';
+        }
         const type = mapColumnTypeToGraphQLType(column.type);
         return `${column.name}: ${type}`;
       })

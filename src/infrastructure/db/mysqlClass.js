@@ -34,11 +34,31 @@ export class MySQLConnection {
     console.log({ tableName, input });
     const { filter } = input;
 
+    // Default LIMIT and OFFSET values
+    const defaultLimit = 100; // Change this value to whatever default limit you desire
+    const defaultOffset = 0;
+
+    // Set the timeout value in seconds
+    const timeoutSeconds = 60; // Change this value to your desired timeout
+
     // If no filters are provided, return all rows from the table
     if (!filter || Object.keys(filter).length === 0) {
-      const sql = `SELECT * FROM ${tableName}`;
+      const take = input.take || defaultLimit;
+      const skip = input.skip || defaultOffset;
+
+      let sql;
+      if (take && skip) {
+        sql = `SELECT * FROM ${tableName} LIMIT ${take} OFFSET ${skip}`;
+      } else if (take) {
+        sql = `SELECT * FROM ${tableName} LIMIT ${take}`;
+      } else if (skip) {
+        sql = `SELECT * FROM ${tableName} LIMIT ${defaultLimit} OFFSET ${skip}`;
+      } else {
+        sql = `SELECT * FROM ${tableName} LIMIT ${defaultLimit}`;
+      }
+
       try {
-        const res = await this.query(sql);
+        const res = await this.query({ sql, timeout: timeoutSeconds * 1000 });
         return res; // Return all rows from the table
       } catch (error) {
         console.error('Error:', error);
@@ -61,10 +81,22 @@ export class MySQLConnection {
     const whereClause = whereConditions.join(' AND ');
 
     // Construct SQL query with WHERE clause
-    const sql = `SELECT * FROM ${tableName} WHERE ${whereClause}`;
+    const take = input.take || defaultLimit;
+    const skip = input.skip || defaultOffset;
+
+    let sql;
+    if (take && skip) {
+      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT ${take} OFFSET ${skip}`;
+    } else if (take) {
+      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT ${take}`;
+    } else if (skip) {
+      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT ${defaultLimit} OFFSET ${skip}`;
+    } else {
+      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT ${defaultLimit}`;
+    }
 
     try {
-      const res = await this.query(sql, values);
+      const res = await this.query({ sql, values, timeout: timeoutSeconds * 1000 });
       return res; // Return the result of the query
     } catch (error) {
       console.error('Error:', error);
@@ -80,19 +112,18 @@ export class MySQLConnection {
    */
   async create(tableName, { input }) {
     const { create } = input;
-    const valuesArray = create.map((item) => Object.values(item));
     const keys = Object.keys(create[0]);
+    const values = create.map((item) => Object.values(item));
+    console.log(values);
     const fields = keys.join(', ');
-    const placeholders = keys.map(() => '?').join(', ');
-    const sql = `INSERT INTO ${tableName} (${fields}) VALUES ${valuesArray.map(() => `(${placeholders})`).join(', ')}`;
-
+    const sql = `INSERT INTO ${tableName} (${fields}) VALUES ${values.map(() => `(?)`).join(', ')}`;
+    console.log(sql);
     try {
-      await Promise.all(valuesArray.map((values) => this.query(sql, values)));
-      logger.info(`Create operation executed successfully.`);
-      return { created: create.map((item) => ({ ...item })) };
+      const res = await this.query(sql, values); // for debugging purposes if needed
+      return { created: create };
     } catch (error) {
-      logger.error(`Error executing create operation: ${error}`);
-      return null;
+      console.error('Error:', error);
+      return null; // Return null if there's an error
     }
   }
 
@@ -104,31 +135,14 @@ export class MySQLConnection {
    */
   async update(tableName, { input }) {
     const { filter, update } = input;
-
-    // Extract filter keys and values
-    const filterKeys = Object.keys(filter);
-    const filterValues = Object.values(filter);
-
-    // Construct WHERE clause for filtering
-    const whereConditions = filterKeys.map((key) => `${key} = ?`).join(' AND ');
-
-    // Initialize an array to hold the SET clauses
-    const setClauses = [];
-
-    // Extract update keys and values and construct SET clauses
-    for (const item of update) {
-      const setClause = Object.keys(item)
-        .map((key) => `${key} = ?`)
-        .join(', ');
-      setClauses.push(setClause);
-    }
-
-    // Construct the SET part of the SQL query
-    const setPart = setClauses.join(', ');
-
-    // Construct the SQL query
-    const sql = `UPDATE ${tableName} SET ${setPart} WHERE ${whereConditions}`;
-
+    const keys = Object.keys(filter);
+    const values = Object.values(filter);
+    const where = keys.map((key) => `${key} IN (?)`).join(' AND ');
+    const set = Object.entries(update)
+      .map(([key]) => `${key} = ?`)
+      .join(', ');
+    const sql = `UPDATE ${tableName} SET ${set} WHERE ${where}`;
+    console.log(sql);
     try {
       const res = await this.query(sql, [...Object.values(update), ...values]); // for debugging purposes if needed
       return { updated: await this.find(tableName, { input }) };
@@ -148,13 +162,18 @@ export class MySQLConnection {
     const { filter } = input;
     const keys = Object.keys(filter);
     const values = Object.values(filter);
-    const where = keys.map((key) => `${key} = ?`).join(' AND ');
+    const where = keys.map((key) => `${key} IN (?)`).join(' AND ');
     const sql = `DELETE FROM ${tableName} WHERE ${where}`;
     try {
-      const res = await this.query(sql, [values]);
+      // Execute the first query to disable foreign key checks
+      await this.query('SET FOREIGN_KEY_CHECKS=0;');
+      // Execute the second query to delete the records
+      const res = await this.query(sql, values);
+      // Execute the third query to enable foreign key checks
+      await this.query('SET FOREIGN_KEY_CHECKS=1;');
       return { deleted: res.affectedRows };
     } catch (error) {
-      logger.error('Error:', error);
+      console.error('Error:', error);
       return null; // Return null if there's an error
     }
   }

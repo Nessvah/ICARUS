@@ -5,11 +5,11 @@ type Query {
   order_items(input: ResolversOrder_items): [Order_items]
   orders(input: ResolversOrders): [Orders]
   payment(input: ResolversPayment): [Payment]
-  products(input: ResolversProducts): [Products]
   product_reviews(input: ResolversProduct_reviews): [Product_reviews]
+  products(input: ResolversProducts): [Products]
   shipments(input: ResolversShipments): [Shipments]
-  userRole(input: ResolversUserRole): [UserRole]
   users(input: ResolversUsers): [Users]
+  user_role(input: ResolversUser_role): [User_role]
 }
 
 type Mutation {
@@ -19,11 +19,11 @@ type Mutation {
   order_items(input: ResolversOrder_items): Order_itemsOutput
   orders(input: ResolversOrders): OrdersOutput
   payment(input: ResolversPayment): PaymentOutput
-  products(input: ResolversProducts): ProductsOutput
   product_reviews(input: ResolversProduct_reviews): Product_reviewsOutput
+  products(input: ResolversProducts): ProductsOutput
   shipments(input: ResolversShipments): ShipmentsOutput
-  userRole(input: ResolversUserRole): UserRoleOutput
   users(input: ResolversUsers): UsersOutput
+  user_role(input: ResolversUser_role): User_roleOutput
 }
 
 input ResolversCategories {
@@ -32,6 +32,8 @@ input ResolversCategories {
   create: [CategoriesInput]
   update: CategoriesUpdate
   operators: Operators
+  take: Int
+  skip: Int
 }
 
 type Categories {
@@ -72,6 +74,8 @@ input ResolversCustomers {
   create: [CustomersInput]
   update: CustomersUpdate
   operators: Operators
+  take: Int
+  skip: Int
 }
 
 type Customers {
@@ -80,7 +84,7 @@ type Customers {
   email: String
   icon_class: String
   icon_label: String
-  orders: String
+  orders: [Orders]
 }
 
 input CustomersInput {
@@ -88,7 +92,6 @@ input CustomersInput {
   email: String
   icon_class: String
   icon_label: String
-  orders: String
 }
 
 input CustomersFilter {
@@ -97,7 +100,6 @@ input CustomersFilter {
   email: [String]
   icon_class: [String]
   icon_label: [String]
-  orders: [String]
 }
 
 input CustomersUpdate {
@@ -105,7 +107,6 @@ input CustomersUpdate {
   email: String
   icon_class: String
   icon_label: String
-  orders: String
 }
 
 type CustomersOutput {
@@ -120,12 +121,14 @@ input ResolversOrder_items {
   create: [Order_itemsInput]
   update: Order_itemsUpdate
   operators: Operators
+  take: Int
+  skip: Int
 }
 
 type Order_items {
   order_item_id: Int!
-  order_id: Int
-  product_id: Int
+  orders: Orders
+  products: Products
   quantity: Int
   price: Float
   currency_type: String
@@ -176,17 +179,19 @@ input ResolversOrders {
   create: [OrdersInput]
   update: OrdersUpdate
   operators: Operators
+  take: Int
+  skip: Int
 }
 
 type Orders {
   order_id: Int!
   order_date: String
-  customer_id: Int
+  customers: Customers
   icon_class: String
   icon_label: String
-  order_items: String
-  shipments: String
-  payment: String
+  order_items: [Order_items]
+  shipments: Shipments
+  payment: Payment
 }
 
 input OrdersInput {
@@ -194,9 +199,6 @@ input OrdersInput {
   customer_id: Int
   icon_class: String
   icon_label: String
-  order_items: String
-  shipments: String
-  payment: String
 }
 
 input OrdersFilter {
@@ -205,9 +207,6 @@ input OrdersFilter {
   customer_id: [Int]
   icon_class: [String]
   icon_label: [String]
-  order_items: [String]
-  shipments: [String]
-  payment: [String]
 }
 
 input OrdersUpdate {
@@ -215,9 +214,6 @@ input OrdersUpdate {
   customer_id: Int
   icon_class: String
   icon_label: String
-  order_items: String
-  shipments: String
-  payment: String
 }
 
 type OrdersOutput {
@@ -232,6 +228,8 @@ input ResolversPayment {
   create: [PaymentInput]
   update: PaymentUpdate
   operators: Operators
+  take: Int
+  skip: Int
 }
 
 type Payment {
@@ -240,7 +238,7 @@ type Payment {
   payment_date: String!
   amount: Float!
   payment_status: String!
-  order_id: Int
+  orders: Orders
 }
 
 input PaymentInput {
@@ -336,12 +334,14 @@ input ResolversProduct_reviews {
   create: [Product_reviewsInput]
   update: Product_reviewsUpdate
   operators: Operators
+  take: Int
+  skip: Int
 }
 
 type Product_reviews {
   review_id: Int!
-  product_id: Int
-  customer_id: Int
+  products: Products
+  customers: Customers
   rating: Int
   review_text: String
   review_date: String
@@ -386,17 +386,74 @@ type Product_reviewsOutput {
   deleted: Int
 }
 
+input ResolversProducts {
+  filter: ProductsFilter
+  action: String
+  create: [ProductsInput]
+  update: ProductsUpdate
+  operators: Operators
+  take: Int
+  skip: Int
+}
+
+type Products {
+  product_id: Int!
+  product_name: String
+  price: Float
+  currency_type: String
+  description: String
+  icon_class: String
+  icon_label: String
+  order_items: [Order_items]
+}
+
+input ProductsInput {
+  product_name: String
+  price: Float
+  currency_type: String
+  description: String
+  icon_class: String
+  icon_label: String
+}
+
+input ProductsFilter {
+  product_id: [Int]
+  product_name: [String]
+  price: [Float]
+  currency_type: [String]
+  description: [String]
+  icon_class: [String]
+  icon_label: [String]
+}
+
+input ProductsUpdate {
+  product_name: String
+  price: Float
+  currency_type: String
+  description: String
+  icon_class: String
+  icon_label: String
+}
+
+type ProductsOutput {
+  created: [Products]!
+  updated: [Products]!
+  deleted: Int
+}
+
 input ResolversShipments {
   filter: ShipmentsFilter
   action: String
   create: [ShipmentsInput]
   update: ShipmentsUpdate
   operators: Operators
+  take: Int
+  skip: Int
 }
 
 type Shipments {
   shipment_id: Int!
-  order_id: Int
+  orders: Orders
   shipment_date: String
   tracking_int: String
   icon_class: String
@@ -472,43 +529,80 @@ input ResolversUsers {
   create: [UsersInput]
   update: UsersUpdate
   operators: Operators
+  take: Int
+  skip: Int
 }
 
 type Users {
   id: ID!
   email: String
-  role_id: Int
+  user_role: User_role
   customer_id: Int
-  created_at: String
+  created_t: String
 }
 
 input UsersInput {
   password: String
   email: String
-  role_id: Int
+  role_id: String!
   customer_id: Int
-  created_at: String
+  created_t: String
 }
 
 input UsersFilter {
   id: [ID]
   email: [String]
-  role_id: [Int]
+  role_id: [String]
   customer_id: [Int]
-  created_at: [String]
+  created_t: [String]
 }
 
 input UsersUpdate {
   password: String
   email: String
-  role_id: Int
+  role_id: String
   customer_id: Int
-  created_at: String
+  created_t: String
 }
 
 type UsersOutput {
   created: [Users]!
   updated: [Users]!
+  deleted: Int
+}
+
+input ResolversUser_role {
+  filter: User_roleFilter
+  action: String
+  create: [User_roleInput]
+  update: User_roleUpdate
+  operators: Operators
+  take: Int
+  skip: Int
+}
+
+type User_role {
+  id: ID!
+  role_name: String!
+  users: [Users]
+}
+
+input User_roleInput {
+  role_name: String!
+}
+
+input User_roleFilter {
+  id: [ID]
+  role_name: [String]
+}
+
+input User_roleUpdate {
+  role_name: String
+}
+
+type User_roleOutput {
+  created: [User_role]!
+  updated: [User_role]!
   deleted: Int
 }
 

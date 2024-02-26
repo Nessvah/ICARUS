@@ -89,6 +89,36 @@ const validationRules = {
       })
       .validate(value),
 
+  description: (value) =>
+    Joi.string()
+      .min(6)
+      .max(50)
+      .messages({
+        'string.min': 'It should have a minimum length of {#limit}.',
+        'string.max': 'It should have a maximum length of {#limit}.',
+      })
+      .validate(value),
+
+  price: (value) =>
+    Joi.number()
+      .precision(2)
+      .strict()
+      .messages({
+        'number.base': 'It must be a number.',
+        'number.precision': 'It must be a float with up to 2 decimal places.',
+      })
+      .validate(value),
+
+  product_name: (value) =>
+    Joi.string()
+      .min(3)
+      .max(20)
+      .messages({
+        'string.min': 'It should have a minimum length of {#limit}.',
+        'string.max': 'It should have a maximum length of {#limit}.',
+      })
+      .validate(value),
+
   /* int: (value) =>
     Joi.number()
       .integer()
