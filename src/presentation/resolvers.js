@@ -3,12 +3,34 @@ import { controller } from '../infrastructure/db/connector.js';
 import { validation } from '../utils/validation/validation.js';
 import { ObjectId } from 'mongodb';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
+import { ImportThemTities } from '../config/importDemTities.js';
+const importer = new ImportThemTities();
 
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-let data = JSON.parse(fs.readFileSync(`../src/config.json`, 'utf8'));
+let data;
+(async () => {
+  try {
+    data = await importer.importAll();
+    if (data && data.tables) {
+      // Ensure data.tables is defined
+      //console.log('data:', data, '______________'); // Log the retrieved data
+
+      // Call autoResolvers after data is available
+      await autoResolvers();
+
+      return data;
+    } else {
+      console.error('Data is missing or incomplete.');
+    }
+    return null;
+  } catch (error) {
+    console.error('Error reading file:', error);
+  }
+})();
+
 let nestedObject = {};
 //a pre version of the resolvers, with same static Query and Mutation.
 const preResolvers = {
@@ -78,8 +100,6 @@ const createRelations = async (table, column) => {
   preResolvers[tableName] = nestedObject;
   //console.log(preResolvers);
 };
-
-autoResolvers();
 
 const resolvers = preResolvers;
 

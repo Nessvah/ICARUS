@@ -1,615 +1,801 @@
+
 type Query {
   tables: [TableInfo]
-  categories(input: ResolversCategories): [Categories]
-  customers(input: ResolversCustomers): [Customers]
-  order_items(input: ResolversOrder_items): [Order_items]
-  orders(input: ResolversOrders): [Orders]
-  payment(input: ResolversPayment): [Payment]
-  product_reviews(input: ResolversProduct_reviews): [Product_reviews]
-  products(input: ResolversProducts): [Products]
-  shipments(input: ResolversShipments): [Shipments]
-  users(input: ResolversUsers): [Users]
-  user_role(input: ResolversUser_role): [User_role]
+    authors(input: ResolversAuthors): [Authors]
+blog_posts(input: ResolversBlog_posts): [Blog_posts]
+brands(input: ResolversBrands): [Brands]
+categories(input: ResolversCategories): [Categories]
+coupons(input: ResolversCoupons): [Coupons]
+customers(input: ResolversCustomers): [Customers]
+order_items(input: ResolversOrder_items): [Order_items]
+orders(input: ResolversOrders): [Orders]
+payment(input: ResolversPayment): [Payment]
+products(input: ResolversProducts): [Products]
+product_reviews(input: ResolversProduct_reviews): [Product_reviews]
+promotions(input: ResolversPromotions): [Promotions]
+shipments(input: ResolversShipments): [Shipments]
+user_role(input: ResolversUser_role): [User_role]
+users(input: ResolversUsers): [Users]
 }
 
 type Mutation {
   authorize(input: AuthorizeUser!): AuthPayload!
-  categories(input: ResolversCategories): CategoriesOutput
-  customers(input: ResolversCustomers): CustomersOutput
-  order_items(input: ResolversOrder_items): Order_itemsOutput
-  orders(input: ResolversOrders): OrdersOutput
-  payment(input: ResolversPayment): PaymentOutput
-  product_reviews(input: ResolversProduct_reviews): Product_reviewsOutput
-  products(input: ResolversProducts): ProductsOutput
-  shipments(input: ResolversShipments): ShipmentsOutput
-  users(input: ResolversUsers): UsersOutput
-  user_role(input: ResolversUser_role): User_roleOutput
+    authors(input: ResolversAuthors): AuthorsOutput
+blog_posts(input: ResolversBlog_posts): Blog_postsOutput
+brands(input: ResolversBrands): BrandsOutput
+categories(input: ResolversCategories): CategoriesOutput
+coupons(input: ResolversCoupons): CouponsOutput
+customers(input: ResolversCustomers): CustomersOutput
+order_items(input: ResolversOrder_items): Order_itemsOutput
+orders(input: ResolversOrders): OrdersOutput
+payment(input: ResolversPayment): PaymentOutput
+products(input: ResolversProducts): ProductsOutput
+product_reviews(input: ResolversProduct_reviews): Product_reviewsOutput
+promotions(input: ResolversPromotions): PromotionsOutput
+shipments(input: ResolversShipments): ShipmentsOutput
+user_role(input: ResolversUser_role): User_roleOutput
+users(input: ResolversUsers): UsersOutput
+}
+
+input ResolversAuthors {
+    filter: AuthorsFilter
+	action: String
+    create: [AuthorsInput]
+	update: AuthorsUpdate
+    operators: Operators
+    take: Int
+    skip: Int
+}
+
+type Authors {
+    id: ID!
+name: String!
+email: String!
+blog_posts: [Blog_posts]
+
+}
+
+input AuthorsInput {
+    name: String!
+email: String!
+
+}
+
+input AuthorsFilter {
+    id: [ID]
+name: [String]
+email: [String]
+
+}
+
+input AuthorsUpdate {
+    name: String
+email: String
+
+}
+
+type AuthorsOutput {
+	created: [Authors]!
+	updated: [Authors]!
+	deleted: Int
+}
+
+input ResolversBlog_posts {
+    filter: Blog_postsFilter
+	action: String
+    create: [Blog_postsInput]
+	update: Blog_postsUpdate
+    operators: Operators
+    take: Int
+    skip: Int
+}
+
+type Blog_posts {
+    id: ID!
+title: String!
+authors: Authors
+content: String
+publish_date: String!
+
+}
+
+input Blog_postsInput {
+    title: String!
+author_id: ID!
+content: String
+publish_date: String!
+}
+
+input Blog_postsFilter {
+    id: [ID]
+title: [String]
+author_id: [ID]
+content: [String]
+publish_date: [String]
+}
+
+input Blog_postsUpdate {
+    title: String
+author_id: ID
+content: String
+publish_date: String
+}
+
+type Blog_postsOutput {
+	created: [Blog_posts]!
+	updated: [Blog_posts]!
+	deleted: Int
+}
+
+input ResolversBrands {
+    filter: BrandsFilter
+	action: String
+    create: [BrandsInput]
+	update: BrandsUpdate
+    operators: Operators
+    take: Int
+    skip: Int
+}
+
+type Brands {
+    id: ID!
+name: String!
+country: String!
+founded_year: String!
+products: String
+
+}
+
+input BrandsInput {
+    name: String!
+country: String!
+founded_year: String!
+products: String
+}
+
+input BrandsFilter {
+    id: [ID]
+name: [String]
+country: [String]
+founded_year: [String]
+products: [String]
+}
+
+input BrandsUpdate {
+    name: String
+country: String
+founded_year: String
+products: String
+}
+
+type BrandsOutput {
+	created: [Brands]!
+	updated: [Brands]!
+	deleted: Int
 }
 
 input ResolversCategories {
-  filter: CategoriesFilter
-  action: String
-  create: [CategoriesInput]
-  update: CategoriesUpdate
-  operators: Operators
-  take: Int
-  skip: Int
+    filter: CategoriesFilter
+	action: String
+    create: [CategoriesInput]
+	update: CategoriesUpdate
+    operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Categories {
-  category_id: Int!
-  category_name: String
-  icon_class: String
-  icon_label: String
+    category_id: Int!
+category_name: String
+icon_class: String
+icon_label: String
+
 }
 
 input CategoriesInput {
-  category_name: String
-  icon_class: String
-  icon_label: String
+    category_name: String
+icon_class: String
+icon_label: String
 }
 
 input CategoriesFilter {
-  category_id: [Int]
-  category_name: [String]
-  icon_class: [String]
-  icon_label: [String]
+    category_id: [Int]
+category_name: [String]
+icon_class: [String]
+icon_label: [String]
 }
 
 input CategoriesUpdate {
-  category_name: String
-  icon_class: String
-  icon_label: String
+    category_name: String
+icon_class: String
+icon_label: String
 }
 
 type CategoriesOutput {
-  created: [Categories]!
-  updated: [Categories]!
-  deleted: Int
+	created: [Categories]!
+	updated: [Categories]!
+	deleted: Int
+}
+
+input ResolversCoupons {
+    filter: CouponsFilter
+	action: String
+    create: [CouponsInput]
+	update: CouponsUpdate
+    operators: Operators
+    take: Int
+    skip: Int
+}
+
+type Coupons {
+    id: ID!
+code: String!
+discount_percent: Int!
+expiration_date: String!
+promotions: Promotions
+
+}
+
+input CouponsInput {
+    code: String!
+discount_percent: Int!
+expiration_date: String!
+promotion_id: ID!
+}
+
+input CouponsFilter {
+    id: [ID]
+code: [String]
+discount_percent: [Int]
+expiration_date: [String]
+promotion_id: [ID]
+}
+
+input CouponsUpdate {
+    code: String
+discount_percent: Int
+expiration_date: String
+promotion_id: ID
+}
+
+type CouponsOutput {
+	created: [Coupons]!
+	updated: [Coupons]!
+	deleted: Int
 }
 
 input ResolversCustomers {
-  filter: CustomersFilter
-  action: String
-  create: [CustomersInput]
-  update: CustomersUpdate
-  operators: Operators
-  take: Int
-  skip: Int
+    filter: CustomersFilter
+	action: String
+    create: [CustomersInput]
+	update: CustomersUpdate
+    operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Customers {
-  customer_id: Int!
-  customer_name: String
-  email: String
-  icon_class: String
-  icon_label: String
-  orders: [Orders]
+    customer_id: Int!
+customer_name: String
+email: String
+icon_class: String
+icon_label: String
+orders: [Orders]
+
 }
 
 input CustomersInput {
-  customer_name: String
-  email: String
-  icon_class: String
-  icon_label: String
+    customer_name: String
+email: String
+icon_class: String
+icon_label: String
+
 }
 
 input CustomersFilter {
-  customer_id: [Int]
-  customer_name: [String]
-  email: [String]
-  icon_class: [String]
-  icon_label: [String]
+    customer_id: [Int]
+customer_name: [String]
+email: [String]
+icon_class: [String]
+icon_label: [String]
+
 }
 
 input CustomersUpdate {
-  customer_name: String
-  email: String
-  icon_class: String
-  icon_label: String
+    customer_name: String
+email: String
+icon_class: String
+icon_label: String
+
 }
 
 type CustomersOutput {
-  created: [Customers]!
-  updated: [Customers]!
-  deleted: Int
+	created: [Customers]!
+	updated: [Customers]!
+	deleted: Int
 }
 
 input ResolversOrder_items {
-  filter: Order_itemsFilter
-  action: String
-  create: [Order_itemsInput]
-  update: Order_itemsUpdate
-  operators: Operators
-  take: Int
-  skip: Int
+    filter: Order_itemsFilter
+	action: String
+    create: [Order_itemsInput]
+	update: Order_itemsUpdate
+    operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Order_items {
-  order_item_id: Int!
-  orders: Orders
-  products: Products
-  quantity: Int
-  price: Float
-  currency_type: String
-  icon_class: String
-  icon_label: String
+    order_item_id: Int!
+orders: Orders
+products: Products
+quantity: Int
+price: Float
+currency_type: String
+icon_class: String
+icon_label: String
+
 }
 
 input Order_itemsInput {
-  order_id: Int
-  product_id: Int
-  quantity: Int
-  price: Float
-  currency_type: String
-  icon_class: String
-  icon_label: String
+    order_id: Int
+product_id: Int
+quantity: Int
+price: Float
+currency_type: String
+icon_class: String
+icon_label: String
 }
 
 input Order_itemsFilter {
-  order_item_id: [Int]
-  order_id: [Int]
-  product_id: [Int]
-  quantity: [Int]
-  price: [Float]
-  currency_type: [String]
-  icon_class: [String]
-  icon_label: [String]
+    order_item_id: [Int]
+order_id: [Int]
+product_id: [Int]
+quantity: [Int]
+price: [Float]
+currency_type: [String]
+icon_class: [String]
+icon_label: [String]
 }
 
 input Order_itemsUpdate {
-  order_id: Int
-  product_id: Int
-  quantity: Int
-  price: Float
-  currency_type: String
-  icon_class: String
-  icon_label: String
+    order_id: Int
+product_id: Int
+quantity: Int
+price: Float
+currency_type: String
+icon_class: String
+icon_label: String
 }
 
 type Order_itemsOutput {
-  created: [Order_items]!
-  updated: [Order_items]!
-  deleted: Int
+	created: [Order_items]!
+	updated: [Order_items]!
+	deleted: Int
 }
 
 input ResolversOrders {
-  filter: OrdersFilter
-  action: String
-  create: [OrdersInput]
-  update: OrdersUpdate
-  operators: Operators
-  take: Int
-  skip: Int
+    filter: OrdersFilter
+	action: String
+    create: [OrdersInput]
+	update: OrdersUpdate
+    operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Orders {
-  order_id: Int!
-  order_date: String
-  customers: Customers
-  icon_class: String
-  icon_label: String
-  order_items: [Order_items]
-  shipments: Shipments
-  payment: Payment
+    order_id: Int!
+order_date: String
+customers: Customers
+icon_class: String
+icon_label: String
+order_items: [Order_items]
+shipments: Shipments
+payment: Payment
+
 }
 
 input OrdersInput {
-  order_date: String
-  customer_id: Int
-  icon_class: String
-  icon_label: String
+    order_date: String
+customer_id: Int
+icon_class: String
+icon_label: String
+
+
+
 }
 
 input OrdersFilter {
-  order_id: [Int]
-  order_date: [String]
-  customer_id: [Int]
-  icon_class: [String]
-  icon_label: [String]
+    order_id: [Int]
+order_date: [String]
+customer_id: [Int]
+icon_class: [String]
+icon_label: [String]
+
+
+
 }
 
 input OrdersUpdate {
-  order_date: String
-  customer_id: Int
-  icon_class: String
-  icon_label: String
+    order_date: String
+customer_id: Int
+icon_class: String
+icon_label: String
+
+
+
 }
 
 type OrdersOutput {
-  created: [Orders]!
-  updated: [Orders]!
-  deleted: Int
+	created: [Orders]!
+	updated: [Orders]!
+	deleted: Int
 }
 
 input ResolversPayment {
-  filter: PaymentFilter
-  action: String
-  create: [PaymentInput]
-  update: PaymentUpdate
-  operators: Operators
-  take: Int
-  skip: Int
+    filter: PaymentFilter
+	action: String
+    create: [PaymentInput]
+	update: PaymentUpdate
+    operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Payment {
-  id: String!
-  payment_method: String!
-  payment_date: String!
-  amount: Float!
-  payment_status: String!
-  orders: Orders
+    id: String!
+payment_method: String!
+payment_date: String!
+amount: Float!
+payment_status: String!
+orders: Orders
+
 }
 
 input PaymentInput {
-  payment_method: String!
-  payment_date: String!
-  amount: Float!
-  payment_status: String!
-  order_id: Int
+    payment_method: String!
+payment_date: String!
+amount: Float!
+payment_status: String!
+order_id: Int
 }
 
 input PaymentFilter {
-  id: [String]
-  payment_method: [String]
-  payment_date: [String]
-  amount: [Float]
-  payment_status: [String]
-  order_id: [Int]
+    id: [String]
+payment_method: [String]
+payment_date: [String]
+amount: [Float]
+payment_status: [String]
+order_id: [Int]
 }
 
 input PaymentUpdate {
-  payment_method: String
-  payment_date: String
-  amount: Float
-  payment_status: String
-  order_id: Int
+    payment_method: String
+payment_date: String
+amount: Float
+payment_status: String
+order_id: Int
 }
 
 type PaymentOutput {
-  created: [Payment]!
-  updated: [Payment]!
-  deleted: Int
+	created: [Payment]!
+	updated: [Payment]!
+	deleted: Int
 }
 
 input ResolversProducts {
-  filter: ProductsFilter
-  action: String
-  create: [ProductsInput]
-  update: ProductsUpdate
-  operators: Operators
+    filter: ProductsFilter
+	action: String
+    create: [ProductsInput]
+	update: ProductsUpdate
+    operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Products {
-  id: ID!
-  product_name: String
-  price: Float
-  currency_type: String
-  description: String
-  icon_class: String
-  icon_label: String
-  order_items: String
+    product_id: Int!
+product_name: String
+price: Float
+currency_type: String
+description: String
+icon_class: String
+icon_label: String
+order_items: [Order_items]
+
 }
 
 input ProductsInput {
-  product_name: String
-  price: Float
-  currency_type: String
-  description: String
-  icon_class: String
-  icon_label: String
-  order_items: String
+    product_name: String
+price: Float
+currency_type: String
+description: String
+icon_class: String
+icon_label: String
+
 }
 
 input ProductsFilter {
-  id: [ID]
-  product_name: [String]
-  price: [Float]
-  currency_type: [String]
-  description: [String]
-  icon_class: [String]
-  icon_label: [String]
-  order_items: [String]
+    product_id: [Int]
+product_name: [String]
+price: [Float]
+currency_type: [String]
+description: [String]
+icon_class: [String]
+icon_label: [String]
+
 }
 
 input ProductsUpdate {
-  product_name: String
-  price: Float
-  currency_type: String
-  description: String
-  icon_class: String
-  icon_label: String
-  order_items: String
+    product_name: String
+price: Float
+currency_type: String
+description: String
+icon_class: String
+icon_label: String
+
 }
 
 type ProductsOutput {
-  created: [Products]!
-  updated: [Products]!
-  deleted: Int
+	created: [Products]!
+	updated: [Products]!
+	deleted: Int
 }
 
 input ResolversProduct_reviews {
-  filter: Product_reviewsFilter
-  action: String
-  create: [Product_reviewsInput]
-  update: Product_reviewsUpdate
-  operators: Operators
-  take: Int
-  skip: Int
+    filter: Product_reviewsFilter
+	action: String
+    create: [Product_reviewsInput]
+	update: Product_reviewsUpdate
+    operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Product_reviews {
-  review_id: Int!
-  products: Products
-  customers: Customers
-  rating: Int
-  review_text: String
-  review_date: String
-  icon_class: String
-  icon_label: String
+    review_id: Int!
+products: Products
+customers: Customers
+rating: Int
+review_text: String
+review_date: String
+icon_class: String
+icon_label: String
+
 }
 
 input Product_reviewsInput {
-  product_id: Int
-  customer_id: Int
-  rating: Int
-  review_text: String
-  review_date: String
-  icon_class: String
-  icon_label: String
+    product_id: Int
+customer_id: Int
+rating: Int
+review_text: String
+review_date: String
+icon_class: String
+icon_label: String
 }
 
 input Product_reviewsFilter {
-  review_id: [Int]
-  product_id: [Int]
-  customer_id: [Int]
-  rating: [Int]
-  review_text: [String]
-  review_date: [String]
-  icon_class: [String]
-  icon_label: [String]
+    review_id: [Int]
+product_id: [Int]
+customer_id: [Int]
+rating: [Int]
+review_text: [String]
+review_date: [String]
+icon_class: [String]
+icon_label: [String]
 }
 
 input Product_reviewsUpdate {
-  product_id: Int
-  customer_id: Int
-  rating: Int
-  review_text: String
-  review_date: String
-  icon_class: String
-  icon_label: String
+    product_id: Int
+customer_id: Int
+rating: Int
+review_text: String
+review_date: String
+icon_class: String
+icon_label: String
 }
 
 type Product_reviewsOutput {
-  created: [Product_reviews]!
-  updated: [Product_reviews]!
-  deleted: Int
+	created: [Product_reviews]!
+	updated: [Product_reviews]!
+	deleted: Int
 }
 
-input ResolversProducts {
-  filter: ProductsFilter
-  action: String
-  create: [ProductsInput]
-  update: ProductsUpdate
-  operators: Operators
-  take: Int
-  skip: Int
+input ResolversPromotions {
+    filter: PromotionsFilter
+	action: String
+    create: [PromotionsInput]
+	update: PromotionsUpdate
+    operators: Operators
+    take: Int
+    skip: Int
 }
 
-type Products {
-  product_id: Int!
-  product_name: String
-  price: Float
-  currency_type: String
-  description: String
-  icon_class: String
-  icon_label: String
-  order_items: [Order_items]
+type Promotions {
+    id: ID!
+name: String!
+description: String!
+start_date: String!
+end_date: String!
+coupons: Coupons
+
 }
 
-input ProductsInput {
-  product_name: String
-  price: Float
-  currency_type: String
-  description: String
-  icon_class: String
-  icon_label: String
+input PromotionsInput {
+    name: String!
+description: String!
+start_date: String!
+end_date: String!
+
 }
 
-input ProductsFilter {
-  product_id: [Int]
-  product_name: [String]
-  price: [Float]
-  currency_type: [String]
-  description: [String]
-  icon_class: [String]
-  icon_label: [String]
+input PromotionsFilter {
+    id: [ID]
+name: [String]
+description: [String]
+start_date: [String]
+end_date: [String]
+
 }
 
-input ProductsUpdate {
-  product_name: String
-  price: Float
-  currency_type: String
-  description: String
-  icon_class: String
-  icon_label: String
+input PromotionsUpdate {
+    name: String
+description: String
+start_date: String
+end_date: String
+
 }
 
-type ProductsOutput {
-  created: [Products]!
-  updated: [Products]!
-  deleted: Int
+type PromotionsOutput {
+	created: [Promotions]!
+	updated: [Promotions]!
+	deleted: Int
 }
 
 input ResolversShipments {
-  filter: ShipmentsFilter
-  action: String
-  create: [ShipmentsInput]
-  update: ShipmentsUpdate
-  operators: Operators
-  take: Int
-  skip: Int
+    filter: ShipmentsFilter
+	action: String
+    create: [ShipmentsInput]
+	update: ShipmentsUpdate
+    operators: Operators
+    take: Int
+    skip: Int
 }
 
 type Shipments {
-  shipment_id: Int!
-  orders: Orders
-  shipment_date: String
-  tracking_int: String
-  icon_class: String
-  icon_label: String
+    shipment_id: Int!
+orders: Orders
+shipment_date: String
+tracking_int: String
+icon_class: String
+icon_label: String
+
 }
 
 input ShipmentsInput {
-  order_id: Int
-  shipment_date: String
-  tracking_int: String
-  icon_class: String
-  icon_label: String
+    order_id: Int
+shipment_date: String
+tracking_int: String
+icon_class: String
+icon_label: String
 }
 
 input ShipmentsFilter {
-  shipment_id: [Int]
-  order_id: [Int]
-  shipment_date: [String]
-  tracking_int: [String]
-  icon_class: [String]
-  icon_label: [String]
+    shipment_id: [Int]
+order_id: [Int]
+shipment_date: [String]
+tracking_int: [String]
+icon_class: [String]
+icon_label: [String]
 }
 
 input ShipmentsUpdate {
-  order_id: Int
-  shipment_date: String
-  tracking_int: String
-  icon_class: String
-  icon_label: String
+    order_id: Int
+shipment_date: String
+tracking_int: String
+icon_class: String
+icon_label: String
 }
 
 type ShipmentsOutput {
-  created: [Shipments]!
-  updated: [Shipments]!
-  deleted: Int
-}
-
-input ResolversUserRole {
-  filter: UserRoleFilter
-  action: String
-  create: [UserRoleInput]
-  update: UserRoleUpdate
-  operators: Operators
-}
-
-type UserRole {
-  id: ID!
-  role_name: String!
-}
-
-input UserRoleInput {
-  role_name: String!
-}
-
-input UserRoleFilter {
-  id: [ID]
-  role_name: [String]
-}
-
-input UserRoleUpdate {
-  role_name: String
-}
-
-type UserRoleOutput {
-  created: [UserRole]!
-  updated: [UserRole]!
-  deleted: Int
-}
-
-input ResolversUsers {
-  filter: UsersFilter
-  action: String
-  create: [UsersInput]
-  update: UsersUpdate
-  operators: Operators
-  take: Int
-  skip: Int
-}
-
-type Users {
-  id: ID!
-  email: String
-  user_role: User_role
-  customer_id: Int
-  created_t: String
-}
-
-input UsersInput {
-  password: String
-  email: String
-  role_id: String!
-  customer_id: Int
-  created_t: String
-}
-
-input UsersFilter {
-  id: [ID]
-  email: [String]
-  role_id: [String]
-  customer_id: [Int]
-  created_t: [String]
-}
-
-input UsersUpdate {
-  password: String
-  email: String
-  role_id: String
-  customer_id: Int
-  created_t: String
-}
-
-type UsersOutput {
-  created: [Users]!
-  updated: [Users]!
-  deleted: Int
+	created: [Shipments]!
+	updated: [Shipments]!
+	deleted: Int
 }
 
 input ResolversUser_role {
-  filter: User_roleFilter
-  action: String
-  create: [User_roleInput]
-  update: User_roleUpdate
-  operators: Operators
-  take: Int
-  skip: Int
+    filter: User_roleFilter
+	action: String
+    create: [User_roleInput]
+	update: User_roleUpdate
+    operators: Operators
+    take: Int
+    skip: Int
 }
 
 type User_role {
-  id: ID!
-  role_name: String!
-  users: [Users]
+    id: ID!
+role_name: String!
+users: [Users]
+
 }
 
 input User_roleInput {
-  role_name: String!
+    role_name: String!
+
 }
 
 input User_roleFilter {
-  id: [ID]
-  role_name: [String]
+    id: [ID]
+role_name: [String]
+
 }
 
 input User_roleUpdate {
-  role_name: String
+    role_name: String
+
 }
 
 type User_roleOutput {
-  created: [User_role]!
-  updated: [User_role]!
-  deleted: Int
+	created: [User_role]!
+	updated: [User_role]!
+	deleted: Int
+}
+
+input ResolversUsers {
+    filter: UsersFilter
+	action: String
+    create: [UsersInput]
+	update: UsersUpdate
+    operators: Operators
+    take: Int
+    skip: Int
+}
+
+type Users {
+    id: ID!
+email: String
+user_role: User_role
+customer_id: Int
+created_t: String
+
+}
+
+input UsersInput {
+    password: String
+email: String
+role_id: String!
+customer_id: Int
+created_t: String
+}
+
+input UsersFilter {
+    id: [ID]
+email: [String]
+role_id: [String]
+customer_id: [Int]
+created_t: [String]
+}
+
+input UsersUpdate {
+    password: String
+email: String
+role_id: String
+customer_id: Int
+created_t: String
+}
+
+type UsersOutput {
+	created: [Users]!
+	updated: [Users]!
+	deleted: Int
 }
 
 enum Operators {
-  EQ
-  GT
-  LT
+    EQ
+    GT
+    LT
 }
 
 input AuthorizeUser {
@@ -631,7 +817,7 @@ type Token {
   refreshToken: String!
 }
 
-type TableInfo {
-  table: String
-  structure: String
-}
+  type TableInfo {
+    table: String
+    structure: String
+  }

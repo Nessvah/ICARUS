@@ -21,8 +21,12 @@
       },
       {
         "name": "role_id",
-        "type": "int",
-        "nullable": true
+        "type": "string",
+        "nullable": false,
+        "isObject": true,
+        "relationType": "n:1",
+        "foreignEntity": "user_role",
+        "foreignKey": "id"
       },
       {
         "name": "customer_id",
@@ -30,7 +34,7 @@
         "nullable": true
       },
       {
-        "name": "created_at",
+        "name": "created_t",
         "type": "string",
         "nullable": true
       }
