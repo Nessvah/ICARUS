@@ -1,0 +1,45 @@
+# FILEPATH: /home/su401/Projects/ICARUS/services/order-service/src/presentation/OrderSchema.graphql
+
+"""
+Represents an order in the system.
+"""
+type Order {
+  id: ID!
+  customer: ID!
+  order_number: String!
+  order_date: String!
+  order_total: Float!
+  order_status: OrderStatus!
+  payment_id: ID
+}
+
+"""
+Possible statuses for an order.
+"""
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELED
+}
+
+type Query {
+  getAllOrders: [Order]!
+  getOrderById(id: ID!): Order
+}
+
+type Mutation {
+  createOrder(input: OrderInput): Order
+  updateOrder(id: ID!, input: OrderInput): Order
+  deleteOrder(id: ID!): Order
+}
+
+input OrderInput {
+  customer_id: ID!
+  order_number: String!
+  order_date: String!
+  order_total: Float!
+  order_status: OrderStatus!
+  payment_id: ID!
+}

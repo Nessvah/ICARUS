@@ -11,11 +11,16 @@ import { resolvers } from '../presentation/resolvers.js';
 import { readConfigFile } from '../presentation/generateTypeDefs.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
 import { auth } from '../aws/auth/auth.js';
+import { ImportThemTities } from '../config/importDemTities.js';
 
 import fs from 'fs';
 import { createDbPool } from './db/connector.js';
+import depthLimit from 'graphql-depth-limit';
+
 const app = express();
 //create a new typedef file.
+new ImportThemTities();
+
 await readConfigFile();
 // create a database pool connection.
 await createDbPool();
@@ -46,6 +51,7 @@ const server = new ApolloServer({
   resolvers,
   formatError: customFormatError,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  validationRules: [depthLimit(3)],
 });
 
 // setup express middleware for morgan http logs
@@ -73,11 +79,13 @@ await server.start();
 app.use(
   '/graphql',
   express.json(),
-  expressMiddleware(server, {
+  expressMiddleware(
+    server /* {
     context: ({ req }) => {
       return auth(req);
     },
-  }),
+  } */,
+  ),
 );
 
 // Prometheus end point

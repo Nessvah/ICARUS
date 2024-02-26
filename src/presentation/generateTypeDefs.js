@@ -1,20 +1,37 @@
 import fs from 'fs';
 //import { logger } from '../infrastructure/server.js';
 import { GraphQLString, GraphQLInt, GraphQLFloat, GraphQLNonNull, GraphQLBoolean, GraphQLID } from 'graphql';
+import { GraphQLJSON } from 'graphql-scalars';
 
+import { ImportThemTities } from '../config/importDemTities.js';
 /**
  * Reads a JSON file and returns the parsed data.
  * @param {string} filePath - The path to the file.
  * @returns {object} The parsed JSON data or null if an error occurs.
  */
-const readConfigFile = () => {
+
+// Call the importAll method to start importing entities
+const importer = new ImportThemTities();
+
+const readConfigFile = async () => {
   try {
-    return JSON.parse(fs.readFileSync('../src/config.json', 'utf8'));
+    const config = await importer.importAll(); // Await the result of importAll()
+
+    if (config && config.tables) {
+      // Ensure config.tables is defined
+      //console.log('Config:', config, '______________'); // Log the retrieved config
+      return config;
+    } else {
+      console.error('Config data is missing or incomplete.');
+      return null;
+    }
   } catch (error) {
     console.error('Error reading config file:', error);
     return null;
   }
 };
+
+//console.log(await readConfigFile());
 /**
  * Capitalizes the first letter of a string.
  * @param {string} str - The string to capitalize.
@@ -50,6 +67,8 @@ const mapColumnTypeToGraphQLType = (columnType) => {
       return GraphQLInt;
     case 'id':
       return GraphQLID;
+    case 'object':
+      return GraphQLString;
     default:
       throw new Error(`Unsupported column type: ${columnType}`);
   }
@@ -60,6 +79,7 @@ const mapColumnTypeToGraphQLType = (columnType) => {
  * @returns {string} The type definitions.
  */
 const generateTypeDefinitions = (config) => {
+  //console.log(config);
   const typeDefs = [];
 
   // Define the Query type
@@ -74,7 +94,6 @@ type Query {
       })
       .join('\n')}
 }`);
-
   // Define the Mutation type
   typeDefs.push(`
 type Mutation {
@@ -112,13 +131,25 @@ type ${tableName} {
         if (!column.isObject) {
           type = mapColumnTypeToGraphQLType(column.type);
           return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
+        } else if (column.isObject && column.type !== 'object') {
+          type = mapColumnTypeToGraphQLType(column.type);
+          return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
         }
-        let columnForeignEntityCapitalize = capitalize(column.foreignEntity);
-        return `${column.foreignEntity}: ${
-          column.relationType[2] === 'n' ? `[${columnForeignEntityCapitalize}]` : columnForeignEntityCapitalize
-        }`;
       })
+      .filter((value) => value)
       .join('\n')}
+      ${table.columns
+        .filter((column) => column.name !== 'password')
+        .map((column) => {
+          if (column.isObject) {
+            let columnForeignEntityCapitalize = capitalize(column.foreignEntity);
+            return `${column.foreignEntity}: ${
+              column.relationType[2] === 'n' ? `[${columnForeignEntityCapitalize}]` : columnForeignEntityCapitalize
+            }`;
+          }
+        })
+        .filter((value) => value)
+        .join('\n')}
 
 }`;
     //Define the entities input
@@ -227,7 +258,7 @@ type Token {
 /**
  * The path to the configuration file.
  */
-const config = readConfigFile();
+const config = await readConfigFile();
 
 if (config) {
   /**

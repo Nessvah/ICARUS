@@ -18,47 +18,62 @@ Exports an object named validationRules that contains validation methods for dif
 
 ### Available Validation Methods:
 
-- email: Validates email addresses.
-- password: Ensures passwords meet complexity requirements.
-- username: Validates usernames for alpha-numeric characters and length constraints.
-- zipCode: Checks if an zipCode contains required format.
-- phoneNumber: Validates phone number formats.
-- url: scheme of http or https
-- date: ISO 8601 format
+- email;
+- password;
+- username;
+- zipCode;
+- phoneNumber;
+- url;
+- publish_date;
+- expiration_date;
+- start_date;
+- end_date;
+- founded_year;
+- description;
+- price;
+- product_name;
+- role_name;
+- customer_name;
+- category_name;
+- name;
+- content;
+- title;
+- code;
+- discount_percent;
+- rating;
+- review_text;
+- currency_type.
 
   Each method returns a validation result, which can be either a success or an error message detailing why the validation failed.
 
 ## "validation.js" file
 
-Exports a function named validation that enhances GraphQL resolver functions with validation logic. It dynamically applies the appropriate validation rules to input data based on field names.
+Defines a dynamic system for applying validation rules based on input field names. It exports a function named validation to enhance resolver functions with preemptive validation logic.
 
 ### Usage:
 
-Wrap your resolver functions with the validation function to automatically validate input arguments against the defined rules in validationRules.js before proceeding with the resolver's logic.
+The autoResolvers function dynamically creates resolvers based on data schema, automatically incorporating validation for mutation and update operations. This approach streamlines the addition of new data types and operations, maintaining consistent validation practices.
 
-Example:
+Resolver Validation:
+Mutation Inputs: Validates inputs for mutations, ensuring compliance with defined rules.
+Update Operations: Applies validation for updates, handling field-specific nuances.
 
 ```bash
-import { validation } from '../utils/validation/validation.js';
-
-testCreateUser: validation(async (_, { input }) => {
-      const newUser = {
-        id: 1,
-        ...input,
-      };
-
-      return newUser;
-    }),
-
+    preResolvers.Mutation[table.name] = async (parent, args, context, info) => {
+      // if (!context.currentUser) {
+      //   throw new AuthenticationError();
+      // }
+      await validation(args.input); // it validates mutation inputs
+      await validation(args.input, 'update'); // it validates update inputs;
+      return await controller(table.name, args);
+    };
 ```
 
 ## Implementing Validation Rules
 
 To add a new validation rule:
 
-1- Define a new method in validationRules.js using Joi to specify the validation logic.
-
-2- Use the newly defined method in validation.js by referencing it through the input fields you wish to validate.
+- Define a new method in validationRules.js using Joi to specify the validation logic.
 
 ## Error Handling
 
@@ -70,6 +85,4 @@ This file has unit tests for validationRules and validation system.
 
 ## Conclusion
 
-Our validation system provides a robust and flexible framework for ensuring data integrity across your Node.js and GraphQL application. By leveraging Joi and dynamic validation rule application, we can maintain high standards of data quality and security.
-
-Feel free to extend the system by adding more validation rules as required for your project's needs. For more information on Joi and its capabilities, visit the Joi documentation.
+Our advanced validation system offers a robust framework for maintaining data integrity within Node.js and GraphQL applications. By leveraging Joi and dynamic rule application, we ensure high data quality and security standards. Developers are encouraged to extend the system by adding new validation rules as necessary, ensuring adaptability and comprehensive coverage.

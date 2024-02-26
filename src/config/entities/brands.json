@@ -1,0 +1,47 @@
+{
+  "tables": {
+    "name": "brands",
+    "database": "mongodb",
+    "columns": [
+      {
+        "name": "id",
+        "type": "id",
+        "primaryKey": true,
+        "nullable": false
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "country",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "founded_year",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "products",
+        "type": "string",
+        "nullable": true,
+        "fields": {
+          "type": "object",
+          "columns": [
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "price",
+              "type": "float"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

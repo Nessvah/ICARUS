@@ -47,6 +47,7 @@ class MongoDBConnection {
   // input:{filter: _id:["id", "id"]} or input:{filter:{keys and values}}
   async find(table, { input }) {
     const db = this.client.db(this.dbName);
+    //console.log(table, input);
     const collection = db.collection(table);
     let res;
 
@@ -54,14 +55,22 @@ class MongoDBConnection {
     const filter = this.filterController(input);
 
     if (filter) {
+      const options = {};
+
+      // Set the timeout value in milliseconds
+      const timeoutMilliseconds = 60000; // Adjust this value to your desired timeout
+
+      // Set the maxTimeMS option
+      options.maxTimeMS = timeoutMilliseconds;
+
       if (input.skip && input.take) {
-        res = await collection.find(filter).sort({ _id: 1 }).skip(input.skip).limit(input.take).toArray();
+        res = await collection.find(filter, options).sort({ _id: 1 }).skip(input.skip).limit(input.take).toArray();
       } else if (input.skip) {
-        res = await collection.find(filter).sort({ _id: 1 }).skip(input.skip).toArray();
+        res = await collection.find(filter, options).sort({ _id: 1 }).skip(input.skip).toArray();
       } else if (input.take) {
-        res = await collection.find(filter).sort({ _id: 1 }).limit(input.take).toArray();
+        res = await collection.find(filter, options).sort({ _id: 1 }).limit(input.take).toArray();
       } else {
-        res = await collection.find(filter).sort({ _id: 1 }).toArray();
+        res = await collection.find(filter, options).sort({ _id: 1 }).toArray();
       }
     }
 

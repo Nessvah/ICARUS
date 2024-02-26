@@ -5,12 +5,26 @@ import { MongoClient } from 'mongodb';
 import mysql from 'mysql2/promise';
 import { logger } from '../server.js';
 
+import { ImportThemTities } from '../../config/importDemTities.js';
+
+// Call the importAll method to start importing entities
+const importer = new ImportThemTities();
 let data;
-try {
-  data = JSON.parse(fs.readFileSync('../src/config.json', 'utf8'));
-} catch (error) {
-  logger.error('error to read file');
-}
+(async () => {
+  try {
+    data = await importer.importAll();
+    if (data && data.tables) {
+      // Ensure data.tables is defined
+      //console.log('data:', data, '______________'); // Log the retrieved data
+      return data;
+    } else {
+      logger.error('Data is missing or incomplete.');
+    }
+    return null;
+  } catch (error) {
+    logger.error('error to read file');
+  }
+})();
 
 //a pool of many different database connections.
 const pools = [];

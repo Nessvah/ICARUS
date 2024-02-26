@@ -1,0 +1,42 @@
+{
+  "tables": {
+    "name": "blog_posts",
+    "database": "mongodb",
+    "columns": [
+      {
+        "name": "id",
+        "type": "id",
+        "primaryKey": true,
+        "nullable": false
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "nullable": false
+      },
+      {
+        "name": "author_id",
+        "type": "id",
+        "nullable": false,
+        "isObject": true,
+        "relationType": "n:1",
+        "foreignEntity": "authors",
+        "foreignKey": "id"
+      },
+      {
+        "name": "content",
+        "type": "string",
+        "nullable": true,
+        "fields": {
+          "type": "string",
+          "column": []
+        }
+      },
+      {
+        "name": "publish_date",
+        "type": "string",
+        "nullable": false
+      }
+    ]
+  }
+}
