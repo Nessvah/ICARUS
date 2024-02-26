@@ -4,6 +4,8 @@ import { validation } from '../utils/validation/validation.js';
 import { ObjectId } from 'mongodb';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { ImportThemTities } from '../config/importDemTities.js';
+import { logger } from '../infrastructure/server.js';
+
 const importer = new ImportThemTities();
 
 const capitalize = (str) => {
@@ -23,11 +25,11 @@ let data;
 
       return data;
     } else {
-      console.error('Data is missing or incomplete.');
+      logger.error('Data is missing or incomplete.');
     }
     return null;
   } catch (error) {
-    console.error('Error reading file:', error);
+    logger.error('Error reading file:', error);
   }
 })();
 
