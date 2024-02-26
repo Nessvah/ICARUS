@@ -75,6 +75,7 @@ app.use(
 // start our server and await for it to resolve
 await server.start();
 
+console.log('test prettier graphql');
 // setup express middleware to handle cors, body parsing,
 // and express middleware funtion
 
