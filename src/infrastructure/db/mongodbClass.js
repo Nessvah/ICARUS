@@ -86,6 +86,20 @@ class MongoDBConnection {
       }
     });
 
+    // To verify if there is array in any column of the table
+    const isArrayField = this.tableData.columns.filter((column) => column.type === 'array');
+
+    // To modify the array field to string
+    if (isArrayField.length > 0) {
+      res.map((element) => {
+        isArrayField.forEach((arrayField) => {
+          const fieldName = arrayField.name;
+          element[fieldName] = JSON.stringify(element[arrayField.name]);
+        });
+        return element;
+      });
+    }
+
     return res;
   }
 

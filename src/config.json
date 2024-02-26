@@ -753,12 +753,8 @@
         },
         {
           "name": "content",
-          "type": "string",
-          "nullable": true,
-          "fields": {
-            "type": "string",
-            "column": []
-          }
+          "type": "array",
+          "nullable": true
         },
         {
           "name": "publish_date",
@@ -798,21 +794,8 @@
         },
         {
           "name": "products",
-          "type": "string",
-          "nullable": true,
-          "fields": {
-            "type": "object",
-            "columns": [
-              {
-                "name": "name",
-                "type": "string"
-              },
-              {
-                "name": "price",
-                "type": "float"
-              }
-            ]
-          }
+          "type": "array",
+          "nullable": false
         }
       ]
     },
