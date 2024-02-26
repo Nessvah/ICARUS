@@ -131,13 +131,25 @@ type ${tableName} {
         if (!column.isObject) {
           type = mapColumnTypeToGraphQLType(column.type);
           return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
+        } else if (column.isObject && column.type !== 'object') {
+          type = mapColumnTypeToGraphQLType(column.type);
+          return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
         }
-        let columnForeignEntityCapitalize = capitalize(column.foreignEntity);
-        return `${column.foreignEntity}: ${
-          column.relationType[2] === 'n' ? `[${columnForeignEntityCapitalize}]` : columnForeignEntityCapitalize
-        }`;
       })
+      .filter((value) => value)
       .join('\n')}
+      ${table.columns
+        .filter((column) => column.name !== 'password')
+        .map((column) => {
+          if (column.isObject) {
+            let columnForeignEntityCapitalize = capitalize(column.foreignEntity);
+            return `${column.foreignEntity}: ${
+              column.relationType[2] === 'n' ? `[${columnForeignEntityCapitalize}]` : columnForeignEntityCapitalize
+            }`;
+          }
+        })
+        .filter((value) => value)
+        .join('\n')}
 
 }`;
     //Define the entities input
