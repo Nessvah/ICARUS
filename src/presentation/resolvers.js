@@ -40,7 +40,6 @@ const preResolvers = {
     tables: (parents, args, context, info) => {
       let tablesInfo = data.tables.map((table) => {
         const columns = table.columns.map((column) => column);
-        console.log({ table: table.name, structure: JSON.stringify(columns) });
         return { table: table.name, structure: JSON.stringify(columns) };
       });
       return tablesInfo;

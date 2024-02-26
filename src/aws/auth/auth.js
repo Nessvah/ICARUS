@@ -11,6 +11,7 @@ import { isValidEmail, decryptingPassword, tokenVerifier } from './Cognito/userV
 //import { AuthorizationError } from '../../utils/error-handling/CustomErrors.js';
 import jwt from 'jsonwebtoken';
 import { logger } from '../../infrastructure/server.js';
+import { AuthenticationError } from '../../utils/error-handling/CustomErrors.js';
 
 const authLogin = async (input) => {
   try {
@@ -51,12 +52,16 @@ const authLogin = async (input) => {
 const auth = async (req) => {
   const token = req.headers.authorization;
 
-  if (!token) {
+  // To verify if the operation is login
+  if (req.body.operationName === 'Authorize') {
     return {
       authLogin,
     };
   }
 
+  if (!token) {
+    throw new AuthenticationError('You dont have token to query');
+  }
   const tokenWithoutPrefix = token.split(' ')[1]; // Bearer agsgsshjagsdhgahsd
 
   try {
@@ -80,7 +85,7 @@ const auth = async (req) => {
       }
     }
   } catch (error) {
-    logger.error(`invalid authorization token`);
+    throw new AuthenticationError('Invalid authorization token');
   }
 };
 
