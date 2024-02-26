@@ -94,7 +94,7 @@ type Blog_posts {
     id: ID!
 title: String!
 author_id: ID!
-content: String
+content: String!
 publish_date: String!
       authors: Authors
 
@@ -103,7 +103,7 @@ publish_date: String!
 input Blog_postsInput {
     title: String!
 author_id: ID!
-content: String
+content: String!
 publish_date: String!
 }
 
@@ -143,7 +143,7 @@ type Brands {
 name: String!
 country: String!
 founded_year: String!
-products: String
+products: String!
       
 
 }
@@ -152,7 +152,7 @@ input BrandsInput {
     name: String!
 country: String!
 founded_year: String!
-products: String
+products: String!
 }
 
 input BrandsFilter {

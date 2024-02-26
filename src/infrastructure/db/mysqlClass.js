@@ -31,7 +31,7 @@ export class MySQLConnection {
   }
 
   async find(tableName, { input }) {
-    console.log({ tableName, input });
+    //console.log({ tableName, input });
     const { filter } = input;
 
     // Default LIMIT and OFFSET values
@@ -114,15 +114,15 @@ export class MySQLConnection {
     const { create } = input;
     const keys = Object.keys(create[0]);
     const values = create.map((item) => Object.values(item));
-    console.log(values);
+    //console.log(values);
     const fields = keys.join(', ');
     const sql = `INSERT INTO ${tableName} (${fields}) VALUES ${values.map(() => `(?)`).join(', ')}`;
-    console.log(sql);
+    //console.log(sql);
     try {
       const res = await this.query(sql, values); // for debugging purposes if needed
       return { created: create };
     } catch (error) {
-      console.error('Error:', error);
+      logger.error('Error:', error);
       return null; // Return null if there's an error
     }
   }
@@ -142,7 +142,7 @@ export class MySQLConnection {
       .map(([key]) => `${key} = ?`)
       .join(', ');
     const sql = `UPDATE ${tableName} SET ${set} WHERE ${where}`;
-    console.log(sql);
+    //console.log(sql);
     try {
       const res = await this.query(sql, [...Object.values(update), ...values]); // for debugging purposes if needed
       return { updated: await this.find(tableName, { input }) };
