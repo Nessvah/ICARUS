@@ -15,6 +15,8 @@ import { ImportThemTities } from '../config/importDemTities.js';
 
 import fs from 'fs';
 import { createDbPool } from './db/connector.js';
+import depthLimit from 'graphql-depth-limit';
+
 const app = express();
 //create a new typedef file.
 new ImportThemTities();
@@ -49,6 +51,7 @@ const server = new ApolloServer({
   resolvers,
   formatError: customFormatError,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  validationRules: [depthLimit(3)],
 });
 
 // setup express middleware for morgan http logs

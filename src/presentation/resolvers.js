@@ -6,6 +6,8 @@ import { logger } from '../infrastructure/server.js';
 
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { ImportThemTities } from '../config/importDemTities.js';
+import { logger } from '../infrastructure/server.js';
+
 const importer = new ImportThemTities();
 
 const capitalize = (str) => {
