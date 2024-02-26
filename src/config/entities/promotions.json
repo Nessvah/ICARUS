@@ -38,6 +38,9 @@
         "foreignEntity": "coupons",
         "foreignKey": "promotion_id"
       }
-    ]
+    ],
+    "backoffice": {
+      "icon": "FaRocket"
+    }
   }
 }

@@ -61,6 +61,9 @@
         "foreignEntity": "orders",
         "foreignKey": "customer_id"
       }
-    ]
+    ],
+    "backoffice": {
+      "icon": "FaHandshake"
+    }
   }
 }

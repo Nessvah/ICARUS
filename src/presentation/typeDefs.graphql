@@ -52,6 +52,7 @@ type Authors {
 name: String!
 email: String!
 blog_posts: [Blog_posts]
+      # Backoffice Icon: FaIdCardAlt
 
 }
 
@@ -96,6 +97,7 @@ title: String!
 authors: Authors
 content: String
 publish_date: String!
+      # Backoffice Icon: FaEdit
 
 }
 
@@ -143,6 +145,7 @@ name: String!
 country: String!
 founded_year: String!
 products: String
+      # Backoffice Icon: FaBlackTie
 
 }
 
@@ -189,6 +192,7 @@ type Categories {
 category_name: String
 icon_class: String
 icon_label: String
+      # Backoffice Icon: FaTags
 
 }
 
@@ -233,6 +237,7 @@ code: String!
 discount_percent: Int!
 expiration_date: String!
 promotions: Promotions
+      # Backoffice Icon: FaTicketAlt
 
 }
 
@@ -281,6 +286,7 @@ email: String
 icon_class: String
 icon_label: String
 orders: [Orders]
+      # Backoffice Icon: FaHandshake
 
 }
 
@@ -334,6 +340,7 @@ price: Float
 currency_type: String
 icon_class: String
 icon_label: String
+      # Backoffice Icon: FaClipboardList
 
 }
 
@@ -393,6 +400,7 @@ icon_label: String
 order_items: [Order_items]
 shipments: Shipments
 payment: Payment
+      # Backoffice Icon: FaShippingFast
 
 }
 
@@ -450,6 +458,7 @@ payment_date: String!
 amount: Float!
 payment_status: String!
 orders: Orders
+      # Backoffice Icon: FaCreditCard
 
 }
 
@@ -503,6 +512,7 @@ description: String
 icon_class: String
 icon_label: String
 order_items: [Order_items]
+      # Backoffice Icon: FaKaaba
 
 }
 
@@ -562,6 +572,7 @@ review_text: String
 review_date: String
 icon_class: String
 icon_label: String
+      # Backoffice Icon: FaStar
 
 }
 
@@ -619,6 +630,7 @@ description: String!
 start_date: String!
 end_date: String!
 coupons: Coupons
+      # Backoffice Icon: FaRocket
 
 }
 
@@ -670,6 +682,7 @@ shipment_date: String
 tracking_int: String
 icon_class: String
 icon_label: String
+      # Backoffice Icon: FaTruckLoading
 
 }
 
@@ -718,6 +731,7 @@ type User_role {
     id: ID!
 role_name: String!
 users: [Users]
+      # Backoffice Icon: FaCrown
 
 }
 
@@ -759,6 +773,7 @@ email: String
 user_role: User_role
 customer_id: Int
 created_t: String
+      # Backoffice Icon: FaUserFriends
 
 }
 
@@ -820,4 +835,5 @@ type Token {
   type TableInfo {
     table: String
     structure: String
+    backoffice: String
   }

@@ -38,6 +38,9 @@
         "type": "string",
         "nullable": true
       }
-    ]
+    ],
+    "backoffice": {
+      "icon": "FaUserFriends"
+    }
   }
 }

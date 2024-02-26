@@ -42,6 +42,9 @@
           ]
         }
       }
-    ]
+    ],
+    "backoffice": {
+      "icon": "FaBlackTie"
+    }
   }
 }

@@ -91,6 +91,10 @@
         "foreignEntity": "payment",
         "foreignKey": "order_id"
       }
-    ]
+    ],
+    "backoffice": {
+      "icon": "FaShippingFast",
+      "currency": "euro"
+    }
   }
 }

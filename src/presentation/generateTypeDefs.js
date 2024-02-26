@@ -138,6 +138,7 @@ type ${tableName} {
         }`;
       })
       .join('\n')}
+      # Backoffice Icon: ${table.backoffice.icon}
 
 }`;
     //Define the entities input
@@ -239,6 +240,7 @@ type Token {
   type TableInfo {
     table: String
     structure: String
+    backoffice: String
   }`);
   return typeDefs.join('\n');
 };
