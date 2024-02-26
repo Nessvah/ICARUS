@@ -34,20 +34,31 @@ export class MySQLConnection {
     console.log({ tableName, input });
     const { filter } = input;
 
+    // Default LIMIT and OFFSET values
+    const defaultLimit = 100; // Change this value to whatever default limit you desire
+    const defaultOffset = 0;
+
+    // Set the timeout value in seconds
+    const timeoutSeconds = 30; // Change this value to your desired timeout
+
     // If no filters are provided, return all rows from the table
     if (!filter || Object.keys(filter).length === 0) {
+      const take = input.take || defaultLimit;
+      const skip = input.skip || defaultOffset;
+
       let sql;
-      if (input.take && input.skip) {
-        sql = `SELECT * FROM ${tableName} LIMIT ${input.take} OFFSET ${input.skip}`;
-      } else if (input.take) {
-        sql = `SELECT * FROM ${tableName} LIMIT ${input.take}`;
-      } else if (input.skip) {
-        sql = `SELECT * FROM ${tableName} LIMIT 50000 OFFSET ${input.skip}`;
+      if (take && skip) {
+        sql = `SELECT * FROM ${tableName} LIMIT ${take} OFFSET ${skip}`;
+      } else if (take) {
+        sql = `SELECT * FROM ${tableName} LIMIT ${take}`;
+      } else if (skip) {
+        sql = `SELECT * FROM ${tableName} LIMIT ${defaultLimit} OFFSET ${skip}`;
       } else {
-        sql = `SELECT * FROM ${tableName}`;
+        sql = `SELECT * FROM ${tableName} LIMIT ${defaultLimit}`;
       }
+
       try {
-        const res = await this.query(sql);
+        const res = await this.query({ sql, timeout: timeoutSeconds * 1000 });
         return res; // Return all rows from the table
       } catch (error) {
         console.error('Error:', error);
@@ -70,19 +81,22 @@ export class MySQLConnection {
     const whereClause = whereConditions.join(' AND ');
 
     // Construct SQL query with WHERE clause
+    const take = input.take || defaultLimit;
+    const skip = input.skip || defaultOffset;
+
     let sql;
-    if (input.take && input.skip) {
-      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT ${input.take} OFFSET ${input.skip}`;
-    } else if (input.take) {
-      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT ${input.take}`;
-    } else if (input.skip) {
-      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT 50000 OFFSET ${input.skip}`;
+    if (take && skip) {
+      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT ${take} OFFSET ${skip}`;
+    } else if (take) {
+      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT ${take}`;
+    } else if (skip) {
+      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT ${defaultLimit} OFFSET ${skip}`;
     } else {
-      sql = `SELECT * FROM ${tableName} WHERE ${whereClause}`;
+      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT ${defaultLimit}`;
     }
 
     try {
-      const res = await this.query(sql, values);
+      const res = await this.query({ sql, values, timeout: timeoutSeconds * 1000 });
       return res; // Return the result of the query
     } catch (error) {
       console.error('Error:', error);
