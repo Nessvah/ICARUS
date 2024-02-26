@@ -39,7 +39,7 @@ export class MySQLConnection {
     const defaultOffset = 0;
 
     // Set the timeout value in seconds
-    const timeoutSeconds = 30; // Change this value to your desired timeout
+    const timeoutSeconds = 60; // Change this value to your desired timeout
 
     // If no filters are provided, return all rows from the table
     if (!filter || Object.keys(filter).length === 0) {

@@ -57,7 +57,7 @@ class MongoDBConnection {
       const options = {};
 
       // Set the timeout value in milliseconds
-      const timeoutMilliseconds = 30000; // Adjust this value to your desired timeout
+      const timeoutMilliseconds = 60000; // Adjust this value to your desired timeout
 
       // Set the maxTimeMS option
       options.maxTimeMS = timeoutMilliseconds;
