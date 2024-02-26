@@ -409,6 +409,64 @@ type OrdersOutput {
   deleted: Int
 }
 
+input ResolversOrder_items {
+  filter: Order_itemsFilter
+  action: String
+  create: [Order_itemsInput]
+  update: Order_itemsUpdate
+  operators: Operators
+  take: Int
+  skip: Int
+}
+
+type Order_items {
+  order_item_id: Int!
+  orders: Orders
+  products: Products
+  quantity: Int
+  price: Float
+  currency_type: String
+  icon_class: String
+  icon_label: String
+}
+
+input Order_itemsInput {
+  order_id: Int
+  product_id: Int
+  quantity: Int
+  price: Float
+  currency_type: String
+  icon_class: String
+  icon_label: String
+}
+
+input Order_itemsFilter {
+  order_item_id: [Int]
+  order_id: [Int]
+  product_id: [Int]
+  quantity: [Int]
+  price: [Float]
+  currency_type: [String]
+  icon_class: [String]
+  icon_label: [String]
+}
+
+input Order_itemsUpdate {
+  order_id: Int
+  product_id: Int
+  quantity: Int
+  price: Float
+  currency_type: String
+  icon_class: String
+  icon_label: String
+}
+
+type Order_itemsOutput {
+  created: [Order_items]!
+  updated: [Order_items]!
+  deleted: Int
+}
+
 input ResolversPayment {
   filter: PaymentFilter
   action: String
@@ -749,6 +807,41 @@ input UsersUpdate {
 type UsersOutput {
   created: [Users]!
   updated: [Users]!
+  deleted: Int
+}
+
+input ResolversUser_role {
+  filter: User_roleFilter
+  action: String
+  create: [User_roleInput]
+  update: User_roleUpdate
+  operators: Operators
+  take: Int
+  skip: Int
+}
+
+type User_role {
+  id: ID!
+  role_name: String!
+  users: [Users]
+}
+
+input User_roleInput {
+  role_name: String!
+}
+
+input User_roleFilter {
+  id: [ID]
+  role_name: [String]
+}
+
+input User_roleUpdate {
+  role_name: String
+}
+
+type User_roleOutput {
+  created: [User_role]!
+  updated: [User_role]!
   deleted: Int
 }
 

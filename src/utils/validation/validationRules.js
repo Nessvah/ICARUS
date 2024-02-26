@@ -80,12 +80,48 @@ const validationRules = {
       })
       .validate(value),
 
-  date: (value) =>
+  publish_date: (value) =>
     Joi.date()
       .iso()
       .messages({
         'date.format':
           'It must be in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ for date and time or YYYY-MM-DD if date only.',
+      })
+      .validate(value),
+
+  expiration_date: (value) =>
+    Joi.date()
+      .iso()
+      .messages({
+        'date.format':
+          'It must be in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ for date and time or YYYY-MM-DD if date only.',
+      })
+      .validate(value),
+
+  start_date: (value) =>
+    Joi.date()
+      .iso()
+      .messages({
+        'date.format':
+          'It must be in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ for date and time or YYYY-MM-DD if date only.',
+      })
+      .validate(value),
+
+  end_date: (value) =>
+    Joi.date()
+      .iso()
+      .messages({
+        'date.format':
+          'It must be in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ for date and time or YYYY-MM-DD if date only.',
+      })
+      .validate(value),
+
+  founded_year: (value) =>
+    Joi.string()
+      .length(4)
+      .messages({
+        'string.length': 'It must be exactly {#limit} characters long.',
+        'string.empty': 'It cannot be empty.',
       })
       .validate(value),
 
@@ -111,7 +147,7 @@ const validationRules = {
 
   product_name: (value) =>
     Joi.string()
-      .min(3)
+      .min(2)
       .max(20)
       .messages({
         'string.min': 'It should have a minimum length of {#limit}.',
@@ -119,17 +155,125 @@ const validationRules = {
       })
       .validate(value),
 
-  /* int: (value) =>
+  role_name: (value) =>
+    Joi.string()
+      .min(2)
+      .max(20)
+      .messages({
+        'string.min': 'It should have a minimum length of {#limit}.',
+        'string.max': 'It should have a maximum length of {#limit}.',
+      })
+      .validate(value),
+
+  customer_name: (value) =>
+    Joi.string()
+      .min(2)
+      .max(20)
+      .messages({
+        'string.min': 'It should have a minimum length of {#limit}.',
+        'string.max': 'It should have a maximum length of {#limit}.',
+      })
+      .validate(value),
+
+  category_name: (value) =>
+    Joi.string()
+      .min(2)
+      .max(20)
+      .messages({
+        'string.min': 'It should have a minimum length of {#limit}.',
+        'string.max': 'It should have a maximum length of {#limit}.',
+      })
+      .validate(value),
+
+  name: (value) =>
+    Joi.string()
+      .min(2)
+      .max(20)
+      .messages({
+        'string.min': 'It should have a minimum length of {#limit}.',
+        'string.max': 'It should have a maximum length of {#limit}.',
+      })
+      .validate(value),
+
+  content: (value) =>
+    Joi.string()
+      .min(2)
+      .max(100)
+      .messages({
+        'string.min': 'It should have a minimum length of {#limit}.',
+        'string.max': 'It should have a maximum length of {#limit}.',
+      })
+      .validate(value),
+
+  title: (value) =>
+    Joi.string()
+      .min(2)
+      .max(50)
+      .messages({
+        'string.min': 'It should have a minimum length of {#limit}.',
+        'string.max': 'It should have a maximum length of {#limit}.',
+      })
+      .validate(value),
+
+  code: (value) =>
+    Joi.string()
+      .min(2)
+      .max(20)
+      .uppercase()
+      .messages({
+        'string.min': 'It should have a minimum length of {#limit}.',
+        'string.max': 'It should have a maximum length of {#limit}.',
+      })
+      .validate(value),
+
+  discount_percent: (value) =>
     Joi.number()
       .integer()
+      .min(1)
+      .max(99)
       .messages({
         'number.base': 'It must be a number.',
         'number.integer': 'It must be an integer.',
+        'number.min': 'It must be at least {#limit}.',
+        'number.max': 'It must be {#limit} or less.',
+      })
+      .validate(value),
+
+  rating: (value) =>
+    Joi.number()
+      .integer()
+      .min(0)
+      .max(5)
+      .messages({
+        'number.base': 'It must be a number.',
+        'number.integer': 'It must be an integer.',
+        'number.min': 'It should have a minimum length of {#limit}.',
+        'number.max': 'It should have a maximum length of {#limit}.',
+      })
+      .validate(value),
+
+  review_text: (value) =>
+    Joi.string()
+      .min(3)
+      .max(200)
+      .messages({
+        'string.min': 'It should have a minimum length of {#limit}.',
+        'string.max': 'It should have a maximum length of {#limit}.',
+      })
+      .validate(value),
+
+  currency_type: (value) =>
+    Joi.string()
+      .length(3)
+      .uppercase()
+      .messages({
+        'string.length': 'It must be exactly {#limit} characters long.',
+        'string.empty': 'It cannot be empty.',
       })
       .validate(value),
 
   //Validates that the input is a float number and optionally specifies the precision (number of decimal places).
-  float: (value) =>
+  /*float: (value) =>
     Joi.number()
       .precision(2)
       .messages({
