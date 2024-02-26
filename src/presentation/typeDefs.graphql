@@ -7,15 +7,15 @@ brands(input: ResolversBrands): [Brands]
 categories(input: ResolversCategories): [Categories]
 coupons(input: ResolversCoupons): [Coupons]
 customers(input: ResolversCustomers): [Customers]
-orders(input: ResolversOrders): [Orders]
 order_items(input: ResolversOrder_items): [Order_items]
+orders(input: ResolversOrders): [Orders]
 payment(input: ResolversPayment): [Payment]
 products(input: ResolversProducts): [Products]
 product_reviews(input: ResolversProduct_reviews): [Product_reviews]
 promotions(input: ResolversPromotions): [Promotions]
 shipments(input: ResolversShipments): [Shipments]
-users(input: ResolversUsers): [Users]
 user_role(input: ResolversUser_role): [User_role]
+users(input: ResolversUsers): [Users]
 }
 
 type Mutation {
@@ -26,15 +26,15 @@ brands(input: ResolversBrands): BrandsOutput
 categories(input: ResolversCategories): CategoriesOutput
 coupons(input: ResolversCoupons): CouponsOutput
 customers(input: ResolversCustomers): CustomersOutput
-orders(input: ResolversOrders): OrdersOutput
 order_items(input: ResolversOrder_items): Order_itemsOutput
+orders(input: ResolversOrders): OrdersOutput
 payment(input: ResolversPayment): PaymentOutput
 products(input: ResolversProducts): ProductsOutput
 product_reviews(input: ResolversProduct_reviews): Product_reviewsOutput
 promotions(input: ResolversPromotions): PromotionsOutput
 shipments(input: ResolversShipments): ShipmentsOutput
-users(input: ResolversUsers): UsersOutput
 user_role(input: ResolversUser_role): User_roleOutput
+users(input: ResolversUsers): UsersOutput
 }
 
 input ResolversAuthors {
@@ -319,66 +319,6 @@ type CustomersOutput {
 	deleted: Int
 }
 
-input ResolversOrders {
-    filter: OrdersFilter
-	action: String
-    create: [OrdersInput]
-	update: OrdersUpdate
-    operators: Operators
-    take: Int
-    skip: Int
-}
-
-type Orders {
-    order_id: Int!
-order_date: String
-customer_id: Int
-icon_class: String
-icon_label: String
-      customers: Customers
-order_items: [Order_items]
-shipments: Shipments
-payment: Payment
-
-}
-
-input OrdersInput {
-    order_date: String
-customer_id: Int
-icon_class: String
-icon_label: String
-
-
-
-}
-
-input OrdersFilter {
-    order_id: [Int]
-order_date: [String]
-customer_id: [Int]
-icon_class: [String]
-icon_label: [String]
-
-
-
-}
-
-input OrdersUpdate {
-    order_date: String
-customer_id: Int
-icon_class: String
-icon_label: String
-
-
-
-}
-
-type OrdersOutput {
-	created: [Orders]!
-	updated: [Orders]!
-	deleted: Int
-}
-
 input ResolversOrder_items {
     filter: Order_itemsFilter
 	action: String
@@ -437,6 +377,66 @@ icon_label: String
 type Order_itemsOutput {
 	created: [Order_items]!
 	updated: [Order_items]!
+	deleted: Int
+}
+
+input ResolversOrders {
+    filter: OrdersFilter
+	action: String
+    create: [OrdersInput]
+	update: OrdersUpdate
+    operators: Operators
+    take: Int
+    skip: Int
+}
+
+type Orders {
+    order_id: Int!
+order_date: String
+customer_id: Int
+icon_class: String
+icon_label: String
+      customers: Customers
+order_items: [Order_items]
+shipments: Shipments
+payment: Payment
+
+}
+
+input OrdersInput {
+    order_date: String
+customer_id: Int
+icon_class: String
+icon_label: String
+
+
+
+}
+
+input OrdersFilter {
+    order_id: [Int]
+order_date: [String]
+customer_id: [Int]
+icon_class: [String]
+icon_label: [String]
+
+
+
+}
+
+input OrdersUpdate {
+    order_date: String
+customer_id: Int
+icon_class: String
+icon_label: String
+
+
+
+}
+
+type OrdersOutput {
+	created: [Orders]!
+	updated: [Orders]!
 	deleted: Int
 }
 
@@ -715,6 +715,45 @@ type ShipmentsOutput {
 	deleted: Int
 }
 
+input ResolversUser_role {
+    filter: User_roleFilter
+	action: String
+    create: [User_roleInput]
+	update: User_roleUpdate
+    operators: Operators
+    take: Int
+    skip: Int
+}
+
+type User_role {
+    id: ID!
+role_name: String!
+      users: [Users]
+
+}
+
+input User_roleInput {
+    role_name: String!
+
+}
+
+input User_roleFilter {
+    id: [ID]
+role_name: [String]
+
+}
+
+input User_roleUpdate {
+    role_name: String
+
+}
+
+type User_roleOutput {
+	created: [User_role]!
+	updated: [User_role]!
+	deleted: Int
+}
+
 input ResolversUsers {
     filter: UsersFilter
 	action: String
@@ -765,45 +804,6 @@ type UsersOutput {
 	deleted: Int
 }
 
-input ResolversUser_role {
-    filter: User_roleFilter
-	action: String
-    create: [User_roleInput]
-	update: User_roleUpdate
-    operators: Operators
-    take: Int
-    skip: Int
-}
-
-type User_role {
-    id: ID!
-role_name: String!
-      users: [Users]
-
-}
-
-input User_roleInput {
-    role_name: String!
-
-}
-
-input User_roleFilter {
-    id: [ID]
-role_name: [String]
-
-}
-
-input User_roleUpdate {
-    role_name: String
-
-}
-
-type User_roleOutput {
-	created: [User_role]!
-	updated: [User_role]!
-	deleted: Int
-}
-
 enum Operators {
     EQ
     GT
@@ -832,4 +832,5 @@ type Token {
   type TableInfo {
     table: String
     structure: String
+    backoffice: String
   }

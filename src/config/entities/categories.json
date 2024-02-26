@@ -39,6 +39,9 @@
         "columnType": "string",
         "extra": ""
       }
-    ]
+    ],
+    "backoffice": {
+      "icon": "FaTags"
+    }
   }
 }

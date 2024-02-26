@@ -28,6 +28,9 @@
         "foreignEntity": "blog_posts",
         "foreignKey": "author_id"
       }
-    ]
+    ],
+    "backoffice": {
+      "icon": "FaIdCardAlt"
+    }
   }
 }

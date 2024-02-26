@@ -29,6 +29,9 @@
         "type": "array",
         "nullable": false
       }
-    ]
+    ],
+    "backoffice": {
+      "icon": "FaBlackTie"
+    }
   }
 }

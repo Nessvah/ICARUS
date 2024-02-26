@@ -42,6 +42,10 @@
         "foreignEntity": "orders",
         "foreignKey": "order_id"
       }
-    ]
+    ],
+    "backoffice": {
+      "icon": "FaCreditCard",
+      "currency": "euro"
+    }
   }
 }

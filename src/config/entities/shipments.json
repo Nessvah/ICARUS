@@ -61,6 +61,10 @@
         "columnType": "string",
         "extra": ""
       }
-    ]
+    ],
+    "backoffice": {
+      "icon": "FaTruckLoading",
+      "currency": "euro"
+    }
   }
 }

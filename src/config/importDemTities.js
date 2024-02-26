@@ -57,6 +57,7 @@ export class ImportThemTities {
             name: tableName,
             database: databaseInfo[databaseName],
             columns: parsedData.tables.columns,
+            backoffice: parsedData.tables.backoffice,
           };
           // Add table information to the tables array
           tables.push(tableInfo);

@@ -79,6 +79,10 @@
         "foreignEntity": "order_items",
         "foreignKey": "product_id"
       }
-    ]
+    ],
+    "backoffice": {
+      "icon": "FaKaaba",
+      "currency": "euro"
+    }
   }
 }
