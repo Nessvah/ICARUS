@@ -63,7 +63,7 @@ export function createMetricsPlugin(register) {
       const isIntrospection = checkForIntrospection(requestContext);
       if (!isIntrospection) {
         return {
-          parsingDidStart(parsingContext) {
+          async parsingDidStart(parsingContext) {
             const labels = createLabels(parsingContext);
 
             metrics.parsingStarted.labels(labels).inc();
@@ -93,6 +93,7 @@ export function createMetricsPlugin(register) {
           },
           async willSendResponse(responseContext) {
             const { startTime } = responseContext.request;
+
             const end = startTimer();
             try {
               const labels = createLabels(responseContext);

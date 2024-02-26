@@ -78,15 +78,7 @@ await server.start();
 // setup express middleware to handle cors, body parsing,
 // and express middleware funtion
 
-app.use(
-  '/graphql',
-  express.json(),
-  expressMiddleware(server, {
-    context: ({ req }) => {
-      return auth(req);
-    },
-  }),
-);
+app.use('/graphql', express.json(), expressMiddleware(server));
 
 // Prometheus end point
 app.get('/metrics', async (req, res) => {

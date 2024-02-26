@@ -11,6 +11,7 @@ import { isValidEmail, decryptingPassword, tokenVerifier } from './Cognito/userV
 //import { AuthorizationError } from '../../utils/error-handling/CustomErrors.js';
 import jwt from 'jsonwebtoken';
 import { logger } from '../../infrastructure/server.js';
+import { AuthenticationError } from '../../utils/error-handling/CustomErrors.js';
 
 const authLogin = async (input) => {
   try {
@@ -79,8 +80,9 @@ const auth = async (req) => {
         throw new Error('Error trying to decode');
       }
     }
+    throw new Error();
   } catch (error) {
-    logger.error(`invalid authorization token`);
+    throw new AuthenticationError('invalid authorization token');
   }
 };
 
