@@ -44,6 +44,6 @@ export function createHistogram(name, help, labelNames, register) {
 export function createLabels(context) {
   return filterUndefinedValues({
     operationName: context.request.operationName || '',
-    operation: context.operation?.operation,
+    operation: context?.operation?.operation || '',
   });
 }

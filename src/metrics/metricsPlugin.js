@@ -81,7 +81,6 @@ export function createMetricsPlugin(register) {
           async executionDidStart(executingContext) {
             // track current time for the execution and
             // attach the start time to the context in the req obj
-
             executingContext.request.startTime = startTimer();
 
             const labels = createLabels(executingContext);
@@ -97,11 +96,11 @@ export function createMetricsPlugin(register) {
             try {
               const labels = createLabels(responseContext);
               const duration = getDurationInSecs(startTime, end);
-              logger.warn('will send response 6');
+
               metrics.resolutionTime.observe(labels, duration);
               metrics.responded.labels(labels).inc();
             } catch (err) {
-              console.log(err, 'error');
+              logger.error(err);
             }
           },
         };
