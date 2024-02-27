@@ -52,12 +52,16 @@ const authLogin = async (input) => {
 const auth = async (req) => {
   const token = req.headers.authorization;
 
-  if (!token) {
+  // To verify if the operation is login
+  if (req.body.operationName === 'Authorize') {
     return {
       authLogin,
     };
   }
 
+  if (!token) {
+    throw new AuthenticationError('You dont have token to query');
+  }
   const tokenWithoutPrefix = token.split(' ')[1]; // Bearer agsgsshjagsdhgahsd
 
   try {

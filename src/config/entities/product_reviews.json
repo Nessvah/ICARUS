@@ -83,6 +83,9 @@
         "columnType": "string",
         "extra": ""
       }
-    ]
+    ],
+    "backoffice": {
+      "icon": "FaStar"
+    }
   }
 }
