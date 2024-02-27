@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { controller } from '../infrastructure/db/connector.js';
 import { validation } from '../utils/validation/validation.js';
 import { ObjectId } from 'mongodb';
@@ -6,7 +5,6 @@ import { logger } from '../infrastructure/server.js';
 
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { ImportThemTities } from '../config/importDemTities.js';
-import { logger } from '../infrastructure/server.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 
 const rateLimiter = getGraphQLRateLimiter({
