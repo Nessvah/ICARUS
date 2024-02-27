@@ -64,17 +64,13 @@ export class MySQLConnection {
 
       sql += paginationSql;
       values.push(...paginationValues);
-
-      // If no logical operators are provided, return all rows from the table
-      // or the input doesnt have the filter property
     }
 
-    logger.warn(sql);
     try {
       const res = await this.query(sql, values);
       return res; // Return all rows from the table
     } catch (error) {
-      console.error('Error:', error);
+      logger.error('Error:', error);
       return null; // Return null if there's an error
     }
   }
@@ -120,7 +116,7 @@ export class MySQLConnection {
       .join(', ');
     const sql = `UPDATE ${tableName} SET ${set} WHERE ${where}`;
     try {
-      const res = await this.query(sql, [...Object.values(update), ...values]); // for debugging purposes if needed
+      await this.query(sql, [...Object.values(update), ...values]); // for debugging purposes if needed
       return { updated: await this.find(tableName, { input }) };
     } catch (error) {
       console.error('Error:', error);
