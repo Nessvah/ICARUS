@@ -99,6 +99,13 @@ type Query {
         return `${tableName}(input: Resolvers${capitalizedTableName}): [${capitalizedTableName}]`;
       })
       .join('\n')}
+	 ${config.tables
+     .map((table) => {
+       const tableName = table.name;
+       const capitalizedTableName = capitalize(table.name);
+       return `${tableName}Count(input: ${capitalizedTableName}Count): ${capitalizedTableName}CountResult`;
+     })
+     .join('\n')}
 }`);
   // Define the Mutation type
   typeDefs.push(`
@@ -120,11 +127,10 @@ type Mutation {
     const resolvers = `
 input Resolvers${tableName} {
     filter: ${tableName}Filter
-	action: String
+	action: ActionType!
     create: [${tableName}Input]
 	update: ${tableName}Update
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }`;
     //Define the entities type
@@ -208,28 +214,35 @@ type ${tableName}Output {
 	deleted: Int
 }`;
 
-    typeDefs.push(resolvers);
-    typeDefs.push(tableTypeDef);
-    typeDefs.push(tableInputTypeDef);
-    typeDefs.push(tableFilters);
-    typeDefs.push(update);
-    typeDefs.push(output);
-  });
+    const ordersCountInput = `
+  input ${tableName}Count {
+    action: ActionType!
+  } \n
 
-  // Define the operators enum
-  typeDefs.push(`
-enum Operators {
-    EQ
-    GT
-    LT
-}`);
+  type ${tableName}CountResult {
+    action: String
+    count: Int!
+  }
+`;
+
+    typeDefs.push(resolvers, tableTypeDef, tableInputTypeDef, tableFilters, update, output, ordersCountInput);
+  });
 
   // Redefinition of the input type for authorizing a user, possibly a duplication error.
   typeDefs.push(`
 input AuthorizeUser {
   email: String!
   password: String!
-}`);
+}
+
+enum ActionType {
+  COUNT
+  FIND
+  CREATE
+  UPDATE
+  DELETE
+}
+`);
 
   // Redefinition of the input type for specifying a role, possibly a duplication error.
   typeDefs.push(`

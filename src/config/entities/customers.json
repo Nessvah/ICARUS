@@ -16,7 +16,7 @@
         "name": "customer_name",
         "type": "string",
         "primaryKey": false,
-        "nullable": true,
+        "nullable": false,
         "defaultValue": null,
         "columnType": "string",
         "extra": ""
@@ -25,7 +25,7 @@
         "name": "email",
         "type": "string",
         "primaryKey": false,
-        "nullable": true,
+        "nullable": false,
         "defaultValue": null,
         "columnType": "string",
         "extra": ""

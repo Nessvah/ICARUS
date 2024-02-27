@@ -18,8 +18,9 @@ export class MySQLConnection {
   async query(sql, values) {
     const connection = await this.getConnection();
     try {
-      logger.info('Executing SQL query:', sql);
-      logger.info('SQL query values:', values);
+      // logger.info('Executing SQL query:', sql);
+      // logger.info('SQL query values:', values);
+      // console.log('----- aqui', values, sql);
       const [rows] = await connection.query(sql, values);
       return rows;
     } catch (error) {
@@ -174,6 +175,17 @@ export class MySQLConnection {
       return { deleted: res.affectedRows };
     } catch (error) {
       console.error('Error:', error);
+      return null; // Return null if there's an error
+    }
+  }
+
+  async count(tableName, { _ }) {
+    const sql = `SELECT COUNT(*) AS ${tableName} FROM ${tableName}`;
+    try {
+      const res = await this.query(sql);
+      return res[0][tableName];
+    } catch (error) {
+      logger.error('Error:', error);
       return null; // Return null if there's an error
     }
   }

@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { controller } from '../infrastructure/db/connector.js';
 import { validation } from '../utils/validation/validation.js';
 import { ObjectId } from 'mongodb';
@@ -6,6 +5,14 @@ import { logger } from '../infrastructure/server.js';
 
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { ImportThemTities } from '../config/importDemTities.js';
+import { getGraphQLRateLimiter } from 'graphql-rate-limit';
+
+//We initialize a rate limiter instance by calling getGraphQLRateLimiter.
+//This function takes an object as an argument with a property identifyContext that defines how to identify the context for rate limiting purposes.
+//In this case, the context is identified based on the id property of the context object
+const rateLimiter = getGraphQLRateLimiter({
+  identifyContext: (ctx) => ctx.currentUser,
+});
 
 const importer = new ImportThemTities();
 
@@ -41,6 +48,7 @@ const preResolvers = {
     tables: () => {
       let tablesInfo = data.tables.map((table) => {
         const columns = table.columns.map((column) => column);
+
         return {
           table: table.name,
           structure: JSON.stringify(columns),
@@ -58,19 +66,40 @@ const preResolvers = {
 // this function use the "data" parameter and create the resolvers dynamically.
 async function autoResolvers() {
   data.tables.forEach((table) => {
+    const countName = `${table.name}Count`;
+
     preResolvers.Query[table.name] = async (parent, args, context, info) => {
+      //verify if the user it's exceeding the rate limit calls for seconds.
+      const limitErrorMessage = await rateLimiter({ parent, args, context, info }, { max: 10, window: '1s' });
+
+      if (limitErrorMessage) throw new Error(limitErrorMessage);
       // if (!context.currentUser) {
       //   throw new AuthenticationError();
       // }
+
       return await controller(table.name, args);
     };
 
+    resolvers.Query[countName] = async (parent, args, context, info) => {
+      // if (!context.currentUser) {
+      //   throw new AuthenticationError();
+      // }
+
+      const result = await controller(table.name, args);
+
+      return { count: result };
+    };
+
     preResolvers.Mutation[table.name] = async (parent, args, context, info) => {
+      //verify if the user it's exceeding the rate limit calls for seconds.
+      const limitErrorMessage = await rateLimiter({ parent, args, context, info }, { max: 10, window: '1s' });
+      if (limitErrorMessage) throw new Error(limitErrorMessage);
       // if (!context.currentUser) {
       //   throw new AuthenticationError();
       // }
       await validation(args.input); // it validates mutation inputs
       await validation(args.input, 'update'); // it validates update inputs;
+
       return await controller(table.name, args);
     };
 
@@ -104,7 +133,6 @@ const createRelations = async (table, column) => {
 
   let tableName = capitalize(table.name);
   preResolvers[tableName] = nestedObject;
-  //console.log(preResolvers);
 };
 
 const resolvers = preResolvers;
