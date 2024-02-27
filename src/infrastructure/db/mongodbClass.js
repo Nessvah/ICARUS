@@ -189,6 +189,18 @@ class MongoDBConnection {
     //return a count of all files deleted.
     return { deleted: res.deletedCount };
   }
+
+  async count(table, { _ }) {
+    try {
+      const db = this.client.db(this.dbName);
+      const collection = db.collection(table);
+
+      return await collection.countDocuments({});
+    } catch (error) {
+      logger.error(error);
+      return [];
+    }
+  }
 }
 
 export { MongoDBConnection };

@@ -88,6 +88,7 @@ export class MySQLConnection {
   async create(tableName, { input }) {
     const { create } = input;
     const valuesArray = create.map((item) => Object.values(item));
+
     const keys = Object.keys(create[0]);
     const fields = keys.join(', ');
     const placeholders = keys.map(() => '?').join(', ');
