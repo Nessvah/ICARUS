@@ -178,4 +178,15 @@ export class MySQLConnection {
       return null; // Return null if there's an error
     }
   }
+
+  async count(tableName, { _ }) {
+    const sql = `SELECT COUNT(*) AS ${tableName} FROM ${tableName}`;
+    try {
+      const res = await this.query(sql);
+      return res[0][tableName];
+    } catch (error) {
+      logger.error('Error:', error);
+      return null; // Return null if there's an error
+    }
+  }
 }

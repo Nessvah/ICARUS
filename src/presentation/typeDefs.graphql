@@ -16,6 +16,21 @@ promotions(input: ResolversPromotions): [Promotions]
 shipments(input: ResolversShipments): [Shipments]
 user_role(input: ResolversUser_role): [User_role]
 users(input: ResolversUsers): [Users]
+	 authorsCount(input: AuthorsCount): AuthorsCountResult
+blog_postsCount(input: Blog_postsCount): Blog_postsCountResult
+brandsCount(input: BrandsCount): BrandsCountResult
+categoriesCount(input: CategoriesCount): CategoriesCountResult
+couponsCount(input: CouponsCount): CouponsCountResult
+customersCount(input: CustomersCount): CustomersCountResult
+order_itemsCount(input: Order_itemsCount): Order_itemsCountResult
+ordersCount(input: OrdersCount): OrdersCountResult
+paymentCount(input: PaymentCount): PaymentCountResult
+productsCount(input: ProductsCount): ProductsCountResult
+product_reviewsCount(input: Product_reviewsCount): Product_reviewsCountResult
+promotionsCount(input: PromotionsCount): PromotionsCountResult
+shipmentsCount(input: ShipmentsCount): ShipmentsCountResult
+user_roleCount(input: User_roleCount): User_roleCountResult
+usersCount(input: UsersCount): UsersCountResult
 }
 
 type Mutation {
@@ -39,11 +54,10 @@ users(input: ResolversUsers): UsersOutput
 
 input ResolversAuthors {
     filter: AuthorsFilter
-	action: String
+	action: ActionType!
     create: [AuthorsInput]
 	update: AuthorsUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -80,13 +94,23 @@ type AuthorsOutput {
 	deleted: Int
 }
 
+  input AuthorsCount {
+    action: ActionType!
+  } 
+
+
+  type AuthorsCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ResolversBlog_posts {
     filter: Blog_postsFilter
-	action: String
+	action: ActionType!
     create: [Blog_postsInput]
 	update: Blog_postsUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -128,13 +152,23 @@ type Blog_postsOutput {
 	deleted: Int
 }
 
+  input Blog_postsCount {
+    action: ActionType!
+  } 
+
+
+  type Blog_postsCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ResolversBrands {
     filter: BrandsFilter
-	action: String
+	action: ActionType!
     create: [BrandsInput]
 	update: BrandsUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -176,13 +210,23 @@ type BrandsOutput {
 	deleted: Int
 }
 
+  input BrandsCount {
+    action: ActionType!
+  } 
+
+
+  type BrandsCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ResolversCategories {
     filter: CategoriesFilter
-	action: String
+	action: ActionType!
     create: [CategoriesInput]
 	update: CategoriesUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -220,13 +264,23 @@ type CategoriesOutput {
 	deleted: Int
 }
 
+  input CategoriesCount {
+    action: ActionType!
+  } 
+
+
+  type CategoriesCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ResolversCoupons {
     filter: CouponsFilter
-	action: String
+	action: ActionType!
     create: [CouponsInput]
 	update: CouponsUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -268,13 +322,23 @@ type CouponsOutput {
 	deleted: Int
 }
 
+  input CouponsCount {
+    action: ActionType!
+  } 
+
+
+  type CouponsCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ResolversCustomers {
     filter: CustomersFilter
-	action: String
+	action: ActionType!
     create: [CustomersInput]
 	update: CustomersUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -319,13 +383,23 @@ type CustomersOutput {
 	deleted: Int
 }
 
+  input CustomersCount {
+    action: ActionType!
+  } 
+
+
+  type CustomersCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ResolversOrder_items {
     filter: Order_itemsFilter
-	action: String
+	action: ActionType!
     create: [Order_itemsInput]
 	update: Order_itemsUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -380,13 +454,23 @@ type Order_itemsOutput {
 	deleted: Int
 }
 
+  input Order_itemsCount {
+    action: ActionType!
+  } 
+
+
+  type Order_itemsCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ResolversOrders {
     filter: OrdersFilter
-	action: String
+	action: ActionType!
     create: [OrdersInput]
 	update: OrdersUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -440,13 +524,23 @@ type OrdersOutput {
 	deleted: Int
 }
 
+  input OrdersCount {
+    action: ActionType!
+  } 
+
+
+  type OrdersCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ResolversPayment {
     filter: PaymentFilter
-	action: String
+	action: ActionType!
     create: [PaymentInput]
 	update: PaymentUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -492,13 +586,23 @@ type PaymentOutput {
 	deleted: Int
 }
 
+  input PaymentCount {
+    action: ActionType!
+  } 
+
+
+  type PaymentCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ResolversProducts {
     filter: ProductsFilter
-	action: String
+	action: ActionType!
     create: [ProductsInput]
 	update: ProductsUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -551,13 +655,23 @@ type ProductsOutput {
 	deleted: Int
 }
 
+  input ProductsCount {
+    action: ActionType!
+  } 
+
+
+  type ProductsCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ResolversProduct_reviews {
     filter: Product_reviewsFilter
-	action: String
+	action: ActionType!
     create: [Product_reviewsInput]
 	update: Product_reviewsUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -612,13 +726,23 @@ type Product_reviewsOutput {
 	deleted: Int
 }
 
+  input Product_reviewsCount {
+    action: ActionType!
+  } 
+
+
+  type Product_reviewsCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ResolversPromotions {
     filter: PromotionsFilter
-	action: String
+	action: ActionType!
     create: [PromotionsInput]
 	update: PromotionsUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -663,13 +787,23 @@ type PromotionsOutput {
 	deleted: Int
 }
 
+  input PromotionsCount {
+    action: ActionType!
+  } 
+
+
+  type PromotionsCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ResolversShipments {
     filter: ShipmentsFilter
-	action: String
+	action: ActionType!
     create: [ShipmentsInput]
 	update: ShipmentsUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -715,13 +849,23 @@ type ShipmentsOutput {
 	deleted: Int
 }
 
+  input ShipmentsCount {
+    action: ActionType!
+  } 
+
+
+  type ShipmentsCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ResolversUser_role {
     filter: User_roleFilter
-	action: String
+	action: ActionType!
     create: [User_roleInput]
 	update: User_roleUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -754,13 +898,23 @@ type User_roleOutput {
 	deleted: Int
 }
 
+  input User_roleCount {
+    action: ActionType!
+  } 
+
+
+  type User_roleCountResult {
+    action: String
+    count: Int!
+  }
+
+
 input ResolversUsers {
     filter: UsersFilter
-	action: String
+	action: ActionType!
     create: [UsersInput]
 	update: UsersUpdate
-    operators: Operators
-    take: Int
+    take: Int = 15
     skip: Int
 }
 
@@ -804,16 +958,30 @@ type UsersOutput {
 	deleted: Int
 }
 
-enum Operators {
-    EQ
-    GT
-    LT
-}
+  input UsersCount {
+    action: ActionType!
+  } 
+
+
+  type UsersCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input AuthorizeUser {
   email: String!
   password: String!
 }
+
+enum ActionType {
+  COUNT
+  FIND
+  CREATE
+  UPDATE
+  DELETE
+}
+
 
 input RoleInput {
   role: String!

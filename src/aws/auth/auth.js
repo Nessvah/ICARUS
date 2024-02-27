@@ -1,14 +1,5 @@
 import { getUser, initiateAuth } from './Cognito/index.js';
 import { isValidEmail, decryptingPassword, tokenVerifier } from './Cognito/userValidation/index.js';
-// import {
-//   createUser,
-//   findAllRoles,
-//   findAllUsers,
-//   findCurrentUser,
-//   createNewRole,
-//   addRoleUser,
-// } from '../../models/usersModel.js';
-//import { AuthorizationError } from '../../utils/error-handling/CustomErrors.js';
 import jwt from 'jsonwebtoken';
 import { logger } from '../../infrastructure/server.js';
 import { AuthenticationError } from '../../utils/error-handling/CustomErrors.js';

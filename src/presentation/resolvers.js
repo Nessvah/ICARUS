@@ -63,6 +63,8 @@ const preResolvers = {
 // this function use the "data" parameter and create the resolvers dynamically.
 async function autoResolvers() {
   data.tables.forEach((table) => {
+    const countName = `${table.name}Count`;
+
     preResolvers.Query[table.name] = async (parent, args, context, info) => {
       const limitErrorMessage = await rateLimiter({ parent, args, context, info }, { max: 10, window: '1s' });
 
@@ -72,6 +74,16 @@ async function autoResolvers() {
       // }
 
       return await controller(table.name, args);
+    };
+
+    resolvers.Query[countName] = async (parent, args, context, info) => {
+      // if (!context.currentUser) {
+      //   throw new AuthenticationError();
+      // }
+
+      const result = await controller(table.name, args);
+
+      return { count: result };
     };
 
     preResolvers.Mutation[table.name] = async (parent, args, context, info) => {
