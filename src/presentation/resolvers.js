@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { controller } from '../infrastructure/db/connector.js';
 import { validation } from '../utils/validation/validation.js';
 import { ObjectId } from 'mongodb';
@@ -6,6 +5,11 @@ import { logger } from '../infrastructure/server.js';
 
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { ImportThemTities } from '../config/importDemTities.js';
+import { getGraphQLRateLimiter } from 'graphql-rate-limit';
+
+const rateLimiter = getGraphQLRateLimiter({
+  identifyContext: (ctx) => ctx.id,
+});
 
 const importer = new ImportThemTities();
 
@@ -64,6 +68,8 @@ const preResolvers = {
 async function autoResolvers() {
   data.tables.forEach((table) => {
     preResolvers.Query[table.name] = async (parent, args, context, info) => {
+      const limitErrorMessage = await rateLimiter({ parent, args, context, info }, { max: 10, window: '1s' });
+      if (limitErrorMessage) throw new Error(limitErrorMessage);
       // if (!context.currentUser) {
       //   throw new AuthenticationError();
       // }
@@ -71,6 +77,8 @@ async function autoResolvers() {
     };
 
     preResolvers.Mutation[table.name] = async (parent, args, context, info) => {
+      const limitErrorMessage = await rateLimiter({ parent, args, context, info }, { max: 10, window: '1s' });
+      if (limitErrorMessage) throw new Error(limitErrorMessage);
       // if (!context.currentUser) {
       //   throw new AuthenticationError();
       // }
