@@ -1,3 +1,6 @@
+scalar JSON
+scalar GraphQLDate
+scalar MySQLDate
 
 type Query {
   tables: [TableInfo]
@@ -48,11 +51,10 @@ input ResolversAuthors {
 }
 
 type Authors {
-    id: ID!
+  id: ID!
 name: String!
 email: String!
-      blog_posts: [Blog_posts]
-
+    blog_posts: [Blog_posts]
 }
 
 input AuthorsInput {
@@ -91,35 +93,34 @@ input ResolversBlog_posts {
 }
 
 type Blog_posts {
-    id: ID!
+  id: ID!
 title: String!
 author_id: ID!
-content: String!
-publish_date: String!
-      authors: Authors
-
+content: JSON!
+publish_date: GraphQLDate!
+    authors: Authors
 }
 
 input Blog_postsInput {
     title: String!
 author_id: ID!
-content: String!
-publish_date: String!
+content: JSON!
+publish_date: GraphQLDate!
 }
 
 input Blog_postsFilter {
     id: [ID]
 title: [String]
 author_id: [ID]
-content: [String]
-publish_date: [String]
+content: [JSON]
+publish_date: [GraphQLDate]
 }
 
 input Blog_postsUpdate {
     title: String
 author_id: ID
-content: String
-publish_date: String
+content: JSON
+publish_date: GraphQLDate
 }
 
 type Blog_postsOutput {
@@ -139,20 +140,19 @@ input ResolversBrands {
 }
 
 type Brands {
-    id: ID!
+  id: ID!
 name: String!
 country: String!
 founded_year: String!
-products: String!
-      
-
+products: JSON!
+    
 }
 
 input BrandsInput {
     name: String!
 country: String!
 founded_year: String!
-products: String!
+products: JSON!
 }
 
 input BrandsFilter {
@@ -160,14 +160,14 @@ input BrandsFilter {
 name: [String]
 country: [String]
 founded_year: [String]
-products: [String]
+products: [JSON]
 }
 
 input BrandsUpdate {
     name: String
 country: String
 founded_year: String
-products: String
+products: JSON
 }
 
 type BrandsOutput {
@@ -187,12 +187,11 @@ input ResolversCategories {
 }
 
 type Categories {
-    category_id: Int!
+  category_id: Int!
 category_name: String
 icon_class: String
 icon_label: String
-      
-
+    
 }
 
 input CategoriesInput {
@@ -231,13 +230,12 @@ input ResolversCoupons {
 }
 
 type Coupons {
-    id: ID!
+  id: ID!
 code: String!
 discount_percent: Int!
 expiration_date: String!
 promotion_id: ID!
-      promotions: Promotions
-
+    promotions: Promotions
 }
 
 input CouponsInput {
@@ -279,13 +277,12 @@ input ResolversCustomers {
 }
 
 type Customers {
-    customer_id: Int!
+  customer_id: Int!
 customer_name: String
 email: String
 icon_class: String
 icon_label: String
-      orders: [Orders]
-
+    orders: [Orders]
 }
 
 input CustomersInput {
@@ -330,7 +327,7 @@ input ResolversOrder_items {
 }
 
 type Order_items {
-    order_item_id: Int!
+  order_item_id: Int!
 order_id: Int
 product_id: Int
 quantity: Int
@@ -338,9 +335,8 @@ price: Float
 currency_type: String
 icon_class: String
 icon_label: String
-      orders: Orders
+    orders: Orders
 products: Products
-
 }
 
 input Order_itemsInput {
@@ -391,16 +387,15 @@ input ResolversOrders {
 }
 
 type Orders {
-    order_id: Int!
+  order_id: Int!
 order_date: String
 customer_id: Int
 icon_class: String
 icon_label: String
-      customers: Customers
+    customers: Customers
 order_items: [Order_items]
 shipments: Shipments
 payment: Payment
-
 }
 
 input OrdersInput {
@@ -451,14 +446,13 @@ input ResolversPayment {
 }
 
 type Payment {
-    id: String!
+  id: String!
 payment_method: String!
 payment_date: String!
 amount: Float!
 payment_status: String!
 order_id: Int
-      orders: Orders
-
+    orders: Orders
 }
 
 input PaymentInput {
@@ -503,15 +497,14 @@ input ResolversProducts {
 }
 
 type Products {
-    product_id: Int!
+  product_id: Int!
 product_name: String
 price: Float
 currency_type: String
 description: String
 icon_class: String
 icon_label: String
-      order_items: [Order_items]
-
+    order_items: [Order_items]
 }
 
 input ProductsInput {
@@ -562,7 +555,7 @@ input ResolversProduct_reviews {
 }
 
 type Product_reviews {
-    review_id: Int!
+  review_id: Int!
 product_id: Int
 customer_id: Int
 rating: Int
@@ -570,9 +563,8 @@ review_text: String
 review_date: String
 icon_class: String
 icon_label: String
-      products: Products
+    products: Products
 customers: Customers
-
 }
 
 input Product_reviewsInput {
@@ -623,13 +615,12 @@ input ResolversPromotions {
 }
 
 type Promotions {
-    id: ID!
+  id: ID!
 name: String!
 description: String!
 start_date: String!
 end_date: String!
-      coupons: Coupons
-
+    coupons: Coupons
 }
 
 input PromotionsInput {
@@ -674,14 +665,13 @@ input ResolversShipments {
 }
 
 type Shipments {
-    shipment_id: Int!
+  shipment_id: Int!
 order_id: Int
 shipment_date: String
 tracking_int: String
 icon_class: String
 icon_label: String
-      orders: Orders
-
+    orders: Orders
 }
 
 input ShipmentsInput {
@@ -726,10 +716,9 @@ input ResolversUser_role {
 }
 
 type User_role {
-    id: ID!
+  id: ID!
 role_name: String!
-      users: [Users]
-
+    users: [Users]
 }
 
 input User_roleInput {
@@ -765,13 +754,12 @@ input ResolversUsers {
 }
 
 type Users {
-    id: ID!
+  id: ID!
 email: String
 role_id: String!
 customer_id: Int
 created_t: String
-      user_role: User_role
-
+    user_role: User_role
 }
 
 input UsersInput {

@@ -30,7 +30,7 @@
       },
       {
         "name": "publish_date",
-        "type": "string",
+        "type": "date",
         "nullable": false
       }
     ],
