@@ -23,6 +23,9 @@
         "foreignEntity": "users",
         "foreignKey": "role_id"
       }
-    ]
+    ],
+    "backoffice": {
+      "icon": "FaCrown"
+    }
   }
 }

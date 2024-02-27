@@ -2,6 +2,8 @@ import fs from 'fs';
 import { controller } from '../infrastructure/db/connector.js';
 import { validation } from '../utils/validation/validation.js';
 import { ObjectId } from 'mongodb';
+import { logger } from '../infrastructure/server.js';
+
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { ImportThemTities } from '../config/importDemTities.js';
 import { logger } from '../infrastructure/server.js';
@@ -42,17 +44,25 @@ let nestedObject = {};
 //a pre version of the resolvers, with same static Query and Mutation.
 const preResolvers = {
   Query: {
-    tables: (parents, args, context, info) => {
+    tables: () => {
       let tablesInfo = data.tables.map((table) => {
         const columns = table.columns.map((column) => column);
-        //console.log({ table: table.name, structure: JSON.stringify(columns) });
-        return { table: table.name, structure: JSON.stringify(columns) };
+        console.log({
+          table: table.name,
+          structure: JSON.stringify(columns),
+          backoffice: JSON.stringify(table.backoffice),
+        });
+        return {
+          table: table.name,
+          structure: JSON.stringify(columns),
+          backoffice: JSON.stringify(table.backoffice), // Add tables.backoffice
+        };
       });
       return tablesInfo;
     },
   },
   Mutation: {
-    authorize: (parents, { input }, { authLogin }, info) => authLogin(input),
+    authorize: (_, { input }, { authLogin }) => authLogin(input),
   },
 };
 
