@@ -40,7 +40,7 @@ async function autoResolvers() {
       // }
 
       const result = await controller(table.name, args);
-      console.log('res', result);
+
       return { count: result };
     };
 

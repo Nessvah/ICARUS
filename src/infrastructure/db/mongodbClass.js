@@ -7,6 +7,17 @@ class MongoDBConnection {
     this.tableData = currentTableInfo; //  {table: table Name, type: database type, databaseName: database name, columns: table structure, pool: connection to the database}
     this.dbName = currentTableInfo.databaseName; //save the database name.
     this.client = currentTableInfo.pool; //the poll connection to the current database.
+    this.operatorsMap = {
+      _eq: '$eq',
+      _lt: '$lt',
+      _lte: '$lte',
+      _gt: '$gt',
+      _gte: '$gte',
+      _neq: '$ne',
+      _and: '$and',
+      _or: '$or',
+      _in: '$in',
+    };
   }
 
   //connect to the database.
@@ -48,27 +59,60 @@ class MongoDBConnection {
   async find(table, { input }) {
     const db = this.client.db(this.dbName);
     const collection = db.collection(table);
-    let res;
 
     //call the filter function to reorganize que filter parameter to a more readable one.
-    const query = this.filterController(input);
+    //const query = this.filterController(input);
 
-    if (query) {
-      res = await collection.find(query).toArray();
-    }
-    if (!res) {
-      return false;
-    }
-    // this transform the "_id" key in a "id" key, to follow the schema graphql definition, that have to be equal to all databases.
-    res.forEach((element) => {
-      if (element._id) {
-        const id = element._id;
-        delete element._id;
-        element.id = id;
+    let mongoQuery = {};
+    if (input.filter) {
+      console.log('inside filter');
+
+      for (const [logicalOp, condition] of Object.entries(input.filter)) {
+        // define the logical operator
+        const mongoLogicalOperator = logicalOp === '_and' ? '$and' : '$or';
+
+        const conditionArray = [];
+        condition.forEach((cond) => {
+          const conditionObject = {};
+          for (const [field, value] of Object.entries(cond)) {
+            // Process individual fields and values
+            for (const [op, val] of Object.entries(value)) {
+              if (this.operatorsMap[op]) {
+                const mongoOperator = this.operatorsMap[op];
+
+                // Add the field and value to the condition object
+                conditionObject[field] = { [mongoOperator]: val };
+                console.log(conditionObject);
+              }
+            }
+          }
+          conditionArray.push(conditionObject);
+          console.log(conditionArray);
+        });
+        mongoQuery[mongoLogicalOperator] = conditionArray;
       }
-    });
+      console.log({ mongoQuery });
+    }
 
-    return res;
+    const res = await collection.find(mongoQuery).toArray();
+    console.log(res);
+
+    // if (query) {
+    //   res = await collection.find(query).toArray();
+    // }
+    // if (!res) {
+    //   return false;
+    // }
+    // // this transform the "_id" key in a "id" key, to follow the schema graphql definition, that have to be equal to all databases.
+    // res.forEach((element) => {
+    //   if (element._id) {
+    //     const id = element._id;
+    //     delete element._id;
+    //     element.id = id;
+    //   }
+    // });
+
+    // return res;
   }
 
   //insert a new document or a array of new documents, in a specific table. Return a array of objects [{document}, {document}]

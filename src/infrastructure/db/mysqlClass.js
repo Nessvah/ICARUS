@@ -147,7 +147,7 @@ export class MySQLConnection {
       return null; // Return null if there's an error
     }
   }
-  0;
+
   async count(tableName, { _ }) {
     const sql = `SELECT COUNT(*) AS ${tableName} FROM ${tableName}`;
     try {
