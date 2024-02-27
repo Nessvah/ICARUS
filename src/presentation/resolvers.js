@@ -7,8 +7,11 @@ import { logger } from '../infrastructure/server.js';
 import { ImportThemTities } from '../config/importDemTities.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 
+//We initialize a rate limiter instance by calling getGraphQLRateLimiter.
+//This function takes an object as an argument with a property identifyContext that defines how to identify the context for rate limiting purposes.
+//In this case, the context is identified based on the id property of the context object
 const rateLimiter = getGraphQLRateLimiter({
-  identifyContext: (ctx) => ctx.id,
+  identifyContext: (ctx) => ctx.currentUser,
 });
 
 const importer = new ImportThemTities();
@@ -68,6 +71,7 @@ const preResolvers = {
 async function autoResolvers() {
   data.tables.forEach((table) => {
     preResolvers.Query[table.name] = async (parent, args, context, info) => {
+      //verify if the user it's exceeding the rate limit calls for seconds.
       const limitErrorMessage = await rateLimiter({ parent, args, context, info }, { max: 10, window: '1s' });
       if (limitErrorMessage) throw new Error(limitErrorMessage);
       // if (!context.currentUser) {
@@ -77,6 +81,7 @@ async function autoResolvers() {
     };
 
     preResolvers.Mutation[table.name] = async (parent, args, context, info) => {
+      //verify if the user it's exceeding the rate limit calls for seconds.
       const limitErrorMessage = await rateLimiter({ parent, args, context, info }, { max: 10, window: '1s' });
       if (limitErrorMessage) throw new Error(limitErrorMessage);
       // if (!context.currentUser) {

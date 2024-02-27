@@ -16,7 +16,7 @@
         "name": "order_id",
         "type": "int",
         "primaryKey": false,
-        "nullable": true,
+        "nullable": false,
         "defaultValue": null,
         "columnType": "object",
         "extra": "MUL",
@@ -29,7 +29,7 @@
         "name": "shipment_date",
         "type": "string",
         "primaryKey": false,
-        "nullable": true,
+        "nullable": false,
         "defaultValue": "'CURRENT_string'",
         "columnType": "string",
         "extra": "DEFAULT_GENERATED"

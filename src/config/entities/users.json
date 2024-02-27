@@ -12,12 +12,12 @@
       {
         "name": "password",
         "type": "string",
-        "nullable": true
+        "nullable": false
       },
       {
         "name": "email",
         "type": "string",
-        "nullable": true
+        "nullable": false
       },
       {
         "name": "role_id",

@@ -16,7 +16,7 @@
         "name": "product_name",
         "type": "string",
         "primaryKey": false,
-        "nullable": true,
+        "nullable": false,
         "defaultValue": null,
         "columnType": "string",
         "extra": ""
@@ -25,7 +25,7 @@
         "name": "price",
         "type": "float",
         "primaryKey": false,
-        "nullable": true,
+        "nullable": false,
         "defaultValue": null,
         "columnType": "float",
         "extra": ""
@@ -34,7 +34,7 @@
         "name": "currency_type",
         "type": "VARCHAR",
         "primaryKey": false,
-        "nullable": true,
+        "nullable": false,
         "defaultValue": "EUR",
         "columnType": "VARCHAR",
         "extra": ""
