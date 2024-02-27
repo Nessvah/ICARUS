@@ -1,7 +1,7 @@
 {
   "tables": {
     "name": "products",
-    "database": "mongodb",
+    "database": "mysql",
     "columns": [
       {
         "name": "product_id",
