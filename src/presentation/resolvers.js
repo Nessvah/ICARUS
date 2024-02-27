@@ -8,7 +8,7 @@ import { ImportThemTities } from '../config/importDemTities.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 
 const rateLimiter = getGraphQLRateLimiter({
-  identifyContext: (ctx) => ctx.id,
+  identifyContext: (ctx) => ctx.currentUser,
 });
 
 const importer = new ImportThemTities();
@@ -45,11 +45,7 @@ const preResolvers = {
     tables: () => {
       let tablesInfo = data.tables.map((table) => {
         const columns = table.columns.map((column) => column);
-        console.log({
-          table: table.name,
-          structure: JSON.stringify(columns),
-          backoffice: JSON.stringify(table.backoffice),
-        });
+
         return {
           table: table.name,
           structure: JSON.stringify(columns),
@@ -69,6 +65,7 @@ async function autoResolvers() {
   data.tables.forEach((table) => {
     preResolvers.Query[table.name] = async (parent, args, context, info) => {
       const limitErrorMessage = await rateLimiter({ parent, args, context, info }, { max: 10, window: '1s' });
+
       if (limitErrorMessage) throw new Error(limitErrorMessage);
       // if (!context.currentUser) {
       //   throw new AuthenticationError();

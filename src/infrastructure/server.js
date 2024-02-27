@@ -6,7 +6,7 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import client from 'prom-client';
-import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
+//import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
 import { resolvers } from '../presentation/resolvers.js';
 import { readConfigFile } from '../presentation/generateTypeDefs.js';
