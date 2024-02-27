@@ -9,6 +9,16 @@ const operatorsMap = {
   _or: 'OR',
 };
 
+/**
+ * * Processes the filter object to construct a SQL WHERE clause and corresponding values.
+ *
+ * @param {object} input - The input object containing filter options.
+ *   @property {object} filter - An object containing filter conditions.
+ *
+ * @returns {object} - An object with properties:
+ *   @property {string} processedSql - The processed SQL WHERE clause.
+ *   @property {Array} processedValues - An array of values corresponding to the filter conditions.
+ */
 export function processFilter(input) {
   const logicalOperator = input.filter._or ? ' OR ' : ' AND ';
   const columns = [];
@@ -28,19 +38,31 @@ export function processFilter(input) {
       sql += whereSql;
       values.push(...whereValues);
       columns.push(...whereColumns); // Concatenate the arrays instead of pushing the entire array
-      console.log('after buildin query', sql, values, whereColumns);
-    } else {
-      // in this scenario the user didnt provide an 'and' or 'or' logical operator
-      // so we can assume that its an and. so we can expect only objects
-      columns.push(key); // save the property
-      const { whereSql, values } = buildWhereClause(filter, logicalOperator, columns);
-      console.log(values, whereSql);
     }
+    // } else {
+    //   // in this scenario the user didnt provide an 'and' or 'or' logical operator
+    //   // so we can assume that its an and. so we can expect only objects
+    //   columns.push(key); // save the property
+    //   const { whereSql, values } = buildWhereClause(filter, logicalOperator, columns);
+    //   console.log(values, whereSql);
+    // }
   });
 
   return { processedSql: sql, processedValues: values };
 }
 
+/**
+ * * Builds a SQL WHERE clause and corresponding values based on filter conditions.
+ *
+ * @param {object|Array} filter - The filter conditions.
+ * @param {string} logicalOp - The logical operator (AND or OR).
+ * @param {Array} columns - An array to store column names.
+ *
+ * @returns {object} - An object with properties:
+ *   @property {string} whereSql - The generated SQL WHERE clause.
+ *   @property {Array} whereValues - An array of values corresponding to the filter conditions.
+ *   @property {Array} whereColumns - An array of column names.
+ */
 function buildWhereClause(filter, logicalOp, columns) {
   const whereConditions = [];
   const values = [];
@@ -77,6 +99,17 @@ function buildWhereClause(filter, logicalOp, columns) {
   return { whereSql: '', values: [] };
 }
 
+/**
+ * * Constructs a SQL pagination clause with optional LIMIT and OFFSET based on input parameters.
+ *
+ * @param {object} input - The input object containing pagination options.
+ *   @property {number} take - The maximum number of rows to return.
+ *   @property {number} skip - The number of rows to skip for pagination.
+ *
+ * @returns {object} - An object with properties:
+ *   @property {string} paginationSql - The generated SQL pagination clause.
+ *   @property {Array} paginationValues - An array of values corresponding to the pagination options.
+ */
 export function buildSkipAndTakeClause(input) {
   const clauses = [];
   let sql = '';

@@ -37,6 +37,20 @@ export class MySQLConnection {
     }
   }
 
+  /**
+   * * Fetches rows from a specified table based on optional filtering and pagination options.
+   *
+   * @param {string} tableName - The name of the table to query.
+   * @param {object} input - The input object containing filter and pagination options.
+   *   @property {object} filter - An object containing filter conditions for the SQL WHERE clause.
+   *   @property {number} skip - The number of rows to skip for pagination.
+   *   @property {number} take - The maximum number of rows to return for pagination.
+   *
+   * @returns {Promise<Array<object>|null>} - A promise that resolves to an array of rows from the specified table,
+   * or null if there's an error. The result is filtered and paginated based on the provided input.
+   *
+   * @throws {Error} - Throws an error if there's an issue executing the SQL query.
+   */
   async find(tableName, { input }) {
     // start constructing the sql query
     let sql = `SELECT * FROM ${tableName}`;
