@@ -121,10 +121,10 @@ const createRelations = async (table, column) => {
     // for mongodb searching parents
     if (table.database.type === 'mongodb') {
       //const idValue = ObjectId.isValid(parent[column.name]) ? parent[column.name].toString() : parent[column.name];
-      args = { input: { action: 'find', filter: { [column.foreignKey]: [parent[column.name]] } } };
+      args = { input: { action: 'FIND', filter: { [column.foreignKey]: [parent[column.name]] } } };
       // for MySQL searching parents
     } else {
-      args = { input: { action: 'find', filter: { [column.foreignKey]: [parent[column.foreignKey]] } } };
+      args = { input: { action: 'FIND', filter: { [column.foreignKey]: [parent[column.foreignKey]] } } };
     }
     const relatedObjects = await controller(column.foreignEntity, args);
 
