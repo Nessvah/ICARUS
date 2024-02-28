@@ -16,3 +16,8 @@ docker tag $DOCKER_IMAGE_NAME:latest $ECR_REPO_URI:latest
 #Login to AWS ECR and push the docker image there
 aws ecr get-login-password --profile $AWS_PROFILE_NAME --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO_URI
 docker push $ECR_REPO_URI:latest
+
+
+#Login to AWS ECR and push the docker image there
+# aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 352074856451.dkr.ecr.eu-north-1.amazonaws.com/icarus-fast-api
+# docker pull 352074856451.dkr.ecr.eu-north-1.amazonaws.com/icarus-fast-api:latest
