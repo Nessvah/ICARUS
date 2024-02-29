@@ -1,3 +1,5 @@
+import { logger } from '../infrastructure/server.js';
+
 const operatorsMap = {
   _eq: '=',
   _lt: '<',
@@ -131,4 +133,44 @@ export function buildSkipAndTakeClause(input) {
     clauses.push(input.take);
   }
   return { paginationSql: sql, paginationValues: clauses };
+}
+
+// Function to fetch the primary key column name for a given table
+export async function fetchPrimaryKeyColumnName(tableName) {
+  const primaryKeyQuery = `
+    SELECT COLUMN_NAME
+    FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+    WHERE TABLE_NAME = ?
+    AND CONSTRAINT_NAME = 'PRIMARY';
+  `;
+
+  // Execute the query and retrieve the primary key column name
+  const result = await this.query(primaryKeyQuery, [tableName]);
+
+  if (result.length === 0) {
+    logger.error('Primary key column not found.');
+    throw new Error('Primary key column not found.');
+  }
+
+  return result[0].COLUMN_NAME;
+}
+
+// Function to fetch foreign key constraints for a given table
+export async function fetchForeignKeyConstraints(tableName) {
+  const foreignKeyQuery = `
+    SELECT
+      COLUMN_NAME,
+      CONSTRAINT_NAME,
+      REFERENCED_TABLE_NAME,
+      REFERENCED_COLUMN_NAME
+    FROM
+      INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+     WHERE
+      TABLE_NAME = ? AND
+      REFERENCED_TABLE_NAME IS NOT NULL AND
+      REFERENCED_COLUMN_NAME IS NOT NULL;
+  `;
+
+  // Execute the query and retrieve foreign key constraints
+  return await this.query(foreignKeyQuery, [tableName]);
 }

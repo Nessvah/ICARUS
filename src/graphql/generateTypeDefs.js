@@ -89,7 +89,7 @@ type Mutation {
       .map((table) => {
         const tableName = table.name;
         const capitalizedTableName = capitalize(table.name);
-        const resolvers = `${capitalizedTableName}ListOptions`;
+        const resolvers = `${capitalizedTableName}MutationOptions`;
         return `${tableName}(input: ${resolvers}): ${capitalizedTableName}Output`;
       })
       .join('\n')}
@@ -99,12 +99,30 @@ type Mutation {
   config.tables.forEach((table) => {
     const tableName = capitalize(table.name);
     //Define the Resolvers input
-    const queryOptions = `
+    const queryFilterOptions = `
 input ${tableName}ListOptions {
     filter: ${tableName}Filter
     skip: Int
     take: Int = 15
     }`;
+
+    //Define the Resolvers input
+    const mutationFilterOptions = `
+input ${tableName}MutationOptions {
+    filter: ${tableName}Filter
+    _action: ActionType!
+    ${table.columns
+      .filter((column) => {
+        if (column.primaryKey || column.name === 'password') return false;
+        else return column;
+      })
+      .map((column) => {
+        const type = mapColumnTypeToGraphQLType(column.type);
+        return `${column.name}: ${type}`;
+      })
+      .join('\n')}
+    }`;
+
     //Define the entities type
     const tableTypeDef = `
 type ${tableName} {
@@ -171,7 +189,7 @@ input ${tableName}LogicalOp {
   }
 `;
 
-    typeDefs.push(nestedFiltering, ordersCountInput, logicalOperations);
+    typeDefs.push(nestedFiltering, ordersCountInput, logicalOperations, mutationFilterOptions);
 
     //Define the Update entities input
     const update = `
@@ -192,7 +210,7 @@ type ${tableName}Output {
 	deleted: Int
 }`;
 
-    typeDefs.push(queryOptions);
+    typeDefs.push(queryFilterOptions);
     typeDefs.push(tableTypeDef);
     typeDefs.push(tableInputTypeDef);
     typeDefs.push(tableFilters);

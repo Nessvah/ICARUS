@@ -1,6 +1,11 @@
 /* eslint-disable no-prototype-builtins */
 
-import { buildSkipAndTakeClause, processFilter } from '../../utils/sqlQueries.js';
+import {
+  buildSkipAndTakeClause,
+  fetchForeignKeyConstraints,
+  fetchPrimaryKeyColumnName,
+  processFilter,
+} from '../../utils/sqlQueries.js';
 import { logger } from '../server.js';
 
 export class MySQLConnection {
@@ -96,18 +101,44 @@ export class MySQLConnection {
    * @returns {Promise<{ created: Array<Object> } | null>} - A promise that resolves to the created record(s) or null if there was an error.
    */
   async create(tableName, { input }) {
-    const { create } = input;
-    const valuesArray = create.map((item) => Object.values(item));
+    console.log('tabe', tableName, 'in0', input);
 
-    const keys = Object.keys(create[0]);
-    const fields = keys.join(', ');
-    const placeholders = keys.map(() => '?').join(', ');
-    const sql = `INSERT INTO ${tableName} (${fields}) VALUES ${valuesArray.map(() => `(${placeholders})`).join(', ')}`;
+    let createQuery = `INSERT INTO ${tableName} (`;
+    let valuesString = 'VALUES (';
+
+    const values = [];
+
+    // in this scenario we dont know whats the name for the pk
+    // so we need to fetch the schema information of the table to know the name
+    const primaryKeyColumnName = await fetchPrimaryKeyColumnName.call(this, tableName);
+    //const foreignKeyConstraints = await fetchForeignKeyConstraints.call(this, tableName);
+
+    // Build the columns and values arrays for the INSERT query
+    for (const [key, value] of Object.entries(input)) {
+      if (key !== '_action') {
+        createQuery += `${key}, `; // we eill need to remove trailing comma and spaces at the end
+        valuesString += '?, ';
+        values.push(value);
+      }
+    }
+
+    // Remove the trailing comma and space from createQuery and valuesString
+    createQuery = `${createQuery.slice(0, -2)}) `;
+    valuesString = `${valuesString.slice(0, -2)})`;
+
+    const finalQuery = createQuery + valuesString;
 
     try {
-      await Promise.all(valuesArray.map((values) => this.query(sql, values)));
-      logger.info(`Create operation executed successfully.`);
-      return { created: create.map((item) => ({ ...item })) };
+      const record = await this.query(finalQuery, values);
+      // send the record created back to the backoffice
+      // Get the ID of the inserted record
+      const insertedId = record.insertId;
+
+      // Fetch the inserted record from the database
+      // now we can fetch the new record just created
+      const selectQuery = `SELECT * FROM ${tableName} WHERE ${primaryKeyColumnName} = ?`;
+      const newRecord = await this.query(selectQuery, [insertedId]);
+      return { created: newRecord };
     } catch (error) {
       logger.error(`Error executing create operation: ${error}`);
       return null;

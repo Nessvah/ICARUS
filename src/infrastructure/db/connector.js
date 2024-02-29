@@ -32,7 +32,7 @@ async function controller(table, args) {
         break;
     }
 
-    const action = args.input.action || 'filter';
+    const action = args.input._action || 'filter';
 
     //filter the CRUD function passed in the action input.
     switch (action) {
