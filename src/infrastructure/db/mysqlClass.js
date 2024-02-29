@@ -2,7 +2,7 @@
 
 import {
   buildSkipAndTakeClause,
-  fetchForeignKeyConstraints,
+  // fetchForeignKeyConstraints,
   fetchPrimaryKeyColumnName,
   processFilter,
 } from '../../utils/sqlQueries.js';
@@ -29,8 +29,8 @@ export class MySQLConnection {
     const connection = await this.getConnection();
 
     try {
-      logger.info('Executing SQL query:', sql);
-      logger.info('SQL query values:', values);
+      console.log('Executing SQL query:', sql);
+      console.log('SQL query values:', values);
       // get only the rows with the info and not the schema
       const [rows] = await connection.query(sql, values);
       return rows;
@@ -101,8 +101,6 @@ export class MySQLConnection {
    * @returns {Promise<{ created: Array<Object> } | null>} - A promise that resolves to the created record(s) or null if there was an error.
    */
   async create(tableName, { input }) {
-    console.log('tabe', tableName, 'in0', input);
-
     let createQuery = `INSERT INTO ${tableName} (`;
     let valuesString = 'VALUES (';
 
@@ -152,6 +150,7 @@ export class MySQLConnection {
    * @returns {Promise<{ updated: Array<Object> } | null>} - A promise that resolves to the updated record(s) or null if there was an error.
    */
   async update(tableName, { input }) {
+    console.log(input);
     const { filter, update } = input;
     const keys = Object.keys(filter);
     const values = Object.values(filter);
@@ -176,13 +175,22 @@ export class MySQLConnection {
    * @returns {Promise<{ deleted: number } | null>} - A promise that resolves to the number of affected rows or null if there was an error.
    */
   async delete(tableName, { input }) {
-    const { filter } = input;
-    const keys = Object.keys(filter);
-    const values = Object.values(filter);
-    const where = keys.map((key) => `${key} = ?`).join(' AND ');
-    const sql = `DELETE FROM ${tableName} WHERE ${where}`;
+    // start constructing the sql query
+    let sql = `DELETE FROM ${tableName}`;
+
+    const values = [];
+    // check if they are deleting with filter conditions
+    if (input.filter) {
+      const { processedSql, processedValues } = processFilter(input);
+
+      // append values from filters and the where sql string
+      values.push(...processedValues);
+      sql += processedSql;
+    }
+    // otherwise delete all records - to implement later?
+
     try {
-      const res = await this.query(sql, [values]);
+      const res = await this.query(sql, values);
       return { deleted: res.affectedRows };
     } catch (error) {
       logger.error('Error:', error);
