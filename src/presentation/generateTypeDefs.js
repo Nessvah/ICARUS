@@ -1,14 +1,8 @@
 import fs from 'fs';
 //import { logger } from '../infrastructure/server.js';
-import {
-  GraphQLString,
-  GraphQLInt,
-  GraphQLFloat,
-  GraphQLNonNull,
-  GraphQLBoolean,
-  GraphQLID,
-  GraphQLList,
-} from 'graphql';
+import { GraphQLString, GraphQLInt, GraphQLFloat, GraphQLNonNull, GraphQLBoolean, GraphQLID } from 'graphql';
+import { MySQLDate, GraphQLDate } from './customScalars.js';
+
 import { GraphQLJSON } from 'graphql-scalars';
 
 import { ImportThemTities } from '../config/importDemTities.js';
@@ -20,6 +14,11 @@ import { ImportThemTities } from '../config/importDemTities.js';
 
 // Call the importAll method to start importing entities
 const importer = new ImportThemTities();
+
+// Alias definition for GraphQLJSON as JSON
+const JSONAliasDefinition = 'scalar JSON';
+const ISODateAliasDefinition = 'scalar GraphQLDate';
+const MySQLDateAliasDefinition = 'scalar MySQLDate';
 
 const readConfigFile = async () => {
   try {
@@ -54,31 +53,27 @@ const capitalize = (str) => {
  * @returns {GraphQLType} The GraphQL type.
  */
 const mapColumnTypeToGraphQLType = (columnType) => {
-  switch (columnType) {
-    case 'INT':
-      return GraphQLInt;
-    case 'VARCHAR':
-      return GraphQLString;
-    case 'DECIMAL':
-      return GraphQLFloat;
-    case 'TIMESTAMP':
-      return GraphQLString;
-    case 'BOOLEAN':
-      return GraphQLBoolean;
-    case 'string':
-      return GraphQLString;
+  switch (columnType.toLowerCase()) {
+    case 'int':
     case 'number':
       return GraphQLInt;
+    case 'varchar':
+    case 'string':
+      return GraphQLString;
+    case 'decimal':
     case 'float':
       return GraphQLFloat;
-    case 'int':
-      return GraphQLInt;
+    case 'boolean':
+      return GraphQLBoolean;
     case 'id':
       return GraphQLID;
+    case 'timestamp':
+      return MySQLDate;
+    case 'date':
+      return GraphQLDate;
     case 'object':
-      return GraphQLString;
     case 'array':
-      return GraphQLString;
+      return GraphQLJSON;
     default:
       throw new Error(`Unsupported column type: ${columnType}`);
   }
@@ -88,10 +83,11 @@ const mapColumnTypeToGraphQLType = (columnType) => {
  * @param {object} config - The configuration data.
  * @returns {string} The type definitions.
  */
+const typeDefs = [];
 const generateTypeDefinitions = (config) => {
-  //console.log(config);
-  const typeDefs = [];
-
+  if (!config || !config.tables || config.tables.length === 0) {
+    throw new Error('Invalid or empty configuration provided.');
+  }
   // Define the Query type
   typeDefs.push(`
 type Query {
@@ -289,12 +285,14 @@ if (config) {
    * The generated type definitions.
    */
   const typeDefsString = generateTypeDefinitions(config);
+  // Prepend the JSON alias definition to the beginning of the generated type definitions
+  const finalTypeDefsString = `${JSONAliasDefinition}\n${ISODateAliasDefinition}\n${MySQLDateAliasDefinition}\n${typeDefsString}`;
   /**
    * Writes the type definitions to a file.
    * @param {string} filePath - The path to the file.
    * @param {string} typeDefsString - The type definitions.
    */
-  fs.writeFileSync('../src/presentation/typeDefs.graphql', typeDefsString);
+  fs.writeFileSync('../src/presentation/typeDefs.graphql', finalTypeDefsString);
 
   console.log('Type definitions generated successfully.');
 } else {

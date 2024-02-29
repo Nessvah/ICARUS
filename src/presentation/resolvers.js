@@ -45,7 +45,6 @@ const preResolvers = {
     tables: () => {
       let tablesInfo = data.tables.map((table) => {
         const columns = table.columns.map((column) => column);
-
         return {
           table: table.name,
           structure: JSON.stringify(columns),
