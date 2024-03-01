@@ -104,6 +104,7 @@ input ${tableName}ListOptions {
     filter: ${tableName}Filter
     skip: Int
     take: Int = 15
+    sort: ${tableName}SortOptions
     }`;
 
     //Define the Resolvers input
@@ -111,6 +112,7 @@ input ${tableName}ListOptions {
 input ${tableName}MutationOptions {
     filter: ${tableName}Filter
     _action: ActionType!
+    sort: ${tableName}SortOptions
     ${table.columns
       .filter((column) => {
         if (column.primaryKey || column.name === 'password') return false;
@@ -134,6 +136,7 @@ type ${tableName} {
       })
       .join('\n')}
 }`;
+
     //Define the entities input
     const tableInputTypeDef = `
 input ${tableName}Input {
@@ -151,6 +154,16 @@ input ${tableName}Input {
 input ${tableName}Filter {
   _and: [ ${tableName}LogicalOp]
   _or: [ ${tableName}LogicalOp]
+}`;
+
+    //Define the Filter entities input
+    const sortOptions = `
+input ${tableName}SortOptions {
+  ${table.columns
+    .map((column) => {
+      return `${column.name}: Sort`;
+    })
+    .join('\n')}
 }`;
 
     const logicalOperations = `
@@ -180,16 +193,16 @@ input ${tableName}LogicalOp {
 
     const ordersCountInput = `
   input ${tableName}Count {
-    action: ActionType!
+    _action: ActionType!
   } \n
 
   type ${tableName}CountResult {
-    action: String
+   action: String
     count: Int!
   }
 `;
 
-    typeDefs.push(nestedFiltering, ordersCountInput, logicalOperations, mutationFilterOptions);
+    typeDefs.push(nestedFiltering, ordersCountInput, logicalOperations, mutationFilterOptions, sortOptions);
 
     //Define the Update entities input
     const update = `
@@ -227,6 +240,10 @@ enum ActionType {
   DELETE
 }
 
+enum Sort {
+  ASC
+  DESC
+}
 
 input AuthorizeUser {
   email: String!
@@ -268,7 +285,7 @@ function generateOperators(operators) {
 `;
 }
 
-const allowedOps = ['_eq', '_neq', '_lt', '_lte', '_gt', '_gte', '_in', '_nin'];
+const allowedOps = ['_eq', '_neq', '_lt', '_lte', '_gt', '_gte', '_in', '_nin', '_like'];
 
 const operators = generateOperators(allowedOps);
 typeDefs.push(operators);

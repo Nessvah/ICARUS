@@ -9,6 +9,7 @@ const operatorsMap = {
   _neq: '<>',
   _and: 'AND',
   _or: 'OR',
+  _like: 'LIKE',
 };
 
 /**

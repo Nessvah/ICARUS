@@ -8,6 +8,7 @@ _gt: String
 _gte: String
 _in: String
 _nin: String
+_like: String
     }
 
 
@@ -63,12 +64,12 @@ icon_label: ComparisonOperators
 
 
   input CategoriesCount {
-    action: ActionType!
+    _action: ActionType!
   } 
 
 
   type CategoriesCountResult {
-    action: String
+   action: String
     count: Int!
   }
 
@@ -85,15 +86,24 @@ icon_label: ComparisonOperators
 input CategoriesMutationOptions {
     filter: CategoriesFilter
     _action: ActionType!
+    sort: CategoriesSortOptions
     category_name: String
 icon_class: String
 icon_label: String
     }
 
+input CategoriesSortOptions {
+  category_id: Sort
+category_name: Sort
+icon_class: Sort
+icon_label: Sort
+}
+
 input CategoriesListOptions {
     filter: CategoriesFilter
     skip: Int
     take: Int = 15
+    sort: CategoriesSortOptions
     }
 
 type Categories {
@@ -138,12 +148,12 @@ icon_label: ComparisonOperators
 
 
   input CustomersCount {
-    action: ActionType!
+    _action: ActionType!
   } 
 
 
   type CustomersCountResult {
-    action: String
+   action: String
     count: Int!
   }
 
@@ -161,16 +171,26 @@ icon_label: ComparisonOperators
 input CustomersMutationOptions {
     filter: CustomersFilter
     _action: ActionType!
+    sort: CustomersSortOptions
     customer_name: String
 email: String
 icon_class: String
 icon_label: String
     }
 
+input CustomersSortOptions {
+  customer_id: Sort
+customer_name: Sort
+email: Sort
+icon_class: Sort
+icon_label: Sort
+}
+
 input CustomersListOptions {
     filter: CustomersFilter
     skip: Int
     take: Int = 15
+    sort: CustomersSortOptions
     }
 
 type Customers {
@@ -221,12 +241,12 @@ icon_label: ComparisonOperators
 
 
   input Order_itemsCount {
-    action: ActionType!
+    _action: ActionType!
   } 
 
 
   type Order_itemsCountResult {
-    action: String
+   action: String
     count: Int!
   }
 
@@ -247,6 +267,7 @@ icon_label: ComparisonOperators
 input Order_itemsMutationOptions {
     filter: Order_itemsFilter
     _action: ActionType!
+    sort: Order_itemsSortOptions
     order_id: Int
 product_id: Int
 quantity: Int
@@ -256,10 +277,22 @@ icon_class: String
 icon_label: String
     }
 
+input Order_itemsSortOptions {
+  order_item_id: Sort
+order_id: Sort
+product_id: Sort
+quantity: Sort
+price: Sort
+currency_type: Sort
+icon_class: Sort
+icon_label: Sort
+}
+
 input Order_itemsListOptions {
     filter: Order_itemsFilter
     skip: Int
     take: Int = 15
+    sort: Order_itemsSortOptions
     }
 
 type Order_items {
@@ -316,12 +349,12 @@ icon_label: ComparisonOperators
 
 
   input OrdersCount {
-    action: ActionType!
+    _action: ActionType!
   } 
 
 
   type OrdersCountResult {
-    action: String
+   action: String
     count: Int!
   }
 
@@ -339,16 +372,26 @@ icon_label: ComparisonOperators
 input OrdersMutationOptions {
     filter: OrdersFilter
     _action: ActionType!
+    sort: OrdersSortOptions
     order_date: String
 customer_id: Int
 icon_class: String
 icon_label: String
     }
 
+input OrdersSortOptions {
+  order_id: Sort
+order_date: Sort
+customer_id: Sort
+icon_class: Sort
+icon_label: Sort
+}
+
 input OrdersListOptions {
     filter: OrdersFilter
     skip: Int
     take: Int = 15
+    sort: OrdersSortOptions
     }
 
 type Orders {
@@ -397,12 +440,12 @@ payment_status: ComparisonOperators
 
 
   input PaymentCount {
-    action: ActionType!
+    _action: ActionType!
   } 
 
 
   type PaymentCountResult {
-    action: String
+   action: String
     count: Int!
   }
 
@@ -421,6 +464,7 @@ payment_status: ComparisonOperators
 input PaymentMutationOptions {
     filter: PaymentFilter
     _action: ActionType!
+    sort: PaymentSortOptions
     order_id: Int
 payment_method: String
 payment_date: String
@@ -428,10 +472,20 @@ amount: Int
 payment_status: String
     }
 
+input PaymentSortOptions {
+  id: Sort
+order_id: Sort
+payment_method: Sort
+payment_date: Sort
+amount: Sort
+payment_status: Sort
+}
+
 input PaymentListOptions {
     filter: PaymentFilter
     skip: Int
     take: Int = 15
+    sort: PaymentSortOptions
     }
 
 type Payment {
@@ -485,12 +539,12 @@ icon_label: ComparisonOperators
 
 
   input Product_reviewsCount {
-    action: ActionType!
+    _action: ActionType!
   } 
 
 
   type Product_reviewsCountResult {
-    action: String
+   action: String
     count: Int!
   }
 
@@ -511,6 +565,7 @@ icon_label: ComparisonOperators
 input Product_reviewsMutationOptions {
     filter: Product_reviewsFilter
     _action: ActionType!
+    sort: Product_reviewsSortOptions
     product_id: Int
 customer_id: Int
 rating: Int
@@ -520,10 +575,22 @@ icon_class: String
 icon_label: String
     }
 
+input Product_reviewsSortOptions {
+  review_id: Sort
+product_id: Sort
+customer_id: Sort
+rating: Sort
+review_text: Sort
+review_date: Sort
+icon_class: Sort
+icon_label: Sort
+}
+
 input Product_reviewsListOptions {
     filter: Product_reviewsFilter
     skip: Int
     take: Int = 15
+    sort: Product_reviewsSortOptions
     }
 
 type Product_reviews {
@@ -582,12 +649,12 @@ icon_label: ComparisonOperators
 
 
   input ProductsCount {
-    action: ActionType!
+    _action: ActionType!
   } 
 
 
   type ProductsCountResult {
-    action: String
+   action: String
     count: Int!
   }
 
@@ -607,6 +674,7 @@ icon_label: ComparisonOperators
 input ProductsMutationOptions {
     filter: ProductsFilter
     _action: ActionType!
+    sort: ProductsSortOptions
     product_name: String
 price: Float
 currency_type: String
@@ -615,10 +683,21 @@ icon_class: String
 icon_label: String
     }
 
+input ProductsSortOptions {
+  product_id: Sort
+product_name: Sort
+price: Sort
+currency_type: Sort
+description: Sort
+icon_class: Sort
+icon_label: Sort
+}
+
 input ProductsListOptions {
     filter: ProductsFilter
     skip: Int
     take: Int = 15
+    sort: ProductsSortOptions
     }
 
 type Products {
@@ -673,12 +752,12 @@ icon_label: ComparisonOperators
 
 
   input ShipmentsCount {
-    action: ActionType!
+    _action: ActionType!
   } 
 
 
   type ShipmentsCountResult {
-    action: String
+   action: String
     count: Int!
   }
 
@@ -697,6 +776,7 @@ icon_label: ComparisonOperators
 input ShipmentsMutationOptions {
     filter: ShipmentsFilter
     _action: ActionType!
+    sort: ShipmentsSortOptions
     order_id: Int
 shipment_date: String
 tracking_int: String
@@ -704,10 +784,20 @@ icon_class: String
 icon_label: String
     }
 
+input ShipmentsSortOptions {
+  shipment_id: Sort
+order_id: Sort
+shipment_date: Sort
+tracking_int: Sort
+icon_class: Sort
+icon_label: Sort
+}
+
 input ShipmentsListOptions {
     filter: ShipmentsFilter
     skip: Int
     take: Int = 15
+    sort: ShipmentsSortOptions
     }
 
 type Shipments {
@@ -759,12 +849,12 @@ created_at: ComparisonOperators
 
 
   input UsersCount {
-    action: ActionType!
+    _action: ActionType!
   } 
 
 
   type UsersCountResult {
-    action: String
+   action: String
     count: Int!
   }
 
@@ -783,16 +873,27 @@ created_at: ComparisonOperators
 input UsersMutationOptions {
     filter: UsersFilter
     _action: ActionType!
+    sort: UsersSortOptions
     email: String
 role_id: Int
 customer_id: Int
 created_at: String
     }
 
+input UsersSortOptions {
+  id: Sort
+password: Sort
+email: Sort
+role_id: Sort
+customer_id: Sort
+created_at: Sort
+}
+
 input UsersListOptions {
     filter: UsersFilter
     skip: Int
     take: Int = 15
+    sort: UsersSortOptions
     }
 
 type Users {
@@ -839,12 +940,12 @@ role_name: ComparisonOperators
 
 
   input User_roleCount {
-    action: ActionType!
+    _action: ActionType!
   } 
 
 
   type User_roleCountResult {
-    action: String
+   action: String
     count: Int!
   }
 
@@ -859,13 +960,20 @@ role_name: ComparisonOperators
 input User_roleMutationOptions {
     filter: User_roleFilter
     _action: ActionType!
+    sort: User_roleSortOptions
     role_name: String
     }
+
+input User_roleSortOptions {
+  id: Sort
+role_name: Sort
+}
 
 input User_roleListOptions {
     filter: User_roleFilter
     skip: Int
     take: Int = 15
+    sort: User_roleSortOptions
     }
 
 type User_role {
@@ -899,6 +1007,10 @@ enum ActionType {
   DELETE
 }
 
+enum Sort {
+  ASC
+  DESC
+}
 
 input AuthorizeUser {
   email: String!

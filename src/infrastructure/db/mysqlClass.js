@@ -59,7 +59,7 @@ export class MySQLConnection {
   async find(tableName, { input }) {
     // start constructing the sql query
     let sql = `SELECT * FROM ${tableName}`;
-
+    console.log(input);
     // array to save the values
     const values = [];
 
@@ -73,6 +73,19 @@ export class MySQLConnection {
       sql += processedSql;
     }
 
+    // check if they have option for sorting
+    if (input.sort) {
+      let groupSql = ` ORDER BY`;
+
+      for (const [key, value] of Object.entries(input.sort)) {
+        groupSql += ` ${key} ${value}, `;
+      }
+
+      groupSql = groupSql.slice(0, -2);
+      console.log('grou', groupSql);
+      sql += groupSql;
+    }
+    console.log(sql, 'sql');
     // if in the input we have find and/or take in our filters, we need
     // to make pagination and construct the sql query
 
@@ -84,6 +97,8 @@ export class MySQLConnection {
       sql += paginationSql;
       values.push(...paginationValues);
     }
+
+    console.log(sql);
 
     try {
       const res = await this.query(sql, values);
@@ -113,6 +128,7 @@ export class MySQLConnection {
 
     // Build the columns and values arrays for the INSERT query
     for (const [key, value] of Object.entries(input)) {
+      console.log(key, value);
       if (key !== '_action') {
         createQuery += `${key}, `; // we eill need to remove trailing comma and spaces at the end
         valuesString += '?, ';
@@ -150,22 +166,40 @@ export class MySQLConnection {
    * @returns {Promise<{ updated: Array<Object> } | null>} - A promise that resolves to the updated record(s) or null if there was an error.
    */
   async update(tableName, { input }) {
-    console.log(input);
-    const { filter, update } = input;
-    const keys = Object.keys(filter);
-    const values = Object.values(filter);
-    const where = keys.map((key) => `${key} = ?`).join(' AND ');
-    const set = Object.entries(update)
-      .map(([key]) => `${key} = ?`)
-      .join(', ');
-    const sql = `UPDATE ${tableName} SET ${set} WHERE ${where}`;
-    try {
-      await this.query(sql, [...Object.values(update), ...values]); // for debugging purposes if needed
-      return { updated: await this.find(tableName, { input }) };
-    } catch (error) {
-      console.error('Error:', error);
-      return null; // Return null if there's an error
+    // UPDATE `table_name` SET `column_name` = `new_value' [WHERE condition];
+    let updateQuery = `UPDATE ${tableName} SET `;
+
+    const columns = [];
+    const values = [];
+
+    if (input.filter) {
+      console.log('inside filtering');
     }
+
+    // simple update without filtering
+    for (const [key, value] of Object.entries(input)) {
+      if (key !== '_action') {
+        console.log(key, value);
+        columns.push(key);
+        values.push(value);
+      }
+    }
+
+    console.log(updateQuery, values, columns);
+    // const keys = Object.keys(filter);
+    // const values = Object.values(filter);
+    // const where = keys.map((key) => `${key} = ?`).join(' AND ');
+    // const set = Object.entries(update)
+    //   .map(([key]) => `${key} = ?`)
+    //   .join(', ');
+    // const sql = `UPDATE ${tableName} SET ${set} WHERE ${where}`;
+    // try {
+    //   await this.query(sql, [...Object.values(update), ...values]); // for debugging purposes if needed
+    //   return { updated: await this.find(tableName, { input }) };
+    // } catch (error) {
+    //   console.error('Error:', error);
+    //   return null; // Return null if there's an error
+    // }
   }
 
   /**
