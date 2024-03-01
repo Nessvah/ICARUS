@@ -81,14 +81,16 @@ await server.start();
 app.use(
   '/graphql',
   express.json(),
-  expressMiddleware(server, {
+  expressMiddleware(
+    server /* , {
     context: ({ req }) => {
       if (req.body.operationName === 'IntrospectionQuery') {
         return { req };
       }
       return auth(req);
     },
-  }),
+  } */,
+  ),
 );
 
 // Prometheus end point

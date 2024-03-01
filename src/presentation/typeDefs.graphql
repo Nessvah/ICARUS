@@ -1,22 +1,38 @@
+scalar JSON
+scalar GraphQLDate
+scalar MySQLDate
 
+    input ComparisonOperators {
+      _eq: String
+_neq: String
+_lt: String
+_lte: String
+_gt: String
+_gte: String
+_in: String
+_nin: String
+    }
+
+
+# define the root Query
 type Query {
   tables: [TableInfo]
-    authors(input: ResolversAuthors): [Authors]
-blog_posts(input: ResolversBlog_posts): [Blog_posts]
-brands(input: ResolversBrands): [Brands]
-categories(input: ResolversCategories): [Categories]
-coupons(input: ResolversCoupons): [Coupons]
-customers(input: ResolversCustomers): [Customers]
-order_items(input: ResolversOrder_items): [Order_items]
-orders(input: ResolversOrders): [Orders]
-payment(input: ResolversPayment): [Payment]
-products(input: ResolversProducts): [Products]
-product_reviews(input: ResolversProduct_reviews): [Product_reviews]
-promotions(input: ResolversPromotions): [Promotions]
-shipments(input: ResolversShipments): [Shipments]
-user_role(input: ResolversUser_role): [User_role]
-users(input: ResolversUsers): [Users]
-	 authorsCount(input: AuthorsCount): AuthorsCountResult
+    authors(input: ResolversAuthors = {}): [Authors]
+blog_posts(input: ResolversBlog_posts = {}): [Blog_posts]
+brands(input: ResolversBrands = {}): [Brands]
+categories(input: ResolversCategories = {}): [Categories]
+coupons(input: ResolversCoupons = {}): [Coupons]
+customers(input: ResolversCustomers = {}): [Customers]
+order_items(input: ResolversOrder_items = {}): [Order_items]
+orders(input: ResolversOrders = {}): [Orders]
+payment(input: ResolversPayment = {}): [Payment]
+products(input: ResolversProducts = {}): [Products]
+product_reviews(input: ResolversProduct_reviews = {}): [Product_reviews]
+promotions(input: ResolversPromotions = {}): [Promotions]
+shipments(input: ResolversShipments = {}): [Shipments]
+user_role(input: ResolversUser_role = {}): [User_role]
+users(input: ResolversUsers = {}): [Users]
+    authorsCount(input: AuthorsCount): AuthorsCountResult
 blog_postsCount(input: Blog_postsCount): Blog_postsCountResult
 brandsCount(input: BrandsCount): BrandsCountResult
 categoriesCount(input: CategoriesCount): CategoriesCountResult
@@ -31,8 +47,10 @@ promotionsCount(input: PromotionsCount): PromotionsCountResult
 shipmentsCount(input: ShipmentsCount): ShipmentsCountResult
 user_roleCount(input: User_roleCount): User_roleCountResult
 usersCount(input: UsersCount): UsersCountResult
+
 }
 
+# define the root Mutation
 type Mutation {
   authorize(input: AuthorizeUser!): AuthPayload!
     authors(input: ResolversAuthors): AuthorsOutput
@@ -76,10 +94,8 @@ email: String!
 }
 
 input AuthorsFilter {
-    id: [ID]
-name: [String]
-email: [String]
-
+  _and: [ AuthorsLogicalOp]
+  _or: [ AuthorsLogicalOp]
 }
 
 input AuthorsUpdate {
@@ -105,6 +121,23 @@ type AuthorsOutput {
   }
 
 
+input AuthorsLogicalOp {
+  _and: [ AuthorsLogicalOp]
+  _or: [ AuthorsLogicalOp]
+   
+name: ComparisonOperators
+email: ComparisonOperators
+
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  name: ComparisonOperators
+email: ComparisonOperators
+}
+
+
 input ResolversBlog_posts {
     filter: Blog_postsFilter
 	action: ActionType!
@@ -118,7 +151,7 @@ type Blog_posts {
     id: ID!
 title: String!
 author_id: ID!
-content: String!
+content: JSON!
 publish_date: String!
       authors: Authors
 
@@ -127,22 +160,19 @@ publish_date: String!
 input Blog_postsInput {
     title: String!
 author_id: ID!
-content: String!
+content: JSON!
 publish_date: String!
 }
 
 input Blog_postsFilter {
-    id: [ID]
-title: [String]
-author_id: [ID]
-content: [String]
-publish_date: [String]
+  _and: [ Blog_postsLogicalOp]
+  _or: [ Blog_postsLogicalOp]
 }
 
 input Blog_postsUpdate {
     title: String
 author_id: ID
-content: String
+content: JSON
 publish_date: String
 }
 
@@ -163,6 +193,26 @@ type Blog_postsOutput {
   }
 
 
+input Blog_postsLogicalOp {
+  _and: [ Blog_postsLogicalOp]
+  _or: [ Blog_postsLogicalOp]
+   
+title: ComparisonOperators
+author_id: ComparisonOperators
+content: ComparisonOperators
+publish_date: ComparisonOperators
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  title: ComparisonOperators
+author_id: ComparisonOperators
+content: ComparisonOperators
+publish_date: ComparisonOperators
+}
+
+
 input ResolversBrands {
     filter: BrandsFilter
 	action: ActionType!
@@ -177,7 +227,7 @@ type Brands {
 name: String!
 country: String!
 founded_year: String!
-products: String!
+products: JSON!
       
 
 }
@@ -186,22 +236,19 @@ input BrandsInput {
     name: String!
 country: String!
 founded_year: String!
-products: String!
+products: JSON!
 }
 
 input BrandsFilter {
-    id: [ID]
-name: [String]
-country: [String]
-founded_year: [String]
-products: [String]
+  _and: [ BrandsLogicalOp]
+  _or: [ BrandsLogicalOp]
 }
 
 input BrandsUpdate {
     name: String
 country: String
 founded_year: String
-products: String
+products: JSON
 }
 
 type BrandsOutput {
@@ -219,6 +266,26 @@ type BrandsOutput {
     action: String
     count: Int!
   }
+
+
+input BrandsLogicalOp {
+  _and: [ BrandsLogicalOp]
+  _or: [ BrandsLogicalOp]
+   
+name: ComparisonOperators
+country: ComparisonOperators
+founded_year: ComparisonOperators
+products: ComparisonOperators
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  name: ComparisonOperators
+country: ComparisonOperators
+founded_year: ComparisonOperators
+products: ComparisonOperators
+}
 
 
 input ResolversCategories {
@@ -246,10 +313,8 @@ icon_label: String
 }
 
 input CategoriesFilter {
-    category_id: [Int]
-category_name: [String]
-icon_class: [String]
-icon_label: [String]
+  _and: [ CategoriesLogicalOp]
+  _or: [ CategoriesLogicalOp]
 }
 
 input CategoriesUpdate {
@@ -273,6 +338,25 @@ type CategoriesOutput {
     action: String
     count: Int!
   }
+
+
+input CategoriesLogicalOp {
+  _and: [ CategoriesLogicalOp]
+  _or: [ CategoriesLogicalOp]
+   category_id: ComparisonOperators
+category_name: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  category_id: ComparisonOperators
+category_name: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+}
 
 
 input ResolversCoupons {
@@ -302,11 +386,8 @@ promotion_id: ID!
 }
 
 input CouponsFilter {
-    id: [ID]
-code: [String]
-discount_percent: [Int]
-expiration_date: [String]
-promotion_id: [ID]
+  _and: [ CouponsLogicalOp]
+  _or: [ CouponsLogicalOp]
 }
 
 input CouponsUpdate {
@@ -331,6 +412,26 @@ type CouponsOutput {
     action: String
     count: Int!
   }
+
+
+input CouponsLogicalOp {
+  _and: [ CouponsLogicalOp]
+  _or: [ CouponsLogicalOp]
+   
+code: ComparisonOperators
+discount_percent: ComparisonOperators
+expiration_date: ComparisonOperators
+promotion_id: ComparisonOperators
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  code: ComparisonOperators
+discount_percent: ComparisonOperators
+expiration_date: ComparisonOperators
+promotion_id: ComparisonOperators
+}
 
 
 input ResolversCustomers {
@@ -361,12 +462,8 @@ icon_label: String
 }
 
 input CustomersFilter {
-    customer_id: [Int]
-customer_name: [String]
-email: [String]
-icon_class: [String]
-icon_label: [String]
-
+  _and: [ CustomersLogicalOp]
+  _or: [ CustomersLogicalOp]
 }
 
 input CustomersUpdate {
@@ -392,6 +489,29 @@ type CustomersOutput {
     action: String
     count: Int!
   }
+
+
+input CustomersLogicalOp {
+  _and: [ CustomersLogicalOp]
+  _or: [ CustomersLogicalOp]
+   customer_id: ComparisonOperators
+customer_name: ComparisonOperators
+email: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+orders: ComparisonOperators
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  customer_id: ComparisonOperators
+customer_name: ComparisonOperators
+email: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+orders: ComparisonOperators
+}
 
 
 input ResolversOrder_items {
@@ -428,14 +548,8 @@ icon_label: String
 }
 
 input Order_itemsFilter {
-    order_item_id: [Int]
-order_id: [Int]
-product_id: [Int]
-quantity: [Int]
-price: [Float]
-currency_type: [String]
-icon_class: [String]
-icon_label: [String]
+  _and: [ Order_itemsLogicalOp]
+  _or: [ Order_itemsLogicalOp]
 }
 
 input Order_itemsUpdate {
@@ -463,6 +577,33 @@ type Order_itemsOutput {
     action: String
     count: Int!
   }
+
+
+input Order_itemsLogicalOp {
+  _and: [ Order_itemsLogicalOp]
+  _or: [ Order_itemsLogicalOp]
+   order_item_id: ComparisonOperators
+order_id: ComparisonOperators
+product_id: ComparisonOperators
+quantity: ComparisonOperators
+price: ComparisonOperators
+currency_type: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  order_item_id: ComparisonOperators
+order_id: ComparisonOperators
+product_id: ComparisonOperators
+quantity: ComparisonOperators
+price: ComparisonOperators
+currency_type: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+}
 
 
 input ResolversOrders {
@@ -498,14 +639,8 @@ icon_label: String
 }
 
 input OrdersFilter {
-    order_id: [Int]
-order_date: [String]
-customer_id: [Int]
-icon_class: [String]
-icon_label: [String]
-
-
-
+  _and: [ OrdersLogicalOp]
+  _or: [ OrdersLogicalOp]
 }
 
 input OrdersUpdate {
@@ -533,6 +668,33 @@ type OrdersOutput {
     action: String
     count: Int!
   }
+
+
+input OrdersLogicalOp {
+  _and: [ OrdersLogicalOp]
+  _or: [ OrdersLogicalOp]
+   order_id: ComparisonOperators
+order_date: ComparisonOperators
+customer_id: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+order_items: ComparisonOperators
+shipments: ComparisonOperators
+payment: ComparisonOperators
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  order_id: ComparisonOperators
+order_date: ComparisonOperators
+customer_id: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+order_items: ComparisonOperators
+shipments: ComparisonOperators
+payment: ComparisonOperators
+}
 
 
 input ResolversPayment {
@@ -564,12 +726,8 @@ order_id: Int
 }
 
 input PaymentFilter {
-    id: [String]
-payment_method: [String]
-payment_date: [String]
-amount: [Float]
-payment_status: [String]
-order_id: [Int]
+  _and: [ PaymentLogicalOp]
+  _or: [ PaymentLogicalOp]
 }
 
 input PaymentUpdate {
@@ -595,6 +753,28 @@ type PaymentOutput {
     action: String
     count: Int!
   }
+
+
+input PaymentLogicalOp {
+  _and: [ PaymentLogicalOp]
+  _or: [ PaymentLogicalOp]
+   
+payment_method: ComparisonOperators
+payment_date: ComparisonOperators
+amount: ComparisonOperators
+payment_status: ComparisonOperators
+order_id: ComparisonOperators
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  payment_method: ComparisonOperators
+payment_date: ComparisonOperators
+amount: ComparisonOperators
+payment_status: ComparisonOperators
+order_id: ComparisonOperators
+}
 
 
 input ResolversProducts {
@@ -629,14 +809,8 @@ icon_label: String
 }
 
 input ProductsFilter {
-    product_id: [Int]
-product_name: [String]
-price: [Float]
-currency_type: [String]
-description: [String]
-icon_class: [String]
-icon_label: [String]
-
+  _and: [ ProductsLogicalOp]
+  _or: [ ProductsLogicalOp]
 }
 
 input ProductsUpdate {
@@ -664,6 +838,33 @@ type ProductsOutput {
     action: String
     count: Int!
   }
+
+
+input ProductsLogicalOp {
+  _and: [ ProductsLogicalOp]
+  _or: [ ProductsLogicalOp]
+   product_id: ComparisonOperators
+product_name: ComparisonOperators
+price: ComparisonOperators
+currency_type: ComparisonOperators
+description: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+order_items: ComparisonOperators
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  product_id: ComparisonOperators
+product_name: ComparisonOperators
+price: ComparisonOperators
+currency_type: ComparisonOperators
+description: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+order_items: ComparisonOperators
+}
 
 
 input ResolversProduct_reviews {
@@ -700,14 +901,8 @@ icon_label: String
 }
 
 input Product_reviewsFilter {
-    review_id: [Int]
-product_id: [Int]
-customer_id: [Int]
-rating: [Int]
-review_text: [String]
-review_date: [String]
-icon_class: [String]
-icon_label: [String]
+  _and: [ Product_reviewsLogicalOp]
+  _or: [ Product_reviewsLogicalOp]
 }
 
 input Product_reviewsUpdate {
@@ -735,6 +930,33 @@ type Product_reviewsOutput {
     action: String
     count: Int!
   }
+
+
+input Product_reviewsLogicalOp {
+  _and: [ Product_reviewsLogicalOp]
+  _or: [ Product_reviewsLogicalOp]
+   review_id: ComparisonOperators
+product_id: ComparisonOperators
+customer_id: ComparisonOperators
+rating: ComparisonOperators
+review_text: ComparisonOperators
+review_date: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  review_id: ComparisonOperators
+product_id: ComparisonOperators
+customer_id: ComparisonOperators
+rating: ComparisonOperators
+review_text: ComparisonOperators
+review_date: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+}
 
 
 input ResolversPromotions {
@@ -765,12 +987,8 @@ end_date: String!
 }
 
 input PromotionsFilter {
-    id: [ID]
-name: [String]
-description: [String]
-start_date: [String]
-end_date: [String]
-
+  _and: [ PromotionsLogicalOp]
+  _or: [ PromotionsLogicalOp]
 }
 
 input PromotionsUpdate {
@@ -796,6 +1014,27 @@ type PromotionsOutput {
     action: String
     count: Int!
   }
+
+
+input PromotionsLogicalOp {
+  _and: [ PromotionsLogicalOp]
+  _or: [ PromotionsLogicalOp]
+   
+name: ComparisonOperators
+description: ComparisonOperators
+start_date: ComparisonOperators
+end_date: ComparisonOperators
+
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  name: ComparisonOperators
+description: ComparisonOperators
+start_date: ComparisonOperators
+end_date: ComparisonOperators
+}
 
 
 input ResolversShipments {
@@ -827,12 +1066,8 @@ icon_label: String
 }
 
 input ShipmentsFilter {
-    shipment_id: [Int]
-order_id: [Int]
-shipment_date: [String]
-tracking_int: [String]
-icon_class: [String]
-icon_label: [String]
+  _and: [ ShipmentsLogicalOp]
+  _or: [ ShipmentsLogicalOp]
 }
 
 input ShipmentsUpdate {
@@ -860,6 +1095,29 @@ type ShipmentsOutput {
   }
 
 
+input ShipmentsLogicalOp {
+  _and: [ ShipmentsLogicalOp]
+  _or: [ ShipmentsLogicalOp]
+   shipment_id: ComparisonOperators
+order_id: ComparisonOperators
+shipment_date: ComparisonOperators
+tracking_int: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  shipment_id: ComparisonOperators
+order_id: ComparisonOperators
+shipment_date: ComparisonOperators
+tracking_int: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+}
+
+
 input ResolversUser_role {
     filter: User_roleFilter
 	action: ActionType!
@@ -882,9 +1140,8 @@ input User_roleInput {
 }
 
 input User_roleFilter {
-    id: [ID]
-role_name: [String]
-
+  _and: [ User_roleLogicalOp]
+  _or: [ User_roleLogicalOp]
 }
 
 input User_roleUpdate {
@@ -907,6 +1164,21 @@ type User_roleOutput {
     action: String
     count: Int!
   }
+
+
+input User_roleLogicalOp {
+  _and: [ User_roleLogicalOp]
+  _or: [ User_roleLogicalOp]
+   
+role_name: ComparisonOperators
+
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  role_name: ComparisonOperators
+}
 
 
 input ResolversUsers {
@@ -937,11 +1209,8 @@ created_t: String
 }
 
 input UsersFilter {
-    id: [ID]
-email: [String]
-role_id: [String]
-customer_id: [Int]
-created_t: [String]
+  _and: [ UsersLogicalOp]
+  _or: [ UsersLogicalOp]
 }
 
 input UsersUpdate {
@@ -969,19 +1238,41 @@ type UsersOutput {
   }
 
 
-input AuthorizeUser {
-  email: String!
-  password: String!
+input UsersLogicalOp {
+  _and: [ UsersLogicalOp]
+  _or: [ UsersLogicalOp]
+   
+password: ComparisonOperators
+email: ComparisonOperators
+role_id: ComparisonOperators
+customer_id: ComparisonOperators
+created_t: ComparisonOperators
 }
 
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  password: ComparisonOperators
+email: ComparisonOperators
+role_id: ComparisonOperators
+customer_id: ComparisonOperators
+created_t: ComparisonOperators
+}
+
+
 enum ActionType {
-  COUNT
   FIND
+  COUNT
   CREATE
   UPDATE
   DELETE
 }
 
+
+input AuthorizeUser {
+  email: String!
+  password: String!
+}
 
 input RoleInput {
   role: String!
@@ -991,14 +1282,15 @@ type AuthPayload {
   token: Token!
 }
 
+
 type Token {
   accessToken: String!
   idToken: String!
   refreshToken: String!
+
 }
 
   type TableInfo {
     table: String
     structure: String
-    backoffice: String
   }

@@ -90,25 +90,27 @@ const generateTypeDefinitions = (config) => {
   }
   // Define the Query type
   typeDefs.push(`
+# define the root Query
 type Query {
   tables: [TableInfo]
     ${config.tables
       .map((table) => {
         const tableName = table.name;
         const capitalizedTableName = capitalize(table.name);
-        return `${tableName}(input: Resolvers${capitalizedTableName}): [${capitalizedTableName}]`;
+        return `${tableName}(input: Resolvers${capitalizedTableName} = {}): [${capitalizedTableName}]`;
       })
       .join('\n')}
-	 ${config.tables
-     .map((table) => {
-       const tableName = table.name;
-       const capitalizedTableName = capitalize(table.name);
-       return `${tableName}Count(input: ${capitalizedTableName}Count): ${capitalizedTableName}CountResult`;
-     })
-     .join('\n')}
-}`);
-  // Define the Mutation type
-  typeDefs.push(`
+    ${config.tables
+      .map((table) => {
+        const tableName = table.name;
+        const capitalizedTableName = capitalize(table.name);
+        return `${tableName}Count(input: ${capitalizedTableName}Count): ${capitalizedTableName}CountResult`;
+      })
+      .join('\n')}
+
+}
+
+# define the root Mutation
 type Mutation {
   authorize(input: AuthorizeUser!): AuthPayload!
     ${config.tables
@@ -133,6 +135,7 @@ input Resolvers${tableName} {
     take: Int = 15
     skip: Int
 }`;
+
     //Define the entities type
     const tableTypeDef = `
 type ${tableName} {
@@ -181,17 +184,47 @@ input ${tableName}Input {
     //Define the Filter entities input
     const tableFilters = `
 input ${tableName}Filter {
-    ${table.columns
-      .filter((column) => column.name !== 'password')
-      .map((column) => {
-        if (column.type === 'object') {
-          return '';
-        }
-        const type = mapColumnTypeToGraphQLType(column.type);
-        return `${column.name}: [${type}]`;
-      })
-      .join('\n')}
+  _and: [ ${tableName}LogicalOp]
+  _or: [ ${tableName}LogicalOp]
 }`;
+
+    const logicalOperations = `
+input ${tableName}LogicalOp {
+  _and: [ ${tableName}LogicalOp]
+  _or: [ ${tableName}LogicalOp]
+   ${table.columns
+     .map((column) => {
+       const type = mapColumnTypeToGraphQLType(column.type);
+       // Ensure "id" is defined only once
+       return column.name !== 'id' ? `${column.name}: ComparisonOperators` : '';
+     })
+     .join('\n')}
+}`;
+
+    const nestedFiltering = `
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  ${table.columns
+    .filter((column) => column.name !== 'id') // Exclude "id" field
+    .map((column) => {
+      const type = mapColumnTypeToGraphQLType(column.type);
+      return `${column.name}: ComparisonOperators`;
+    })
+    .join('\n')}
+}
+`;
+
+    const ordersCountInput = `
+  input ${tableName}Count {
+    action: ActionType!
+  } \n
+
+  type ${tableName}CountResult {
+    action: String
+    count: Int!
+  }
+`;
 
     //Define the Update entities input
     const update = `
@@ -215,65 +248,74 @@ type ${tableName}Output {
 	deleted: Int
 }`;
 
-    const ordersCountInput = `
-  input ${tableName}Count {
-    action: ActionType!
-  } \n
-
-  type ${tableName}CountResult {
-    action: String
-    count: Int!
-  }
-`;
-
-    typeDefs.push(resolvers, tableTypeDef, tableInputTypeDef, tableFilters, update, output, ordersCountInput);
+    typeDefs.push(
+      resolvers,
+      tableTypeDef,
+      tableInputTypeDef,
+      tableFilters,
+      update,
+      output,
+      ordersCountInput,
+      logicalOperations,
+      nestedFiltering,
+    );
   });
 
-  // Redefinition of the input type for authorizing a user, possibly a duplication error.
+  // Define the operators enum
   typeDefs.push(`
+enum ActionType {
+  FIND
+  COUNT
+  CREATE
+  UPDATE
+  DELETE
+}
+
+
 input AuthorizeUser {
   email: String!
   password: String!
 }
 
-enum ActionType {
-  COUNT
-  FIND
-  CREATE
-  UPDATE
-  DELETE
-}
-`);
-
-  // Redefinition of the input type for specifying a role, possibly a duplication error.
-  typeDefs.push(`
 input RoleInput {
   role: String!
-}`);
+}
 
-  // Define a type for the authentication payload, which includes a token.
-  typeDefs.push(`
 type AuthPayload {
   token: Token!
-}`);
+}
 
-  // Define a type for a token, which includes access, identity, and refresh tokens.
-  typeDefs.push(`
+
 type Token {
   accessToken: String!
   idToken: String!
   refreshToken: String!
-}`);
 
-  // Define a type for providing information about a database table, including its name and structure.
-  typeDefs.push(`
+}
+
   type TableInfo {
     table: String
     structure: String
-    backoffice: String
   }`);
   return typeDefs.join('\n');
 };
+
+function generateOperators(operators) {
+  const operatorsStr = operators.map((operator) => {
+    return `${operator}: String`;
+  });
+
+  return `
+    input ComparisonOperators {
+      ${operatorsStr.join('\n')}
+    }
+`;
+}
+
+const allowedOps = ['_eq', '_neq', '_lt', '_lte', '_gt', '_gte', '_in', '_nin'];
+
+const operators = generateOperators(allowedOps);
+typeDefs.push(operators);
 
 /**
  * The path to the configuration file.

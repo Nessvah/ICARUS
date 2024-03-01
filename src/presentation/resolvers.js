@@ -1,11 +1,10 @@
 import { controller } from '../infrastructure/db/connector.js';
-import { validation } from '../utils/validation/validation.js';
-import { ObjectId } from 'mongodb';
 import { logger } from '../infrastructure/server.js';
+import { validation } from '../utils/validation/validation.js';
 
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
-import { ImportThemTities } from '../config/importDemTities.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
+import { ImportThemTities } from '../config/importDemTities.js';
 
 const rateLimiter = getGraphQLRateLimiter({
   identifyContext: (ctx) => ctx.currentUser,
@@ -131,4 +130,4 @@ const createRelations = async (table, column) => {
 
 const resolvers = preResolvers;
 
-export { resolvers, autoResolvers };
+export { autoResolvers, resolvers };
