@@ -110,19 +110,9 @@ input ${tableName}ListOptions {
     //Define the Resolvers input
     const mutationFilterOptions = `
 input ${tableName}MutationOptions {
-    filter: ${tableName}Filter
-    _action: ActionType!
-    sort: ${tableName}SortOptions
-    ${table.columns
-      .filter((column) => {
-        if (column.primaryKey || column.name === 'password') return false;
-        else return column;
-      })
-      .map((column) => {
-        const type = mapColumnTypeToGraphQLType(column.type);
-        return `${column.name}: ${type}`;
-      })
-      .join('\n')}
+    _create: ${tableName}Input
+    _update: ${tableName}UpDel
+    _delete: ${tableName}Delete
     }`;
 
     //Define the entities type
@@ -193,7 +183,7 @@ input ${tableName}LogicalOp {
 
     const ordersCountInput = `
   input ${tableName}Count {
-    _action: ActionType!
+    _count: Int
   } \n
 
   type ${tableName}CountResult {
@@ -206,7 +196,7 @@ input ${tableName}LogicalOp {
 
     //Define the Update entities input
     const update = `
-input ${tableName}Update {
+input ${tableName}UpDel {
     ${table.columns
       .filter((column) => column.primaryKey !== true)
       .map((column) => {
@@ -214,6 +204,12 @@ input ${tableName}Update {
         return `${column.name}: ${type}`;
       })
       .join('\n')}
+       filter: ${tableName}Filter
+}`;
+
+    const del = `
+input ${tableName}Delete {
+       filter: ${tableName}Filter
 }`;
     // Define the output type
     const output = `
@@ -228,7 +224,7 @@ type ${tableName}Output {
     typeDefs.push(tableInputTypeDef);
     typeDefs.push(tableFilters);
     typeDefs.push(update);
-    typeDefs.push(output);
+    typeDefs.push(output, del);
   });
 
   // Define the operators enum

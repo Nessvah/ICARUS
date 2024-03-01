@@ -82,10 +82,9 @@ export class MySQLConnection {
       }
 
       groupSql = groupSql.slice(0, -2);
-      console.log('grou', groupSql);
       sql += groupSql;
     }
-    console.log(sql, 'sql');
+
     // if in the input we have find and/or take in our filters, we need
     // to make pagination and construct the sql query
 
@@ -97,8 +96,6 @@ export class MySQLConnection {
       sql += paginationSql;
       values.push(...paginationValues);
     }
-
-    console.log(sql);
 
     try {
       const res = await this.query(sql, values);
@@ -127,8 +124,7 @@ export class MySQLConnection {
     //const foreignKeyConstraints = await fetchForeignKeyConstraints.call(this, tableName);
 
     // Build the columns and values arrays for the INSERT query
-    for (const [key, value] of Object.entries(input)) {
-      console.log(key, value);
+    for (const [key, value] of Object.entries(input._create)) {
       if (key !== '_action') {
         createQuery += `${key}, `; // we eill need to remove trailing comma and spaces at the end
         valuesString += '?, ';
@@ -169,37 +165,44 @@ export class MySQLConnection {
     // UPDATE `table_name` SET `column_name` = `new_value' [WHERE condition];
     let updateQuery = `UPDATE ${tableName} SET `;
 
-    const columns = [];
     const values = [];
 
-    if (input.filter) {
-      console.log('inside filtering');
-    }
-
     // simple update without filtering
-    for (const [key, value] of Object.entries(input)) {
-      if (key !== '_action') {
-        console.log(key, value);
-        columns.push(key);
-        values.push(value);
+    for (const [key, value] of Object.entries(input._update)) {
+      if (key !== 'filter') {
+        updateQuery += `${key} = ?, `;
+        values.push(`${value}`);
+      } else {
+        // handle filtering in update
+        // mimik object structure for the function to process filter
+        const filter = {};
+        filter[key] = value;
+
+        const { processedSql, processedValues } = processFilter(filter);
+
+        // remove trailing spaces and comma
+        updateQuery = `${updateQuery.slice(0, -2)}`;
+        values.push(...processedValues);
+
+        updateQuery += processedSql;
       }
     }
 
-    console.log(updateQuery, values, columns);
-    // const keys = Object.keys(filter);
-    // const values = Object.values(filter);
-    // const where = keys.map((key) => `${key} = ?`).join(' AND ');
-    // const set = Object.entries(update)
-    //   .map(([key]) => `${key} = ?`)
-    //   .join(', ');
-    // const sql = `UPDATE ${tableName} SET ${set} WHERE ${where}`;
-    // try {
-    //   await this.query(sql, [...Object.values(update), ...values]); // for debugging purposes if needed
-    //   return { updated: await this.find(tableName, { input }) };
-    // } catch (error) {
-    //   console.error('Error:', error);
-    //   return null; // Return null if there's an error
-    // }
+    // get the name of the pk column
+    const primaryKeyColumnName = await fetchPrimaryKeyColumnName.call(this, tableName);
+
+    try {
+      const record = await this.query(updateQuery, values);
+
+      console.log('res', record);
+      const selectQuery = `SELECT * FROM ${tableName} WHERE ${primaryKeyColumnName} = LAST_INSERT_ID();`;
+      const newRecord = await this.query(selectQuery);
+      console.log(newRecord, 5);
+      return { updated: newRecord };
+    } catch (err) {
+      logger.error(err);
+      return err; // Return null if there's an error
+    }
   }
 
   /**
@@ -210,25 +213,29 @@ export class MySQLConnection {
    */
   async delete(tableName, { input }) {
     // start constructing the sql query
+    const deleteObj = input._delete;
+
+    // for now lets not let them delete everything
+    if (Object.entries(deleteObj).length === 0) return new Error("Can't delete everything for now.");
+
     let sql = `DELETE FROM ${tableName}`;
 
     const values = [];
     // check if they are deleting with filter conditions
-    if (input.filter) {
-      const { processedSql, processedValues } = processFilter(input);
+    if (deleteObj.filter) {
+      const { processedSql, processedValues } = processFilter(deleteObj);
 
       // append values from filters and the where sql string
       values.push(...processedValues);
       sql += processedSql;
     }
-    // otherwise delete all records - to implement later?
 
     try {
       const res = await this.query(sql, values);
       return { deleted: res.affectedRows };
     } catch (error) {
       logger.error('Error:', error);
-      return null; // Return null if there's an error
+      return error; // this will return the error message and null
     }
   }
 
@@ -239,7 +246,7 @@ export class MySQLConnection {
       return res[0][tableName];
     } catch (error) {
       logger.error('Error:', error);
-      return null; // Return null if there's an error
+      return error;
     }
   }
 }

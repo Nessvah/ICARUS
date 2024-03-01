@@ -32,19 +32,25 @@ async function controller(table, args) {
         break;
     }
 
-    const action = args.input._action || 'filter';
+    let action;
+    for (const key in args.input) {
+      if (key.startsWith('_') || key === 'filter') {
+        action = key;
+        console.log(args.input, key);
+      }
+    }
 
     //filter the CRUD function passed in the action input.
     switch (action) {
       case 'filter':
         return await connection.find(table, args);
-      case 'COUNT':
+      case '_count':
         return await connection.count(table, args);
-      case 'CREATE':
+      case '_create':
         return await connection.create(table, args);
-      case 'UPDATE':
+      case '_update':
         return await connection.update(table, args);
-      case 'DELETE':
+      case '_delete':
         return await connection.delete(table, args);
       default:
         return 'Action not defined';

@@ -64,7 +64,7 @@ icon_label: ComparisonOperators
 
 
   input CategoriesCount {
-    _action: ActionType!
+    _count: Int
   } 
 
 
@@ -84,12 +84,9 @@ icon_label: ComparisonOperators
 }
 
 input CategoriesMutationOptions {
-    filter: CategoriesFilter
-    _action: ActionType!
-    sort: CategoriesSortOptions
-    category_name: String
-icon_class: String
-icon_label: String
+    _create: CategoriesInput
+    _update: CategoriesUpDel
+    _delete: CategoriesDelete
     }
 
 input CategoriesSortOptions {
@@ -124,16 +121,21 @@ input CategoriesFilter {
   _or: [ CategoriesLogicalOp]
 }
 
-input CategoriesUpdate {
+input CategoriesUpDel {
     category_name: String
 icon_class: String
 icon_label: String
+       filter: CategoriesFilter
 }
 
 type CategoriesOutput {
 	created: [Categories]!
 	updated: [Categories]!
 	deleted: Int
+}
+
+input CategoriesDelete {
+       filter: CategoriesFilter
 }
 
   input NestedFiltering {
@@ -148,7 +150,7 @@ icon_label: ComparisonOperators
 
 
   input CustomersCount {
-    _action: ActionType!
+    _count: Int
   } 
 
 
@@ -169,13 +171,9 @@ icon_label: ComparisonOperators
 }
 
 input CustomersMutationOptions {
-    filter: CustomersFilter
-    _action: ActionType!
-    sort: CustomersSortOptions
-    customer_name: String
-email: String
-icon_class: String
-icon_label: String
+    _create: CustomersInput
+    _update: CustomersUpDel
+    _delete: CustomersDelete
     }
 
 input CustomersSortOptions {
@@ -213,17 +211,22 @@ input CustomersFilter {
   _or: [ CustomersLogicalOp]
 }
 
-input CustomersUpdate {
+input CustomersUpDel {
     customer_name: String
 email: String
 icon_class: String
 icon_label: String
+       filter: CustomersFilter
 }
 
 type CustomersOutput {
 	created: [Customers]!
 	updated: [Customers]!
 	deleted: Int
+}
+
+input CustomersDelete {
+       filter: CustomersFilter
 }
 
   input NestedFiltering {
@@ -241,7 +244,7 @@ icon_label: ComparisonOperators
 
 
   input Order_itemsCount {
-    _action: ActionType!
+    _count: Int
   } 
 
 
@@ -265,16 +268,9 @@ icon_label: ComparisonOperators
 }
 
 input Order_itemsMutationOptions {
-    filter: Order_itemsFilter
-    _action: ActionType!
-    sort: Order_itemsSortOptions
-    order_id: Int
-product_id: Int
-quantity: Int
-price: Float
-currency_type: String
-icon_class: String
-icon_label: String
+    _create: Order_itemsInput
+    _update: Order_itemsUpDel
+    _delete: Order_itemsDelete
     }
 
 input Order_itemsSortOptions {
@@ -321,7 +317,7 @@ input Order_itemsFilter {
   _or: [ Order_itemsLogicalOp]
 }
 
-input Order_itemsUpdate {
+input Order_itemsUpDel {
     order_id: Int
 product_id: Int
 quantity: Int
@@ -329,12 +325,17 @@ price: Float
 currency_type: String
 icon_class: String
 icon_label: String
+       filter: Order_itemsFilter
 }
 
 type Order_itemsOutput {
 	created: [Order_items]!
 	updated: [Order_items]!
 	deleted: Int
+}
+
+input Order_itemsDelete {
+       filter: Order_itemsFilter
 }
 
   input NestedFiltering {
@@ -349,7 +350,7 @@ icon_label: ComparisonOperators
 
 
   input OrdersCount {
-    _action: ActionType!
+    _count: Int
   } 
 
 
@@ -370,13 +371,9 @@ icon_label: ComparisonOperators
 }
 
 input OrdersMutationOptions {
-    filter: OrdersFilter
-    _action: ActionType!
-    sort: OrdersSortOptions
-    order_date: String
-customer_id: Int
-icon_class: String
-icon_label: String
+    _create: OrdersInput
+    _update: OrdersUpDel
+    _delete: OrdersDelete
     }
 
 input OrdersSortOptions {
@@ -414,17 +411,22 @@ input OrdersFilter {
   _or: [ OrdersLogicalOp]
 }
 
-input OrdersUpdate {
+input OrdersUpDel {
     order_date: String
 customer_id: Int
 icon_class: String
 icon_label: String
+       filter: OrdersFilter
 }
 
 type OrdersOutput {
 	created: [Orders]!
 	updated: [Orders]!
 	deleted: Int
+}
+
+input OrdersDelete {
+       filter: OrdersFilter
 }
 
   input NestedFiltering {
@@ -440,7 +442,7 @@ payment_status: ComparisonOperators
 
 
   input PaymentCount {
-    _action: ActionType!
+    _count: Int
   } 
 
 
@@ -462,14 +464,9 @@ payment_status: ComparisonOperators
 }
 
 input PaymentMutationOptions {
-    filter: PaymentFilter
-    _action: ActionType!
-    sort: PaymentSortOptions
-    order_id: Int
-payment_method: String
-payment_date: String
-amount: Int
-payment_status: String
+    _create: PaymentInput
+    _update: PaymentUpDel
+    _delete: PaymentDelete
     }
 
 input PaymentSortOptions {
@@ -510,18 +507,23 @@ input PaymentFilter {
   _or: [ PaymentLogicalOp]
 }
 
-input PaymentUpdate {
+input PaymentUpDel {
     order_id: Int
 payment_method: String
 payment_date: String
 amount: Int
 payment_status: String
+       filter: PaymentFilter
 }
 
 type PaymentOutput {
 	created: [Payment]!
 	updated: [Payment]!
 	deleted: Int
+}
+
+input PaymentDelete {
+       filter: PaymentFilter
 }
 
   input NestedFiltering {
@@ -539,7 +541,7 @@ icon_label: ComparisonOperators
 
 
   input Product_reviewsCount {
-    _action: ActionType!
+    _count: Int
   } 
 
 
@@ -563,16 +565,9 @@ icon_label: ComparisonOperators
 }
 
 input Product_reviewsMutationOptions {
-    filter: Product_reviewsFilter
-    _action: ActionType!
-    sort: Product_reviewsSortOptions
-    product_id: Int
-customer_id: Int
-rating: Int
-review_text: String
-review_date: String
-icon_class: String
-icon_label: String
+    _create: Product_reviewsInput
+    _update: Product_reviewsUpDel
+    _delete: Product_reviewsDelete
     }
 
 input Product_reviewsSortOptions {
@@ -619,7 +614,7 @@ input Product_reviewsFilter {
   _or: [ Product_reviewsLogicalOp]
 }
 
-input Product_reviewsUpdate {
+input Product_reviewsUpDel {
     product_id: Int
 customer_id: Int
 rating: Int
@@ -627,12 +622,17 @@ review_text: String
 review_date: String
 icon_class: String
 icon_label: String
+       filter: Product_reviewsFilter
 }
 
 type Product_reviewsOutput {
 	created: [Product_reviews]!
 	updated: [Product_reviews]!
 	deleted: Int
+}
+
+input Product_reviewsDelete {
+       filter: Product_reviewsFilter
 }
 
   input NestedFiltering {
@@ -649,7 +649,7 @@ icon_label: ComparisonOperators
 
 
   input ProductsCount {
-    _action: ActionType!
+    _count: Int
   } 
 
 
@@ -672,15 +672,9 @@ icon_label: ComparisonOperators
 }
 
 input ProductsMutationOptions {
-    filter: ProductsFilter
-    _action: ActionType!
-    sort: ProductsSortOptions
-    product_name: String
-price: Float
-currency_type: String
-description: String
-icon_class: String
-icon_label: String
+    _create: ProductsInput
+    _update: ProductsUpDel
+    _delete: ProductsDelete
     }
 
 input ProductsSortOptions {
@@ -724,19 +718,24 @@ input ProductsFilter {
   _or: [ ProductsLogicalOp]
 }
 
-input ProductsUpdate {
+input ProductsUpDel {
     product_name: String
 price: Float
 currency_type: String
 description: String
 icon_class: String
 icon_label: String
+       filter: ProductsFilter
 }
 
 type ProductsOutput {
 	created: [Products]!
 	updated: [Products]!
 	deleted: Int
+}
+
+input ProductsDelete {
+       filter: ProductsFilter
 }
 
   input NestedFiltering {
@@ -752,7 +751,7 @@ icon_label: ComparisonOperators
 
 
   input ShipmentsCount {
-    _action: ActionType!
+    _count: Int
   } 
 
 
@@ -774,14 +773,9 @@ icon_label: ComparisonOperators
 }
 
 input ShipmentsMutationOptions {
-    filter: ShipmentsFilter
-    _action: ActionType!
-    sort: ShipmentsSortOptions
-    order_id: Int
-shipment_date: String
-tracking_int: String
-icon_class: String
-icon_label: String
+    _create: ShipmentsInput
+    _update: ShipmentsUpDel
+    _delete: ShipmentsDelete
     }
 
 input ShipmentsSortOptions {
@@ -822,18 +816,23 @@ input ShipmentsFilter {
   _or: [ ShipmentsLogicalOp]
 }
 
-input ShipmentsUpdate {
+input ShipmentsUpDel {
     order_id: Int
 shipment_date: String
 tracking_int: String
 icon_class: String
 icon_label: String
+       filter: ShipmentsFilter
 }
 
 type ShipmentsOutput {
 	created: [Shipments]!
 	updated: [Shipments]!
 	deleted: Int
+}
+
+input ShipmentsDelete {
+       filter: ShipmentsFilter
 }
 
   input NestedFiltering {
@@ -849,7 +848,7 @@ created_at: ComparisonOperators
 
 
   input UsersCount {
-    _action: ActionType!
+    _count: Int
   } 
 
 
@@ -871,13 +870,9 @@ created_at: ComparisonOperators
 }
 
 input UsersMutationOptions {
-    filter: UsersFilter
-    _action: ActionType!
-    sort: UsersSortOptions
-    email: String
-role_id: Int
-customer_id: Int
-created_at: String
+    _create: UsersInput
+    _update: UsersUpDel
+    _delete: UsersDelete
     }
 
 input UsersSortOptions {
@@ -917,18 +912,23 @@ input UsersFilter {
   _or: [ UsersLogicalOp]
 }
 
-input UsersUpdate {
+input UsersUpDel {
     password: String
 email: String
 role_id: Int
 customer_id: Int
 created_at: String
+       filter: UsersFilter
 }
 
 type UsersOutput {
 	created: [Users]!
 	updated: [Users]!
 	deleted: Int
+}
+
+input UsersDelete {
+       filter: UsersFilter
 }
 
   input NestedFiltering {
@@ -940,7 +940,7 @@ role_name: ComparisonOperators
 
 
   input User_roleCount {
-    _action: ActionType!
+    _count: Int
   } 
 
 
@@ -958,10 +958,9 @@ role_name: ComparisonOperators
 }
 
 input User_roleMutationOptions {
-    filter: User_roleFilter
-    _action: ActionType!
-    sort: User_roleSortOptions
-    role_name: String
+    _create: User_roleInput
+    _update: User_roleUpDel
+    _delete: User_roleDelete
     }
 
 input User_roleSortOptions {
@@ -990,14 +989,19 @@ input User_roleFilter {
   _or: [ User_roleLogicalOp]
 }
 
-input User_roleUpdate {
+input User_roleUpDel {
     role_name: String
+       filter: User_roleFilter
 }
 
 type User_roleOutput {
 	created: [User_role]!
 	updated: [User_role]!
 	deleted: Int
+}
+
+input User_roleDelete {
+       filter: User_roleFilter
 }
 
 enum ActionType {
