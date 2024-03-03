@@ -136,6 +136,7 @@ input Resolvers${tableName} {
 	update: ${tableName}Update
     take: Int = 15
     skip: Int
+    sort: ${tableName}Sort
 }`;
     //Define the entities type
     const tableTypeDef = `
@@ -211,6 +212,21 @@ input ${tableName}Update {
       })
       .join('\n')}
 }`;
+
+    //Define the Update entities input
+    const sort = `
+   input ${tableName}Sort {
+       ${table.columns
+         .filter((column) => column.primaryKey !== true)
+         .map((column) => {
+           if (column.foreignKey) {
+             return '';
+           }
+           return `${column.name}: Sort`;
+         })
+         .join('\n')}
+   }`;
+
     // Define the output type
     const output = `
 type ${tableName}Output {
@@ -228,9 +244,14 @@ type ${tableName}Output {
     action: String
     count: Int!
   }
+
+enum Sort { 
+  ASC 
+  DESC 
+}
 `;
 
-    typeDefs.push(resolvers, tableTypeDef, tableInputTypeDef, tableFilters, update, output, ordersCountInput);
+    typeDefs.push(resolvers, tableTypeDef, tableInputTypeDef, tableFilters, update, output, ordersCountInput, sort);
   });
 
   // Redefinition of the input type for authorizing a user, possibly a duplication error.
