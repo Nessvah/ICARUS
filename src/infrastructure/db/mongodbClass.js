@@ -25,59 +25,126 @@ class MongoDBConnection {
   }
 
   //organize de filter in a mongodb filter structure, that will be use in the crud functions.
+  // Convert GraphQL filter to MongoDB query
   filterController(input) {
     let query = {};
-    this.tableData.columns.forEach((colum) => {
-      if (input.filter) {
-        if (input.filter[colum.name]) {
-          if (colum.name == 'id') {
-            let idArray = [];
-            input.filter.id.forEach((id) => idArray.push(new ObjectId(id)));
-            query._id = { $in: idArray };
-          } else {
-            query[colum.name] = { $in: input.filter[colum.name] };
-          }
+
+    // Iterate through filter fields
+    Object.keys(input).forEach((fieldName) => {
+      const filterValue = input[fieldName];
+
+      // Handle nested operators _and and _or
+      if (fieldName === '_and' || fieldName === '_or') {
+        if (Array.isArray(filterValue)) {
+          const operator = fieldName === '_and' ? '$and' : '$or';
+          const nestedQueries = filterValue.map((nestedFilter) => this.filterController(nestedFilter));
+          query[operator] = nestedQueries;
+        }
+      } else {
+        // Handle comparison operators from ComparisonOperators input type
+        switch (fieldName) {
+          case '_eq':
+          case '_neq':
+          case '_lt':
+          case '_lte':
+          case '_gt':
+          case '_gte':
+          case '_in':
+          case '_nin':
+            query = { ...query, ...this.handleNestedFilters(fieldName, filterValue) };
+            break;
+          default:
+            // Handle nested filters
+            if (typeof filterValue === 'object') {
+              query[fieldName] = this.filterController(filterValue);
+            }
+            break;
         }
       }
     });
+
     return query;
+  }
+
+  handleNestedFilters(fieldName, filterValue) {
+    const nestedQuery = {};
+
+    // Handle comparison operators from ComparisonOperators input type
+    const operator = fieldName.replace('_', '$');
+
+    switch (fieldName) {
+      case '_eq':
+      case '_neq':
+        // For String, Integer, Boolean, Double, Min/Max keys, Symbol, Date, ObjectID, Regular expression
+        // Convert string to corresponding type if applicable
+        nestedQuery[operator] = filterValue;
+        break;
+      case '_lt':
+      case '_lte':
+      case '_gt':
+      case '_gte':
+        // For Integer, Double, Date
+        // Convert string to number if applicable
+        nestedQuery[operator] = !isNaN(filterValue) ? parseFloat(filterValue) : filterValue;
+        break;
+      case '_in':
+      case '_nin':
+        // For Arrays
+        // Split the string and convert each element to the corresponding type if applicable
+        nestedQuery[operator] = filterValue.split(',').map((val) => val.trim());
+        break;
+      // Handle other comparison operators from ComparisonOperators input type...
+      default:
+        // Handle nested filters
+        if (typeof filterValue === 'object') {
+          nestedQuery[fieldName] = this.filterController(filterValue);
+        }
+        break;
+    }
+
+    console.log(nestedQuery); // Log the nested query
+    return nestedQuery;
   }
 
   //find a specific value or a array of values in a document, in a specific table. Return a array of objects fonded [{document}, {document}]
   // input:{filter: _id:["id", "id"]} or input:{filter:{keys and values}}
   async find(table, { input }) {
     const db = this.client.db(this.dbName);
-    //console.log(table, input);
     const collection = db.collection(table);
     let res;
 
-    //call the filter function to reorganize que filter parameter to a more readable one.
-    const filter = this.filterController(input);
+    // Check if input.filter is empty or not defined
+    if (!input.filter || Object.keys(input.filter).length === 0) {
+      // If input.filter is empty or not defined, return all documents
+      res = await collection.find().toArray();
+    } else {
+      // Call the filter function to reorganize the filter parameter
+      const filter = this.filterController(input.filter); // Pass only the filter part
+      console.log(JSON.stringify(filter, null, 2));
 
-    if (filter) {
-      const options = {};
+      if (filter) {
+        const options = {
+          // Set the timeout value in milliseconds
+          maxTimeMS: 60000, // Adjust this value to your desired timeout
+        };
 
-      // Set the timeout value in milliseconds
-      const timeoutMilliseconds = 60000; // Adjust this value to your desired timeout
-
-      // Set the maxTimeMS option
-      options.maxTimeMS = timeoutMilliseconds;
-
-      if (input.skip && input.take) {
-        res = await collection.find(filter, options).sort({ _id: 1 }).skip(input.skip).limit(input.take).toArray();
-      } else if (input.skip) {
-        res = await collection.find(filter, options).sort({ _id: 1 }).skip(input.skip).toArray();
-      } else if (input.take) {
-        res = await collection.find(filter, options).sort({ _id: 1 }).limit(input.take).toArray();
-      } else {
-        res = await collection.find(filter, options).sort({ _id: 1 }).toArray();
+        if (input.skip && input.take) {
+          res = await collection.find(filter, options).sort({ _id: 1 }).skip(input.skip).limit(input.take).toArray();
+        } else if (input.skip) {
+          res = await collection.find(filter, options).sort({ _id: 1 }).skip(input.skip).toArray();
+        } else if (input.take) {
+          res = await collection.find(filter, options).sort({ _id: 1 }).limit(input.take).toArray();
+        } else {
+          res = await collection.find(filter, options).sort({ _id: 1 }).toArray();
+        }
       }
     }
 
     if (!res) {
       return false;
     }
-    // this transform the "_id" key in a "id" key, to follow the schema graphql definition, that have to be equal to all databases.
+
+    // Transform "_id" key into "id" key
     res.forEach((element) => {
       if (element._id) {
         const id = element._id;
@@ -86,10 +153,9 @@ class MongoDBConnection {
       }
     });
 
-    // To verify if there is array in any column of the table
+    // Modify array fields to strings if necessary
     const isArrayField = this.tableData.columns.filter((column) => column.type === 'array');
 
-    // To modify the array field to string
     if (isArrayField.length > 0) {
       res.map((element) => {
         isArrayField.forEach((arrayField) => {
@@ -99,7 +165,7 @@ class MongoDBConnection {
         return element;
       });
     }
-
+    console.log({ res });
     return res;
   }
 

@@ -32,7 +32,7 @@
       },
       {
         "name": "currency_type",
-        "type": "VARCHAR",
+        "type": "string",
         "primaryKey": false,
         "nullable": true,
         "defaultValue": "EUR",
