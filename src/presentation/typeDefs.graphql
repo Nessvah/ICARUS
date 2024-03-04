@@ -2,1098 +2,1176 @@ scalar JSON
 scalar GraphQLDate
 scalar MySQLDate
 
-input ComparisonOperators {
-  _eq: String
-  _neq: String
-  _lt: String
-  _lte: String
-  _gt: String
-  _gte: String
-  _in: String
-  _nin: String
-}
+    input ComparisonOperators {
+      _eq: String
+_neq: String
+_lt: String
+_lte: String
+_gt: String
+_gte: String
+_in: String
+_nin: String
+    }
+
 
 # define the root Query
 type Query {
   tables: [TableInfo]
-  authors(input: ResolversAuthors = {}): [Authors]
-  blog_posts(input: ResolversBlog_posts = {}): [Blog_posts]
-  brands(input: ResolversBrands = {}): [Brands]
-  categories(input: ResolversCategories = {}): [Categories]
-  coupons(input: ResolversCoupons = {}): [Coupons]
-  customers(input: ResolversCustomers = {}): [Customers]
-  order_items(input: ResolversOrder_items = {}): [Order_items]
-  orders(input: ResolversOrders = {}): [Orders]
-  payment(input: ResolversPayment = {}): [Payment]
-  products(input: ResolversProducts = {}): [Products]
-  product_reviews(input: ResolversProduct_reviews = {}): [Product_reviews]
-  promotions(input: ResolversPromotions = {}): [Promotions]
-  shipments(input: ResolversShipments = {}): [Shipments]
-  user_role(input: ResolversUser_role = {}): [User_role]
-  users(input: ResolversUsers = {}): [Users]
-  authorsCount(input: AuthorsCount): AuthorsCountResult
-  blog_postsCount(input: Blog_postsCount): Blog_postsCountResult
-  brandsCount(input: BrandsCount): BrandsCountResult
-  categoriesCount(input: CategoriesCount): CategoriesCountResult
-  couponsCount(input: CouponsCount): CouponsCountResult
-  customersCount(input: CustomersCount): CustomersCountResult
-  order_itemsCount(input: Order_itemsCount): Order_itemsCountResult
-  ordersCount(input: OrdersCount): OrdersCountResult
-  paymentCount(input: PaymentCount): PaymentCountResult
-  productsCount(input: ProductsCount): ProductsCountResult
-  product_reviewsCount(input: Product_reviewsCount): Product_reviewsCountResult
-  promotionsCount(input: PromotionsCount): PromotionsCountResult
-  shipmentsCount(input: ShipmentsCount): ShipmentsCountResult
-  user_roleCount(input: User_roleCount): User_roleCountResult
-  usersCount(input: UsersCount): UsersCountResult
+    authors(input: ResolversAuthors = {}): [Authors]
+blog_posts(input: ResolversBlog_posts = {}): [Blog_posts]
+brands(input: ResolversBrands = {}): [Brands]
+categories(input: ResolversCategories = {}): [Categories]
+coupons(input: ResolversCoupons = {}): [Coupons]
+customers(input: ResolversCustomers = {}): [Customers]
+order_items(input: ResolversOrder_items = {}): [Order_items]
+orders(input: ResolversOrders = {}): [Orders]
+payment(input: ResolversPayment = {}): [Payment]
+products(input: ResolversProducts = {}): [Products]
+product_reviews(input: ResolversProduct_reviews = {}): [Product_reviews]
+promotions(input: ResolversPromotions = {}): [Promotions]
+shipments(input: ResolversShipments = {}): [Shipments]
+user_role(input: ResolversUser_role = {}): [User_role]
+users(input: ResolversUsers = {}): [Users]
+    authorsCount(input: AuthorsCount): AuthorsCountResult
+blog_postsCount(input: Blog_postsCount): Blog_postsCountResult
+brandsCount(input: BrandsCount): BrandsCountResult
+categoriesCount(input: CategoriesCount): CategoriesCountResult
+couponsCount(input: CouponsCount): CouponsCountResult
+customersCount(input: CustomersCount): CustomersCountResult
+order_itemsCount(input: Order_itemsCount): Order_itemsCountResult
+ordersCount(input: OrdersCount): OrdersCountResult
+paymentCount(input: PaymentCount): PaymentCountResult
+productsCount(input: ProductsCount): ProductsCountResult
+product_reviewsCount(input: Product_reviewsCount): Product_reviewsCountResult
+promotionsCount(input: PromotionsCount): PromotionsCountResult
+shipmentsCount(input: ShipmentsCount): ShipmentsCountResult
+user_roleCount(input: User_roleCount): User_roleCountResult
+usersCount(input: UsersCount): UsersCountResult
+
 }
 
 # define the root Mutation
 type Mutation {
   authorize(input: AuthorizeUser!): AuthPayload!
-  authors(input: ResolversAuthors): AuthorsOutput
-  blog_posts(input: ResolversBlog_posts): Blog_postsOutput
-  brands(input: ResolversBrands): BrandsOutput
-  categories(input: ResolversCategories): CategoriesOutput
-  coupons(input: ResolversCoupons): CouponsOutput
-  customers(input: ResolversCustomers): CustomersOutput
-  order_items(input: ResolversOrder_items): Order_itemsOutput
-  orders(input: ResolversOrders): OrdersOutput
-  payment(input: ResolversPayment): PaymentOutput
-  products(input: ResolversProducts): ProductsOutput
-  product_reviews(input: ResolversProduct_reviews): Product_reviewsOutput
-  promotions(input: ResolversPromotions): PromotionsOutput
-  shipments(input: ResolversShipments): ShipmentsOutput
-  user_role(input: ResolversUser_role): User_roleOutput
-  users(input: ResolversUsers): UsersOutput
+    authors(input: ResolversAuthors): AuthorsOutput
+blog_posts(input: ResolversBlog_posts): Blog_postsOutput
+brands(input: ResolversBrands): BrandsOutput
+categories(input: ResolversCategories): CategoriesOutput
+coupons(input: ResolversCoupons): CouponsOutput
+customers(input: ResolversCustomers): CustomersOutput
+order_items(input: ResolversOrder_items): Order_itemsOutput
+orders(input: ResolversOrders): OrdersOutput
+payment(input: ResolversPayment): PaymentOutput
+products(input: ResolversProducts): ProductsOutput
+product_reviews(input: ResolversProduct_reviews): Product_reviewsOutput
+promotions(input: ResolversPromotions): PromotionsOutput
+shipments(input: ResolversShipments): ShipmentsOutput
+user_role(input: ResolversUser_role): User_roleOutput
+users(input: ResolversUsers): UsersOutput
 }
 
 input ResolversAuthors {
-  filter: AuthorsFilter
-  action: ActionType!
-  create: [AuthorsInput]
-  update: AuthorsUpdate
-  take: Int = 15
-  skip: Int
+    filter: AuthorsFilter
+	action: ActionType!
+    create: [AuthorsInput]
+	update: AuthorsUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type Authors {
-  id: ID!
-  name: String!
-  email: String!
-  blog_posts: [Blog_posts]
+    id: ID!
+name: String!
+email: String!
+      blog_posts: [Blog_posts]
+
 }
 
 input AuthorsInput {
-  name: String!
-  email: String!
+    name: String!
+email: String!
+
 }
 
 input AuthorsFilter {
-  _and: [AuthorsLogicalOp]
-  _or: [AuthorsLogicalOp]
+  _and: [ AuthorsLogicalOp]
+  _or: [ AuthorsLogicalOp]
 }
 
 input AuthorsUpdate {
-  name: String
-  email: String
+    name: String
+email: String
+
 }
 
 type AuthorsOutput {
-  created: [Authors]!
-  updated: [Authors]!
-  deleted: Int
+	created: [Authors]!
+	updated: [Authors]!
+	deleted: Int
 }
 
-input AuthorsCount {
-  action: ActionType!
-}
+  input AuthorsCount {
+    action: ActionType!
+  } 
 
-type AuthorsCountResult {
-  action: String
-  count: Int!
-}
+
+  type AuthorsCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input AuthorsLogicalOp {
-  _and: [AuthorsLogicalOp]
-  _or: [AuthorsLogicalOp]
+  _and: [ AuthorsLogicalOp]
+  _or: [ AuthorsLogicalOp]
+   
+name: ComparisonOperators
+email: ComparisonOperators
 
-  name: ComparisonOperators
-  email: ComparisonOperators
 }
 
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
   name: ComparisonOperators
-  email: ComparisonOperators
+email: ComparisonOperators
 }
 
+
 input ResolversBlog_posts {
-  filter: Blog_postsFilter
-  action: ActionType!
-  create: [Blog_postsInput]
-  update: Blog_postsUpdate
-  take: Int = 15
-  skip: Int
+    filter: Blog_postsFilter
+	action: ActionType!
+    create: [Blog_postsInput]
+	update: Blog_postsUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type Blog_posts {
-  id: ID!
-  title: String!
-  author_id: ID!
-  content: JSON!
-  publish_date: String!
-  authors: Authors
+    id: ID!
+title: String!
+author_id: ID!
+content: JSON!
+publish_date: String!
+      authors: Authors
+
 }
 
 input Blog_postsInput {
-  title: String!
-  author_id: ID!
-  content: JSON!
-  publish_date: String!
+    title: String!
+author_id: ID!
+content: JSON!
+publish_date: String!
 }
 
 input Blog_postsFilter {
-  _and: [Blog_postsLogicalOp]
-  _or: [Blog_postsLogicalOp]
+  _and: [ Blog_postsLogicalOp]
+  _or: [ Blog_postsLogicalOp]
 }
 
 input Blog_postsUpdate {
-  title: String
-  author_id: ID
-  content: JSON
-  publish_date: String
+    title: String
+author_id: ID
+content: JSON
+publish_date: String
 }
 
 type Blog_postsOutput {
-  created: [Blog_posts]!
-  updated: [Blog_posts]!
-  deleted: Int
+	created: [Blog_posts]!
+	updated: [Blog_posts]!
+	deleted: Int
 }
 
-input Blog_postsCount {
-  action: ActionType!
-}
+  input Blog_postsCount {
+    action: ActionType!
+  } 
 
-type Blog_postsCountResult {
-  action: String
-  count: Int!
-}
+
+  type Blog_postsCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input Blog_postsLogicalOp {
-  _and: [Blog_postsLogicalOp]
-  _or: [Blog_postsLogicalOp]
-
-  title: ComparisonOperators
-  author_id: ComparisonOperators
-  content: ComparisonOperators
-  publish_date: ComparisonOperators
+  _and: [ Blog_postsLogicalOp]
+  _or: [ Blog_postsLogicalOp]
+   
+title: ComparisonOperators
+author_id: ComparisonOperators
+content: ComparisonOperators
+publish_date: ComparisonOperators
 }
 
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
   title: ComparisonOperators
-  author_id: ComparisonOperators
-  content: ComparisonOperators
-  publish_date: ComparisonOperators
+author_id: ComparisonOperators
+content: ComparisonOperators
+publish_date: ComparisonOperators
 }
 
+
 input ResolversBrands {
-  filter: BrandsFilter
-  action: ActionType!
-  create: [BrandsInput]
-  update: BrandsUpdate
-  take: Int = 15
-  skip: Int
+    filter: BrandsFilter
+	action: ActionType!
+    create: [BrandsInput]
+	update: BrandsUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type Brands {
-  id: ID!
-  name: String!
-  country: String!
-  founded_year: String!
-  products: JSON!
+    id: ID!
+name: String!
+country: String!
+founded_year: String!
+products: JSON!
+      
+
 }
 
 input BrandsInput {
-  name: String!
-  country: String!
-  founded_year: String!
-  products: JSON!
+    name: String!
+country: String!
+founded_year: String!
+products: JSON!
 }
 
 input BrandsFilter {
-  _and: [BrandsLogicalOp]
-  _or: [BrandsLogicalOp]
+  _and: [ BrandsLogicalOp]
+  _or: [ BrandsLogicalOp]
 }
 
 input BrandsUpdate {
-  name: String
-  country: String
-  founded_year: String
-  products: JSON
+    name: String
+country: String
+founded_year: String
+products: JSON
 }
 
 type BrandsOutput {
-  created: [Brands]!
-  updated: [Brands]!
-  deleted: Int
+	created: [Brands]!
+	updated: [Brands]!
+	deleted: Int
 }
 
-input BrandsCount {
-  action: ActionType!
-}
+  input BrandsCount {
+    action: ActionType!
+  } 
 
-type BrandsCountResult {
-  action: String
-  count: Int!
-}
+
+  type BrandsCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input BrandsLogicalOp {
-  _and: [BrandsLogicalOp]
-  _or: [BrandsLogicalOp]
-
-  name: ComparisonOperators
-  country: ComparisonOperators
-  founded_year: ComparisonOperators
-  products: ComparisonOperators
+  _and: [ BrandsLogicalOp]
+  _or: [ BrandsLogicalOp]
+   
+name: ComparisonOperators
+country: ComparisonOperators
+founded_year: ComparisonOperators
+products: ComparisonOperators
 }
 
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
   name: ComparisonOperators
-  country: ComparisonOperators
-  founded_year: ComparisonOperators
-  products: ComparisonOperators
+country: ComparisonOperators
+founded_year: ComparisonOperators
+products: ComparisonOperators
 }
 
+
 input ResolversCategories {
-  filter: CategoriesFilter
-  action: ActionType!
-  create: [CategoriesInput]
-  update: CategoriesUpdate
-  take: Int = 15
-  skip: Int
+    filter: CategoriesFilter
+	action: ActionType!
+    create: [CategoriesInput]
+	update: CategoriesUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type Categories {
-  category_id: Int!
-  category_name: String
-  icon_class: String
-  icon_label: String
+    category_id: Int!
+category_name: String
+icon_class: String
+icon_label: String
+      
+
 }
 
 input CategoriesInput {
-  category_name: String
-  icon_class: String
-  icon_label: String
+    category_name: String
+icon_class: String
+icon_label: String
 }
 
 input CategoriesFilter {
-  _and: [CategoriesLogicalOp]
-  _or: [CategoriesLogicalOp]
+  _and: [ CategoriesLogicalOp]
+  _or: [ CategoriesLogicalOp]
 }
 
 input CategoriesUpdate {
-  category_name: String
-  icon_class: String
-  icon_label: String
+    category_name: String
+icon_class: String
+icon_label: String
 }
 
 type CategoriesOutput {
-  created: [Categories]!
-  updated: [Categories]!
-  deleted: Int
+	created: [Categories]!
+	updated: [Categories]!
+	deleted: Int
 }
 
-input CategoriesCount {
-  action: ActionType!
-}
+  input CategoriesCount {
+    action: ActionType!
+  } 
 
-type CategoriesCountResult {
-  action: String
-  count: Int!
-}
+
+  type CategoriesCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input CategoriesLogicalOp {
-  _and: [CategoriesLogicalOp]
-  _or: [CategoriesLogicalOp]
-  category_id: ComparisonOperators
-  category_name: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
+  _and: [ CategoriesLogicalOp]
+  _or: [ CategoriesLogicalOp]
+   category_id: ComparisonOperators
+category_name: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
 }
 
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
   category_id: ComparisonOperators
-  category_name: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
+category_name: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
 }
 
+
 input ResolversCoupons {
-  filter: CouponsFilter
-  action: ActionType!
-  create: [CouponsInput]
-  update: CouponsUpdate
-  take: Int = 15
-  skip: Int
+    filter: CouponsFilter
+	action: ActionType!
+    create: [CouponsInput]
+	update: CouponsUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type Coupons {
-  id: ID!
-  code: String!
-  discount_percent: Int!
-  expiration_date: String!
-  promotion_id: ID!
-  promotions: Promotions
+    id: ID!
+code: String!
+discount_percent: Int!
+expiration_date: String!
+promotion_id: ID!
+      promotions: Promotions
+
 }
 
 input CouponsInput {
-  code: String!
-  discount_percent: Int!
-  expiration_date: String!
-  promotion_id: ID!
+    code: String!
+discount_percent: Int!
+expiration_date: String!
+promotion_id: ID!
 }
 
 input CouponsFilter {
-  _and: [CouponsLogicalOp]
-  _or: [CouponsLogicalOp]
+  _and: [ CouponsLogicalOp]
+  _or: [ CouponsLogicalOp]
 }
 
 input CouponsUpdate {
-  code: String
-  discount_percent: Int
-  expiration_date: String
-  promotion_id: ID
+    code: String
+discount_percent: Int
+expiration_date: String
+promotion_id: ID
 }
 
 type CouponsOutput {
-  created: [Coupons]!
-  updated: [Coupons]!
-  deleted: Int
+	created: [Coupons]!
+	updated: [Coupons]!
+	deleted: Int
 }
 
-input CouponsCount {
-  action: ActionType!
-}
+  input CouponsCount {
+    action: ActionType!
+  } 
 
-type CouponsCountResult {
-  action: String
-  count: Int!
-}
+
+  type CouponsCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input CouponsLogicalOp {
-  _and: [CouponsLogicalOp]
-  _or: [CouponsLogicalOp]
-
-  code: ComparisonOperators
-  discount_percent: ComparisonOperators
-  expiration_date: ComparisonOperators
-  promotion_id: ComparisonOperators
+  _and: [ CouponsLogicalOp]
+  _or: [ CouponsLogicalOp]
+   
+code: ComparisonOperators
+discount_percent: ComparisonOperators
+expiration_date: ComparisonOperators
+promotion_id: ComparisonOperators
 }
 
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
   code: ComparisonOperators
-  discount_percent: ComparisonOperators
-  expiration_date: ComparisonOperators
-  promotion_id: ComparisonOperators
+discount_percent: ComparisonOperators
+expiration_date: ComparisonOperators
+promotion_id: ComparisonOperators
 }
 
+
 input ResolversCustomers {
-  filter: CustomersFilter
-  action: ActionType!
-  create: [CustomersInput]
-  update: CustomersUpdate
-  take: Int = 15
-  skip: Int
+    filter: CustomersFilter
+	action: ActionType!
+    create: [CustomersInput]
+	update: CustomersUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type Customers {
-  customer_id: Int!
-  customer_name: String
-  email: String
-  icon_class: String
-  icon_label: String
-  orders: [Orders]
+    customer_id: Int!
+customer_name: String
+email: String
+icon_class: String
+icon_label: String
+      orders: [Orders]
+
 }
 
 input CustomersInput {
-  customer_name: String
-  email: String
-  icon_class: String
-  icon_label: String
+    customer_name: String
+email: String
+icon_class: String
+icon_label: String
+
 }
 
 input CustomersFilter {
-  _and: [CustomersLogicalOp]
-  _or: [CustomersLogicalOp]
+  _and: [ CustomersLogicalOp]
+  _or: [ CustomersLogicalOp]
 }
 
 input CustomersUpdate {
-  customer_name: String
-  email: String
-  icon_class: String
-  icon_label: String
+    customer_name: String
+email: String
+icon_class: String
+icon_label: String
+
 }
 
 type CustomersOutput {
-  created: [Customers]!
-  updated: [Customers]!
-  deleted: Int
+	created: [Customers]!
+	updated: [Customers]!
+	deleted: Int
 }
 
-input CustomersCount {
-  action: ActionType!
-}
+  input CustomersCount {
+    action: ActionType!
+  } 
 
-type CustomersCountResult {
-  action: String
-  count: Int!
-}
+
+  type CustomersCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input CustomersLogicalOp {
-  _and: [CustomersLogicalOp]
-  _or: [CustomersLogicalOp]
-  customer_id: ComparisonOperators
-  customer_name: ComparisonOperators
-  email: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
-  orders: ComparisonOperators
+  _and: [ CustomersLogicalOp]
+  _or: [ CustomersLogicalOp]
+   customer_id: ComparisonOperators
+customer_name: ComparisonOperators
+email: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+orders: ComparisonOperators
 }
 
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
   customer_id: ComparisonOperators
-  customer_name: ComparisonOperators
-  email: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
-  orders: ComparisonOperators
+customer_name: ComparisonOperators
+email: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+orders: ComparisonOperators
 }
 
+
 input ResolversOrder_items {
-  filter: Order_itemsFilter
-  action: ActionType!
-  create: [Order_itemsInput]
-  update: Order_itemsUpdate
-  take: Int = 15
-  skip: Int
+    filter: Order_itemsFilter
+	action: ActionType!
+    create: [Order_itemsInput]
+	update: Order_itemsUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type Order_items {
-  order_item_id: Int!
-  order_id: Int
-  product_id: Int
-  quantity: Int
-  price: Float
-  currency_type: String
-  icon_class: String
-  icon_label: String
-  orders: Orders
-  products: Products
+    order_item_id: Int!
+order_id: Int
+product_id: Int
+quantity: Int
+price: Float
+currency_type: String
+icon_class: String
+icon_label: String
+      orders: Orders
+products: Products
+
 }
 
 input Order_itemsInput {
-  order_id: Int
-  product_id: Int
-  quantity: Int
-  price: Float
-  currency_type: String
-  icon_class: String
-  icon_label: String
+    order_id: Int
+product_id: Int
+quantity: Int
+price: Float
+currency_type: String
+icon_class: String
+icon_label: String
 }
 
 input Order_itemsFilter {
-  _and: [Order_itemsLogicalOp]
-  _or: [Order_itemsLogicalOp]
+  _and: [ Order_itemsLogicalOp]
+  _or: [ Order_itemsLogicalOp]
 }
 
 input Order_itemsUpdate {
-  order_id: Int
-  product_id: Int
-  quantity: Int
-  price: Float
-  currency_type: String
-  icon_class: String
-  icon_label: String
+    order_id: Int
+product_id: Int
+quantity: Int
+price: Float
+currency_type: String
+icon_class: String
+icon_label: String
 }
 
 type Order_itemsOutput {
-  created: [Order_items]!
-  updated: [Order_items]!
-  deleted: Int
+	created: [Order_items]!
+	updated: [Order_items]!
+	deleted: Int
 }
 
-input Order_itemsCount {
-  action: ActionType!
-}
+  input Order_itemsCount {
+    action: ActionType!
+  } 
 
-type Order_itemsCountResult {
-  action: String
-  count: Int!
-}
+
+  type Order_itemsCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input Order_itemsLogicalOp {
-  _and: [Order_itemsLogicalOp]
-  _or: [Order_itemsLogicalOp]
-  order_item_id: ComparisonOperators
-  order_id: ComparisonOperators
-  product_id: ComparisonOperators
-  quantity: ComparisonOperators
-  price: ComparisonOperators
-  currency_type: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
+  _and: [ Order_itemsLogicalOp]
+  _or: [ Order_itemsLogicalOp]
+   order_item_id: ComparisonOperators
+order_id: ComparisonOperators
+product_id: ComparisonOperators
+quantity: ComparisonOperators
+price: ComparisonOperators
+currency_type: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
 }
 
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
   order_item_id: ComparisonOperators
-  order_id: ComparisonOperators
-  product_id: ComparisonOperators
-  quantity: ComparisonOperators
-  price: ComparisonOperators
-  currency_type: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
+order_id: ComparisonOperators
+product_id: ComparisonOperators
+quantity: ComparisonOperators
+price: ComparisonOperators
+currency_type: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
 }
 
+
 input ResolversOrders {
-  filter: OrdersFilter
-  action: ActionType!
-  create: [OrdersInput]
-  update: OrdersUpdate
-  take: Int = 15
-  skip: Int
+    filter: OrdersFilter
+	action: ActionType!
+    create: [OrdersInput]
+	update: OrdersUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type Orders {
-  order_id: Int!
-  order_date: String
-  customer_id: Int
-  icon_class: String
-  icon_label: String
-  customers: Customers
-  order_items: [Order_items]
-  shipments: Shipments
-  payment: Payment
+    order_id: Int!
+order_date: String
+customer_id: Int
+icon_class: String
+icon_label: String
+      customers: Customers
+order_items: [Order_items]
+shipments: Shipments
+payment: Payment
+
 }
 
 input OrdersInput {
-  order_date: String
-  customer_id: Int
-  icon_class: String
-  icon_label: String
+    order_date: String
+customer_id: Int
+icon_class: String
+icon_label: String
+
+
+
 }
 
 input OrdersFilter {
-  _and: [OrdersLogicalOp]
-  _or: [OrdersLogicalOp]
+  _and: [ OrdersLogicalOp]
+  _or: [ OrdersLogicalOp]
 }
 
 input OrdersUpdate {
-  order_date: String
-  customer_id: Int
-  icon_class: String
-  icon_label: String
+    order_date: String
+customer_id: Int
+icon_class: String
+icon_label: String
+
+
+
 }
 
 type OrdersOutput {
-  created: [Orders]!
-  updated: [Orders]!
-  deleted: Int
+	created: [Orders]!
+	updated: [Orders]!
+	deleted: Int
 }
 
-input OrdersCount {
-  action: ActionType!
-}
+  input OrdersCount {
+    action: ActionType!
+  } 
 
-type OrdersCountResult {
-  action: String
-  count: Int!
-}
+
+  type OrdersCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input OrdersLogicalOp {
-  _and: [OrdersLogicalOp]
-  _or: [OrdersLogicalOp]
-  order_id: ComparisonOperators
-  order_date: ComparisonOperators
-  customer_id: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
-  order_items: ComparisonOperators
-  shipments: ComparisonOperators
-  payment: ComparisonOperators
+  _and: [ OrdersLogicalOp]
+  _or: [ OrdersLogicalOp]
+   order_id: ComparisonOperators
+order_date: ComparisonOperators
+customer_id: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+order_items: ComparisonOperators
+shipments: ComparisonOperators
+payment: ComparisonOperators
 }
 
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
   order_id: ComparisonOperators
-  order_date: ComparisonOperators
-  customer_id: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
-  order_items: ComparisonOperators
-  shipments: ComparisonOperators
-  payment: ComparisonOperators
+order_date: ComparisonOperators
+customer_id: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+order_items: ComparisonOperators
+shipments: ComparisonOperators
+payment: ComparisonOperators
 }
 
+
 input ResolversPayment {
-  filter: PaymentFilter
-  action: ActionType!
-  create: [PaymentInput]
-  update: PaymentUpdate
-  take: Int = 15
-  skip: Int
+    filter: PaymentFilter
+	action: ActionType!
+    create: [PaymentInput]
+	update: PaymentUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type Payment {
-  id: String!
-  payment_method: String!
-  payment_date: String!
-  amount: Float!
-  payment_status: String!
-  order_id: Int
-  orders: Orders
+    id: String!
+payment_method: String!
+payment_date: String!
+amount: Float!
+payment_status: String!
+order_id: Int
+      orders: Orders
+
 }
 
 input PaymentInput {
-  payment_method: String!
-  payment_date: String!
-  amount: Float!
-  payment_status: String!
-  order_id: Int
+    payment_method: String!
+payment_date: String!
+amount: Float!
+payment_status: String!
+order_id: Int
 }
 
 input PaymentFilter {
-  _and: [PaymentLogicalOp]
-  _or: [PaymentLogicalOp]
+  _and: [ PaymentLogicalOp]
+  _or: [ PaymentLogicalOp]
 }
 
 input PaymentUpdate {
-  payment_method: String
-  payment_date: String
-  amount: Float
-  payment_status: String
-  order_id: Int
+    payment_method: String
+payment_date: String
+amount: Float
+payment_status: String
+order_id: Int
 }
 
 type PaymentOutput {
-  created: [Payment]!
-  updated: [Payment]!
-  deleted: Int
+	created: [Payment]!
+	updated: [Payment]!
+	deleted: Int
 }
 
-input PaymentCount {
-  action: ActionType!
-}
+  input PaymentCount {
+    action: ActionType!
+  } 
 
-type PaymentCountResult {
-  action: String
-  count: Int!
-}
+
+  type PaymentCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input PaymentLogicalOp {
-  _and: [PaymentLogicalOp]
-  _or: [PaymentLogicalOp]
-
-  payment_method: ComparisonOperators
-  payment_date: ComparisonOperators
-  amount: ComparisonOperators
-  payment_status: ComparisonOperators
-  order_id: ComparisonOperators
+  _and: [ PaymentLogicalOp]
+  _or: [ PaymentLogicalOp]
+   
+payment_method: ComparisonOperators
+payment_date: ComparisonOperators
+amount: ComparisonOperators
+payment_status: ComparisonOperators
+order_id: ComparisonOperators
 }
 
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
   payment_method: ComparisonOperators
-  payment_date: ComparisonOperators
-  amount: ComparisonOperators
-  payment_status: ComparisonOperators
-  order_id: ComparisonOperators
+payment_date: ComparisonOperators
+amount: ComparisonOperators
+payment_status: ComparisonOperators
+order_id: ComparisonOperators
 }
 
+
 input ResolversProducts {
-  filter: ProductsFilter
-  action: ActionType!
-  create: [ProductsInput]
-  update: ProductsUpdate
-  take: Int = 15
-  skip: Int
+    filter: ProductsFilter
+	action: ActionType!
+    create: [ProductsInput]
+	update: ProductsUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type Products {
-  product_id: Int!
-  product_name: String
-  price: Float
-  currency_type: String
-  description: String
-  icon_class: String
-  icon_label: String
-  order_items: [Order_items]
+    product_id: Int!
+product_name: String
+price: Float
+currency_type: String
+description: String
+icon_class: String
+icon_label: String
+      order_items: [Order_items]
+
 }
 
 input ProductsInput {
-  product_name: String
-  price: Float
-  currency_type: String
-  description: String
-  icon_class: String
-  icon_label: String
+    product_name: String
+price: Float
+currency_type: String
+description: String
+icon_class: String
+icon_label: String
+
 }
 
 input ProductsFilter {
-  _and: [ProductsLogicalOp]
-  _or: [ProductsLogicalOp]
+  _and: [ ProductsLogicalOp]
+  _or: [ ProductsLogicalOp]
 }
 
 input ProductsUpdate {
-  product_name: String
-  price: Float
-  currency_type: String
-  description: String
-  icon_class: String
-  icon_label: String
+    product_name: String
+price: Float
+currency_type: String
+description: String
+icon_class: String
+icon_label: String
+
 }
 
 type ProductsOutput {
-  created: [Products]!
-  updated: [Products]!
-  deleted: Int
+	created: [Products]!
+	updated: [Products]!
+	deleted: Int
 }
 
-input ProductsCount {
-  action: ActionType!
-}
+  input ProductsCount {
+    action: ActionType!
+  } 
 
-type ProductsCountResult {
-  action: String
-  count: Int!
-}
+
+  type ProductsCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input ProductsLogicalOp {
-  _and: [ProductsLogicalOp]
-  _or: [ProductsLogicalOp]
-  product_id: ComparisonOperators
-  product_name: ComparisonOperators
-  price: ComparisonOperators
-  currency_type: ComparisonOperators
-  description: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
-  order_items: ComparisonOperators
+  _and: [ ProductsLogicalOp]
+  _or: [ ProductsLogicalOp]
+   product_id: ComparisonOperators
+product_name: ComparisonOperators
+price: ComparisonOperators
+currency_type: ComparisonOperators
+description: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+order_items: ComparisonOperators
 }
 
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
   product_id: ComparisonOperators
-  product_name: ComparisonOperators
-  price: ComparisonOperators
-  currency_type: ComparisonOperators
-  description: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
-  order_items: ComparisonOperators
+product_name: ComparisonOperators
+price: ComparisonOperators
+currency_type: ComparisonOperators
+description: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
+order_items: ComparisonOperators
 }
 
+
 input ResolversProduct_reviews {
-  filter: Product_reviewsFilter
-  action: ActionType!
-  create: [Product_reviewsInput]
-  update: Product_reviewsUpdate
-  take: Int = 15
-  skip: Int
+    filter: Product_reviewsFilter
+	action: ActionType!
+    create: [Product_reviewsInput]
+	update: Product_reviewsUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type Product_reviews {
-  review_id: Int!
-  product_id: Int
-  customer_id: Int
-  rating: Int
-  review_text: String
-  review_date: String
-  icon_class: String
-  icon_label: String
-  products: Products
-  customers: Customers
+    review_id: Int!
+product_id: Int
+customer_id: Int
+rating: Int
+review_text: String
+review_date: String
+icon_class: String
+icon_label: String
+      products: Products
+customers: Customers
+
 }
 
 input Product_reviewsInput {
-  product_id: Int
-  customer_id: Int
-  rating: Int
-  review_text: String
-  review_date: String
-  icon_class: String
-  icon_label: String
+    product_id: Int
+customer_id: Int
+rating: Int
+review_text: String
+review_date: String
+icon_class: String
+icon_label: String
 }
 
 input Product_reviewsFilter {
-  _and: [Product_reviewsLogicalOp]
-  _or: [Product_reviewsLogicalOp]
+  _and: [ Product_reviewsLogicalOp]
+  _or: [ Product_reviewsLogicalOp]
 }
 
 input Product_reviewsUpdate {
-  product_id: Int
-  customer_id: Int
-  rating: Int
-  review_text: String
-  review_date: String
-  icon_class: String
-  icon_label: String
+    product_id: Int
+customer_id: Int
+rating: Int
+review_text: String
+review_date: String
+icon_class: String
+icon_label: String
 }
 
 type Product_reviewsOutput {
-  created: [Product_reviews]!
-  updated: [Product_reviews]!
-  deleted: Int
+	created: [Product_reviews]!
+	updated: [Product_reviews]!
+	deleted: Int
 }
 
-input Product_reviewsCount {
-  action: ActionType!
-}
+  input Product_reviewsCount {
+    action: ActionType!
+  } 
 
-type Product_reviewsCountResult {
-  action: String
-  count: Int!
-}
+
+  type Product_reviewsCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input Product_reviewsLogicalOp {
-  _and: [Product_reviewsLogicalOp]
-  _or: [Product_reviewsLogicalOp]
-  review_id: ComparisonOperators
-  product_id: ComparisonOperators
-  customer_id: ComparisonOperators
-  rating: ComparisonOperators
-  review_text: ComparisonOperators
-  review_date: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
+  _and: [ Product_reviewsLogicalOp]
+  _or: [ Product_reviewsLogicalOp]
+   review_id: ComparisonOperators
+product_id: ComparisonOperators
+customer_id: ComparisonOperators
+rating: ComparisonOperators
+review_text: ComparisonOperators
+review_date: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
 }
 
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
   review_id: ComparisonOperators
-  product_id: ComparisonOperators
-  customer_id: ComparisonOperators
-  rating: ComparisonOperators
-  review_text: ComparisonOperators
-  review_date: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
+product_id: ComparisonOperators
+customer_id: ComparisonOperators
+rating: ComparisonOperators
+review_text: ComparisonOperators
+review_date: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
 }
 
+
 input ResolversPromotions {
-  filter: PromotionsFilter
-  action: ActionType!
-  create: [PromotionsInput]
-  update: PromotionsUpdate
-  take: Int = 15
-  skip: Int
+    filter: PromotionsFilter
+	action: ActionType!
+    create: [PromotionsInput]
+	update: PromotionsUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type Promotions {
-  id: ID!
-  name: String!
-  description: String!
-  start_date: String!
-  end_date: String!
-  coupons: Coupons
+    id: ID!
+name: String!
+description: String!
+start_date: String!
+end_date: String!
+      coupons: Coupons
+
 }
 
 input PromotionsInput {
-  name: String!
-  description: String!
-  start_date: String!
-  end_date: String!
+    name: String!
+description: String!
+start_date: String!
+end_date: String!
+
 }
 
 input PromotionsFilter {
-  _and: [PromotionsLogicalOp]
-  _or: [PromotionsLogicalOp]
+  _and: [ PromotionsLogicalOp]
+  _or: [ PromotionsLogicalOp]
 }
 
 input PromotionsUpdate {
-  name: String
-  description: String
-  start_date: String
-  end_date: String
+    name: String
+description: String
+start_date: String
+end_date: String
+
 }
 
 type PromotionsOutput {
-  created: [Promotions]!
-  updated: [Promotions]!
-  deleted: Int
+	created: [Promotions]!
+	updated: [Promotions]!
+	deleted: Int
 }
 
-input PromotionsCount {
-  action: ActionType!
-}
+  input PromotionsCount {
+    action: ActionType!
+  } 
 
-type PromotionsCountResult {
-  action: String
-  count: Int!
-}
+
+  type PromotionsCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input PromotionsLogicalOp {
-  _and: [PromotionsLogicalOp]
-  _or: [PromotionsLogicalOp]
+  _and: [ PromotionsLogicalOp]
+  _or: [ PromotionsLogicalOp]
+   
+name: ComparisonOperators
+description: ComparisonOperators
+start_date: ComparisonOperators
+end_date: ComparisonOperators
 
-  name: ComparisonOperators
-  description: ComparisonOperators
-  start_date: ComparisonOperators
-  end_date: ComparisonOperators
 }
 
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
   name: ComparisonOperators
-  description: ComparisonOperators
-  start_date: ComparisonOperators
-  end_date: ComparisonOperators
+description: ComparisonOperators
+start_date: ComparisonOperators
+end_date: ComparisonOperators
 }
 
+
 input ResolversShipments {
-  filter: ShipmentsFilter
-  action: ActionType!
-  create: [ShipmentsInput]
-  update: ShipmentsUpdate
-  take: Int = 15
-  skip: Int
+    filter: ShipmentsFilter
+	action: ActionType!
+    create: [ShipmentsInput]
+	update: ShipmentsUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type Shipments {
-  shipment_id: Int!
-  order_id: Int
-  shipment_date: String
-  tracking_int: String
-  icon_class: String
-  icon_label: String
-  orders: Orders
+    shipment_id: Int!
+order_id: Int
+shipment_date: String
+tracking_int: String
+icon_class: String
+icon_label: String
+      orders: Orders
+
 }
 
 input ShipmentsInput {
-  order_id: Int
-  shipment_date: String
-  tracking_int: String
-  icon_class: String
-  icon_label: String
+    order_id: Int
+shipment_date: String
+tracking_int: String
+icon_class: String
+icon_label: String
 }
 
 input ShipmentsFilter {
-  _and: [ShipmentsLogicalOp]
-  _or: [ShipmentsLogicalOp]
+  _and: [ ShipmentsLogicalOp]
+  _or: [ ShipmentsLogicalOp]
 }
 
 input ShipmentsUpdate {
-  order_id: Int
-  shipment_date: String
-  tracking_int: String
-  icon_class: String
-  icon_label: String
+    order_id: Int
+shipment_date: String
+tracking_int: String
+icon_class: String
+icon_label: String
 }
 
 type ShipmentsOutput {
-  created: [Shipments]!
-  updated: [Shipments]!
-  deleted: Int
+	created: [Shipments]!
+	updated: [Shipments]!
+	deleted: Int
 }
 
-input ShipmentsCount {
-  action: ActionType!
-}
+  input ShipmentsCount {
+    action: ActionType!
+  } 
 
-type ShipmentsCountResult {
-  action: String
-  count: Int!
-}
+
+  type ShipmentsCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input ShipmentsLogicalOp {
-  _and: [ShipmentsLogicalOp]
-  _or: [ShipmentsLogicalOp]
-  shipment_id: ComparisonOperators
-  order_id: ComparisonOperators
-  shipment_date: ComparisonOperators
-  tracking_int: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
+  _and: [ ShipmentsLogicalOp]
+  _or: [ ShipmentsLogicalOp]
+   shipment_id: ComparisonOperators
+order_id: ComparisonOperators
+shipment_date: ComparisonOperators
+tracking_int: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
 }
 
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
   shipment_id: ComparisonOperators
-  order_id: ComparisonOperators
-  shipment_date: ComparisonOperators
-  tracking_int: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
+order_id: ComparisonOperators
+shipment_date: ComparisonOperators
+tracking_int: ComparisonOperators
+icon_class: ComparisonOperators
+icon_label: ComparisonOperators
 }
 
+
 input ResolversUser_role {
-  filter: User_roleFilter
-  action: ActionType!
-  create: [User_roleInput]
-  update: User_roleUpdate
-  take: Int = 15
-  skip: Int
+    filter: User_roleFilter
+	action: ActionType!
+    create: [User_roleInput]
+	update: User_roleUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type User_role {
-  id: ID!
-  role_name: String!
-  users: [Users]
+    id: ID!
+role_name: String!
+      users: [Users]
+
 }
 
 input User_roleInput {
-  role_name: String!
+    role_name: String!
+
 }
 
 input User_roleFilter {
-  _and: [User_roleLogicalOp]
-  _or: [User_roleLogicalOp]
+  _and: [ User_roleLogicalOp]
+  _or: [ User_roleLogicalOp]
 }
 
 input User_roleUpdate {
-  role_name: String
+    role_name: String
+
 }
 
 type User_roleOutput {
-  created: [User_role]!
-  updated: [User_role]!
-  deleted: Int
+	created: [User_role]!
+	updated: [User_role]!
+	deleted: Int
 }
 
-input User_roleCount {
-  action: ActionType!
-}
+  input User_roleCount {
+    action: ActionType!
+  } 
 
-type User_roleCountResult {
-  action: String
-  count: Int!
-}
+
+  type User_roleCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input User_roleLogicalOp {
-  _and: [User_roleLogicalOp]
-  _or: [User_roleLogicalOp]
+  _and: [ User_roleLogicalOp]
+  _or: [ User_roleLogicalOp]
+   
+role_name: ComparisonOperators
 
-  role_name: ComparisonOperators
 }
 
 input NestedFiltering {
@@ -1102,80 +1180,85 @@ input NestedFiltering {
   role_name: ComparisonOperators
 }
 
+
 input ResolversUsers {
-  filter: UsersFilter
-  action: ActionType!
-  create: [UsersInput]
-  update: UsersUpdate
-  take: Int = 15
-  skip: Int
+    filter: UsersFilter
+	action: ActionType!
+    create: [UsersInput]
+	update: UsersUpdate
+    take: Int = 15
+    skip: Int
 }
 
 type Users {
-  id: ID!
-  email: String
-  role_id: String!
-  customer_id: Int
-  created_t: String
-  user_role: User_role
+    id: ID!
+email: String
+role_id: String!
+customer_id: Int
+created_t: String
+      user_role: User_role
+
 }
 
 input UsersInput {
-  password: String
-  email: String
-  role_id: String!
-  customer_id: Int
-  created_t: String
+    password: String
+email: String
+role_id: String!
+customer_id: Int
+created_t: String
 }
 
 input UsersFilter {
-  _and: [UsersLogicalOp]
-  _or: [UsersLogicalOp]
+  _and: [ UsersLogicalOp]
+  _or: [ UsersLogicalOp]
 }
 
 input UsersUpdate {
-  password: String
-  email: String
-  role_id: String
-  customer_id: Int
-  created_t: String
+    password: String
+email: String
+role_id: String
+customer_id: Int
+created_t: String
 }
 
 type UsersOutput {
-  created: [Users]!
-  updated: [Users]!
-  deleted: Int
+	created: [Users]!
+	updated: [Users]!
+	deleted: Int
 }
 
-input UsersCount {
-  action: ActionType!
-}
+  input UsersCount {
+    action: ActionType!
+  } 
 
-type UsersCountResult {
-  action: String
-  count: Int!
-}
+
+  type UsersCountResult {
+    action: String
+    count: Int!
+  }
+
 
 input UsersLogicalOp {
-  _and: [UsersLogicalOp]
-  _or: [UsersLogicalOp]
-
-  password: ComparisonOperators
-  email: ComparisonOperators
-  role_id: ComparisonOperators
-  customer_id: ComparisonOperators
-  created_t: ComparisonOperators
+  _and: [ UsersLogicalOp]
+  _or: [ UsersLogicalOp]
+   
+password: ComparisonOperators
+email: ComparisonOperators
+role_id: ComparisonOperators
+customer_id: ComparisonOperators
+created_t: ComparisonOperators
 }
 
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
   password: ComparisonOperators
-  email: ComparisonOperators
-  role_id: ComparisonOperators
-  customer_id: ComparisonOperators
-  created_t: ComparisonOperators
+email: ComparisonOperators
+role_id: ComparisonOperators
+customer_id: ComparisonOperators
+created_t: ComparisonOperators
 }
+
 
 enum ActionType {
   FIND
@@ -1184,6 +1267,7 @@ enum ActionType {
   UPDATE
   DELETE
 }
+
 
 input AuthorizeUser {
   email: String!
@@ -1198,13 +1282,15 @@ type AuthPayload {
   token: Token!
 }
 
+
 type Token {
   accessToken: String!
   idToken: String!
   refreshToken: String!
+
 }
 
-type TableInfo {
-  table: String
-  structure: String
-}
+  type TableInfo {
+    table: String
+    structure: String
+  }

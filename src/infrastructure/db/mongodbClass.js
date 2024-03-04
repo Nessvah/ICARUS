@@ -102,7 +102,6 @@ class MongoDBConnection {
         break;
     }
 
-    console.log(nestedQuery); // Log the nested query
     return nestedQuery;
   }
 
@@ -120,7 +119,7 @@ class MongoDBConnection {
     } else {
       // Call the filter function to reorganize the filter parameter
       const filter = this.filterController(input.filter); // Pass only the filter part
-      console.log(JSON.stringify(filter, null, 2));
+      //console.log(JSON.stringify(filter, null, 2));
 
       if (filter) {
         const options = {
@@ -165,7 +164,6 @@ class MongoDBConnection {
         return element;
       });
     }
-    console.log({ res });
     return res;
   }
 
