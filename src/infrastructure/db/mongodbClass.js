@@ -41,7 +41,7 @@ class MongoDBConnection {
     this.tableData.columns.forEach((colum) => {
       if (input.filter) {
         if (input.filter[colum.name]) {
-          if (colum.name == 'id') {
+          if (colum.name === 'id') {
             let idArray = [];
             input.filter.id.forEach((id) => idArray.push(new ObjectId(id)));
             query._id = { $in: idArray };
@@ -60,6 +60,7 @@ class MongoDBConnection {
     const db = this.client.db(this.dbName);
     //console.log(table, input);
     const collection = db.collection(table);
+    let res;
 
     //call the filter function to reorganize que filter parameter to a more readable one.
     const filter = this.filterController(input);
@@ -107,7 +108,6 @@ class MongoDBConnection {
         delete element._id;
         element.id = id;
       }
-      console.log({ mongoQuery });
     });
 
     // To verify if there is array in any column of the table
@@ -219,7 +219,7 @@ class MongoDBConnection {
     if (input.sort) {
       const { sort } = input;
       const sortOptions = {};
-      for (let key in sort) {
+      for (const key in sort) {
         if (sort[key] === 'ASC') sortOptions[key] = 1; //ASC
         else if (sort[key] === 'DESC') sortOptions[key] = -1; //DESC
       }

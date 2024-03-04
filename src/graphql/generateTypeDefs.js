@@ -126,7 +126,7 @@ input ${tableName}ListOptions {
     filter: ${tableName}Filter
     skip: Int
     take: Int = 15
-    sort: ${tableName}Sort
+    sort: ${tableName}SortOptions
     }`;
 
     //Define the Resolvers input
@@ -191,22 +191,28 @@ input ${tableName}Filter {
   _or: [ ${tableName}LogicalOp]
 }`;
 
-    //Define the Filter entities input
-    //     const sortOptions = `
-    // input ${tableName}SortOptions {
-    //   ${table.columns
-    //     .map((column) => {
-    //       // console.log(tableName, column, column.name);
-    //       return `${column.name}: Sort`;
-    //     })
-    //     .join('\n')}
-    // }`;
+    //  Define the Filter entities input
+    const sortOptions = `
+    input ${tableName}SortOptions {
+      ${table.columns
+        .filter((column) => column.primaryKey !== true || column.isObject)
+        .map((column) => {
+          // console.log(tableName, column, column.name);
+          return `${column.name}: Sort`;
+        })
+        .join('\n')}
+    }`;
 
     const logicalOperations = `
 input ${tableName}LogicalOp {
   _and: [ ${tableName}LogicalOp]
   _or: [ ${tableName}LogicalOp]
-
+   ${table.columns
+     .filter((column) => column.primaryKey !== true || column.isObjec === false)
+     .map((column) => {
+       return `${column.name}: ComparisonOperators`;
+     })
+     .join('\n')}
   }`;
 
     const nestedFiltering = `
@@ -216,7 +222,6 @@ input ${tableName}LogicalOp {
          ${table.columns
            .filter((column) => column.primaryKey !== true || column.isObject)
            .map((column) => {
-             const type = mapColumnTypeToGraphQLType(column.type);
              return `${column.name}: ComparisonOperators`;
            })
            .join('\n')}
@@ -234,7 +239,7 @@ input ${tableName}LogicalOp {
   }
 `;
 
-    typeDefs.push(nestedFiltering, ordersCountInput, logicalOperations, mutationFilterOptions);
+    typeDefs.push(nestedFiltering, ordersCountInput, sortOptions, logicalOperations, mutationFilterOptions);
 
     //Define the Update entities input
     const update = `
