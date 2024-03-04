@@ -23,7 +23,7 @@
         "isObject": true,
         "relationType": "n:1",
         "foreignEntity": "products",
-        "foreignKey": "id"
+        "foreignKey": "product_id"
       },
       {
         "name": "customer_id",
