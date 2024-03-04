@@ -77,14 +77,14 @@ input ResolversAuthors {
 	update: AuthorsUpdate
     take: Int = 15
     skip: Int
+    sort: AuthorsSort
 }
 
 type Authors {
-    id: ID!
+  id: ID!
 name: String!
 email: String!
-      blog_posts: [Blog_posts]
-
+    blog_posts: [Blog_posts]
 }
 
 input AuthorsInput {
@@ -120,6 +120,17 @@ type AuthorsOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input AuthorsSort {
+       name: Sort
+email: Sort
+
+   }
 
 input AuthorsLogicalOp {
   _and: [ AuthorsLogicalOp]
@@ -145,23 +156,23 @@ input ResolversBlog_posts {
 	update: Blog_postsUpdate
     take: Int = 15
     skip: Int
+    sort: Blog_postsSort
 }
 
 type Blog_posts {
-    id: ID!
+  id: ID!
 title: String!
 author_id: ID!
 content: JSON!
-publish_date: String!
-      authors: Authors
-
+publish_date: GraphQLDate!
+    authors: Authors
 }
 
 input Blog_postsInput {
     title: String!
 author_id: ID!
 content: JSON!
-publish_date: String!
+publish_date: GraphQLDate!
 }
 
 input Blog_postsFilter {
@@ -173,7 +184,7 @@ input Blog_postsUpdate {
     title: String
 author_id: ID
 content: JSON
-publish_date: String
+publish_date: GraphQLDate
 }
 
 type Blog_postsOutput {
@@ -192,6 +203,18 @@ type Blog_postsOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input Blog_postsSort {
+       title: Sort
+
+content: Sort
+publish_date: Sort
+   }
 
 input Blog_postsLogicalOp {
   _and: [ Blog_postsLogicalOp]
@@ -220,16 +243,16 @@ input ResolversBrands {
 	update: BrandsUpdate
     take: Int = 15
     skip: Int
+    sort: BrandsSort
 }
 
 type Brands {
-    id: ID!
+  id: ID!
 name: String!
 country: String!
 founded_year: String!
 products: JSON!
-      
-
+    
 }
 
 input BrandsInput {
@@ -267,6 +290,18 @@ type BrandsOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input BrandsSort {
+       name: Sort
+country: Sort
+founded_year: Sort
+products: Sort
+   }
 
 input BrandsLogicalOp {
   _and: [ BrandsLogicalOp]
@@ -295,21 +330,21 @@ input ResolversCategories {
 	update: CategoriesUpdate
     take: Int = 15
     skip: Int
+    sort: CategoriesSort
 }
 
 type Categories {
-    category_id: Int!
-category_name: String
-icon_class: String
-icon_label: String
-      
-
+  category_id: Int!
+category_name: String!
+icon_class: String!
+icon_label: String!
+    
 }
 
 input CategoriesInput {
-    category_name: String
-icon_class: String
-icon_label: String
+    category_name: String!
+icon_class: String!
+icon_label: String!
 }
 
 input CategoriesFilter {
@@ -339,6 +374,17 @@ type CategoriesOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input CategoriesSort {
+       category_name: Sort
+icon_class: Sort
+icon_label: Sort
+   }
 
 input CategoriesLogicalOp {
   _and: [ CategoriesLogicalOp]
@@ -366,16 +412,16 @@ input ResolversCoupons {
 	update: CouponsUpdate
     take: Int = 15
     skip: Int
+    sort: CouponsSort
 }
 
 type Coupons {
-    id: ID!
+  id: ID!
 code: String!
 discount_percent: Int!
 expiration_date: String!
 promotion_id: ID!
-      promotions: Promotions
-
+    promotions: Promotions
 }
 
 input CouponsInput {
@@ -413,6 +459,18 @@ type CouponsOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input CouponsSort {
+       code: Sort
+discount_percent: Sort
+expiration_date: Sort
+
+   }
 
 input CouponsLogicalOp {
   _and: [ CouponsLogicalOp]
@@ -441,21 +499,21 @@ input ResolversCustomers {
 	update: CustomersUpdate
     take: Int = 15
     skip: Int
+    sort: CustomersSort
 }
 
 type Customers {
-    customer_id: Int!
-customer_name: String
-email: String
+  customer_id: Int!
+customer_name: String!
+email: String!
 icon_class: String
 icon_label: String
-      orders: [Orders]
-
+    orders: [Orders]
 }
 
 input CustomersInput {
-    customer_name: String
-email: String
+    customer_name: String!
+email: String!
 icon_class: String
 icon_label: String
 
@@ -490,6 +548,19 @@ type CustomersOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input CustomersSort {
+       customer_name: Sort
+email: Sort
+icon_class: Sort
+icon_label: Sort
+
+   }
 
 input CustomersLogicalOp {
   _and: [ CustomersLogicalOp]
@@ -521,28 +592,28 @@ input ResolversOrder_items {
 	update: Order_itemsUpdate
     take: Int = 15
     skip: Int
+    sort: Order_itemsSort
 }
 
 type Order_items {
-    order_item_id: Int!
-order_id: Int
-product_id: Int
-quantity: Int
-price: Float
-currency_type: String
+  order_item_id: Int!
+order_id: Int!
+product_id: Int!
+quantity: Int!
+price: Float!
+currency_type: String!
 icon_class: String
 icon_label: String
-      orders: Orders
+    orders: Orders
 products: Products
-
 }
 
 input Order_itemsInput {
-    order_id: Int
-product_id: Int
-quantity: Int
-price: Float
-currency_type: String
+    order_id: Int!
+product_id: Int!
+quantity: Int!
+price: Float!
+currency_type: String!
 icon_class: String
 icon_label: String
 }
@@ -578,6 +649,21 @@ type Order_itemsOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input Order_itemsSort {
+       
+
+quantity: Sort
+price: Sort
+currency_type: Sort
+icon_class: Sort
+icon_label: Sort
+   }
 
 input Order_itemsLogicalOp {
   _and: [ Order_itemsLogicalOp]
@@ -613,24 +699,24 @@ input ResolversOrders {
 	update: OrdersUpdate
     take: Int = 15
     skip: Int
+    sort: OrdersSort
 }
 
 type Orders {
-    order_id: Int!
-order_date: String
-customer_id: Int
+  order_id: Int!
+order_date: String!
+customer_id: Int!
 icon_class: String
 icon_label: String
-      customers: Customers
+    customers: Customers
 order_items: [Order_items]
 shipments: Shipments
 payment: Payment
-
 }
 
 input OrdersInput {
-    order_date: String
-customer_id: Int
+    order_date: String!
+customer_id: Int!
 icon_class: String
 icon_label: String
 
@@ -669,6 +755,21 @@ type OrdersOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input OrdersSort {
+       order_date: Sort
+
+icon_class: Sort
+icon_label: Sort
+
+
+
+   }
 
 input OrdersLogicalOp {
   _and: [ OrdersLogicalOp]
@@ -704,17 +805,17 @@ input ResolversPayment {
 	update: PaymentUpdate
     take: Int = 15
     skip: Int
+    sort: PaymentSort
 }
 
 type Payment {
-    id: String!
+  id: String!
 payment_method: String!
 payment_date: String!
 amount: Float!
 payment_status: String!
 order_id: Int
-      orders: Orders
-
+    orders: Orders
 }
 
 input PaymentInput {
@@ -754,6 +855,19 @@ type PaymentOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input PaymentSort {
+       payment_method: Sort
+payment_date: Sort
+amount: Sort
+payment_status: Sort
+
+   }
 
 input PaymentLogicalOp {
   _and: [ PaymentLogicalOp]
@@ -784,24 +898,24 @@ input ResolversProducts {
 	update: ProductsUpdate
     take: Int = 15
     skip: Int
+    sort: ProductsSort
 }
 
 type Products {
-    product_id: Int!
-product_name: String
-price: Float
-currency_type: String
+  product_id: Int!
+product_name: String!
+price: Float!
+currency_type: String!
 description: String
 icon_class: String
 icon_label: String
-      order_items: [Order_items]
-
+    order_items: [Order_items]
 }
 
 input ProductsInput {
-    product_name: String
-price: Float
-currency_type: String
+    product_name: String!
+price: Float!
+currency_type: String!
 description: String
 icon_class: String
 icon_label: String
@@ -839,6 +953,21 @@ type ProductsOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input ProductsSort {
+       product_name: Sort
+price: Sort
+currency_type: Sort
+description: Sort
+icon_class: Sort
+icon_label: Sort
+
+   }
 
 input ProductsLogicalOp {
   _and: [ ProductsLogicalOp]
@@ -874,28 +1003,28 @@ input ResolversProduct_reviews {
 	update: Product_reviewsUpdate
     take: Int = 15
     skip: Int
+    sort: Product_reviewsSort
 }
 
 type Product_reviews {
-    review_id: Int!
-product_id: Int
-customer_id: Int
-rating: Int
-review_text: String
-review_date: String
+  review_id: Int!
+product_id: Int!
+customer_id: Int!
+rating: Int!
+review_text: String!
+review_date: String!
 icon_class: String
 icon_label: String
-      products: Products
+    products: Products
 customers: Customers
-
 }
 
 input Product_reviewsInput {
-    product_id: Int
-customer_id: Int
-rating: Int
-review_text: String
-review_date: String
+    product_id: Int!
+customer_id: Int!
+rating: Int!
+review_text: String!
+review_date: String!
 icon_class: String
 icon_label: String
 }
@@ -931,6 +1060,21 @@ type Product_reviewsOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input Product_reviewsSort {
+       
+
+rating: Sort
+review_text: Sort
+review_date: Sort
+icon_class: Sort
+icon_label: Sort
+   }
 
 input Product_reviewsLogicalOp {
   _and: [ Product_reviewsLogicalOp]
@@ -966,16 +1110,16 @@ input ResolversPromotions {
 	update: PromotionsUpdate
     take: Int = 15
     skip: Int
+    sort: PromotionsSort
 }
 
 type Promotions {
-    id: ID!
+  id: ID!
 name: String!
 description: String!
 start_date: String!
 end_date: String!
-      coupons: Coupons
-
+    coupons: Coupons
 }
 
 input PromotionsInput {
@@ -1015,6 +1159,19 @@ type PromotionsOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input PromotionsSort {
+       name: Sort
+description: Sort
+start_date: Sort
+end_date: Sort
+
+   }
 
 input PromotionsLogicalOp {
   _and: [ PromotionsLogicalOp]
@@ -1044,22 +1201,22 @@ input ResolversShipments {
 	update: ShipmentsUpdate
     take: Int = 15
     skip: Int
+    sort: ShipmentsSort
 }
 
 type Shipments {
-    shipment_id: Int!
-order_id: Int
-shipment_date: String
+  shipment_id: Int!
+order_id: Int!
+shipment_date: String!
 tracking_int: String
 icon_class: String
 icon_label: String
-      orders: Orders
-
+    orders: Orders
 }
 
 input ShipmentsInput {
-    order_id: Int
-shipment_date: String
+    order_id: Int!
+shipment_date: String!
 tracking_int: String
 icon_class: String
 icon_label: String
@@ -1094,6 +1251,19 @@ type ShipmentsOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input ShipmentsSort {
+       
+shipment_date: Sort
+tracking_int: Sort
+icon_class: Sort
+icon_label: Sort
+   }
 
 input ShipmentsLogicalOp {
   _and: [ ShipmentsLogicalOp]
@@ -1125,13 +1295,13 @@ input ResolversUser_role {
 	update: User_roleUpdate
     take: Int = 15
     skip: Int
+    sort: User_roleSort
 }
 
 type User_role {
-    id: ID!
+  id: ID!
 role_name: String!
-      users: [Users]
-
+    users: [Users]
 }
 
 input User_roleInput {
@@ -1165,6 +1335,16 @@ type User_roleOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input User_roleSort {
+       role_name: Sort
+
+   }
 
 input User_roleLogicalOp {
   _and: [ User_roleLogicalOp]
@@ -1188,21 +1368,21 @@ input ResolversUsers {
 	update: UsersUpdate
     take: Int = 15
     skip: Int
+    sort: UsersSort
 }
 
 type Users {
-    id: ID!
-email: String
+  id: ID!
+email: String!
 role_id: String!
 customer_id: Int
 created_t: String
-      user_role: User_role
-
+    user_role: User_role
 }
 
 input UsersInput {
-    password: String
-email: String
+    password: String!
+email: String!
 role_id: String!
 customer_id: Int
 created_t: String
@@ -1237,6 +1417,19 @@ type UsersOutput {
     count: Int!
   }
 
+enum Sort { 
+  ASC 
+  DESC 
+}
+
+
+   input UsersSort {
+       password: Sort
+email: Sort
+
+customer_id: Sort
+created_t: Sort
+   }
 
 input UsersLogicalOp {
   _and: [ UsersLogicalOp]

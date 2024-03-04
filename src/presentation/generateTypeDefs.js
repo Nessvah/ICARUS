@@ -3,7 +3,7 @@ import fs from 'fs';
 import { GraphQLString, GraphQLInt, GraphQLFloat, GraphQLNonNull, GraphQLBoolean, GraphQLID } from 'graphql';
 import { MySQLDate, GraphQLDate } from './customScalars.js';
 
-import { GraphQLJSON } from 'graphql-scalars';
+import { GraphQLJSON } from 'graphql-type-json';
 
 import { ImportThemTities } from '../config/importDemTities.js';
 /**
@@ -134,38 +134,38 @@ input Resolvers${tableName} {
 	update: ${tableName}Update
     take: Int = 15
     skip: Int
+    sort: ${tableName}Sort
 }`;
 
     //Define the entities type
     const tableTypeDef = `
 type ${tableName} {
+  ${table.columns
+    .filter((column) => column.name !== 'password')
+    .map((column) => {
+      let type;
+      if (!column.isObject) {
+        type = mapColumnTypeToGraphQLType(column.type);
+        return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
+      } else if (column.isObject && column.type !== 'object') {
+        type = mapColumnTypeToGraphQLType(column.type);
+        return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
+      }
+    })
+    .filter((value) => value)
+    .join('\n')}
     ${table.columns
       .filter((column) => column.name !== 'password')
       .map((column) => {
-        let type;
-        if (!column.isObject) {
-          type = mapColumnTypeToGraphQLType(column.type);
-          return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
-        } else if (column.isObject && column.type !== 'object') {
-          type = mapColumnTypeToGraphQLType(column.type);
-          return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
+        if (column.isObject) {
+          let columnForeignEntityCapitalize = capitalize(column.foreignEntity);
+          return `${column.foreignEntity}: ${
+            column.relationType[2] === 'n' ? `[${columnForeignEntityCapitalize}]` : columnForeignEntityCapitalize
+          }`;
         }
       })
       .filter((value) => value)
       .join('\n')}
-      ${table.columns
-        .filter((column) => column.name !== 'password')
-        .map((column) => {
-          if (column.isObject) {
-            let columnForeignEntityCapitalize = capitalize(column.foreignEntity);
-            return `${column.foreignEntity}: ${
-              column.relationType[2] === 'n' ? `[${columnForeignEntityCapitalize}]` : columnForeignEntityCapitalize
-            }`;
-          }
-        })
-        .filter((value) => value)
-        .join('\n')}
-
 }`;
     //Define the entities input
     const tableInputTypeDef = `
@@ -215,17 +215,6 @@ input NestedFiltering {
 }
 `;
 
-    const ordersCountInput = `
-  input ${tableName}Count {
-    action: ActionType!
-  } \n
-
-  type ${tableName}CountResult {
-    action: String
-    count: Int!
-  }
-`;
-
     //Define the Update entities input
     const update = `
 input ${tableName}Update {
@@ -240,6 +229,21 @@ input ${tableName}Update {
       })
       .join('\n')}
 }`;
+
+    //Define the Update entities input
+    const sort = `
+   input ${tableName}Sort {
+       ${table.columns
+         .filter((column) => column.primaryKey !== true)
+         .map((column) => {
+           if (column.foreignKey) {
+             return '';
+           }
+           return `${column.name}: Sort`;
+         })
+         .join('\n')}
+   }`;
+
     // Define the output type
     const output = `
 type ${tableName}Output {
@@ -247,6 +251,22 @@ type ${tableName}Output {
 	updated: [${tableName}]!
 	deleted: Int
 }`;
+
+    const ordersCountInput = `
+  input ${tableName}Count {
+    action: ActionType!
+  } \n
+
+  type ${tableName}CountResult {
+    action: String
+    count: Int!
+  }
+
+enum Sort { 
+  ASC 
+  DESC 
+}
+`;
 
     typeDefs.push(
       resolvers,
@@ -256,12 +276,13 @@ type ${tableName}Output {
       update,
       output,
       ordersCountInput,
+      sort,
       logicalOperations,
       nestedFiltering,
     );
   });
 
-  // Define the operators enum
+  // Redefinition of the input type for authorizing a user, possibly a duplication error.
   typeDefs.push(`
 enum ActionType {
   FIND
@@ -327,6 +348,7 @@ if (config) {
    * The generated type definitions.
    */
   const typeDefsString = generateTypeDefinitions(config);
+
   // Prepend the JSON alias definition to the beginning of the generated type definitions
   const finalTypeDefsString = `${JSONAliasDefinition}\n${ISODateAliasDefinition}\n${MySQLDateAliasDefinition}\n${typeDefsString}`;
   /**

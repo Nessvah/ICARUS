@@ -6,6 +6,9 @@ import { validation } from '../utils/validation/validation.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 import { ImportThemTities } from '../config/importDemTities.js';
 
+//We initialize a rate limiter instance by calling getGraphQLRateLimiter.
+//This function takes an object as an argument with a property identifyContext that defines how to identify the context for rate limiting purposes.
+//In this case, the context is identified based on the id property of the context object
 const rateLimiter = getGraphQLRateLimiter({
   identifyContext: (ctx) => ctx.currentUser,
 });
@@ -64,6 +67,7 @@ async function autoResolvers() {
     const countName = `${table.name}Count`;
 
     preResolvers.Query[table.name] = async (parent, args, context, info) => {
+      //verify if the user it's exceeding the rate limit calls for seconds.
       const limitErrorMessage = await rateLimiter({ parent, args, context, info }, { max: 10, window: '1s' });
 
       if (limitErrorMessage) throw new Error(limitErrorMessage);
@@ -85,6 +89,7 @@ async function autoResolvers() {
     };
 
     preResolvers.Mutation[table.name] = async (parent, args, context, info) => {
+      //verify if the user it's exceeding the rate limit calls for seconds.
       const limitErrorMessage = await rateLimiter({ parent, args, context, info }, { max: 10, window: '1s' });
       if (limitErrorMessage) throw new Error(limitErrorMessage);
       // if (!context.currentUser) {
@@ -114,10 +119,10 @@ const createRelations = async (table, column) => {
     // for mongodb searching parents
     if (table.database.type === 'mongodb') {
       //const idValue = ObjectId.isValid(parent[column.name]) ? parent[column.name].toString() : parent[column.name];
-      args = { input: { action: 'find', filter: { [column.foreignKey]: [parent[column.name]] } } };
+      args = { input: { action: 'FIND', filter: { [column.foreignKey]: [parent[column.name]] } } };
       // for MySQL searching parents
     } else {
-      args = { input: { action: 'find', filter: { [column.foreignKey]: [parent[column.foreignKey]] } } };
+      args = { input: { action: 'FIND', filter: { [column.foreignKey]: [parent[column.foreignKey]] } } };
     }
     const relatedObjects = await controller(column.foreignEntity, args);
 

@@ -16,7 +16,7 @@
         "name": "category_name",
         "type": "string",
         "primaryKey": false,
-        "nullable": true,
+        "nullable": false,
         "defaultValue": null,
         "columnType": "string",
         "extra": ""
@@ -25,7 +25,7 @@
         "name": "icon_class",
         "type": "string",
         "primaryKey": false,
-        "nullable": true,
+        "nullable": false,
         "defaultValue": "'FaTags'",
         "columnType": "string",
         "extra": ""
@@ -34,7 +34,7 @@
         "name": "icon_label",
         "type": "string",
         "primaryKey": false,
-        "nullable": true,
+        "nullable": false,
         "defaultValue": "'Category'",
         "columnType": "string",
         "extra": ""

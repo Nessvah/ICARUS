@@ -127,46 +127,58 @@ class MongoDBConnection {
           maxTimeMS: 60000, // Adjust this value to your desired timeout
         };
 
-        if (input.skip && input.take) {
-          res = await collection.find(filter, options).sort({ _id: 1 }).skip(input.skip).limit(input.take).toArray();
-        } else if (input.skip) {
-          res = await collection.find(filter, options).sort({ _id: 1 }).skip(input.skip).toArray();
-        } else if (input.take) {
-          res = await collection.find(filter, options).sort({ _id: 1 }).limit(input.take).toArray();
+        // Building query dynamically
+        let query = collection.find(filter, options);
+
+        // Add sort if client requests or let it default
+        if (input.sort) {
+          query = query.sort(this.sort(input));
         } else {
-          res = await collection.find(filter, options).sort({ _id: 1 }).toArray();
+          query = query.sort({ _id: 1 }); // Ordenação padrão se não for especificada
         }
+
+        // Add skip if client requests
+        if (input.skip) {
+          query = query.skip(input.skip);
+        }
+
+        // Add limit if client requests
+        if (input.take) {
+          query = query.limit(input.take);
+        }
+
+        // Making the query with all parameters requested by client
+        res = await query.toArray();
       }
-    }
 
-    if (!res) {
-      return false;
-    }
-
-    // Transform "_id" key into "id" key
-    res.forEach((element) => {
-      if (element._id) {
-        const id = element._id;
-        delete element._id;
-        element.id = id;
+      if (!res) {
+        return false;
       }
-    });
 
-    // Modify array fields to strings if necessary
-    const isArrayField = this.tableData.columns.filter((column) => column.type === 'array');
-
-    if (isArrayField.length > 0) {
-      res.map((element) => {
-        isArrayField.forEach((arrayField) => {
-          const fieldName = arrayField.name;
-          element[fieldName] = JSON.stringify(element[arrayField.name]);
-        });
-        return element;
+      // Transform "_id" key into "id" key
+      res.forEach((element) => {
+        if (element._id) {
+          const id = element._id;
+          delete element._id;
+          element.id = id;
+        }
       });
-    }
-    return res;
-  }
 
+      // Modify array fields to strings if necessary
+      const isArrayField = this.tableData.columns.filter((column) => column.type === 'array');
+
+      if (isArrayField.length > 0) {
+        res.map((element) => {
+          isArrayField.forEach((arrayField) => {
+            const fieldName = arrayField.name;
+            element[fieldName] = JSON.stringify(element[arrayField.name]);
+          });
+          return element;
+        });
+      }
+      return res;
+    }
+  }
   //insert a new document or a array of new documents, in a specific table. Return a array of objects [{document}, {document}]
   //input:{create:[{keys and values}, {keys and values}]}
   async create(table, { input }) {
@@ -252,6 +264,20 @@ class MongoDBConnection {
       logger.error(error);
       return [];
     }
+  }
+
+  // Changing "ASC"/"DESC" for "1"/"-1"
+  sort(input) {
+    if (input.sort) {
+      const { sort } = input;
+      const sortOptions = {};
+      for (let key in sort) {
+        if (sort[key] === 'ASC') sortOptions[key] = 1; //ASC
+        else if (sort[key] === 'DESC') sortOptions[key] = -1; //DESC
+      }
+      return sortOptions;
+    }
+    return {};
   }
 }
 
