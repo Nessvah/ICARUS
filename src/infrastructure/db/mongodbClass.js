@@ -27,11 +27,13 @@ class MongoDBConnection {
   //organize de filter in a mongodb filter structure, that will be use in the crud functions.
   // Convert GraphQL filter to MongoDB query
   filterController(input) {
+    console.log({ input });
     let query = {};
 
     // Iterate through filter fields
     Object.keys(input).forEach((fieldName) => {
       const filterValue = input[fieldName];
+      console.log({ fieldName, filterValue });
 
       // Handle nested operators _and and _or
       if (fieldName === '_and' || fieldName === '_or') {
@@ -119,7 +121,7 @@ class MongoDBConnection {
     } else {
       // Call the filter function to reorganize the filter parameter
       const filter = this.filterController(input.filter); // Pass only the filter part
-      //console.log(JSON.stringify(filter, null, 2));
+      console.log(JSON.stringify(filter, null, 2));
 
       if (filter) {
         const options = {
@@ -176,6 +178,7 @@ class MongoDBConnection {
           return element;
         });
       }
+      console.log({ res });
       return res;
     }
   }
