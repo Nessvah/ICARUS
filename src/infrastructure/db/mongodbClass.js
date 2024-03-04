@@ -63,15 +63,28 @@ class MongoDBConnection {
       // Set the maxTimeMS option
       options.maxTimeMS = timeoutMilliseconds;
 
-      if (input.skip && input.take) {
-        res = await collection.find(filter, options).sort({ _id: 1 }).skip(input.skip).limit(input.take).toArray();
-      } else if (input.skip) {
-        res = await collection.find(filter, options).sort({ _id: 1 }).skip(input.skip).toArray();
-      } else if (input.take) {
-        res = await collection.find(filter, options).sort({ _id: 1 }).limit(input.take).toArray();
+      // Buildind query dinamically
+      let query = collection.find(filter, options);
+
+      // Add sort if client requests or let it default
+      if (input.sort) {
+        query = query.sort(this.sort(input));
       } else {
-        res = await collection.find(filter, options).sort({ _id: 1 }).toArray();
+        query = query.sort({ _id: 1 }); // Ordenação padrão se não for especificada
       }
+
+      // Add skip if client requests
+      if (input.skip) {
+        query = query.skip(input.skip);
+      }
+
+      // Add limit if client requests
+      if (input.take) {
+        query = query.limit(input.take);
+      }
+
+      // Making the query with all parameters requested by client
+      res = await query.toArray();
     }
 
     if (!res) {
@@ -188,6 +201,20 @@ class MongoDBConnection {
       logger.error(error);
       return [];
     }
+  }
+
+  // Changing "ASC"/"DESC" for "1"/"-1"
+  sort(input) {
+    if (input.sort) {
+      const { sort } = input;
+      const sortOptions = {};
+      for (let key in sort) {
+        if (sort[key] === 'ASC') sortOptions[key] = 1; //ASC
+        else if (sort[key] === 'DESC') sortOptions[key] = -1; //DESC
+      }
+      return sortOptions;
+    }
+    return {};
   }
 }
 
