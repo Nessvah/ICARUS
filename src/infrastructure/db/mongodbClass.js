@@ -27,7 +27,8 @@ class MongoDBConnection {
   //organize de filter in a mongodb filter structure, that will be use in the crud functions.
   // Convert GraphQL filter to MongoDB query
   filterController(input) {
-    console.log({ input });
+    //console.log({ input });
+
     let query = {};
 
     // Iterate through filter fields
@@ -37,6 +38,7 @@ class MongoDBConnection {
 
       // Handle nested operators _and and _or
       if (fieldName === '_and' || fieldName === '_or') {
+        console.log('nested filter');
         if (Array.isArray(filterValue)) {
           const operator = fieldName === '_and' ? '$and' : '$or';
           const nestedQueries = filterValue.map((nestedFilter) => this.filterController(nestedFilter));
@@ -44,21 +46,41 @@ class MongoDBConnection {
         }
       } else {
         // Handle comparison operators from ComparisonOperators input type
+        const operator = fieldName.replace('_', '$');
         switch (fieldName) {
           case '_eq':
           case '_neq':
+            // For String, Integer, Boolean, Double, Min/Max keys, Symbol, Date, ObjectID, Regular expression
+            // Convert string to corresponding type if applicable
+            if (typeof filterValue === 'string' && ObjectId.isValid(filterValue)) {
+              query[operator] = ObjectId(filterValue);
+            } else {
+              query[operator] = filterValue;
+            }
+
+            break;
           case '_lt':
           case '_lte':
           case '_gt':
           case '_gte':
+            // For Integer, Double, Date
+            // Convert string to number if applicable
+            query[operator] = !isNaN(filterValue) ? parseFloat(filterValue) : filterValue;
+            break;
           case '_in':
           case '_nin':
-            query = { ...query, ...this.handleNestedFilters(fieldName, filterValue) };
+            // For Arrays
+            // Split the string and convert each element to the corresponding type if applicable
+            query[operator] = filterValue.split(',').map((val) => val.trim());
             break;
+          // Handle other comparison operators from ComparisonOperators input type...
           default:
             // Handle nested filters
             if (typeof filterValue === 'object') {
-              query[fieldName] = this.filterController(filterValue);
+              const nestedQuery = this.filterController(filterValue);
+              if (Object.keys(nestedQuery).length > 0) {
+                query[fieldName] = nestedQuery;
+              }
             }
             break;
         }
@@ -66,45 +88,6 @@ class MongoDBConnection {
     });
 
     return query;
-  }
-
-  handleNestedFilters(fieldName, filterValue) {
-    const nestedQuery = {};
-
-    // Handle comparison operators from ComparisonOperators input type
-    const operator = fieldName.replace('_', '$');
-
-    switch (fieldName) {
-      case '_eq':
-      case '_neq':
-        // For String, Integer, Boolean, Double, Min/Max keys, Symbol, Date, ObjectID, Regular expression
-        // Convert string to corresponding type if applicable
-        nestedQuery[operator] = filterValue;
-        break;
-      case '_lt':
-      case '_lte':
-      case '_gt':
-      case '_gte':
-        // For Integer, Double, Date
-        // Convert string to number if applicable
-        nestedQuery[operator] = !isNaN(filterValue) ? parseFloat(filterValue) : filterValue;
-        break;
-      case '_in':
-      case '_nin':
-        // For Arrays
-        // Split the string and convert each element to the corresponding type if applicable
-        nestedQuery[operator] = filterValue.split(',').map((val) => val.trim());
-        break;
-      // Handle other comparison operators from ComparisonOperators input type...
-      default:
-        // Handle nested filters
-        if (typeof filterValue === 'object') {
-          nestedQuery[fieldName] = this.filterController(filterValue);
-        }
-        break;
-    }
-
-    return nestedQuery;
   }
 
   //find a specific value or a array of values in a document, in a specific table. Return a array of objects fonded [{document}, {document}]
@@ -178,7 +161,7 @@ class MongoDBConnection {
           return element;
         });
       }
-      console.log({ res });
+      //console.log({ res });
       return res;
     }
   }
