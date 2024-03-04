@@ -197,7 +197,7 @@ class MongoDBConnection {
   async update(table, { input }) {
     const db = this.client.db(this.dbName);
     //call the filter function to reorganize que filter parameter to a more readable one.
-    const filter = this.filterController(input);
+    const filter = this.filterController(input.filter);
     const { update } = input;
 
     //edit the original document, with the input.
@@ -230,7 +230,7 @@ class MongoDBConnection {
     //input have to be a object if {id:[array of string ids] or filter: {object values}}
     const db = this.client.db(this.dbName);
     const collection = db.collection(table);
-    const filter = this.filterController(input);
+    const filter = this.filterController(input.filter);
     //verify if filter have any kay values to filter and made the delete, to avoid delete all the database by mistake.
     if (Object.keys(filter).length <= 0) {
       return false;
