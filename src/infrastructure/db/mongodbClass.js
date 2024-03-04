@@ -7,6 +7,17 @@ class MongoDBConnection {
     this.tableData = currentTableInfo; //  {table: table Name, type: database type, databaseName: database name, columns: table structure, pool: connection to the database}
     this.dbName = currentTableInfo.databaseName; //save the database name.
     this.client = currentTableInfo.pool; //the poll connection to the current database.
+    this.operatorsMap = {
+      _eq: '$eq',
+      _lt: '$lt',
+      _lte: '$lte',
+      _gt: '$gt',
+      _gte: '$gte',
+      _neq: '$ne',
+      _and: '$and',
+      _or: '$or',
+      _in: '$in',
+    };
   }
 
   //connect to the database.
@@ -49,7 +60,6 @@ class MongoDBConnection {
     const db = this.client.db(this.dbName);
     //console.log(table, input);
     const collection = db.collection(table);
-    let res;
 
     //call the filter function to reorganize que filter parameter to a more readable one.
     const filter = this.filterController(input);
@@ -97,6 +107,7 @@ class MongoDBConnection {
         delete element._id;
         element.id = id;
       }
+      console.log({ mongoQuery });
     });
 
     // To verify if there is array in any column of the table

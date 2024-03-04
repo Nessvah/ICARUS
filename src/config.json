@@ -13,7 +13,7 @@
       "columns": [
         {
           "name": "category_id",
-          "type": "int",
+          "type": "id",
           "primaryKey": true,
           "nullable": false,
           "defaultValue": null,
@@ -24,7 +24,7 @@
           "name": "category_name",
           "type": "string",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": null,
           "columnType": "string",
           "extra": ""
@@ -73,7 +73,7 @@
           "name": "customer_name",
           "type": "string",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": null,
           "columnType": "string",
           "extra": ""
@@ -82,7 +82,7 @@
           "name": "email",
           "type": "string",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": null,
           "columnType": "string",
           "extra": ""
@@ -170,7 +170,7 @@
           "name": "quantity",
           "type": "int",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": null,
           "columnType": "int",
           "extra": ""
@@ -179,7 +179,7 @@
           "name": "price",
           "type": "float",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": null,
           "columnType": "float",
           "extra": ""
@@ -188,7 +188,7 @@
           "name": "currency_type",
           "type": "VARCHAR",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": "EUR",
           "columnType": "VARCHAR",
           "extra": ""
@@ -237,7 +237,7 @@
           "name": "order_date",
           "type": "string",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": "'CURRENT_string'",
           "columnType": "string",
           "extra": "DEFAULT_GENERATED"
@@ -386,7 +386,7 @@
           "name": "product_id",
           "type": "int",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": null,
           "columnType": "object",
           "extra": "MUL",
@@ -399,7 +399,7 @@
           "name": "customer_id",
           "type": "int",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": null,
           "columnType": "object",
           "extra": "MUL",
@@ -412,7 +412,7 @@
           "name": "rating",
           "type": "int",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": null,
           "columnType": "int",
           "extra": ""
@@ -421,7 +421,7 @@
           "name": "review_text",
           "type": "string",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": null,
           "columnType": "string",
           "extra": ""
@@ -430,7 +430,7 @@
           "name": "review_date",
           "type": "string",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": "'CURRENT_string'",
           "columnType": "string",
           "extra": "DEFAULT_GENERATED"
@@ -479,7 +479,7 @@
           "name": "product_name",
           "type": "string",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": null,
           "columnType": "string",
           "extra": ""
@@ -488,7 +488,7 @@
           "name": "price",
           "type": "float",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": null,
           "columnType": "float",
           "extra": ""
@@ -497,7 +497,7 @@
           "name": "currency_type",
           "type": "VARCHAR",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": "EUR",
           "columnType": "VARCHAR",
           "extra": ""
@@ -506,7 +506,7 @@
           "name": "description",
           "type": "string",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": null,
           "columnType": "string",
           "extra": ""
@@ -568,7 +568,7 @@
           "name": "order_id",
           "type": "int",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": null,
           "columnType": "object",
           "extra": "MUL",
@@ -581,7 +581,7 @@
           "name": "shipment_date",
           "type": "string",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": "'CURRENT_string'",
           "columnType": "string",
           "extra": "DEFAULT_GENERATED"
@@ -590,7 +590,7 @@
           "name": "tracking_int",
           "type": "string",
           "primaryKey": false,
-          "nullable": true,
+          "nullable": false,
           "defaultValue": null,
           "columnType": "string",
           "extra": ""
@@ -673,7 +673,66 @@
           "nullable": false
         },
         {
-          "name": "role_name",
+          "name": "code",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "discount_percent",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "expiration_date",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "promotion_id",
+          "type": "id",
+          "nullable": false,
+          "isObject": true,
+          "relationType": "1:1",
+          "foreignEntity": "promotions",
+          "foreignKey": "id"
+        }
+      ]
+    },
+    {
+      "name": "promotions",
+      "database": {
+        "type": "mongodb",
+        "uri": "mongodb+srv://icarus-user:veryGoodPassword@cluster0.hxbgjxm.mongodb.net/",
+        "databaseName": "icarus-test"
+      },
+      "columns": [
+        {
+          "name": "id",
+          "type": "object",
+          "nullable": false,
+          "isObject": true,
+          "primaryKey": true,
+          "relationType": "1:1",
+          "foreignEntity": "coupons",
+          "foreignKey": "promotion_id"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "start_date",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "end_date",
           "type": "string",
           "nullable": false
         },
@@ -697,12 +756,6 @@
       },
       "columns": [
         {
-          "name": "id",
-          "type": "id",
-          "primaryKey": true,
-          "nullable": false
-        },
-        {
           "name": "name",
           "type": "string",
           "nullable": false
@@ -715,6 +768,7 @@
         {
           "name": "id",
           "type": "object",
+          "primaryKey": true,
           "nullable": false,
           "isObject": true,
           "relationType": "1:n",
@@ -849,9 +903,12 @@
       "columns": [
         {
           "name": "id",
-          "type": "id",
-          "primaryKey": true,
-          "nullable": false
+          "type": "object",
+          "nullable": false,
+          "isObject": true,
+          "relationType": "1:1",
+          "foreignEntity": "coupons",
+          "foreignKey": "promotion_id"
         },
         {
           "name": "name",
@@ -872,15 +929,6 @@
           "name": "end_date",
           "type": "string",
           "nullable": false
-        },
-        {
-          "name": "id",
-          "type": "object",
-          "nullable": false,
-          "isObject": true,
-          "relationType": "1:1",
-          "foreignEntity": "coupons",
-          "foreignKey": "promotion_id"
         }
       ]
     }

@@ -1,18 +1,20 @@
 import { controller } from '../infrastructure/db/connector.js';
 import { validation } from '../utils/validation/validation.js';
-import { ObjectId } from 'mongodb';
 import { logger } from '../infrastructure/server.js';
-
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { ImportThemTities } from '../config/importDemTities.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 
-//We initialize a rate limiter instance by calling getGraphQLRateLimiter.
-//This function takes an object as an argument with a property identifyContext that defines how to identify the context for rate limiting purposes.
-//In this case, the context is identified based on the id property of the context object
+// We initialize a rate limiter instance by calling getGraphQLRateLimiter.
+// This function takes an object as an argument with a property identifyContext that defines
+// how to identify the context for rate limiting purposes.
+// In this case, the context is identified based on the id property of the context object
+
 const rateLimiter = getGraphQLRateLimiter({
   identifyContext: (ctx) => ctx.currentUser,
 });
+
+const rateLimiterConfig = { max: 10, window: '1s' };
 
 const importer = new ImportThemTities();
 
@@ -20,16 +22,15 @@ const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-let data;
 (async () => {
   try {
-    data = await importer.importAll();
+    const data = await importer.importAll();
     if (data && data.tables) {
       // Ensure data.tables is defined
       //console.log('data:', data, '______________'); // Log the retrieved data
 
       // Call autoResolvers after data is available
-      await autoResolvers();
+      await autoResolvers(data);
 
       return data;
     } else {
@@ -42,11 +43,33 @@ let data;
 })();
 
 let nestedObject = {};
+export const resolvers = {};
 //a pre version of the resolvers, with same static Query and Mutation.
-const preResolvers = {
-  Query: {
+// export const resolvers = {
+//   Query: {
+//     tables: () => {
+//       const tablesInfo = data.tables.map((table) => {
+//         const columns = table.columns.map((column) => column);
+
+//         return {
+//           table: table.name,
+//           structure: JSON.stringify(columns),
+//           backoffice: JSON.stringify(table.backoffice), // Add tables.backoffice
+//         };
+//       });
+//       return tablesInfo;
+//     },
+//   },
+//   Mutation: {
+//     authorize: (_, { input }, { authLogin }) => authLogin(input),
+//   },
+// };
+
+// this function use the "data" parameter and create the resolvers dynamically.
+async function autoResolvers(data) {
+  resolvers.Query = {
     tables: () => {
-      let tablesInfo = data.tables.map((table) => {
+      const tablesInfo = data.tables.map((table) => {
         const columns = table.columns.map((column) => column);
 
         return {
@@ -57,43 +80,34 @@ const preResolvers = {
       });
       return tablesInfo;
     },
-  },
-  Mutation: {
-    authorize: (_, { input }, { authLogin }) => authLogin(input),
-  },
-};
+  };
 
-// this function use the "data" parameter and create the resolvers dynamically.
-async function autoResolvers() {
   data.tables.forEach((table) => {
     const countName = `${table.name}Count`;
 
-    preResolvers.Query[table.name] = async (parent, args, context, info) => {
+    resolvers.Query[table.name] = async (parent, args, context, info) => {
       //verify if the user it's exceeding the rate limit calls for seconds.
-      const limitErrorMessage = await rateLimiter({ parent, args, context, info }, { max: 10, window: '1s' });
+      const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
 
       if (limitErrorMessage) throw new Error(limitErrorMessage);
-      // if (!context.currentUser) {
-      //   throw new AuthenticationError();
-      // }
-
       return await controller(table.name, args);
     };
 
     resolvers.Query[countName] = async (parent, args, context, info) => {
-      // if (!context.currentUser) {
-      //   throw new AuthenticationError();
-      // }
-
       const result = await controller(table.name, args);
 
       return { count: result };
     };
 
-    preResolvers.Mutation[table.name] = async (parent, args, context, info) => {
+    resolvers.Mutation = {
+      authorize: (_, { input }, { authLogin }) => authLogin(input),
+    };
+
+    resolvers.Mutation[table.name] = async (parent, args, context, info) => {
       //verify if the user it's exceeding the rate limit calls for seconds.
-      const limitErrorMessage = await rateLimiter({ parent, args, context, info }, { max: 10, window: '1s' });
+      const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
       if (limitErrorMessage) throw new Error(limitErrorMessage);
+
       // if (!context.currentUser) {
       //   throw new AuthenticationError();
       // }
@@ -131,10 +145,6 @@ const createRelations = async (table, column) => {
     return column.relationType[2] === 'n' ? relatedObjects : relatedObjects[0];
   };
 
-  let tableName = capitalize(table.name);
-  preResolvers[tableName] = nestedObject;
+  const tableName = capitalize(table.name);
+  resolvers[tableName] = nestedObject;
 };
-
-const resolvers = preResolvers;
-
-export { resolvers, autoResolvers };
