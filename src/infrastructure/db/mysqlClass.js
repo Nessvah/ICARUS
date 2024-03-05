@@ -29,8 +29,8 @@ export class MySQLConnection {
     const connection = await this.getConnection();
 
     try {
-      console.log('Executing SQL query:', sql);
-      console.log('SQL query values:', values);
+      //console.log('Executing SQL query:', sql);
+      //console.log('SQL query values:', values);
       // get only the rows with the info and not the schema
       const [rows] = await connection.query(sql, values);
       return rows;

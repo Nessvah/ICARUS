@@ -90,10 +90,8 @@ async function autoResolvers(data) {
       // if (!context.currentUser) {
       //   throw new AuthenticationError();
       // }
-      console.log('FVNEFAHVGHEAFVEAFVNJFV');
       await validation(args.input); // it validates mutation inputs
       await validation(args.input, 'update'); // it validates update inputs;
-      console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
 
       return await controller(table.name, args);
     };

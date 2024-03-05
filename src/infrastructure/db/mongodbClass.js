@@ -53,13 +53,13 @@ class MongoDBConnection {
         if (fieldName === '_and' || fieldName === '_or') {
           //console.log('nested filter');
           if (Array.isArray(filterValue)) {
-            const operator = fieldName === '_and' ? '$and' : '$or';
+            const operator = this.operatorsMap[fieldName] || '$' + fieldName;
             const nestedQueries = filterValue.map((nestedFilter) => this.filterController(nestedFilter));
             query[operator] = nestedQueries;
           }
         } else {
           // Handle comparison operators from ComparisonOperators input type
-          const operator = fieldName.replace('_', '$');
+          const operator = this.operatorsMap[fieldName] || '$' + fieldName;
           switch (fieldName) {
             case '_eq':
             case '_neq':
@@ -195,13 +195,11 @@ class MongoDBConnection {
       const collection = db.collection(table);
 
       const res = await collection.insertMany([input._create]);
-      console.log({ res });
       if (!res) {
         return false;
       }
       // this transform the "_id" key in a "id" key, to follow the schema graphql definition, that have to be equal to all databases.
       [input._create].forEach((element) => {
-        console.log({ element });
         if (element._id) {
           const id = element._id;
           delete element._id;
@@ -231,7 +229,6 @@ class MongoDBConnection {
       //edit the original document, with the input.
 
       const res = await collection.updateMany(filter, { $set: _update });
-      console.log({ res });
       if (!res) {
         return false;
       }
@@ -242,7 +239,6 @@ class MongoDBConnection {
       }
       // this transform the "_id" key in a "id" key, to follow the schema graphql definition, that have to be equal to all databases.
       updated.forEach((element) => {
-        console.log({ element });
         if (element._id) {
           const id = element._id;
           delete element._id;
