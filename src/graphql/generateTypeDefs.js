@@ -1,15 +1,6 @@
 import fs from 'fs';
 //import { logger } from '../infrastructure/server.js';
-import {
-  GraphQLString,
-  GraphQLInt,
-  GraphQLFloat,
-  GraphQLNonNull,
-  GraphQLBoolean,
-  GraphQLID,
-  GraphQLList,
-} from 'graphql';
-import { GraphQLJSON } from 'graphql-scalars';
+import { GraphQLString, GraphQLInt, GraphQLFloat, GraphQLNonNull, GraphQLBoolean, GraphQLID } from 'graphql';
 
 import { ImportThemTities } from '../config/importDemTities.js';
 /**
@@ -54,25 +45,19 @@ const capitalize = (str) => {
  * @returns {GraphQLType} The GraphQL type.
  */
 const mapColumnTypeToGraphQLType = (columnType) => {
-  switch (columnType) {
-    case 'INT':
-      return GraphQLInt;
-    case 'VARCHAR':
-      return GraphQLString;
-    case 'DECIMAL':
-      return GraphQLFloat;
-    case 'TIMESTAMP':
-      return GraphQLString;
-    case 'BOOLEAN':
-      return GraphQLBoolean;
-    case 'string':
-      return GraphQLString;
+  switch (columnType.toLowerCase()) {
+    case 'int':
     case 'number':
       return GraphQLInt;
+    case 'varchar':
+    case 'string':
+    case 'timestamp': // create scalar type for timestamps
+      return GraphQLString;
+    case 'decimal':
     case 'float':
       return GraphQLFloat;
-    case 'int':
-      return GraphQLInt;
+    case 'boolean':
+      return GraphQLBoolean;
     case 'id':
       return GraphQLID;
     case 'object':
@@ -83,33 +68,40 @@ const mapColumnTypeToGraphQLType = (columnType) => {
       throw new Error(`Unsupported column type: ${columnType}`);
   }
 };
+
 /**
  * Generates the type definitions for the GraphQL schema.
  * @param {object} config - The configuration data.
  * @returns {string} The type definitions.
  */
 const generateTypeDefinitions = (config) => {
+  const allowedOps = ['_eq', '_neq', '_lt', '_lte', '_gt', '_gte', '_in', '_nin', '_like'];
+
+  const operators = generateOperators(allowedOps);
+
   //console.log(config);
   const typeDefs = [];
+  typeDefs.push(operators);
 
   // Define the Query type
   typeDefs.push(`
+# define the root Query
 type Query {
   tables: [TableInfo]
     ${config.tables
       .map((table) => {
         const tableName = table.name;
         const capitalizedTableName = capitalize(table.name);
-        return `${tableName}(input: Resolvers${capitalizedTableName}): [${capitalizedTableName}]`;
+        return `${tableName}(input: ${capitalizedTableName}ListOptions = {}): [${capitalizedTableName}]`;
       })
       .join('\n')}
-	 ${config.tables
-     .map((table) => {
-       const tableName = table.name;
-       const capitalizedTableName = capitalize(table.name);
-       return `${tableName}Count(input: ${capitalizedTableName}Count): ${capitalizedTableName}CountResult`;
-     })
-     .join('\n')}
+    ${config.tables
+      .map((table) => {
+        const tableName = table.name;
+        const capitalizedTableName = capitalize(table.name);
+        return `${tableName}Count(input: ${capitalizedTableName}Count): ${capitalizedTableName}CountResult`;
+      })
+      .join('\n')}
 }`);
   // Define the Mutation type
   typeDefs.push(`
@@ -119,28 +111,36 @@ type Mutation {
       .map((table) => {
         const tableName = table.name;
         const capitalizedTableName = capitalize(table.name);
-        const resolvers = `Resolvers${capitalizedTableName}`;
+        const resolvers = `${capitalizedTableName}MutationOptions`;
         return `${tableName}(input: ${resolvers}): ${capitalizedTableName}Output`;
       })
       .join('\n')}
 }`);
 
+  // start creating all the schemas
   config.tables.forEach((table) => {
     const tableName = capitalize(table.name);
     //Define the Resolvers input
-    const resolvers = `
-input Resolvers${tableName} {
+    const queryFilterOptions = `
+input ${tableName}ListOptions {
     filter: ${tableName}Filter
-	action: ActionType!
-    create: [${tableName}Input]
-	update: ${tableName}Update
-    take: Int = 15
     skip: Int
-    sort: ${tableName}Sort
-}`;
+    take: Int = 15
+    sort: ${tableName}SortOptions
+    }`;
+
+    //Define the Resolvers input
+    const mutationFilterOptions = `
+input ${tableName}MutationOptions {
+    _create: ${tableName}Input
+    _update: ${tableName}UpDel
+    _delete: ${tableName}Delete
+    }`;
+
     //Define the entities type
     const tableTypeDef = `
 type ${tableName} {
+
     ${table.columns
       .filter((column) => column.name !== 'password')
       .map((column) => {
@@ -159,7 +159,7 @@ type ${tableName} {
         .filter((column) => column.name !== 'password')
         .map((column) => {
           if (column.isObject) {
-            let columnForeignEntityCapitalize = capitalize(column.foreignEntity);
+            const columnForeignEntityCapitalize = capitalize(column.foreignEntity);
             return `${column.foreignEntity}: ${
               column.relationType[2] === 'n' ? `[${columnForeignEntityCapitalize}]` : columnForeignEntityCapitalize
             }`;
@@ -167,8 +167,8 @@ type ${tableName} {
         })
         .filter((value) => value)
         .join('\n')}
-
 }`;
+
     //Define the entities input
     const tableInputTypeDef = `
 input ${tableName}Input {
@@ -183,24 +183,66 @@ input ${tableName}Input {
       })
       .join('\n')}
 }`;
+
     //Define the Filter entities input
     const tableFilters = `
 input ${tableName}Filter {
-    ${table.columns
-      .filter((column) => column.name !== 'password')
-      .map((column) => {
-        if (column.type === 'object') {
-          return '';
-        }
-        const type = mapColumnTypeToGraphQLType(column.type);
-        return `${column.name}: [${type}]`;
-      })
-      .join('\n')}
+  _and: [ ${tableName}LogicalOp]
+  _or: [ ${tableName}LogicalOp]
 }`;
+
+    //  Define the Filter entities input
+    const sortOptions = `
+    input ${tableName}SortOptions {
+      ${table.columns
+        .filter((column) => column.type !== 'object')
+        .map((column) => {
+          return `${column.name}: Sort`;
+        })
+        .join('\n')}
+    }`;
+
+    const logicalOperations = `
+input ${tableName}LogicalOp {
+  _and: [ ${tableName}LogicalOp]
+  _or: [ ${tableName}LogicalOp]
+   ${table.columns
+     .filter((column) => column.type !== 'object')
+     .map((column) => {
+       return `${column.name}: ComparisonOperators`;
+     })
+     .join('\n')}
+  }`;
+
+    const nestedFiltering = `
+      input NestedFiltering {
+        _and: [NestedFiltering]
+        _or: [NestedFiltering]
+         ${table.columns
+           .filter((column) => column.primaryKey !== true || column.isObject)
+           .map((column) => {
+             return `${column.name}: ComparisonOperators`;
+           })
+           .join('\n')}
+      }
+    `;
+
+    const ordersCountInput = `
+  input ${tableName}Count {
+    _count: Int
+  } \n
+
+  type ${tableName}CountResult {
+   action: String
+    count: Int!
+  }
+`;
+
+    typeDefs.push(nestedFiltering, ordersCountInput, sortOptions, logicalOperations, mutationFilterOptions);
 
     //Define the Update entities input
     const update = `
-input ${tableName}Update {
+input ${tableName}UpDel {
     ${table.columns
       .filter((column) => column.primaryKey !== true)
       .map((column) => {
@@ -211,21 +253,27 @@ input ${tableName}Update {
         return `${column.name}: ${type}`;
       })
       .join('\n')}
+       filter: ${tableName}Filter
+}`;
+
+    const del = `
+input ${tableName}Delete {
+       filter: ${tableName}Filter
 }`;
 
     //Define the Update entities input
     const sort = `
-   input ${tableName}Sort {
-       ${table.columns
-         .filter((column) => column.primaryKey !== true)
-         .map((column) => {
-           if (column.foreignKey) {
-             return '';
-           }
-           return `${column.name}: Sort`;
-         })
-         .join('\n')}
-   }`;
+     input ${tableName}Sort {
+         ${table.columns
+           .filter((column) => column.primaryKey !== true)
+           .map((column) => {
+             if (column.foreignKey) {
+               return '';
+             }
+             return `${column.name}: Sort`;
+           })
+           .join('\n')}
+     }`;
 
     // Define the output type
     const output = `
@@ -235,63 +283,48 @@ type ${tableName}Output {
 	deleted: Int
 }`;
 
-    const ordersCountInput = `
-  input ${tableName}Count {
-    action: ActionType!
-  } \n
-
-  type ${tableName}CountResult {
-    action: String
-    count: Int!
-  }
-
-enum Sort { 
-  ASC 
-  DESC 
-}
-`;
-
-    typeDefs.push(resolvers, tableTypeDef, tableInputTypeDef, tableFilters, update, output, ordersCountInput, sort);
+    typeDefs.push(queryFilterOptions);
+    typeDefs.push(tableTypeDef);
+    typeDefs.push(tableInputTypeDef);
+    typeDefs.push(tableFilters);
+    typeDefs.push(update);
+    typeDefs.push(output, del, sort);
   });
 
-  // Redefinition of the input type for authorizing a user, possibly a duplication error.
+  // Define the operators enum
   typeDefs.push(`
+enum ActionType {
+  COUNT
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum Sort {
+  ASC
+  DESC
+}
+
 input AuthorizeUser {
   email: String!
   password: String!
 }
 
-enum ActionType {
-  COUNT
-  FIND
-  CREATE
-  UPDATE
-  DELETE
-}
-`);
-
-  // Redefinition of the input type for specifying a role, possibly a duplication error.
-  typeDefs.push(`
 input RoleInput {
   role: String!
-}`);
+}
 
-  // Define a type for the authentication payload, which includes a token.
-  typeDefs.push(`
 type AuthPayload {
   token: Token!
-}`);
+}
 
-  // Define a type for a token, which includes access, identity, and refresh tokens.
-  typeDefs.push(`
+
 type Token {
   accessToken: String!
   idToken: String!
   refreshToken: String!
-}`);
+}
 
-  // Define a type for providing information about a database table, including its name and structure.
-  typeDefs.push(`
   type TableInfo {
     table: String
     structure: String
@@ -299,6 +332,18 @@ type Token {
   }`);
   return typeDefs.join('\n');
 };
+
+function generateOperators(operators) {
+  const operatorsStr = operators.map((operator) => {
+    return `${operator}: String`;
+  });
+
+  return `
+    input ComparisonOperators {
+      ${operatorsStr.join('\n')}
+    }
+`;
+}
 
 /**
  * The path to the configuration file.
@@ -315,7 +360,7 @@ if (config) {
    * @param {string} filePath - The path to the file.
    * @param {string} typeDefsString - The type definitions.
    */
-  fs.writeFileSync('../src/presentation/typeDefs.graphql', typeDefsString);
+  fs.writeFileSync('../src/graphql/typeDefs.graphql', typeDefsString);
 
   console.log('Type definitions generated successfully.');
 } else {

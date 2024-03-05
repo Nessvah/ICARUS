@@ -7,6 +7,17 @@ class MongoDBConnection {
     this.tableData = currentTableInfo; //  {table: table Name, type: database type, databaseName: database name, columns: table structure, pool: connection to the database}
     this.dbName = currentTableInfo.databaseName; //save the database name.
     this.client = currentTableInfo.pool; //the poll connection to the current database.
+    this.operatorsMap = {
+      _eq: '$eq',
+      _lt: '$lt',
+      _lte: '$lte',
+      _gt: '$gt',
+      _gte: '$gte',
+      _neq: '$ne',
+      _and: '$and',
+      _or: '$or',
+      _in: '$in',
+    };
   }
 
   //connect to the database.
@@ -30,7 +41,7 @@ class MongoDBConnection {
     this.tableData.columns.forEach((colum) => {
       if (input.filter) {
         if (input.filter[colum.name]) {
-          if (colum.name == 'id') {
+          if (colum.name === 'id') {
             let idArray = [];
             input.filter.id.forEach((id) => idArray.push(new ObjectId(id)));
             query._id = { $in: idArray };
@@ -178,7 +189,7 @@ class MongoDBConnection {
     const db = this.client.db(this.dbName);
     const collection = db.collection(table);
     const filter = this.filterController(input);
-    //verify if filter have any kay values to filter and made the delete, to avoid delete all the database by mistake.
+    //verify if filter have any kay values to filter and made to delete, to avoid delete all the database by mistake.
     if (Object.keys(filter).length <= 0) {
       return false;
     }
@@ -208,7 +219,7 @@ class MongoDBConnection {
     if (input.sort) {
       const { sort } = input;
       const sortOptions = {};
-      for (let key in sort) {
+      for (const key in sort) {
         if (sort[key] === 'ASC') sortOptions[key] = 1; //ASC
         else if (sort[key] === 'DESC') sortOptions[key] = -1; //DESC
       }
