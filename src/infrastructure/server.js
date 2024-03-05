@@ -11,7 +11,7 @@ import initializeLogger from '../utils/loggers/winstonConfig.js';
 import { resolvers } from '../graphql/resolvers.js';
 import { readConfigFile } from '../graphql/generateTypeDefs.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
-import { auth } from '../aws/auth/auth.js';
+// import { auth } from '../aws/auth/auth.js';
 import { ImportThemTities } from '../config/importDemTities.js';
 import { createMetricsPlugin } from '../metrics/metricsPlugin.js';
 
@@ -42,7 +42,7 @@ const metricsPlugin = await createMetricsPlugin(register);
 
 let typeDefs;
 try {
-  typeDefs = fs.readFileSync('./presentation/typeDefs.graphql', 'utf8');
+  typeDefs = fs.readFileSync('./graphql/typeDefs.graphql', 'utf8');
 } catch (e) {
   logger.error(e);
 }
@@ -76,7 +76,7 @@ app.use(
 await server.start();
 
 // setup express middleware to handle cors, body parsing,
-// and express middleware funtion
+// and express middleware function
 
 app.use(
   '/graphql',
@@ -84,10 +84,11 @@ app.use(
   expressMiddleware(
     server /* , {
     context: ({ req }) => {
-      if (req.body.operationName === 'IntrospectionQuery') {
-        return { req };
-      }
-      return auth(req);
+      // if (req.body.operationName === 'IntrospectionQuery') {
+      //   return { req };
+      // }
+      // return auth(req);
+      return { req };
     },
   } */,
   ),

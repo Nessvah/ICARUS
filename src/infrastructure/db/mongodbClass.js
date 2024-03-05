@@ -7,6 +7,17 @@ class MongoDBConnection {
     this.tableData = currentTableInfo; //  {table: table Name, type: database type, databaseName: database name, columns: table structure, pool: connection to the database}
     this.dbName = currentTableInfo.databaseName; //save the database name.
     this.client = currentTableInfo.pool; //the poll connection to the current database.
+    this.operatorsMap = {
+      _eq: '$eq',
+      _lt: '$lt',
+      _lte: '$lte',
+      _gt: '$gt',
+      _gte: '$gte',
+      _neq: '$ne',
+      _and: '$and',
+      _or: '$or',
+      _in: '$in',
+    };
   }
 
   //connect to the database.
@@ -257,7 +268,7 @@ class MongoDBConnection {
     if (input.sort) {
       const { sort } = input;
       const sortOptions = {};
-      for (let key in sort) {
+      for (const key in sort) {
         if (sort[key] === 'ASC') sortOptions[key] = 1; //ASC
         else if (sort[key] === 'DESC') sortOptions[key] = -1; //DESC
       }
