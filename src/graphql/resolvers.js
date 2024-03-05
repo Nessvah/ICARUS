@@ -1,7 +1,6 @@
 import { controller } from '../infrastructure/db/connector.js';
 import { logger } from '../infrastructure/server.js';
 import { validation } from '../utils/validation/validation.js';
-import { logger } from '../infrastructure/server.js';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 import { ImportThemTities } from '../config/importDemTities.js';
@@ -91,8 +90,10 @@ async function autoResolvers(data) {
       // if (!context.currentUser) {
       //   throw new AuthenticationError();
       // }
+      console.log('FVNEFAHVGHEAFVEAFVNJFV');
       await validation(args.input); // it validates mutation inputs
       await validation(args.input, 'update'); // it validates update inputs;
+      console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
 
       return await controller(table.name, args);
     };
@@ -115,7 +116,7 @@ const createRelations = async (table, column) => {
     // for mongodb searching parents
     if (table.database.type === 'mongodb') {
       //const idValue = ObjectId.isValid(parent[column.name]) ? parent[column.name].toString() : parent[column.name];
-      args = { input: { action: 'FIND', filter: { _and: [{ [column.foreignKey]: { _eq: parent.id } }] } } };
+      args = { input: { filter: { _and: [{ [column.foreignKey]: { _eq: parent.id } }] } } };
       // for MySQL searching parents
     } else {
       args = { input: { filter: { [column.foreignKey]: parent[column.foreignKey] } } };

@@ -38,6 +38,7 @@ const validateFields = (item, operation) => {
 // f the operation is 'update' and the input.update property exists, it calls the validateFields function with the entire input.update object.
 // In both cases, the validateFields function performs field-level validation based on the operation type and the provided validation rules.
 const validation = async (input, operation = 'create') => {
+  console.log('validation input:', input, 'operation:', operation, '______________');
   if (operation === 'create' && input.create && Array.isArray(input.create)) {
     for (const item of input.create) {
       validateFields(item, operation);
