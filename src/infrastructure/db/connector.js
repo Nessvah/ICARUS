@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { MongoDBConnection } from './mongodbClass.js';
 import { MySQLConnection } from './mysqlClass.js';
 import { MongoClient } from 'mongodb';
@@ -33,7 +32,8 @@ const pools = [];
 async function controller(table, args) {
   let connection;
   //find the right database in the pool, base on table name.
-  let currentTable = await pools.find((db) => db.table === table);
+  const currentTable = await pools.find((db) => db.table === table);
+
   //create a connection class to the specific database type, that will have all the CRUD functions to be use.
   try {
     switch (currentTable.type) {
@@ -45,18 +45,25 @@ async function controller(table, args) {
         break;
     }
 
+    let action;
+    for (const key in args.input) {
+      if (key.startsWith('_') || key === 'filter') {
+        action = key;
+      }
+    }
+
     //filter the CRUD function passed in the action input.
-    switch (args.input.action) {
-      case 'FIND':
+    switch (action) {
+      case 'filter':
         return await connection.find(table, args);
-      case 'CREATE':
-        return await connection.create(table, args);
-      case 'UPDATE':
-        return await connection.update(table, args);
-      case 'DELETE':
-        return await connection.delete(table, args);
-      case 'COUNT':
+      case '_count':
         return await connection.count(table, args);
+      case '_create':
+        return await connection.create(table, args);
+      case '_update':
+        return await connection.update(table, args);
+      case '_delete':
+        return await connection.delete(table, args);
       default:
         return 'Action not defined';
     }
