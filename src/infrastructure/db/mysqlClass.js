@@ -59,11 +59,11 @@ export class MySQLConnection {
   async find(tableName, { input }) {
     // start constructing the sql query
     let sql = `SELECT * FROM ${tableName}`;
-    console.log(input);
+
     // array to save the values
     const values = [];
 
-    // check if the filter options is present and if it is
+    // check if the filter options is present and if it is,
     // take all the nested information and construct a sql query to filter
     if (input.filter) {
       const { processedSql, processedValues } = processFilter(input);
@@ -89,8 +89,6 @@ export class MySQLConnection {
     // to make pagination and construct the sql query
 
     if (input.skip || input.take) {
-      logger.warn('inside skip and take');
-
       const { paginationSql, paginationValues } = buildSkipAndTakeClause(input);
 
       sql += paginationSql;
@@ -118,7 +116,7 @@ export class MySQLConnection {
 
     const values = [];
 
-    // in this scenario we dont know whats the name for the pk
+    // in this scenario we don't know what's the name for the pk,
     // so we need to fetch the schema information of the table to know the name
     const primaryKeyColumnName = await fetchPrimaryKeyColumnName.call(this, tableName);
     //const foreignKeyConstraints = await fetchForeignKeyConstraints.call(this, tableName);
@@ -170,12 +168,7 @@ export class MySQLConnection {
 
     // simple update without filtering
     for (const [key, value] of Object.entries(input._update)) {
-      if (key !== 'filter') {
-        updateQuery += `${key} = ?, `;
-        findQuery += ` ${key} = ? AND `;
-        values.push(`${value}`);
-        findValues.push(value);
-      } else {
+      if (key === 'filter') {
         // handle filtering in update
         // mimik object structure for the function to process filter
         const filter = {};
@@ -188,6 +181,11 @@ export class MySQLConnection {
         values.push(...processedValues);
 
         updateQuery += processedSql;
+      } else {
+        updateQuery += `${key} = ?, `;
+        findQuery += ` ${key} = ? AND `;
+        values.push(value);
+        findValues.push(value);
       }
     }
 

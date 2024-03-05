@@ -140,6 +140,7 @@ input ${tableName}MutationOptions {
     //Define the entities type
     const tableTypeDef = `
 type ${tableName} {
+
     ${table.columns
       .filter((column) => column.name !== 'password')
       .map((column) => {
@@ -158,7 +159,7 @@ type ${tableName} {
         .filter((column) => column.name !== 'password')
         .map((column) => {
           if (column.isObject) {
-            let columnForeignEntityCapitalize = capitalize(column.foreignEntity);
+            const columnForeignEntityCapitalize = capitalize(column.foreignEntity);
             return `${column.foreignEntity}: ${
               column.relationType[2] === 'n' ? `[${columnForeignEntityCapitalize}]` : columnForeignEntityCapitalize
             }`;
@@ -166,7 +167,6 @@ type ${tableName} {
         })
         .filter((value) => value)
         .join('\n')}
-
 }`;
 
     //Define the entities input
@@ -323,7 +323,6 @@ type Token {
   accessToken: String!
   idToken: String!
   refreshToken: String!
-
 }
 
   type TableInfo {

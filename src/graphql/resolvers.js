@@ -44,26 +44,6 @@ const capitalize = (str) => {
 
 let nestedObject = {};
 export const resolvers = {};
-//a pre version of the resolvers, with same static Query and Mutation.
-// export const resolvers = {
-//   Query: {
-//     tables: () => {
-//       const tablesInfo = data.tables.map((table) => {
-//         const columns = table.columns.map((column) => column);
-
-//         return {
-//           table: table.name,
-//           structure: JSON.stringify(columns),
-//           backoffice: JSON.stringify(table.backoffice), // Add tables.backoffice
-//         };
-//       });
-//       return tablesInfo;
-//     },
-//   },
-//   Mutation: {
-//     authorize: (_, { input }, { authLogin }) => authLogin(input),
-//   },
-// };
 
 // this function use the "data" parameter and create the resolvers dynamically.
 async function autoResolvers(data) {
@@ -131,7 +111,6 @@ async function autoResolvers(data) {
 const createRelations = async (table, column) => {
   const name = column.isObject ? column.foreignEntity : column.name;
   nestedObject[name] = async (parent, args, info) => {
-    console.log('AQUIIIII', parent);
     // let args;
     // for mongodb searching parents
     if (table.database.type === 'mongodb') {

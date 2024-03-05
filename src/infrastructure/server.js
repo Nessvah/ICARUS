@@ -11,7 +11,7 @@ import initializeLogger from '../utils/loggers/winstonConfig.js';
 import { resolvers } from '../graphql/resolvers.js';
 import { readConfigFile } from '../graphql/generateTypeDefs.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
-import { auth } from '../aws/auth/auth.js';
+// import { auth } from '../aws/auth/auth.js';
 import { ImportThemTities } from '../config/importDemTities.js';
 import { createMetricsPlugin } from '../metrics/metricsPlugin.js';
 
@@ -76,7 +76,7 @@ app.use(
 await server.start();
 
 // setup express middleware to handle cors, body parsing,
-// and express middleware funtion
+// and express middleware function
 
 app.use(
   '/graphql',
