@@ -195,9 +195,8 @@ input ${tableName}Filter {
     const sortOptions = `
     input ${tableName}SortOptions {
       ${table.columns
-        .filter((column) => column.primaryKey !== true || column.isObject)
+        .filter((column) => column.type !== 'object')
         .map((column) => {
-          // console.log(tableName, column, column.name);
           return `${column.name}: Sort`;
         })
         .join('\n')}
@@ -208,7 +207,7 @@ input ${tableName}LogicalOp {
   _and: [ ${tableName}LogicalOp]
   _or: [ ${tableName}LogicalOp]
    ${table.columns
-     .filter((column) => column.primaryKey !== true || column.isObjec === false)
+     .filter((column) => column.type !== 'object')
      .map((column) => {
        return `${column.name}: ComparisonOperators`;
      })

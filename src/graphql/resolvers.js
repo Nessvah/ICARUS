@@ -82,6 +82,10 @@ async function autoResolvers(data) {
     },
   };
 
+  resolvers.Mutation = {
+    authorize: (_, { input }, { authLogin }) => authLogin(input),
+  };
+
   data.tables.forEach((table) => {
     const countName = `${table.name}Count`;
 
@@ -97,10 +101,6 @@ async function autoResolvers(data) {
       const result = await controller(table.name, args);
 
       return { count: result };
-    };
-
-    resolvers.Mutation = {
-      authorize: (_, { input }, { authLogin }) => authLogin(input),
     };
 
     resolvers.Mutation[table.name] = async (parent, args, context, info) => {
@@ -130,15 +130,16 @@ async function autoResolvers(data) {
 
 const createRelations = async (table, column) => {
   const name = column.isObject ? column.foreignEntity : column.name;
-  nestedObject[name] = async (parent) => {
-    let args;
+  nestedObject[name] = async (parent, args, info) => {
+    console.log('AQUIIIII', parent);
+    // let args;
     // for mongodb searching parents
     if (table.database.type === 'mongodb') {
       //const idValue = ObjectId.isValid(parent[column.name]) ? parent[column.name].toString() : parent[column.name];
-      args = { input: { action: 'FIND', filter: { [column.foreignKey]: [parent[column.name]] } } };
+      args = { input: { filter: { [column.foreignKey]: [parent[column.name]] } } };
       // for MySQL searching parents
     } else {
-      args = { input: { action: 'FIND', filter: { [column.foreignKey]: [parent[column.foreignKey]] } } };
+      args = { input: { filter: { [column.foreignKey]: parent[column.foreignKey] } } };
     }
     const relatedObjects = await controller(column.foreignEntity, args);
 

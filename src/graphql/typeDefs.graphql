@@ -87,17 +87,17 @@ id: ComparisonOperators
 
 
     input AuthorsSortOptions {
-      name: Sort
+      id: Sort
+name: Sort
 email: Sort
-id: Sort
     }
 
 input AuthorsLogicalOp {
   _and: [ AuthorsLogicalOp]
   _or: [ AuthorsLogicalOp]
-   name: ComparisonOperators
+   id: ComparisonOperators
+name: ComparisonOperators
 email: ComparisonOperators
-id: ComparisonOperators
   }
 
 input AuthorsMutationOptions {
@@ -177,7 +177,8 @@ publish_date: ComparisonOperators
 
 
     input Blog_postsSortOptions {
-      title: Sort
+      id: Sort
+title: Sort
 author_id: Sort
 content: Sort
 publish_date: Sort
@@ -186,7 +187,8 @@ publish_date: Sort
 input Blog_postsLogicalOp {
   _and: [ Blog_postsLogicalOp]
   _or: [ Blog_postsLogicalOp]
-   title: ComparisonOperators
+   id: ComparisonOperators
+title: ComparisonOperators
 author_id: ComparisonOperators
 content: ComparisonOperators
 publish_date: ComparisonOperators
@@ -274,7 +276,8 @@ products: ComparisonOperators
 
 
     input BrandsSortOptions {
-      name: Sort
+      id: Sort
+name: Sort
 country: Sort
 founded_year: Sort
 products: Sort
@@ -283,7 +286,8 @@ products: Sort
 input BrandsLogicalOp {
   _and: [ BrandsLogicalOp]
   _or: [ BrandsLogicalOp]
-   name: ComparisonOperators
+   id: ComparisonOperators
+name: ComparisonOperators
 country: ComparisonOperators
 founded_year: ComparisonOperators
 products: ComparisonOperators
@@ -370,7 +374,8 @@ icon_label: ComparisonOperators
 
 
     input CategoriesSortOptions {
-      category_name: Sort
+      category_id: Sort
+category_name: Sort
 icon_class: Sort
 icon_label: Sort
     }
@@ -378,7 +383,8 @@ icon_label: Sort
 input CategoriesLogicalOp {
   _and: [ CategoriesLogicalOp]
   _or: [ CategoriesLogicalOp]
-   category_name: ComparisonOperators
+   category_id: ComparisonOperators
+category_name: ComparisonOperators
 icon_class: ComparisonOperators
 icon_label: ComparisonOperators
   }
@@ -461,7 +467,8 @@ promotion_id: ComparisonOperators
 
 
     input CouponsSortOptions {
-      code: Sort
+      id: Sort
+code: Sort
 discount_percent: Sort
 expiration_date: Sort
 promotion_id: Sort
@@ -470,7 +477,8 @@ promotion_id: Sort
 input CouponsLogicalOp {
   _and: [ CouponsLogicalOp]
   _or: [ CouponsLogicalOp]
-   code: ComparisonOperators
+   id: ComparisonOperators
+code: ComparisonOperators
 discount_percent: ComparisonOperators
 expiration_date: ComparisonOperators
 promotion_id: ComparisonOperators
@@ -559,21 +567,21 @@ orders: ComparisonOperators
 
 
     input CustomersSortOptions {
-      customer_name: Sort
+      customer_id: Sort
+customer_name: Sort
 email: Sort
 icon_class: Sort
 icon_label: Sort
-orders: Sort
     }
 
 input CustomersLogicalOp {
   _and: [ CustomersLogicalOp]
   _or: [ CustomersLogicalOp]
-   customer_name: ComparisonOperators
+   customer_id: ComparisonOperators
+customer_name: ComparisonOperators
 email: ComparisonOperators
 icon_class: ComparisonOperators
 icon_label: ComparisonOperators
-orders: ComparisonOperators
   }
 
 input CustomersMutationOptions {
@@ -664,7 +672,8 @@ icon_label: ComparisonOperators
 
 
     input Order_itemsSortOptions {
-      order_id: Sort
+      order_item_id: Sort
+order_id: Sort
 product_id: Sort
 quantity: Sort
 price: Sort
@@ -676,7 +685,8 @@ icon_label: Sort
 input Order_itemsLogicalOp {
   _and: [ Order_itemsLogicalOp]
   _or: [ Order_itemsLogicalOp]
-   order_id: ComparisonOperators
+   order_item_id: ComparisonOperators
+order_id: ComparisonOperators
 product_id: ComparisonOperators
 quantity: ComparisonOperators
 price: ComparisonOperators
@@ -783,25 +793,21 @@ payment: ComparisonOperators
 
 
     input OrdersSortOptions {
-      order_date: Sort
+      order_id: Sort
+order_date: Sort
 customer_id: Sort
 icon_class: Sort
 icon_label: Sort
-order_items: Sort
-shipments: Sort
-payment: Sort
     }
 
 input OrdersLogicalOp {
   _and: [ OrdersLogicalOp]
   _or: [ OrdersLogicalOp]
-   order_date: ComparisonOperators
+   order_id: ComparisonOperators
+order_date: ComparisonOperators
 customer_id: ComparisonOperators
 icon_class: ComparisonOperators
 icon_label: ComparisonOperators
-order_items: ComparisonOperators
-shipments: ComparisonOperators
-payment: ComparisonOperators
   }
 
 input OrdersMutationOptions {
@@ -899,7 +905,8 @@ order_id: ComparisonOperators
 
 
     input PaymentSortOptions {
-      payment_method: Sort
+      id: Sort
+payment_method: Sort
 payment_date: Sort
 amount: Sort
 payment_status: Sort
@@ -909,7 +916,8 @@ order_id: Sort
 input PaymentLogicalOp {
   _and: [ PaymentLogicalOp]
   _or: [ PaymentLogicalOp]
-   payment_method: ComparisonOperators
+   id: ComparisonOperators
+payment_method: ComparisonOperators
 payment_date: ComparisonOperators
 amount: ComparisonOperators
 payment_status: ComparisonOperators
@@ -1005,25 +1013,25 @@ order_items: ComparisonOperators
 
 
     input ProductsSortOptions {
-      product_name: Sort
+      product_id: Sort
+product_name: Sort
 price: Sort
 currency_type: Sort
 description: Sort
 icon_class: Sort
 icon_label: Sort
-order_items: Sort
     }
 
 input ProductsLogicalOp {
   _and: [ ProductsLogicalOp]
   _or: [ ProductsLogicalOp]
-   product_name: ComparisonOperators
+   product_id: ComparisonOperators
+product_name: ComparisonOperators
 price: ComparisonOperators
 currency_type: ComparisonOperators
 description: ComparisonOperators
 icon_class: ComparisonOperators
 icon_label: ComparisonOperators
-order_items: ComparisonOperators
   }
 
 input ProductsMutationOptions {
@@ -1122,7 +1130,8 @@ icon_label: ComparisonOperators
 
 
     input Product_reviewsSortOptions {
-      product_id: Sort
+      review_id: Sort
+product_id: Sort
 customer_id: Sort
 rating: Sort
 review_text: Sort
@@ -1134,7 +1143,8 @@ icon_label: Sort
 input Product_reviewsLogicalOp {
   _and: [ Product_reviewsLogicalOp]
   _or: [ Product_reviewsLogicalOp]
-   product_id: ComparisonOperators
+   review_id: ComparisonOperators
+product_id: ComparisonOperators
 customer_id: ComparisonOperators
 rating: ComparisonOperators
 review_text: ComparisonOperators
@@ -1239,21 +1249,21 @@ id: ComparisonOperators
 
 
     input PromotionsSortOptions {
-      name: Sort
+      id: Sort
+name: Sort
 description: Sort
 start_date: Sort
 end_date: Sort
-id: Sort
     }
 
 input PromotionsLogicalOp {
   _and: [ PromotionsLogicalOp]
   _or: [ PromotionsLogicalOp]
-   name: ComparisonOperators
+   id: ComparisonOperators
+name: ComparisonOperators
 description: ComparisonOperators
 start_date: ComparisonOperators
 end_date: ComparisonOperators
-id: ComparisonOperators
   }
 
 input PromotionsMutationOptions {
@@ -1342,7 +1352,8 @@ icon_label: ComparisonOperators
 
 
     input ShipmentsSortOptions {
-      order_id: Sort
+      shipment_id: Sort
+order_id: Sort
 shipment_date: Sort
 tracking_int: Sort
 icon_class: Sort
@@ -1352,7 +1363,8 @@ icon_label: Sort
 input ShipmentsLogicalOp {
   _and: [ ShipmentsLogicalOp]
   _or: [ ShipmentsLogicalOp]
-   order_id: ComparisonOperators
+   shipment_id: ComparisonOperators
+order_id: ComparisonOperators
 shipment_date: ComparisonOperators
 tracking_int: ComparisonOperators
 icon_class: ComparisonOperators
@@ -1443,15 +1455,15 @@ id: ComparisonOperators
 
 
     input User_roleSortOptions {
-      role_name: Sort
-id: Sort
+      id: Sort
+role_name: Sort
     }
 
 input User_roleLogicalOp {
   _and: [ User_roleLogicalOp]
   _or: [ User_roleLogicalOp]
-   role_name: ComparisonOperators
-id: ComparisonOperators
+   id: ComparisonOperators
+role_name: ComparisonOperators
   }
 
 input User_roleMutationOptions {
@@ -1528,7 +1540,8 @@ created_t: ComparisonOperators
 
 
     input UsersSortOptions {
-      password: Sort
+      id: Sort
+password: Sort
 email: Sort
 role_id: Sort
 customer_id: Sort
@@ -1538,7 +1551,8 @@ created_t: Sort
 input UsersLogicalOp {
   _and: [ UsersLogicalOp]
   _or: [ UsersLogicalOp]
-   password: ComparisonOperators
+   id: ComparisonOperators
+password: ComparisonOperators
 email: ComparisonOperators
 role_id: ComparisonOperators
 customer_id: ComparisonOperators

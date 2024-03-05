@@ -164,14 +164,17 @@ export class MySQLConnection {
   async update(tableName, { input }) {
     // UPDATE `table_name` SET `column_name` = `new_value' [WHERE condition];
     let updateQuery = `UPDATE ${tableName} SET `;
-
+    let findQuery = `SELECT * FROM ${tableName} WHERE`;
     const values = [];
+    const findValues = [];
 
     // simple update without filtering
     for (const [key, value] of Object.entries(input._update)) {
       if (key !== 'filter') {
         updateQuery += `${key} = ?, `;
+        findQuery += ` ${key} = ? AND `;
         values.push(`${value}`);
+        findValues.push(value);
       } else {
         // handle filtering in update
         // mimik object structure for the function to process filter
@@ -181,24 +184,25 @@ export class MySQLConnection {
         const { processedSql, processedValues } = processFilter(filter);
 
         // remove trailing spaces and comma
-        updateQuery = `${updateQuery.slice(0, -2)}`;
+        updateQuery = updateQuery.slice(0, -2);
         values.push(...processedValues);
 
         updateQuery += processedSql;
       }
     }
 
-    // get the name of the pk column
-    const primaryKeyColumnName = await fetchPrimaryKeyColumnName.call(this, tableName);
+    findQuery = findQuery.slice(0, -5);
 
     try {
       const record = await this.query(updateQuery, values);
 
-      console.log('res', record);
-      const selectQuery = `SELECT * FROM ${tableName} WHERE ${primaryKeyColumnName} = LAST_INSERT_ID();`;
-      const newRecord = await this.query(selectQuery);
-      console.log(newRecord, 5);
-      return { updated: newRecord };
+      if (record.changedRows > 0) {
+        // find the record updated
+        const newRecord = await this.query(findQuery, findValues);
+        return { updated: newRecord };
+      }
+
+      return { updated: [] };
     } catch (err) {
       logger.error(err);
       return err; // Return null if there's an error

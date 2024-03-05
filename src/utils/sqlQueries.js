@@ -41,14 +41,13 @@ export function processFilter(input) {
       sql += whereSql;
       values.push(...whereValues);
       columns.push(...whereColumns); // Concatenate the arrays instead of pushing the entire array
+    } else {
+      // in this scenario the user didnt provide an 'and' or 'or' logical operator
+      // so we can assume that its an and. so we can expect only objects
+
+      values.push(filter[key]);
+      sql += ` WHERE ${key} = ?`;
     }
-    // } else {
-    //   // in this scenario the user didnt provide an 'and' or 'or' logical operator
-    //   // so we can assume that its an and. so we can expect only objects
-    //   columns.push(key); // save the property
-    //   const { whereSql, values } = buildWhereClause(filter, logicalOperator, columns);
-    //   console.log(values, whereSql);
-    // }
   });
 
   return { processedSql: sql, processedValues: values };
