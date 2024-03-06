@@ -1,5 +1,4 @@
-import { GraphQLScalarType } from 'graphql';
-import { Kind } from 'graphql';
+import { GraphQLScalarType, Kind } from 'graphql';
 
 const GraphQLDate = new GraphQLScalarType({
   name: 'GraphQLDate',

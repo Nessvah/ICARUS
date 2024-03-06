@@ -116,7 +116,7 @@ class MongoDBConnection {
       let res;
 
       // Check if input.filter is empty or not defined
-      if (!input.filter || input.filter === null || Object.keys(input.filter).length === 0) {
+      if (!input.filter || Object.keys(input.filter).length === 0) {
         // If input.filter is empty or not defined, return all documents
         const res = await collection.find().toArray();
         res.forEach((element) => {

@@ -85,7 +85,7 @@ const mapColumnTypeToGraphQLType = (columnType) => {
  * @param {object} config - The configuration data.
  * @returns {string} The type definitions.
  */
-const typeDefs = [];
+
 const generateTypeDefinitions = (config) => {
   if (!config || !config.tables || config.tables.length === 0) {
     throw new Error('Invalid or empty configuration provided.');
@@ -96,10 +96,14 @@ const generateTypeDefinitions = (config) => {
 
   //console.log(config);
   const typeDefs = [];
-  typeDefs.push(operators);
 
   // Define the Query type
   typeDefs.push(`
+  ${JSONAliasDefinition}
+  ${ISODateAliasDefinition}
+  ${MySQLDateAliasDefinition}
+  ${operators}
+  
 # define the root Query
 type Query {
   tables: [TableInfo]
@@ -308,14 +312,7 @@ type ${tableName}Output {
 
   // Define the operators enum
   typeDefs.push(`
-enum ActionType {
-  COUNT
-  CREATE
-  UPDATE
-  DELETE
-}
-
-enum Sort {
+  enum Sort {
   ASC
   DESC
 }
@@ -369,14 +366,12 @@ if (config) {
    * The generated type definitions.
    */
   const typeDefsString = generateTypeDefinitions(config);
-  // Prepend the JSON alias definition to the beginning of the generated type definitions
-  const finalTypeDefsString = `${JSONAliasDefinition}\n${ISODateAliasDefinition}\n${MySQLDateAliasDefinition}\n${typeDefsString}`;
   /**
    * Writes the type definitions to a file.
    * @param {string} filePath - The path to the file.
    * @param {string} typeDefsString - The type definitions.
    */
-  fs.writeFileSync('../src/graphql/typeDefs.graphql', finalTypeDefsString);
+  fs.writeFileSync('../src/graphql/typeDefs.graphql', typeDefsString);
 
   console.log('Type definitions generated successfully.');
 } else {
