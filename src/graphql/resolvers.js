@@ -73,7 +73,8 @@ async function autoResolvers(data) {
       const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
 
       if (limitErrorMessage) throw new Error(limitErrorMessage);
-      return await controller(table.name, args);
+      const teste = await controller(table.name, args);
+      return teste;
     };
 
     resolvers.Query[countName] = async (parent, args, context, info) => {

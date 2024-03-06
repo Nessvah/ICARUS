@@ -118,7 +118,15 @@ class MongoDBConnection {
       // Check if input.filter is empty or not defined
       if (!input.filter || input.filter === null || Object.keys(input.filter).length === 0) {
         // If input.filter is empty or not defined, return all documents
-        return await collection.find().toArray();
+        const res = await collection.find().toArray();
+        res.forEach((element) => {
+          if (element._id) {
+            const id = element._id;
+            delete element._id;
+            element.id = id;
+          }
+        });
+        return res;
       } else {
         // Call the filter function to reorganize the filter parameter
         const filter = input.filter._and ? this.filterController(input.filter) : input.filter;
