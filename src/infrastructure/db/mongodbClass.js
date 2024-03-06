@@ -121,7 +121,7 @@ class MongoDBConnection {
         query = collection.find();
       } else {
         // Call the filter function to reorganize the filter parameter
-        const filter = input.filter._and ? this.filterController(input.filter) : input.filter;
+        const filter = input.filter._and || input.filter._or ? this.filterController(input.filter) : input.filter;
         //console.log(JSON.stringify(filter, null, 2));
         const options = {
           // Set the timeout value in milliseconds
