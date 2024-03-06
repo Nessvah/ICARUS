@@ -73,8 +73,7 @@ async function autoResolvers(data) {
       const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
 
       if (limitErrorMessage) throw new Error(limitErrorMessage);
-      const teste = await controller(table.name, args);
-      return teste;
+      return await controller(table.name, args);
     };
 
     resolvers.Query[countName] = async (parent, args, context, info) => {
@@ -110,8 +109,8 @@ async function autoResolvers(data) {
 
 const createRelations = async (table, column) => {
   const name = column.isObject ? column.foreignEntity : column.name;
-  nestedObject[name] = async (parent, args, info) => {
-    // let args;
+  nestedObject[name] = async (parent, args) => {
+    let tempArgs = args;
     // for mongodb searching parents
     if (table.database.type === 'mongodb') {
       //const idValue = ObjectId.isValid(parent[column.name]) ? parent[column.name].toString() : parent[column.name];
@@ -120,6 +119,10 @@ const createRelations = async (table, column) => {
     } else {
       args = { input: { filter: { [column.foreignKey]: parent[column.foreignKey] } } };
     }
+
+    tempArgs.take ? (args.input.take = tempArgs.take) : '';
+    tempArgs.skip ? (args.input.skip = tempArgs.skip) : '';
+
     const relatedObjects = await controller(column.foreignEntity, args);
 
     return column.relationType[2] === 'n' ? relatedObjects : relatedObjects[0];

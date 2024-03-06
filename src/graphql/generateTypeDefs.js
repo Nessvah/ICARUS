@@ -175,7 +175,7 @@ type ${tableName} {
         .map((column) => {
           if (column.isObject) {
             const columnForeignEntityCapitalize = capitalize(column.foreignEntity);
-            return `${column.foreignEntity}: ${
+            return `${column.foreignEntity}(take: Int = 15, skip: Int): ${
               column.relationType[2] === 'n' ? `[${columnForeignEntityCapitalize}]` : columnForeignEntityCapitalize
             }`;
           }
