@@ -11,7 +11,7 @@ import initializeLogger from '../utils/loggers/winstonConfig.js';
 import { resolvers } from '../graphql/resolvers.js';
 import { readConfigFile } from '../graphql/generateTypeDefs.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
-// import { auth } from '../aws/auth/auth.js';
+import { auth } from '../aws/auth/auth.js';
 import { ImportThemTities } from '../config/importDemTities.js';
 import { createMetricsPlugin } from '../metrics/metricsPlugin.js';
 
@@ -81,17 +81,15 @@ await server.start();
 app.use(
   '/graphql',
   express.json(),
-  expressMiddleware(
-    server /* , {
+  expressMiddleware(server, {
     context: ({ req }) => {
-      // if (req.body.operationName === 'IntrospectionQuery') {
-      //   return { req };
-      // }
-      // return auth(req);
-      return { req };
+      if (req.body.operationName === 'IntrospectionQuery') {
+        return { req };
+      } else {
+        return { req };
+      }
     },
-  } */,
-  ),
+  }),
 );
 
 // Prometheus end point

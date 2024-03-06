@@ -128,7 +128,6 @@ class MongoDBConnection {
           // Set the timeout value in milliseconds
           maxTimeMS: 60000, // Adjust this value to your desired timeout
         };
-
         query = collection.find(filter, options).maxTimeMS(options.maxTimeMS);
       }
 

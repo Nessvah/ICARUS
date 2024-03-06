@@ -49,8 +49,9 @@ async function controller(table, args) {
     for (const key in args.input) {
       if (key.startsWith('_')) {
         action = key;
+      } else {
+        action = 'filter';
       }
-      action = 'filter';
     }
 
     //filter the CRUD function passed in the action input.
