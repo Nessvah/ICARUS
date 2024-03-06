@@ -14,7 +14,7 @@
       },
       {
         "name": "order_date",
-        "type": "string",
+        "type": "timestamp",
         "primaryKey": false,
         "nullable": false,
         "defaultValue": "'CURRENT_string'",

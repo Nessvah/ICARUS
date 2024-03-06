@@ -35,7 +35,7 @@
       },
       {
         "name": "created_t",
-        "type": "string",
+        "type": "timestamp",
         "nullable": true
       }
     ],

@@ -159,7 +159,6 @@ input ${tableName}MutationOptions {
     //Define the entities type
     const tableTypeDef = `
 type ${tableName} {
-
     ${table.columns
       .filter((column) => column.name !== 'password')
       .map((column) => {

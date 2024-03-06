@@ -118,7 +118,6 @@ input AuthorsListOptions {
     }
 
 type Authors {
-
     id: ID!
 name: String!
 email: String!
@@ -212,7 +211,6 @@ input Blog_postsListOptions {
     }
 
 type Blog_posts {
-
     id: ID!
 title: String!
 author_id: ID!
@@ -311,7 +309,6 @@ input BrandsListOptions {
     }
 
 type Brands {
-
     id: ID!
 name: String!
 country: String!
@@ -407,7 +404,6 @@ input CategoriesListOptions {
     }
 
 type Categories {
-
     category_id: Int!
 category_name: String!
 icon_class: String!
@@ -502,7 +498,6 @@ input CouponsListOptions {
     }
 
 type Coupons {
-
     id: ID!
 code: String!
 discount_percent: Int!
@@ -602,7 +597,6 @@ input CustomersListOptions {
     }
 
 type Customers {
-
     customer_id: Int!
 customer_name: String!
 email: String!
@@ -713,7 +707,6 @@ input Order_itemsListOptions {
     }
 
 type Order_items {
-
     order_item_id: Int!
 order_id: Int!
 product_id: Int!
@@ -828,7 +821,6 @@ input OrdersListOptions {
     }
 
 type Orders {
-
     order_id: Int!
 order_date: String!
 customer_id: Int!
@@ -942,7 +934,6 @@ input PaymentListOptions {
     }
 
 type Payment {
-
     id: String!
 payment_method: String!
 payment_date: String!
@@ -1052,7 +1043,6 @@ input ProductsListOptions {
     }
 
 type Products {
-
     product_id: Int!
 product_name: String!
 price: Float!
@@ -1171,13 +1161,12 @@ input Product_reviewsListOptions {
     }
 
 type Product_reviews {
-
     review_id: Int!
 product_id: Int!
 customer_id: Int!
 rating: Int!
 review_text: String!
-review_date: String!
+review_date: GraphQLDate!
 icon_class: String
 icon_label: String
       products(take: Int = 15, skip: Int): Products
@@ -1189,7 +1178,7 @@ input Product_reviewsInput {
 customer_id: Int!
 rating: Int!
 review_text: String!
-review_date: String!
+review_date: GraphQLDate!
 icon_class: String
 icon_label: String
 }
@@ -1204,7 +1193,7 @@ input Product_reviewsUpDel {
 customer_id: Int
 rating: Int
 review_text: String
-review_date: String
+review_date: GraphQLDate
 icon_class: String
 icon_label: String
        filter: Product_reviewsFilter
@@ -1284,7 +1273,6 @@ input PromotionsListOptions {
     }
 
 type Promotions {
-
     id: ID!
 name: String!
 description: String!
@@ -1389,7 +1377,6 @@ input ShipmentsListOptions {
     }
 
 type Shipments {
-
     shipment_id: Int!
 order_id: Int!
 shipment_date: String!
@@ -1484,7 +1471,6 @@ input User_roleListOptions {
     }
 
 type User_role {
-
     id: ID!
 role_name: String!
       users(take: Int = 15, skip: Int): [Users]
@@ -1577,7 +1563,6 @@ input UsersListOptions {
     }
 
 type Users {
-
     id: ID!
 email: String!
 role_id: String!
