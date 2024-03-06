@@ -47,7 +47,6 @@ async function controller(table, args) {
 
     let action;
     for (const key in args.input) {
-      console.log(args.input);
       if (key.startsWith('_')) {
         action = key;
       }
