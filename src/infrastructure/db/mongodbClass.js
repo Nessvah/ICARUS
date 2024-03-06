@@ -66,7 +66,7 @@ class MongoDBConnection {
               // For String, Integer, Boolean, Double, Min/Max keys, Symbol, Date, ObjectID, Regular expression
               // Convert string to corresponding type if applicable
               if (typeof filterValue === 'string' && ObjectId.isValid(filterValue)) {
-                query[operator] = ObjectId(filterValue);
+                query[operator] = new ObjectId(filterValue);
               } else {
                 query[operator] = filterValue;
               }
@@ -114,11 +114,44 @@ class MongoDBConnection {
       const db = this.client.db(this.dbName);
       const collection = db.collection(table);
       let res;
+      let query;
 
       // Check if input.filter is empty or not defined
-      if (!input.filter || Object.keys(input.filter).length === 0) {
-        // If input.filter is empty or not defined, return all documents
-        const res = await collection.find().toArray();
+
+      if (!input.filter || input.filter === null || Object.keys(input.filter).length === 0) {
+        query = collection.find();
+      } else {
+        // Call the filter function to reorganize the filter parameter
+        const filter = input.filter._and || input.filter._or ? this.filterController(input.filter) : input.filter;
+        //console.log(JSON.stringify(filter, null, 2));
+        const options = {
+          // Set the timeout value in milliseconds
+          maxTimeMS: 60000, // Adjust this value to your desired timeout
+        };
+
+        query = collection.find(filter, options).maxTimeMS(options.maxTimeMS);
+      }
+
+      // Add sort if client requests or let it default
+      if (input.sort) {
+        query = query.sort(this.sort(input));
+      } else {
+        query = query.sort({ _id: 1 }); // Ordenação padrão se não for especificada
+      }
+
+      // Add skip if client requests
+      if (input.skip) {
+        query = query.skip(input.skip);
+      }
+
+      // Add limit if client requests
+      if (input.take) {
+        query = query.limit(input.take);
+      }
+
+      res = await query.toArray();
+
+      if (res) {
         res.forEach((element) => {
           if (element._id) {
             const id = element._id;
@@ -128,66 +161,7 @@ class MongoDBConnection {
         });
         return res;
       } else {
-        // Call the filter function to reorganize the filter parameter
-        const filter = input.filter._and ? this.filterController(input.filter) : input.filter;
-        //console.log(JSON.stringify(filter, null, 2));
-
-        if (filter) {
-          const options = {
-            // Set the timeout value in milliseconds
-            maxTimeMS: 60000, // Adjust this value to your desired timeout
-          };
-
-          // Building query dynamically
-          let query = collection.find(filter, options);
-
-          // Add sort if client requests or let it default
-          if (input.sort) {
-            query = query.sort(this.sort(input));
-          } else {
-            query = query.sort({ _id: 1 }); // Ordenação padrão se não for especificada
-          }
-
-          // Add skip if client requests
-          if (input.skip) {
-            query = query.skip(input.skip);
-          }
-
-          // Add limit if client requests
-          if (input.take) {
-            query = query.limit(input.take);
-          }
-
-          // Making the query with all parameters requested by client
-          res = await query.toArray();
-        }
-
-        if (!res) {
-          return false;
-        }
-
-        // Transform "_id" key into "id" key
-        res.forEach((element) => {
-          if (element._id) {
-            const id = element._id;
-            delete element._id;
-            element.id = id;
-          }
-        });
-
-        // Modify array fields to strings if necessary
-        const isArrayField = this.tableData.columns.filter((column) => column.type === 'array');
-
-        if (isArrayField.length > 0) {
-          res.map((element) => {
-            isArrayField.forEach((arrayField) => {
-              const fieldName = arrayField.name;
-              element[fieldName] = JSON.stringify(element[arrayField.name]);
-            });
-            return element;
-          });
-        }
-        return res;
+        return false;
       }
     } catch (error) {
       logger.error(error);
