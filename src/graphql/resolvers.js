@@ -114,7 +114,7 @@ const createRelations = async (table, column) => {
     // for mongodb searching parents
     if (table.database.type === 'mongodb') {
       //const idValue = ObjectId.isValid(parent[column.name]) ? parent[column.name].toString() : parent[column.name];
-      args = { input: { filter: { _and: [{ [column.foreignKey]: { _eq: parent.id } }] } } };
+      args = { input: { filter: { _and: { [column.foreignKey]: { _eq: parent.id } } } } };
       // for MySQL searching parents
     } else {
       args = { input: { filter: { [column.foreignKey]: parent[column.foreignKey] } } };
