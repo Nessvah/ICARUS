@@ -1,5 +1,4 @@
-import { GraphQLScalarType } from 'graphql';
-import { Kind } from 'graphql';
+import { GraphQLScalarType, Kind } from 'graphql';
 
 const GraphQLDate = new GraphQLScalarType({
   name: 'GraphQLDate',
@@ -45,12 +44,12 @@ const MySQLDate = new GraphQLScalarType({
     return `${year}-${month}-${day}`;
   },
   parseValue: (value) => {
-    const [year, month, day] = value.split('-');
+    const [year, month, day] = value.split('-').map((v) => parseInt(v, 10));
     return new Date(year, month - 1, day);
   },
   parseLiteral: (ast) => {
     if (ast.kind === Kind.STRING) {
-      const [year, month, day] = ast.value.split('-');
+      const [year, month, day] = ast.value.split('-').map((v) => parseInt(v, 10));
       return new Date(year, month - 1, day);
     }
     return null;

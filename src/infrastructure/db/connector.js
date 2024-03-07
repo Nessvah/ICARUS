@@ -47,8 +47,10 @@ async function controller(table, args) {
 
     let action;
     for (const key in args.input) {
-      if (key.startsWith('_') || key === 'filter') {
+      if (key.startsWith('_')) {
         action = key;
+      } else {
+        action = 'filter';
       }
     }
 

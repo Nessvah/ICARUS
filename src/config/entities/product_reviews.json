@@ -58,7 +58,7 @@
       },
       {
         "name": "review_date",
-        "type": "string",
+        "type": "date",
         "primaryKey": false,
         "nullable": false,
         "defaultValue": "'CURRENT_string'",
