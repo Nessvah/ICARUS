@@ -50,16 +50,26 @@ class MongoDBConnection {
         const filterValue = input[fieldName];
 
         // Handle nested operators _and and _or
-        if (fieldName === '_and' || fieldName === '_or') {
+        if (fieldName === '_and') {
           //console.log('nested filter');
           if (Array.isArray(filterValue)) {
             const operator = this.operatorsMap[fieldName] || '$' + fieldName;
             const nestedQueries = filterValue.map((nestedFilter) => this.filterController(nestedFilter));
+
+            query[operator] = nestedQueries;
+          }
+        } else if (fieldName === '_or') {
+          //console.log('nested filter');
+          if (Array.isArray(filterValue)) {
+            const operator = this.operatorsMap[fieldName] || '$' + fieldName;
+            const nestedQueries = filterValue.map((nestedFilter) => this.filterController(nestedFilter));
+
             query[operator] = nestedQueries;
           }
         } else {
           // Handle comparison operators from ComparisonOperators input type
           const operator = this.operatorsMap[fieldName] || '$' + fieldName;
+
           switch (fieldName) {
             case '_eq':
             case '_neq':
@@ -92,7 +102,11 @@ class MongoDBConnection {
               if (typeof filterValue === 'object') {
                 const nestedQuery = this.filterController(filterValue);
                 if (Object.keys(nestedQuery).length > 0) {
-                  query[fieldName] = nestedQuery;
+                  if (fieldName === 'id') {
+                    query._id = nestedQuery;
+                  } else {
+                    query[fieldName] = nestedQuery;
+                  }
                 }
               }
               break;
