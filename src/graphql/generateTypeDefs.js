@@ -343,6 +343,7 @@ type Token {
   type TableInfo {
     table: String
     structure: String
+    backoffice: String
   }`);
   return typeDefs.join('\n');
 };

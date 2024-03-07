@@ -17,6 +17,8 @@ class MongoDBConnection {
       _and: '$and',
       _or: '$or',
       _in: '$in',
+      _nin: '$nin',
+      _like: '$regex',
     };
   }
 
@@ -42,6 +44,7 @@ class MongoDBConnection {
   //organize de filter in a mongodb filter structure, that will be use in the crud functions.
   // Convert GraphQL filter to MongoDB query
   filterController(input) {
+    console.log({ input });
     try {
       let query = {};
 
@@ -51,39 +54,38 @@ class MongoDBConnection {
 
         // Handle nested operators _and and _or
         if (fieldName === '_and' || fieldName === '_or') {
-          //console.log('nested filter');
           if (Array.isArray(filterValue)) {
-            const operator = this.operatorsMap[fieldName] || '$' + fieldName;
+            const operator = fieldName === '_and' ? '$and' : '$or';
             const nestedQueries = filterValue.map((nestedFilter) => this.filterController(nestedFilter));
             query[operator] = nestedQueries;
           }
         } else {
           // Handle comparison operators from ComparisonOperators input type
-          const operator = this.operatorsMap[fieldName] || '$' + fieldName;
+          const operator = this.operatorsMap[fieldName] || fieldName;
           switch (fieldName) {
             case '_eq':
             case '_neq':
-              // For String, Integer, Boolean, Double, Min/Max keys, Symbol, Date, ObjectID, Regular expression
-              // Convert string to corresponding type if applicable
-              if (typeof filterValue === 'string' && ObjectId.isValid(filterValue)) {
-                query[operator] = ObjectId(filterValue);
-              } else {
-                query[operator] = filterValue;
-              }
-
+              // For equality and inequality, handle as usual
+              query[operator] = filterValue;
               break;
             case '_lt':
             case '_lte':
             case '_gt':
             case '_gte':
-              // For Integer, Double, Date
-              // Convert string to number if applicable
-              query[operator] = !isNaN(filterValue) ? parseFloat(filterValue) : filterValue;
+              // For less than, less than or equal to, greater than, greater than or equal to
+              // handle as usual
+              query[operator] = filterValue;
               break;
+            case '_like':
+              // For case-insensitive substring match using regular expression
+              const regexPattern = `.*${filterValue}.*`;
+              query = { $regex: regexPattern, $options: 'i' };
+              console.log(query);
+              break;
+
             case '_in':
             case '_nin':
-              // For Arrays
-              // Split the string and convert each element to the corresponding type if applicable
+              // For inclusion and exclusion in an array, handle as usual
               query[operator] = filterValue.split(',').map((val) => val.trim());
               break;
             // Handle other comparison operators from ComparisonOperators input type...
@@ -99,7 +101,7 @@ class MongoDBConnection {
           }
         }
       });
-
+      console.log({ query });
       return query;
     } catch (error) {
       logger.error(error);
@@ -118,10 +120,19 @@ class MongoDBConnection {
       // Check if input.filter is empty or not defined
       if (!input.filter || input.filter === null || Object.keys(input.filter).length === 0) {
         // If input.filter is empty or not defined, return all documents
-        return await collection.find().toArray();
+        const res = await collection.find().toArray();
+        res.forEach((element) => {
+          if (element._id) {
+            const id = element._id;
+            delete element._id;
+            element.id = id;
+          }
+        });
+
+        return res;
       } else {
         // Call the filter function to reorganize the filter parameter
-        const filter = input.filter._and ? this.filterController(input.filter) : input.filter;
+        const filter = input.filter._and || input.filter._or ? this.filterController(input.filter) : input.filter;
         //console.log(JSON.stringify(filter, null, 2));
 
         if (filter) {
@@ -137,7 +148,7 @@ class MongoDBConnection {
           if (input.sort) {
             query = query.sort(this.sort(input));
           } else {
-            query = query.sort({ _id: 1 }); // Ordenação padrão se não for especificada
+            query = query.sort({ _id: 1 }); // Default sorting if not specified
           }
 
           // Add skip if client requests
