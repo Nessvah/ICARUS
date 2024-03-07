@@ -1,16 +1,29 @@
-import fs from 'fs';
 import { MongoDBConnection } from './mongodbClass.js';
 import { MySQLConnection } from './mysqlClass.js';
 import { MongoClient } from 'mongodb';
 import mysql from 'mysql2/promise';
 import { logger } from '../server.js';
 
+import { ImportThemTities } from '../../config/importDemTities.js';
+
+// Call the importAll method to start importing entities
+const importer = new ImportThemTities();
 let data;
-try {
-  data = JSON.parse(fs.readFileSync('../src/config.json', 'utf8'));
-} catch (error) {
-  logger.error('error to read file: ', error);
-}
+(async () => {
+  try {
+    data = await importer.importAll();
+    if (data && data.tables) {
+      // Ensure data.tables is defined
+      //console.log('data:', data, '______________'); // Log the retrieved data
+      return data;
+    } else {
+      logger.error('Data is missing or incomplete.');
+    }
+    return null;
+  } catch (error) {
+    logger.error('error to read file');
+  }
+})();
 
 //a pool of many different database connections.
 const pools = [];
@@ -19,7 +32,8 @@ const pools = [];
 async function controller(table, args) {
   let connection;
   //find the right database in the pool, base on table name.
-  let currentTable = await pools.find((db) => db.table === table);
+  const currentTable = await pools.find((db) => db.table === table);
+
   //create a connection class to the specific database type, that will have all the CRUD functions to be use.
   try {
     switch (currentTable.type) {
@@ -31,15 +45,26 @@ async function controller(table, args) {
         break;
     }
 
+    let action;
+    for (const key in args.input) {
+      if (key.startsWith('_')) {
+        action = key;
+      } else {
+        action = 'filter';
+      }
+    }
+
     //filter the CRUD function passed in the action input.
-    switch (args.input.action) {
-      case 'find':
+    switch (action) {
+      case 'filter':
         return await connection.find(table, args);
-      case 'create':
+      case '_count':
+        return await connection.count(table, args);
+      case '_create':
         return await connection.create(table, args);
-      case 'update':
+      case '_update':
         return await connection.update(table, args);
-      case 'delete':
+      case '_delete':
         return await connection.delete(table, args);
       default:
         return 'Action not defined';

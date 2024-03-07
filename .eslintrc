@@ -5,7 +5,7 @@
     "jest": true
   },
 
-  "ignorePatterns": ["public/javascripts/*.min.js"],
+  "ignorePatterns": ["public/javascripts/*.min.js", "src/presentation/typeDefs.graphql"],
   "extends": ["eslint:recommended", "plugin:node/recommended"], //coding rules - eslint
   "plugins": ["prettier"],
   "parserOptions": {

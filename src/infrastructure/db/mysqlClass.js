@@ -1,11 +1,21 @@
+/* eslint-disable no-prototype-builtins */
+
+import {
+  buildSkipAndTakeClause,
+  // fetchForeignKeyConstraints,
+  fetchPrimaryKeyColumnName,
+  processFilter,
+} from '../../utils/sqlQueries.js';
 import { logger } from '../server.js';
+
 export class MySQLConnection {
   constructor(currentTableInfo) {
     this.pool = currentTableInfo.pool;
   }
 
   async getConnection() {
-    return this.pool.getConnection();
+    logger.warn('getting mysql conn from pool...');
+    return await this.pool.getConnection();
   }
 
   /**
@@ -17,9 +27,11 @@ export class MySQLConnection {
    */
   async query(sql, values) {
     const connection = await this.getConnection();
+
     try {
-      logger.info('Executing SQL query:', sql);
-      logger.info('SQL query values:', values);
+      //console.log('Executing SQL query:', sql);
+      //console.log('SQL query values:', values);
+      // get only the rows with the info and not the schema
       const [rows] = await connection.query(sql, values);
       return rows;
     } catch (error) {
@@ -30,74 +42,64 @@ export class MySQLConnection {
     }
   }
 
+  /**
+   * * Fetches rows from a specified table based on optional filtering and pagination options.
+   *
+   * @param {string} tableName - The name of the table to query.
+   * @param {object} input - The input object containing filter and pagination options.
+   *   @property {object} filter - An object containing filter conditions for the SQL WHERE clause.
+   *   @property {number} skip - The number of rows to skip for pagination.
+   *   @property {number} take - The maximum number of rows to return for pagination.
+   *
+   * @returns {Promise<Array<object>|null>} - A promise that resolves to an array of rows from the specified table,
+   * or null if there's an error. The result is filtered and paginated based on the provided input.
+   *
+   * @throws {Error} - Throws an error if there's an issue executing the SQL query.
+   */
   async find(tableName, { input }) {
-    //console.log({ tableName, input });
-    const { filter } = input;
+    // start constructing the sql query
+    let sql = `SELECT * FROM ${tableName}`;
 
-    // If no filters are provided, return all rows from the table
-    if (!filter || Object.keys(filter).length === 0) {
-      let sql;
-      if (input.take && input.skip) {
-        sql = `SELECT * FROM ${tableName} LIMIT ${input.take} OFFSET ${input.skip}`;
-      } else if (input.take) {
-        sql = `SELECT * FROM ${tableName} LIMIT ${input.take}`;
-      } else if (input.skip) {
-        sql = `SELECT * FROM ${tableName} LIMIT 50000 OFFSET ${input.skip}`;
-      } else {
-        sql = `SELECT * FROM ${tableName}`;
-      }
-      try {
-        const res = await this.query(sql);
-        return res; // Return all rows from the table
-      } catch (error) {
-        console.error('Error:', error);
-        return null; // Return null if there's an error
-      }
-      //
-    } else {
-      const keyName = Object.keys(filter)[0];
-      const sql = `SELECT * FROM ${tableName} WHERE ${keyName} = ?`;
-      const params = [filter[keyName]];
-      try {
-        const res = await this.query(sql, params);
-        return res;
-      } catch (e) {
-        console.error('Error: ', e);
-        return null;
-      }
-    }
-
-    // Construct WHERE clause with only relevant filters
-    const whereConditions = [];
+    // array to save the values
     const values = [];
 
-    Object.entries(filter).forEach(([column, columnValues]) => {
-      if (Array.isArray(columnValues) && columnValues.length > 0) {
-        const placeholders = columnValues.map(() => '?').join(', ');
-        whereConditions.push(`${column} IN (${placeholders})`);
-        values.push(...columnValues);
+    // check if the filter options is present and if it is,
+    // take all the nested information and construct a sql query to filter
+    if (input.filter) {
+      const { processedSql, processedValues } = processFilter(input);
+
+      // append values from filters and the where sql string
+      values.push(...processedValues);
+      sql += processedSql;
+    }
+
+    // check if they have option for sorting
+    if (input.sort) {
+      let groupSql = ` ORDER BY`;
+
+      for (const [key, value] of Object.entries(input.sort)) {
+        groupSql += ` ${key} ${value}, `;
       }
-    });
 
-    const whereClause = whereConditions.join(' AND ');
+      groupSql = groupSql.slice(0, -2);
+      sql += groupSql;
+    }
 
-    // Construct SQL query with WHERE clause
-    let sql;
-    if (input.take && input.skip) {
-      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT ${input.take} OFFSET ${input.skip}`;
-    } else if (input.take) {
-      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT ${input.take}`;
-    } else if (input.skip) {
-      sql = `SELECT * FROM ${tableName} WHERE ${whereClause} LIMIT 50000 OFFSET ${input.skip}`;
-    } else {
-      sql = `SELECT * FROM ${tableName} WHERE ${whereClause}`;
+    // if in the input we have find and/or take in our filters, we need
+    // to make pagination and construct the sql query
+
+    if (input.skip || input.take) {
+      const { paginationSql, paginationValues } = buildSkipAndTakeClause(input);
+
+      sql += paginationSql;
+      values.push(...paginationValues);
     }
 
     try {
       const res = await this.query(sql, values);
-      return res; // Return the result of the query
+      return res; // Return all rows from the table
     } catch (error) {
-      console.error('Error:', error);
+      logger.error('Error:', error);
       return null; // Return null if there's an error
     }
   }
@@ -109,18 +111,44 @@ export class MySQLConnection {
    * @returns {Promise<{ created: Array<Object> } | null>} - A promise that resolves to the created record(s) or null if there was an error.
    */
   async create(tableName, { input }) {
-    const { create } = input;
-    const keys = Object.keys(create[0]);
-    const values = create.map((item) => Object.values(item));
-    console.log(values);
-    const fields = keys.join(', ');
-    const sql = `INSERT INTO ${tableName} (${fields}) VALUES ${values.map(() => `(?)`).join(', ')}`;
-    console.log(sql);
+    let createQuery = `INSERT INTO ${tableName} (`;
+    let valuesString = 'VALUES (';
+
+    const values = [];
+
+    // in this scenario we don't know what's the name for the pk,
+    // so we need to fetch the schema information of the table to know the name
+    const primaryKeyColumnName = await fetchPrimaryKeyColumnName.call(this, tableName);
+    //const foreignKeyConstraints = await fetchForeignKeyConstraints.call(this, tableName);
+
+    // Build the columns and values arrays for the INSERT query
+    for (const [key, value] of Object.entries(input._create)) {
+      if (key !== '_action') {
+        createQuery += `${key}, `; // we eill need to remove trailing comma and spaces at the end
+        valuesString += '?, ';
+        values.push(value);
+      }
+    }
+
+    // Remove the trailing comma and space from createQuery and valuesString
+    createQuery = `${createQuery.slice(0, -2)}) `;
+    valuesString = `${valuesString.slice(0, -2)})`;
+
+    const finalQuery = createQuery + valuesString;
+
     try {
-      const res = await this.query(sql, values); // for debugging purposes if needed
-      return { created: create };
+      const record = await this.query(finalQuery, values);
+      // send the record created back to the backoffice
+      // Get the ID of the inserted record
+      const insertedId = record.insertId;
+
+      // Fetch the inserted record from the database
+      // now we can fetch the new record just created
+      const selectQuery = `SELECT * FROM ${tableName} WHERE ${primaryKeyColumnName} = ?`;
+      const newRecord = await this.query(selectQuery, [insertedId]);
+      return { created: newRecord };
     } catch (error) {
-      console.error('Error:', error);
+      logger.error('Error:', error);
       return null; // Return null if there's an error
     }
   }
@@ -132,21 +160,50 @@ export class MySQLConnection {
    * @returns {Promise<{ updated: Array<Object> } | null>} - A promise that resolves to the updated record(s) or null if there was an error.
    */
   async update(tableName, { input }) {
-    const { filter, update } = input;
-    const keys = Object.keys(filter);
-    const values = Object.values(filter);
-    const where = keys.map((key) => `${key} IN (?)`).join(' AND ');
-    const set = Object.entries(update)
-      .map(([key]) => `${key} = ?`)
-      .join(', ');
-    const sql = `UPDATE ${tableName} SET ${set} WHERE ${where}`;
-    console.log(sql);
+    // UPDATE `table_name` SET `column_name` = `new_value' [WHERE condition];
+    let updateQuery = `UPDATE ${tableName} SET `;
+    let findQuery = `SELECT * FROM ${tableName} WHERE`;
+    const values = [];
+    const findValues = [];
+
+    // simple update without filtering
+    for (const [key, value] of Object.entries(input._update)) {
+      if (key === 'filter') {
+        // handle filtering in update
+        // mimik object structure for the function to process filter
+        const filter = {};
+        filter[key] = value;
+
+        const { processedSql, processedValues } = processFilter(filter);
+
+        // remove trailing spaces and comma
+        updateQuery = updateQuery.slice(0, -2);
+        values.push(...processedValues);
+
+        updateQuery += processedSql;
+      } else {
+        updateQuery += `${key} = ?, `;
+        findQuery += ` ${key} = ? AND `;
+        values.push(value);
+        findValues.push(value);
+      }
+    }
+
+    findQuery = findQuery.slice(0, -5);
+
     try {
-      const res = await this.query(sql, [...Object.values(update), ...values]); // for debugging purposes if needed
-      return { updated: await this.find(tableName, { input }) };
-    } catch (error) {
-      console.error('Error:', error);
-      return null; // Return null if there's an error
+      const record = await this.query(updateQuery, values);
+
+      if (record.changedRows > 0) {
+        // find the record updated
+        const newRecord = await this.query(findQuery, findValues);
+        return { updated: newRecord };
+      }
+
+      return { updated: [] };
+    } catch (err) {
+      logger.error(err);
+      return err; // Return null if there's an error
     }
   }
 
@@ -157,22 +214,41 @@ export class MySQLConnection {
    * @returns {Promise<{ deleted: number } | null>} - A promise that resolves to the number of affected rows or null if there was an error.
    */
   async delete(tableName, { input }) {
-    const { filter } = input;
-    const keys = Object.keys(filter);
-    const values = Object.values(filter);
-    const where = keys.map((key) => `${key} IN (?)`).join(' AND ');
-    const sql = `DELETE FROM ${tableName} WHERE ${where}`;
+    // start constructing the sql query
+    const deleteObj = input._delete;
+
+    // for now lets not let them delete everything
+    if (Object.entries(deleteObj).length === 0) return new Error("Can't delete everything for now.");
+
+    let sql = `DELETE FROM ${tableName}`;
+
+    const values = [];
+    // check if they are deleting with filter conditions
+    if (deleteObj.filter) {
+      const { processedSql, processedValues } = processFilter(deleteObj);
+
+      // append values from filters and the where sql string
+      values.push(...processedValues);
+      sql += processedSql;
+    }
+
     try {
-      // Execute the first query to disable foreign key checks
-      await this.query('SET FOREIGN_KEY_CHECKS=0;');
-      // Execute the second query to delete the records
       const res = await this.query(sql, values);
-      // Execute the third query to enable foreign key checks
-      await this.query('SET FOREIGN_KEY_CHECKS=1;');
       return { deleted: res.affectedRows };
     } catch (error) {
       console.error('Error:', error);
       return null; // Return null if there's an error
+    }
+  }
+
+  async count(tableName, { _ }) {
+    const sql = `SELECT COUNT(*) AS ${tableName} FROM ${tableName}`;
+    try {
+      const res = await this.query(sql);
+      return res[0][tableName];
+    } catch (error) {
+      logger.error('Error:', error);
+      return error; // this will return the error message and null
     }
   }
 }

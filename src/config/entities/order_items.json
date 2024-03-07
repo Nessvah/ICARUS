@@ -1,0 +1,92 @@
+{
+  "tables": {
+    "name": "order_items",
+    "database": "mysql",
+    "columns": [
+      {
+        "name": "order_item_id",
+        "type": "int",
+        "primaryKey": true,
+        "nullable": false,
+        "defaultValue": null,
+        "columnType": "int",
+        "extra": "auto_increment"
+      },
+      {
+        "name": "order_id",
+        "type": "int",
+        "primaryKey": false,
+        "nullable": false,
+        "defaultValue": null,
+        "columnType": "object",
+        "extra": "MUL",
+        "isObject": true,
+        "relationType": "n:1",
+        "foreignEntity": "orders",
+        "foreignKey": "order_id"
+      },
+      {
+        "name": "product_id",
+        "type": "int",
+        "primaryKey": false,
+        "nullable": false,
+        "defaultValue": null,
+        "columnType": "object",
+        "extra": "MUL",
+        "isObject": true,
+        "relationType": "n:1",
+        "foreignEntity": "products",
+        "foreignKey": "product_id"
+      },
+      {
+        "name": "quantity",
+        "type": "int",
+        "primaryKey": false,
+        "nullable": false,
+        "defaultValue": null,
+        "columnType": "int",
+        "extra": ""
+      },
+      {
+        "name": "price",
+        "type": "float",
+        "primaryKey": false,
+        "nullable": false,
+        "defaultValue": null,
+        "columnType": "float",
+        "extra": ""
+      },
+      {
+        "name": "currency_type",
+        "type": "VARCHAR",
+        "primaryKey": false,
+        "nullable": false,
+        "defaultValue": "EUR",
+        "columnType": "VARCHAR",
+        "extra": ""
+      },
+      {
+        "name": "icon_class",
+        "type": "string",
+        "primaryKey": false,
+        "nullable": true,
+        "defaultValue": "'FaBasketShopping'",
+        "columnType": "string",
+        "extra": ""
+      },
+      {
+        "name": "icon_label",
+        "type": "string",
+        "primaryKey": false,
+        "nullable": true,
+        "defaultValue": "'Order Item'",
+        "columnType": "string",
+        "extra": ""
+      }
+    ],
+    "backoffice": {
+      "icon": "FaClipboardList",
+      "currency": "euro"
+    }
+  }
+}
