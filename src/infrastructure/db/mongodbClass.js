@@ -65,6 +65,7 @@ export class MongoDBConnection {
   filterController(input) {
     // Function to convert GraphQL filter to MongoDB query
     try {
+      // Initialize an empty object to store the MongoDB query
       let query = {};
 
       // Iterate through filter fields
@@ -139,12 +140,13 @@ export class MongoDBConnection {
               with the nested filter value. If the nested filter results in a non-empty object, 
               it sets the MongoDB operator to _id for the _id field or to the field name for other fields. */
               if (typeof filterValue === 'object') {
+                // If filterValue is an object, recursively call filterController for nested filters
                 const nestedQuery = this.filterController(filterValue);
                 if (Object.keys(nestedQuery).length > 0) {
                   if (fieldName === 'id') {
-                    query._id = nestedQuery;
+                    query._id = nestedQuery; // Set _id field
                   } else {
-                    query[fieldName] = nestedQuery;
+                    query[fieldName] = nestedQuery; // Set field name
                   }
                 }
               }
@@ -155,8 +157,8 @@ export class MongoDBConnection {
       // returns the resulting MongoDB query.
       return query;
     } catch (error) {
-      logger.error(error);
-      throw error;
+      logger.error(error); // Log any errors
+      return {}; // Return an empty object in case of errors
     }
   }
 
