@@ -9,7 +9,8 @@ async function createTables(config) {
     if (config.settings) {
       config.settings.forEach((element) => {
         fs.writeFileSync(
-          path.join(__dirname, `../config/entities/${element.tables.name}.json`, JSON.stringify(element)),
+          path.join(__dirname, `../config/entities/${element.tables.name}.json`),
+          JSON.stringify(element),
         );
       });
     }
