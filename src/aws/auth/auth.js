@@ -81,4 +81,4 @@ const auth = async (req) => {
   }
 };
 
-export { auth };
+export { auth, authLogin };
