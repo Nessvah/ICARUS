@@ -20,6 +20,11 @@ export class ImportThemTities {
       const dbFolderPath = path.join(this.__dirname, './db');
       const connectionFiles = await fs.readdir(dbFolderPath);
 
+      // Throw an error if there are no connection files
+      if (connectionFiles.length === 0) {
+        throw new Error('No connection files found');
+      }
+
       // Object to store database information extracted from connection files
       const databaseInfo = {};
 
@@ -38,6 +43,11 @@ export class ImportThemTities {
       // Read entities files from the entities folder
       const entitiesFolderPath = path.join(this.__dirname, './entities');
       const entitiesFiles = await fs.readdir(entitiesFolderPath);
+
+      // Throw an error if there are no entities files
+      if (entitiesFiles.length === 0) {
+        throw new Error('No entities files found');
+      }
 
       // Loop through each entities file
       for (let file of entitiesFiles) {
