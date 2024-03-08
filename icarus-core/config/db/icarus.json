@@ -1,6 +1,5 @@
 {
-    "type": "icarus",
-    "uri": "icarus",
-    "databaseName": "icarus"
-  }
-  
+  "type": "icarus",
+  "uri": "icarus",
+  "databaseName": "icarus"
+}

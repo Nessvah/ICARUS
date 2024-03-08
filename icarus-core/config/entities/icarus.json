@@ -1,23 +1,22 @@
 {
-    "tables": {
-      "name": "icarus",
-      "database": "icarus",
-      "columns": [
-        {
-          "name": "id",
-          "type": "id",
-          "primaryKey": true,
-          "nullable": false
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "nullable": false
-        }
-      ],
-      "backoffice": {
-        "icon": "FaIdCardAlt"
+  "tables": {
+    "name": "icarus",
+    "database": "icarus",
+    "columns": [
+      {
+        "name": "id",
+        "type": "id",
+        "primaryKey": true,
+        "nullable": false
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "nullable": false
       }
+    ],
+    "backoffice": {
+      "icon": "FaIdCardAlt"
     }
   }
-  
+}
