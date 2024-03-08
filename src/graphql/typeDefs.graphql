@@ -23,30 +23,30 @@ type Query {
   categories(input: CategoriesListOptions = {}): [Categories]
   coupons(input: CouponsListOptions = {}): [Coupons]
   customers(input: CustomersListOptions = {}): [Customers]
-  order_items(input: Order_itemsListOptions = {}): [Order_items]
   orders(input: OrdersListOptions = {}): [Orders]
+  order_items(input: Order_itemsListOptions = {}): [Order_items]
   payment(input: PaymentListOptions = {}): [Payment]
   products(input: ProductsListOptions = {}): [Products]
   product_reviews(input: Product_reviewsListOptions = {}): [Product_reviews]
   promotions(input: PromotionsListOptions = {}): [Promotions]
   shipments(input: ShipmentsListOptions = {}): [Shipments]
-  user_role(input: User_roleListOptions = {}): [User_role]
   users(input: UsersListOptions = {}): [Users]
+  user_role(input: User_roleListOptions = {}): [User_role]
   authorsCount(input: AuthorsCount): AuthorsCountResult
   blog_postsCount(input: Blog_postsCount): Blog_postsCountResult
   brandsCount(input: BrandsCount): BrandsCountResult
   categoriesCount(input: CategoriesCount): CategoriesCountResult
   couponsCount(input: CouponsCount): CouponsCountResult
   customersCount(input: CustomersCount): CustomersCountResult
-  order_itemsCount(input: Order_itemsCount): Order_itemsCountResult
   ordersCount(input: OrdersCount): OrdersCountResult
+  order_itemsCount(input: Order_itemsCount): Order_itemsCountResult
   paymentCount(input: PaymentCount): PaymentCountResult
   productsCount(input: ProductsCount): ProductsCountResult
   product_reviewsCount(input: Product_reviewsCount): Product_reviewsCountResult
   promotionsCount(input: PromotionsCount): PromotionsCountResult
   shipmentsCount(input: ShipmentsCount): ShipmentsCountResult
-  user_roleCount(input: User_roleCount): User_roleCountResult
   usersCount(input: UsersCount): UsersCountResult
+  user_roleCount(input: User_roleCount): User_roleCountResult
 }
 
 type Mutation {
@@ -57,15 +57,15 @@ type Mutation {
   categories(input: CategoriesMutationOptions): CategoriesOutput
   coupons(input: CouponsMutationOptions): CouponsOutput
   customers(input: CustomersMutationOptions): CustomersOutput
-  order_items(input: Order_itemsMutationOptions): Order_itemsOutput
   orders(input: OrdersMutationOptions): OrdersOutput
+  order_items(input: Order_itemsMutationOptions): Order_itemsOutput
   payment(input: PaymentMutationOptions): PaymentOutput
   products(input: ProductsMutationOptions): ProductsOutput
   product_reviews(input: Product_reviewsMutationOptions): Product_reviewsOutput
   promotions(input: PromotionsMutationOptions): PromotionsOutput
   shipments(input: ShipmentsMutationOptions): ShipmentsOutput
-  user_role(input: User_roleMutationOptions): User_roleOutput
   users(input: UsersMutationOptions): UsersOutput
+  user_role(input: User_roleMutationOptions): User_roleOutput
 }
 
 input NestedFiltering {
@@ -621,6 +621,108 @@ input CustomersSort {
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
+  order_date: ComparisonOperators
+  customer_id: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+  order_items: ComparisonOperators
+  shipments: ComparisonOperators
+  payment: ComparisonOperators
+}
+
+input OrdersCount {
+  _count: Int
+}
+
+type OrdersCountResult {
+  action: String
+  count: Int!
+}
+
+input OrdersSortOptions {
+  order_id: Sort
+  order_date: Sort
+  customer_id: Sort
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input OrdersLogicalOp {
+  _and: [OrdersLogicalOp]
+  _or: [OrdersLogicalOp]
+  order_id: ComparisonOperators
+  order_date: ComparisonOperators
+  customer_id: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+}
+
+input OrdersMutationOptions {
+  _create: OrdersInput
+  _update: OrdersUpDel
+  _delete: OrdersDelete
+}
+
+input OrdersListOptions {
+  filter: OrdersFilter
+  skip: Int
+  take: Int = 15
+  sort: OrdersSortOptions
+}
+
+type Orders {
+  order_id: Int!
+  order_date: MySQLDate!
+  customer_id: Int!
+  icon_class: String
+  icon_label: String
+  customers(take: Int = 15, skip: Int): Customers
+  order_items(take: Int = 15, skip: Int): [Order_items]
+  shipments(take: Int = 15, skip: Int): Shipments
+  payment(take: Int = 15, skip: Int): Payment
+}
+
+input OrdersInput {
+  order_date: MySQLDate!
+  customer_id: Int!
+  icon_class: String
+  icon_label: String
+}
+
+input OrdersFilter {
+  _and: [OrdersLogicalOp]
+  _or: [OrdersLogicalOp]
+}
+
+input OrdersUpDel {
+  order_date: MySQLDate
+  customer_id: Int
+  icon_class: String
+  icon_label: String
+
+  filter: OrdersFilter
+}
+
+type OrdersOutput {
+  created: [Orders]!
+  updated: [Orders]!
+  deleted: Int
+}
+
+input OrdersDelete {
+  filter: OrdersFilter
+}
+
+input OrdersSort {
+  order_date: Sort
+
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
   order_id: ComparisonOperators
   product_id: ComparisonOperators
   quantity: ComparisonOperators
@@ -729,108 +831,6 @@ input Order_itemsSort {
   quantity: Sort
   price: Sort
   currency_type: Sort
-  icon_class: Sort
-  icon_label: Sort
-}
-
-input NestedFiltering {
-  _and: [NestedFiltering]
-  _or: [NestedFiltering]
-  order_date: ComparisonOperators
-  customer_id: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
-  order_items: ComparisonOperators
-  shipments: ComparisonOperators
-  payment: ComparisonOperators
-}
-
-input OrdersCount {
-  _count: Int
-}
-
-type OrdersCountResult {
-  action: String
-  count: Int!
-}
-
-input OrdersSortOptions {
-  order_id: Sort
-  order_date: Sort
-  customer_id: Sort
-  icon_class: Sort
-  icon_label: Sort
-}
-
-input OrdersLogicalOp {
-  _and: [OrdersLogicalOp]
-  _or: [OrdersLogicalOp]
-  order_id: ComparisonOperators
-  order_date: ComparisonOperators
-  customer_id: ComparisonOperators
-  icon_class: ComparisonOperators
-  icon_label: ComparisonOperators
-}
-
-input OrdersMutationOptions {
-  _create: OrdersInput
-  _update: OrdersUpDel
-  _delete: OrdersDelete
-}
-
-input OrdersListOptions {
-  filter: OrdersFilter
-  skip: Int
-  take: Int = 15
-  sort: OrdersSortOptions
-}
-
-type Orders {
-  order_id: Int!
-  order_date: MySQLDate!
-  customer_id: Int!
-  icon_class: String
-  icon_label: String
-  customers(take: Int = 15, skip: Int): Customers
-  order_items(take: Int = 15, skip: Int): [Order_items]
-  shipments(take: Int = 15, skip: Int): Shipments
-  payment(take: Int = 15, skip: Int): Payment
-}
-
-input OrdersInput {
-  order_date: MySQLDate!
-  customer_id: Int!
-  icon_class: String
-  icon_label: String
-}
-
-input OrdersFilter {
-  _and: [OrdersLogicalOp]
-  _or: [OrdersLogicalOp]
-}
-
-input OrdersUpDel {
-  order_date: MySQLDate
-  customer_id: Int
-  icon_class: String
-  icon_label: String
-
-  filter: OrdersFilter
-}
-
-type OrdersOutput {
-  created: [Orders]!
-  updated: [Orders]!
-  deleted: Int
-}
-
-input OrdersDelete {
-  filter: OrdersFilter
-}
-
-input OrdersSort {
-  order_date: Sort
-
   icon_class: Sort
   icon_label: Sort
 }
@@ -1363,82 +1363,6 @@ input ShipmentsSort {
 input NestedFiltering {
   _and: [NestedFiltering]
   _or: [NestedFiltering]
-  role_name: ComparisonOperators
-  id: ComparisonOperators
-}
-
-input User_roleCount {
-  _count: Int
-}
-
-type User_roleCountResult {
-  action: String
-  count: Int!
-}
-
-input User_roleSortOptions {
-  id: Sort
-  role_name: Sort
-}
-
-input User_roleLogicalOp {
-  _and: [User_roleLogicalOp]
-  _or: [User_roleLogicalOp]
-  id: ComparisonOperators
-  role_name: ComparisonOperators
-}
-
-input User_roleMutationOptions {
-  _create: User_roleInput
-  _update: User_roleUpDel
-  _delete: User_roleDelete
-}
-
-input User_roleListOptions {
-  filter: User_roleFilter
-  skip: Int
-  take: Int = 15
-  sort: User_roleSortOptions
-}
-
-type User_role {
-  id: ID!
-  role_name: String!
-  users(take: Int = 15, skip: Int): [Users]
-}
-
-input User_roleInput {
-  role_name: String!
-}
-
-input User_roleFilter {
-  _and: [User_roleLogicalOp]
-  _or: [User_roleLogicalOp]
-}
-
-input User_roleUpDel {
-  role_name: String
-
-  filter: User_roleFilter
-}
-
-type User_roleOutput {
-  created: [User_role]!
-  updated: [User_role]!
-  deleted: Int
-}
-
-input User_roleDelete {
-  filter: User_roleFilter
-}
-
-input User_roleSort {
-  role_name: Sort
-}
-
-input NestedFiltering {
-  _and: [NestedFiltering]
-  _or: [NestedFiltering]
   password: ComparisonOperators
   email: ComparisonOperators
   role_id: ComparisonOperators
@@ -1535,6 +1459,82 @@ input UsersSort {
 
   customer_id: Sort
   created_t: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  role_name: ComparisonOperators
+  id: ComparisonOperators
+}
+
+input User_roleCount {
+  _count: Int
+}
+
+type User_roleCountResult {
+  action: String
+  count: Int!
+}
+
+input User_roleSortOptions {
+  id: Sort
+  role_name: Sort
+}
+
+input User_roleLogicalOp {
+  _and: [User_roleLogicalOp]
+  _or: [User_roleLogicalOp]
+  id: ComparisonOperators
+  role_name: ComparisonOperators
+}
+
+input User_roleMutationOptions {
+  _create: User_roleInput
+  _update: User_roleUpDel
+  _delete: User_roleDelete
+}
+
+input User_roleListOptions {
+  filter: User_roleFilter
+  skip: Int
+  take: Int = 15
+  sort: User_roleSortOptions
+}
+
+type User_role {
+  id: ID!
+  role_name: String!
+  users(take: Int = 15, skip: Int): [Users]
+}
+
+input User_roleInput {
+  role_name: String!
+}
+
+input User_roleFilter {
+  _and: [User_roleLogicalOp]
+  _or: [User_roleLogicalOp]
+}
+
+input User_roleUpDel {
+  role_name: String
+
+  filter: User_roleFilter
+}
+
+type User_roleOutput {
+  created: [User_role]!
+  updated: [User_role]!
+  deleted: Int
+}
+
+input User_roleDelete {
+  filter: User_roleFilter
+}
+
+input User_roleSort {
+  role_name: Sort
 }
 
 enum Sort {

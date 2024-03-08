@@ -4,6 +4,7 @@ import { validation } from '../utils/validation/validation.js';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 import { ImportThemTities } from '../config/importDemTities.js';
+import { myHook } from '../utils/hooks/indexHooks.js';
 
 // We initialize a rate limiter instance by calling getGraphQLRateLimiter.
 // This function takes an object as an argument with a property identifyContext that defines
@@ -69,6 +70,7 @@ async function autoResolvers(data) {
     const countName = `${table.name}Count`;
 
     resolvers.Query[table.name] = async (parent, args, context, info) => {
+      const res = await myHook(table.name, args);
       //verify if the user it's exceeding the rate limit calls for seconds.
       const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
 
@@ -77,6 +79,7 @@ async function autoResolvers(data) {
     };
 
     resolvers.Query[countName] = async (parent, args, context, info) => {
+      //const res = await myHook(table, input);
       const result = await controller(table.name, args);
 
       return { count: result };
@@ -90,6 +93,8 @@ async function autoResolvers(data) {
       // if (!context.currentUser) {
       //   throw new AuthenticationError();
       // }
+      const res = await myHook(table.name, args);
+
       await validation(args.input); // it validates mutation inputs
       await validation(args.input, 'update'); // it validates update inputs;
 
