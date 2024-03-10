@@ -42,11 +42,12 @@ const entity = {
     backoffice: {
       icon: 'FaUserFriends',
     },
-    hooks: {
-      queryAll: 'roleFunction',
-      _create: 'addUserFunction',
-    },
   },
 };
 
-export { entity };
+const usersBeforeResolverHook = async function () {
+  const roles = ['admin', 'manager', 'user'];
+  return roles.includes('admin');
+};
+
+export { entity, usersBeforeResolverHook };

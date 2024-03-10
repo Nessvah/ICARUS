@@ -4,7 +4,8 @@ import { validation } from '../utils/validation/validation.js';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 import { ImportThemTities } from '../config/importDemTities.js';
-import { myHook } from '../utils/hooks/indexHooks.js';
+import { beforeResolver } from '../utils/hooks/beforeResolver.js';
+import { AuthorizationError } from '../utils/error-handling/CustomErrors.js';
 
 // We initialize a rate limiter instance by calling getGraphQLRateLimiter.
 // This function takes an object as an argument with a property identifyContext that defines
@@ -70,12 +71,19 @@ async function autoResolvers(data) {
     const countName = `${table.name}Count`;
 
     resolvers.Query[table.name] = async (parent, args, context, info) => {
-      const res = await myHook(table.name, args);
-      //verify if the user it's exceeding the rate limit calls for seconds.
-      const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
+      try {
+        await beforeResolver(table.name, args, context);
 
-      if (limitErrorMessage) throw new Error(limitErrorMessage);
-      return await controller(table.name, args);
+        //console.log(table);
+        //verify if the user it's exceeding the rate limit calls for seconds.
+        const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
+
+        if (limitErrorMessage) throw new Error(limitErrorMessage);
+        return await controller(table.name, args);
+      } catch (e) {
+        logger.error(e);
+        throw new AuthorizationError(e);
+      }
     };
 
     resolvers.Query[countName] = async (parent, args, context, info) => {

@@ -56,8 +56,7 @@ export class ImportThemTities {
           // Construct the full absolute path of .js entity
           const fileAbsolutePath = path.join(entitiesFolderPath, file);
           // Transforming absolute path in something readable to import()
-          const filePathURL = new URL(`
-          ://${fileAbsolutePath}`);
+          const filePathURL = new URL(`file://${fileAbsolutePath}`);
           // All information from .js file in module
           const module = await import(filePathURL);
 
