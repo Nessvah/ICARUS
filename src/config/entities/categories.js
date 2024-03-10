@@ -45,3 +45,5 @@ const entity = {
     },
   },
 };
+
+export { entity };
