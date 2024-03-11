@@ -28,7 +28,7 @@ const beforeResolver = async (table, args, QueryType) => {
       const res = await beforeResolverMutation(table, entityInfo, args);
       return res;
     }
-    return;
+    return args;
   } catch (error) {
     throw new Error(error);
   }

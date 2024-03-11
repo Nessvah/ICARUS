@@ -96,9 +96,10 @@ async function autoResolvers(data) {
 
     resolvers.Mutation[table.name] = async (parent, args, context, info) => {
       try {
-        const res = await beforeResolver(table.name, args, 'Mutation');
+        // Verifying if there is hooks for the mutation query which is required
+        const argss = await beforeResolver(table.name, args, 'Mutation');
         //verify if the user it's exceeding the rate limit calls for seconds.
-        const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
+        const limitErrorMessage = await rateLimiter({ parent, argss, context, info }, rateLimiterConfig);
         if (limitErrorMessage) throw new Error(limitErrorMessage);
 
         // if (!context.currentUser) {
