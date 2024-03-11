@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { permissionHook } from './permissionHook.js';
+import { beforeResolverMutation } from './beforeResolverMutation.js';
 
 const beforeResolver = async (table, args, QueryType) => {
   try {
@@ -21,6 +22,13 @@ const beforeResolver = async (table, args, QueryType) => {
     if (!hasPermission) {
       throw new Error('Permission denied');
     }
+
+    // Verification if the query is a mutation query
+    if (QueryType === 'Mutation') {
+      const res = await beforeResolverMutation(table, entityInfo, args);
+      return res;
+    }
+    return;
   } catch (error) {
     throw new Error(error);
   }

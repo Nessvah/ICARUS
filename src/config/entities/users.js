@@ -57,9 +57,14 @@ const usersPermissionMutation = async function () {
   return true;
 };
 
-const usersAddMutation = async function () {
+const users_create = async function (args) {
   const currentDate = new Date();
-  console.log(currentDate.toISOString());
+  args.input._create.created_t = currentDate;
+  return args;
 };
 
-export { entity, usersPermissionQuery, usersAddMutation, usersPermissionMutation };
+const users_update = async function () {
+  const currentDate = new Date();
+};
+
+export { entity, usersPermissionQuery, users_create, users_update, usersPermissionMutation };
