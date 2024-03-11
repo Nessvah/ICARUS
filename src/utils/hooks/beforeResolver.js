@@ -1,7 +1,9 @@
 import fs from 'fs';
+import { permissionHook } from './permissionHook.js';
 
-const beforeResolver = async (table, args, context) => {
+const beforeResolver = async (table, args, QueryType) => {
   try {
+    // Definition of entity path
     const filePath = `config/entities/${table}.js`;
 
     // Verifying if the file exists
@@ -12,18 +14,12 @@ const beforeResolver = async (table, args, context) => {
     // Importing entity informations
     const entityInfo = await import(`../../${filePath}`);
 
-    // Verifying if there is a hook called beforeResolverHook
-    const beforeResolverHook = entityInfo[`${table}BeforeResolverHook`];
-    if (typeof beforeResolverHook !== 'function') {
-      return;
-    }
+    // Verifying if there is a permission hook for this Query
+    const hasPermission = await permissionHook(entityInfo, table, args, QueryType);
 
-    // Executing the hook with arguments
-    const result = await beforeResolverHook(args);
-
-    // Veifying if the user is allowed to make the query
-    if (!result) {
-      throw new Error('User not allowed');
+    // Verification of permission for the required query
+    if (!hasPermission) {
+      throw new Error('Permission denied');
     }
   } catch (error) {
     throw new Error(error);

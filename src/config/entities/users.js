@@ -45,9 +45,21 @@ const entity = {
   },
 };
 
-const usersBeforeResolverHook = async function () {
+const usersPermissionQuery = async function () {
   const roles = ['admin', 'manager', 'user'];
-  return roles.includes('admin');
+  if (!roles.includes('admin')) return false;
+  return true;
 };
 
-export { entity, usersBeforeResolverHook };
+const usersPermissionMutation = async function () {
+  const roles = ['admin', 'manager', 'user'];
+  if (!roles.includes('admin')) return false;
+  return true;
+};
+
+const usersAddMutation = async function () {
+  const currentDate = new Date();
+  console.log(currentDate.toISOString());
+};
+
+export { entity, usersPermissionQuery, usersAddMutation, usersPermissionMutation };

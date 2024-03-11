@@ -72,7 +72,8 @@ async function autoResolvers(data) {
 
     resolvers.Query[table.name] = async (parent, args, context, info) => {
       try {
-        await beforeResolver(table.name, args, context);
+        // Caling function beforeResolver to see if there is hooks for the query called
+        await beforeResolver(table.name, args, 'Query');
 
         //console.log(table);
         //verify if the user it's exceeding the rate limit calls for seconds.
@@ -94,19 +95,22 @@ async function autoResolvers(data) {
     };
 
     resolvers.Mutation[table.name] = async (parent, args, context, info) => {
-      //verify if the user it's exceeding the rate limit calls for seconds.
-      const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
-      if (limitErrorMessage) throw new Error(limitErrorMessage);
+      try {
+        const res = await beforeResolver(table.name, args, 'Mutation');
+        //verify if the user it's exceeding the rate limit calls for seconds.
+        const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
+        if (limitErrorMessage) throw new Error(limitErrorMessage);
 
-      // if (!context.currentUser) {
-      //   throw new AuthenticationError();
-      // }
-      const res = await myHook(table.name, args);
+        // if (!context.currentUser) {
+        //   throw new AuthenticationError();
+        // }
+        await validation(args.input); // it validates mutation inputs
+        await validation(args.input, 'update'); // it validates update inputs;
 
-      await validation(args.input); // it validates mutation inputs
-      await validation(args.input, 'update'); // it validates update inputs;
-
-      return await controller(table.name, args);
+        return await controller(table.name, args);
+      } catch (e) {
+        throw new AuthorizationError(e);
+      }
     };
 
     nestedObject = {};
