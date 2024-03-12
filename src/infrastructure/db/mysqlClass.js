@@ -241,10 +241,24 @@ export class MySQLConnection {
     }
   }
 
-  async count(tableName, { _ }) {
-    const sql = `SELECT COUNT(*) AS ${tableName} FROM ${tableName}`;
+  async count(tableName, { input }) {
+    let sql = `SELECT COUNT(*) AS ${tableName} FROM ${tableName}`;
+
+    // array to save the values
+    const values = [];
+
+    // check if the filter options is present and if it is,
+    // take all the nested information and construct a sql query to filter
+    if (input.filter) {
+      const { processedSql, processedValues } = processFilter(input);
+
+      // append values from filters and the where sql string
+      values.push(...processedValues);
+      sql += processedSql;
+    }
+
     try {
-      const res = await this.query(sql);
+      const res = await this.query(sql, values);
       return res[0][tableName];
     } catch (error) {
       logger.error('Error:', error);

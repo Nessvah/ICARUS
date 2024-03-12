@@ -1,47 +1,17 @@
 import { controller } from '../infrastructure/db/connector.js';
-import { logger } from '../infrastructure/server.js';
 import { validation } from '../utils/validation/validation.js';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
-import { ImportThemTities } from '../config/importDemTities.js';
-
-// We initialize a rate limiter instance by calling getGraphQLRateLimiter.
-// This function takes an object as an argument with a property identifyContext that defines
-// how to identify the context for rate limiting purposes.
-// In this case, the context is identified based on the id property of the context object
-
-const rateLimiterConfig = { max: 10, window: '1s' };
-
-const importer = new ImportThemTities();
-
+import { config } from './generateTypeDefs.js';
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
-
-(async () => {
-  try {
-    const data = await importer.importAll();
-    if (data && data.tables) {
-      // Ensure data.tables is defined
-      //console.log('data:', data, '______________'); // Log the retrieved data
-
-      // Call autoResolvers after data is available
-      await autoResolvers(data);
-
-      return data;
-    } else {
-      logger.error('Data is missing or incomplete.');
-    }
-    return null;
-  } catch (error) {
-    logger.error('Error reading file:', error);
-  }
-})();
 
 let nestedObject = {};
 export const resolvers = {};
 
 // this function use the "data" parameter and create the resolvers dynamically.
-async function autoResolvers(data) {
+async function autoResolvers() {
+  const data = config;
   resolvers.Query = {
     tables: () => {
       const tablesInfo = data.tables.map((table) => {
@@ -124,3 +94,5 @@ const createRelations = async (table, column) => {
   const tableName = capitalize(table.name);
   resolvers[tableName] = nestedObject;
 };
+
+export { autoResolvers };

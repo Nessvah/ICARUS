@@ -7,17 +7,17 @@ import { fileURLToPath } from 'url'; // Module to convert a file URL to a file p
 export class ImportThemTities {
   constructor() {
     // Initialize the directory name using the current file URL
-    this.__dirname = path.dirname(fileURLToPath(import.meta.url));
+    this.path = path.dirname(fileURLToPath(import.meta.url));
   }
 
   // Method to import all entities
-  async importAll() {
+  async importAll(configPath) {
     try {
       // Array to store table information
       const tables = [];
 
       // Read all connection files from the db folder
-      const dbFolderPath = path.join(this.__dirname, './db');
+      const dbFolderPath = path.join(configPath, '/db');
       const connectionFiles = await fs.readdir(dbFolderPath);
 
       // Object to store database information extracted from connection files
@@ -36,7 +36,7 @@ export class ImportThemTities {
       }
 
       // Read entities files from the entities folder
-      const entitiesFolderPath = path.join(this.__dirname, './entities');
+      const entitiesFolderPath = path.join(configPath, '/entities');
       const entitiesFiles = await fs.readdir(entitiesFolderPath);
 
       // Loop through each entities file

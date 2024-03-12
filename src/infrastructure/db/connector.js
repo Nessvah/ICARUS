@@ -8,6 +8,7 @@ import { ImportThemTities } from '../../config/importDemTities.js';
 
 // Call the importAll method to start importing entities
 const importer = new ImportThemTities();
+
 let data;
 (async () => {
   try {
@@ -21,7 +22,7 @@ let data;
     }
     return null;
   } catch (error) {
-    logger.error('error to read file');
+    logger.error('error to read file', error);
   }
 })();
 
