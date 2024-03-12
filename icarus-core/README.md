@@ -1,4 +1,4 @@
-# Icarus2
+# Icarus
 
 ## NPM
 
@@ -7,7 +7,7 @@
 ## Create a Config Folder
 
 Create a `config` folder, them inside this folder, create a `db` and a `entities` folder.
-Inside of the `db` folder you will add the data base configuration in a json file.
+Inside of the `db` folder you will add the database configuration in a json file.
 Inside of the `entities` folder you will add the tables information in a json file.
 
 ```
