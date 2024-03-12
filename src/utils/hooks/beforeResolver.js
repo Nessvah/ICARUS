@@ -16,12 +16,7 @@ const beforeResolver = async (table, args, QueryType) => {
     const entityInfo = await import(`../../${filePath}`);
 
     // Verifying if there is a permission hook for this Query
-    const hasPermission = await permissionHook(entityInfo, table, args, QueryType);
-
-    // Verification of permission for the required query
-    if (!hasPermission) {
-      throw new Error('Permission denied');
-    }
+    await permissionHook(entityInfo, table, args, QueryType);
 
     // Verification if the query is a mutation query
     if (QueryType === 'Mutation') {

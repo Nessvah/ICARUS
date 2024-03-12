@@ -45,7 +45,7 @@ const entity = {
   },
 };
 
-const usersPermissionQuery = async function () {
+const usersPermissionQuery = async function (context) {
   const roles = ['admin', 'manager', 'user'];
   if (!roles.includes('admin')) return false;
   return true;
