@@ -2,6 +2,13 @@ import fs from 'fs';
 import { permissionHook } from './permissionHook.js';
 import { beforeResolverMutation } from './beforeResolverMutation.js';
 
+/**
+ * Constructor for MongoDBConnection class.
+ * @param {string} table - Name of current table.
+ * @param {object} args - Args with input information.
+ * @param {string} QueryType - Query type (Mutation/Query).
+ * @returns {Promise<object[]>} - Modified args or same args.
+ */
 const beforeResolver = async (table, args, QueryType) => {
   try {
     // Definition of entity path

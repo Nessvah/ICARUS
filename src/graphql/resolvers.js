@@ -1,6 +1,5 @@
 import { controller } from '../infrastructure/db/connector.js';
 import { logger } from '../infrastructure/server.js';
-import { validation } from '../utils/validation/validation.js';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 import { ImportThemTities } from '../config/importDemTities.js';
@@ -75,11 +74,10 @@ async function autoResolvers(data) {
         // Caling function beforeResolver to see if there is hooks for the query called
         await beforeResolver(table.name, args, 'Query');
 
-        //console.log(table);
         //verify if the user it's exceeding the rate limit calls for seconds.
         const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
-
         if (limitErrorMessage) throw new Error(limitErrorMessage);
+
         return await controller(table.name, args);
       } catch (e) {
         logger.error(e);
@@ -98,15 +96,10 @@ async function autoResolvers(data) {
       try {
         // Verifying if there is hooks for the mutation query which is required
         const argss = await beforeResolver(table.name, args, 'Mutation');
+
         //verify if the user it's exceeding the rate limit calls for seconds.
         const limitErrorMessage = await rateLimiter({ parent, argss, context, info }, rateLimiterConfig);
         if (limitErrorMessage) throw new Error(limitErrorMessage);
-
-        // if (!context.currentUser) {
-        //   throw new AuthenticationError();
-        // }
-        await validation(args.input); // it validates mutation inputs
-        await validation(args.input, 'update'); // it validates update inputs;
 
         return await controller(table.name, args);
       } catch (e) {

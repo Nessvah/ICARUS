@@ -90,4 +90,10 @@ const entity = {
   },
 };
 
-export { entity };
+const product_reviews_create = async function (args) {
+  const currentDate = new Date();
+  args.input._create.review_date = currentDate;
+  return args;
+};
+
+export { entity, product_reviews_create };

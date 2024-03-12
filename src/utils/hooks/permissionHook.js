@@ -1,3 +1,12 @@
+/**
+ * Constructor for MongoDBConnection class.
+ * @param {object} entityInfo - Information about the entity file .js.
+ * @param {string} table - The name of the entity which is comming.
+ * @param {object} args - Args with input information.
+ * @param {string} QueryType - Query type (Mutation/Query).
+ * @returns {boolean} returns true or false depending on permission.
+ */
+
 const permissionHook = async function (entityInfo, table, args, QueryType) {
   try {
     // Verifying if there is a hook called permissionHook
