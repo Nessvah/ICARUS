@@ -36,4 +36,29 @@ const beforeResolver = async (table, args, QueryType) => {
   }
 };
 
-export { beforeResolver };
+/**
+ * Constructor for MongoDBConnection class.
+ * @param {string} table - Name of current table.
+ * @param {object} args - Args with input information.
+ * @param {object} column - Actual column on iteration.
+ * @returns {Promise<object[]>} - Modified args or same args.
+ */
+const beforeResolverRelations = async (table, args, column, parent) => {
+  let tempArgs = args;
+  // for mongodb searching parents
+  if (table.database.type === 'mongodb') {
+    //const idValue = ObjectId.isValid(parent[column.name]) ? parent[column.name].toString() : parent[column.name];
+    args = { input: { filter: { _and: { [column.foreignKey]: { _eq: parent.id } } } } };
+    // for MySQL searching parents
+  } else {
+    args = { input: { filter: { [column.foreignKey]: parent[column.foreignKey] } } };
+  }
+
+  // Verification of take and skip inside input
+  tempArgs.take ? (args.input.take = tempArgs.take) : '';
+  tempArgs.skip ? (args.input.skip = tempArgs.skip) : '';
+
+  return args;
+};
+
+export { beforeResolver, beforeResolverRelations };
