@@ -254,7 +254,7 @@ export class MongoDBConnection {
 
       // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
       // Iterate over each element in the input._create array
-      const processedRes = await afterResolver([input._create], this.tableData.type);
+      const processedRes = afterResolver([input._create], this.tableData.type);
 
       // Return an object with the created property, containing the inserted data
       return { created: processedRes };
