@@ -13,6 +13,7 @@ const beforeResolver = async (table, args, QueryType) => {
   try {
     // Definition of entity path
     const filePath = `config/entities/${table}.js`;
+    console.log(filePath);
 
     // Verifying if the file exists
     if (!fs.existsSync(filePath)) {
@@ -20,7 +21,7 @@ const beforeResolver = async (table, args, QueryType) => {
     }
 
     // Importing entity informations
-    const entityInfo = await import(`../../${filePath}`);
+    const entityInfo = await import(`../../../${filePath}`);
 
     // Verifying if there is a permission hook for this Query
     await permissionHook(entityInfo, table, args, QueryType);

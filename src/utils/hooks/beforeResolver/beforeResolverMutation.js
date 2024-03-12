@@ -1,4 +1,4 @@
-import { validation } from '../validation/validation.js';
+import { validation } from '../../validation/validation.js';
 
 /**
  * Constructor for MongoDBConnection class.
