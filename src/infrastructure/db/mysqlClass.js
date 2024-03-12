@@ -251,4 +251,22 @@ export class MySQLConnection {
       return error; // this will return the error message and null
     }
   }
+
+  /*   async saveFileToDatabase(fileUrl) {
+    const tableName = 'files'; // Replace 'files' with the name of your table where you want to save the file URLs
+    const sql = `INSERT INTO ${tableName} (fileUrl) VALUES (?)`;
+    const values = [fileUrl];
+
+    try {
+        // Execute the SQL query to insert the file URL into the database
+        await this.query(sql, values);
+        // Log success message
+        logger.info('File URL saved to database:', fileUrl);
+        // Return the file URL
+        return { fileUrl };
+    } catch (error) {
+        // Log any errors that occur during the database operation
+        logger.error('Error saving file URL to database:', error);
+        throw new Error('Failed to save file URL to database');
+    } */
 }

@@ -1,5 +1,7 @@
 import { MongoDBConnection } from './mongodbClass.js';
 import { MySQLConnection } from './mysqlClass.js';
+import { S3Connection } from './s3Class.js';
+
 import { MongoClient } from 'mongodb';
 import mysql from 'mysql2/promise';
 import { logger } from '../server.js';
@@ -14,7 +16,8 @@ let data;
     data = await importer.importAll();
     if (data && data.tables) {
       // Ensure data.tables is defined
-      //console.log('data:', data, '______________'); // Log the retrieved data
+      //console.log('data:', data.tables, '______________'); // Log the retrieved data
+      //console.log(data.connections.s3);
       return data;
     } else {
       logger.error('Data is missing or incomplete.');
@@ -66,6 +69,9 @@ async function controller(table, args) {
         return await connection.update(table, args);
       case '_delete':
         return await connection.delete(table, args);
+      case '_upload':
+        return await connection.upload(table, args);
+
       default:
         return 'Action not defined';
     }
@@ -73,7 +79,6 @@ async function controller(table, args) {
     logger.error(error);
   }
 }
-
 //create a pool connection to many databases, based on the config files in the "data" variable.
 async function createDbPool() {
   data.tables.forEach(async (table) => {

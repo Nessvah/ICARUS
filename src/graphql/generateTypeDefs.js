@@ -1,6 +1,6 @@
 import fs from 'fs';
 //import { logger } from '../infrastructure/server.js';
-import { GraphQLString, GraphQLInt, GraphQLFloat, GraphQLNonNull, GraphQLBoolean, GraphQLID } from 'graphql';
+import { GraphQLString, GraphQLInt, GraphQLFloat, GraphQLNonNull, GraphQLBoolean, GraphQLID, graphql } from 'graphql';
 
 import { MySQLDate, GraphQLDate } from './customScalars.js';
 
@@ -102,6 +102,7 @@ const generateTypeDefinitions = (config) => {
   ${JSONAliasDefinition}
   ${ISODateAliasDefinition}
   ${MySQLDateAliasDefinition}
+  scalar Upload
   ${operators}
   
 # define the root Query
@@ -121,6 +122,7 @@ type Query {
         return `${tableName}Count(input: ${capitalizedTableName}Count): ${capitalizedTableName}CountResult`;
       })
       .join('\n')}
+
 }`);
   // Define the Mutation type
   typeDefs.push(`
@@ -131,9 +133,11 @@ type Mutation {
         const tableName = table.name;
         const capitalizedTableName = capitalize(table.name);
         const resolvers = `${capitalizedTableName}MutationOptions`;
-        return `${tableName}(input: ${resolvers}): ${capitalizedTableName}Output`;
+        return `${tableName}(input: ${resolvers}): ${capitalizedTableName}Output
+        `;
       })
       .join('\n')}
+
 }`);
 
   // start creating all the schemas
@@ -154,6 +158,7 @@ input ${tableName}MutationOptions {
     _create: ${tableName}Input
     _update: ${tableName}UpDel
     _delete: ${tableName}Delete
+    _upload: ${tableName}Upload
     }`;
 
     //Define the entities type
@@ -256,7 +261,31 @@ input ${tableName}LogicalOp {
   }
 `;
 
-    typeDefs.push(nestedFiltering, ordersCountInput, sortOptions, logicalOperations, mutationFilterOptions);
+    const uploadInput = `
+  input ${tableName}Upload {
+    file: Upload
+    filter: ${tableName}Filter
+
+  }
+`;
+
+    const uploadOutput = `
+  type ${tableName}UploadOutput {
+    Bucket: String
+    Key: String
+    Location: String
+
+  }`;
+
+    typeDefs.push(
+      nestedFiltering,
+      ordersCountInput,
+      sortOptions,
+      logicalOperations,
+      mutationFilterOptions,
+      uploadInput,
+      uploadOutput,
+    );
 
     //Define the Update entities input
     const update = `
@@ -299,6 +328,7 @@ type ${tableName}Output {
 	created: [${tableName}]!
 	updated: [${tableName}]!
 	deleted: Int
+  uploaded: ${tableName}UploadOutput
 }`;
 
     typeDefs.push(queryFilterOptions);
@@ -336,11 +366,15 @@ type Token {
   refreshToken: String!
 }
 
-  type TableInfo {
-    table: String
-    structure: String
-    backoffice: String
-  }`);
+type TableInfo {
+  table: String
+  structure: String
+  backoffice: String
+}
+  
+
+
+  `);
   return typeDefs.join('\n');
 };
 

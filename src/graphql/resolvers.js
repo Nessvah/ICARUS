@@ -4,6 +4,15 @@ import { validation } from '../utils/validation/validation.js';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 import { ImportThemTities } from '../config/importDemTities.js';
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
+import { S3Connection } from '../infrastructure/db/s3Class.js';
+
+import { upload } from './upload.js';
+
+import { createReadStream } from 'fs';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+
+import { createUploadStream } from '../infrastructure/upload/stream.js';
 
 // We initialize a rate limiter instance by calling getGraphQLRateLimiter.
 // This function takes an object as an argument with a property identifyContext that defines
@@ -17,6 +26,7 @@ const rateLimiter = getGraphQLRateLimiter({
 const rateLimiterConfig = { max: 10, window: '1s' };
 
 const importer = new ImportThemTities();
+const s3Connection = new S3Connection();
 
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -60,51 +70,77 @@ async function autoResolvers(data) {
       return tablesInfo;
     },
   };
-
-  resolvers.Mutation = {
+  resolvers.Upload = GraphQLUpload;
+  (resolvers.Mutation = {
     authorize: (_, { input }, { authLogin }) => authLogin(input),
-  };
+    /*     upload: async (parent, { file }) => {
+      const { filename, createReadStream } = await file;
 
-  data.tables.forEach((table) => {
-    const countName = `${table.name}Count`;
+      const stream = createReadStream();
 
-    resolvers.Query[table.name] = async (parent, args, context, info) => {
-      //verify if the user it's exceeding the rate limit calls for seconds.
-      const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
+      try {
+        const uploadStream = createUploadStream(filename);
+        stream.pipe(uploadStream.writeStream);
+        const result = await uploadStream.promise;
 
-      if (limitErrorMessage) throw new Error(limitErrorMessage);
-      return await controller(table.name, args);
-    };
+        // Extract the Location URL from the result object
+        const fileUrl = result.Location;
 
-    resolvers.Query[countName] = async (parent, args, context, info) => {
-      const result = await controller(table.name, args);
-
-      return { count: result };
-    };
-
-    resolvers.Mutation[table.name] = async (parent, args, context, info) => {
-      //verify if the user it's exceeding the rate limit calls for seconds.
-      const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
-      if (limitErrorMessage) throw new Error(limitErrorMessage);
-
-      // if (!context.currentUser) {
-      //   throw new AuthenticationError();
-      // }
-      await validation(args.input); // it validates mutation inputs
-      await validation(args.input, 'update'); // it validates update inputs;
-
-      return await controller(table.name, args);
-    };
-
-    nestedObject = {};
-
-    // To create the relations based on the column key "isObject"
-    table.columns.forEach((column) => {
-      if (column.isObject) {
-        createRelations(table, column);
+        // Return only the file URL
+        console.log({ fileUrl });
+        return fileUrl;
+      } catch (error) {
+        console.log(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
+        throw new ApolloError('Error uploading file');
       }
+      console.log({ result });
+      return result;
+    }, */
+  }),
+    data.tables.forEach((table) => {
+      //console.log({ table });
+      const countName = `${table.name}Count`;
+
+      resolvers.Query[table.name] = async (parent, args, context, info) => {
+        //verify if the user it's exceeding the rate limit calls for seconds.
+        const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
+
+        if (limitErrorMessage) throw new Error(limitErrorMessage);
+        return await controller(table.name, args);
+      };
+
+      resolvers.Query[countName] = async (parent, args, context, info) => {
+        const result = await controller(table.name, args);
+
+        return { count: result };
+      };
+
+      resolvers.Mutation[table.name] = async (parent, args, context, info) => {
+        //verify if the user it's exceeding the rate limit calls for seconds.
+        const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
+        if (limitErrorMessage) throw new Error(limitErrorMessage);
+
+        // if (!context.currentUser) {
+        //   throw new AuthenticationError();
+        // }
+        console.log({ args });
+        console.log(JSON.stringify(args));
+
+        await validation(args.input); // it validates mutation inputs
+        await validation(args.input, 'update'); // it validates update inputs;
+
+        return await controller(table.name, args);
+      };
+
+      nestedObject = {};
+
+      // To create the relations based on the column key "isObject"
+      table.columns.forEach((column) => {
+        if (column.isObject) {
+          createRelations(table, column);
+        }
+      });
     });
-  });
 }
 
 const createRelations = async (table, column) => {

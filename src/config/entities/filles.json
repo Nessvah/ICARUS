@@ -1,7 +1,7 @@
 {
   "tables": {
-    "name": "brands",
-    "database": "mongodb",
+    "name": "files",
+    "database": "s3",
     "columns": [
       {
         "name": "id",
@@ -10,33 +10,25 @@
         "nullable": false
       },
       {
-        "name": "name",
+        "name": "filename",
         "type": "string",
         "nullable": false
       },
       {
-        "name": "country",
+        "name": "uri",
         "type": "string",
         "nullable": false
       },
       {
-        "name": "founded_year",
+        "name": "mimetype",
         "type": "string",
         "nullable": false
       },
       {
-        "name": "products",
-        "type": "array",
-        "nullable": false
-      },
-      {
-        "name": "fileUrl",
+        "name": "encoding",
         "type": "string",
-        "nullable": true
+        "nullable": false
       }
-    ],
-    "backoffice": {
-      "icon": "FaBlackTie"
-    }
+    ]
   }
 }

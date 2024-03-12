@@ -32,6 +32,11 @@
         "name": "publish_date",
         "type": "date",
         "nullable": false
+      },
+      {
+        "name": "fileUrl",
+        "type": "string",
+        "nullable": true
       }
     ],
     "backoffice": {

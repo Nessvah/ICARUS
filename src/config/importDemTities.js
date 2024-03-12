@@ -8,6 +8,7 @@ export class ImportThemTities {
   constructor() {
     // Initialize the directory name using the current file URL
     this.__dirname = path.dirname(fileURLToPath(import.meta.url));
+    this.processedFiles = new Set();
   }
 
   // Method to import all entities
@@ -15,6 +16,7 @@ export class ImportThemTities {
     try {
       // Array to store table information
       const tables = [];
+      const connections = [];
 
       // Read all connection files from the db folder
       const dbFolderPath = path.join(this.__dirname, './db');
@@ -73,9 +75,19 @@ export class ImportThemTities {
           tables.push(tableInfo);
         }
       }
-      // console.log({ tables });
 
-      return { tables };
+      for (let file of connectionFiles) {
+        const connectionFilePath = path.join(dbFolderPath, file);
+        const connectionData = await fs.readFile(connectionFilePath, 'utf-8');
+        const fileName = path.parse(file).name;
+        const connectionInfo = JSON.parse(connectionData);
+        connections[fileName] = connectionInfo; // Assign connection info by name
+        this.processedFiles.add(file);
+      }
+      /*       console.log({ connections });
+      console.log({ tables }); */
+
+      return { tables, connections };
       // Log the extracted tables information
     } catch (e) {
       // Log any errors that occur during execution
