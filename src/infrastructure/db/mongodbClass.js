@@ -372,15 +372,35 @@ export class MongoDBConnection {
    * @param {object} options - Additional options.
    * @returns {Promise<number>} - The count of documents in the collection.
    */
-  async count(table, { _ }) {
+  async count(table, { input }) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
       const collection = db.collection(table);
+      let res;
+      let query;
 
-      // Use the countDocuments method to retrieve the count of documents in the collection
-      return await collection.countDocuments({});
+      //* Check if input.filter is empty or not defined
+      /* Retrieve the database and collection objects from the MongoDB client. 
+      Then, it determines whether the input contains a filter or not. If the filter is empty, 
+      it returns all the documents in the collection. 
+      Otherwise, it reorganizes the filter parameter using the filterController function. */
+      if (!input.filter || input.filter === null || Object.keys(input.filter).length === 0) {
+        query = collection.find();
+      } else {
+        // Call the filter function to reorganize the filter parameter
+        const filter = input.filter._and || input.filter._or ? this.filterController(input.filter) : input.filter;
+        const options = {
+          // Set the timeout value in milliseconds
+          maxTimeMS: 60000, // Adjust this value to your desired timeout
+        };
+        query = collection.find(filter, options).maxTimeMS(options.maxTimeMS);
+      }
+
+      // Call the COunt function to retrieve the results value
+      res = await query.count();
+      return res;
     } catch (error) {
       logger.error(error); // Log any errors
       return []; // Return an empty array in case of any errors
