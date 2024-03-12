@@ -9,12 +9,12 @@ import { validationRules } from './validationRules.js';
 const validateFields = (item, operation) => {
   for (const [key, value] of Object.entries(item)) {
     // Skip validation if value is undefined during update, since it indicates no change is intended for that field
-    if (operation === 'update' && value === undefined) {
+    if (operation === '_update' && value === undefined) {
       continue;
     }
 
     // Throw an error if attempting to set a value to null or an empty string during update
-    if (operation === 'update' && (value === null || value === '')) {
+    if (operation === '_update' && (value === null || value === '')) {
       throw new UserInputError(`Update error: Cannot set field '${key}' to null or an empty string.`);
     }
 
@@ -37,14 +37,14 @@ const validateFields = (item, operation) => {
 // If the conditions are met, it iterates over each item in the input.create array and calls the validateFields function for each item.
 // f the operation is 'update' and the input.update property exists, it calls the validateFields function with the entire input.update object.
 // In both cases, the validateFields function performs field-level validation based on the operation type and the provided validation rules.
-const validation = async (input, operation = 'create') => {
-  if (operation === 'create' && input.create && Array.isArray(input.create)) {
-    for (const item of input.create) {
+const validation = async (input, operation = '_create') => {
+  if (operation === '_create' && input._create && Array.isArray(input._create)) {
+    for (const item of input._create) {
       validateFields(item, operation);
     }
-  } else if (operation === 'update' && input.update) {
+  } else if (operation === '_update' && input._update) {
     // For update operations, pass the entire 'update' object for validation
-    validateFields(input.update, operation);
+    validateFields(input._update, operation);
   }
 };
 

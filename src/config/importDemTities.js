@@ -1,7 +1,7 @@
 // Import necessary modules
 import fs from 'fs/promises'; // File system module for asynchronous file operations
 import path from 'path'; // Module for handling file paths
-import { fileURLToPath } from 'url'; // Module to convert a file URL to a file path
+import { fileURLToPath, URL } from 'url'; // Module to convert a file URL to a file path
 
 // Define a class for importing entities
 export class ImportThemTities {
@@ -52,22 +52,22 @@ export class ImportThemTities {
       // Loop through each entities file
       for (let file of entitiesFiles) {
         // Check if the file is a JSON file
-        if (file.endsWith('.json')) {
-          // Construct the full path to the JSON file
-          const filePath = path.join(entitiesFolderPath, file);
-          // Read JSON file data
-          const jsonData = await fs.readFile(filePath, 'utf-8');
-          // Parse JSON file data
-          const parsedData = JSON.parse(jsonData);
+        if (file.endsWith('.js')) {
+          // Construct the full absolute path of .js entity
+          const fileAbsolutePath = path.join(entitiesFolderPath, file);
+          // Transforming absolute path in something readable to import()
+          const filePathURL = new URL(`file://${fileAbsolutePath}`);
+          // All information from .js file in module
+          const module = await import(filePathURL);
 
           // Extract table information from parsed JSON data
-          const tableName = parsedData.tables.name;
-          const databaseName = parsedData.tables.database;
+          const tableName = module.entity.tables.name;
+          const databaseName = module.entity.tables.database;
           const tableInfo = {
             name: tableName,
             database: databaseInfo[databaseName],
-            columns: parsedData.tables.columns,
-            backoffice: parsedData.tables.backoffice,
+            columns: module.entity.tables.columns,
+            backoffice: module.entity.tables.backoffice,
           };
           // Add table information to the tables array
           tables.push(tableInfo);
