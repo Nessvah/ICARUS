@@ -7,6 +7,7 @@ import {
   processFilter,
 } from '../../utils/sqlQueries.js';
 import { logger } from '../server.js';
+import { createUploadStream } from '../upload/stream.js';
 
 export class MySQLConnection {
   constructor(currentTableInfo) {
@@ -160,6 +161,8 @@ export class MySQLConnection {
    * @returns {Promise<{ updated: Array<Object> } | null>} - A promise that resolves to the updated record(s) or null if there was an error.
    */
   async update(tableName, { input }) {
+    console.log('CHEGUEEEE');
+    console.log({ input });
     // UPDATE `table_name` SET `column_name` = `new_value' [WHERE condition];
     let updateQuery = `UPDATE ${tableName} SET `;
     let findQuery = `SELECT * FROM ${tableName} WHERE`;
@@ -167,21 +170,31 @@ export class MySQLConnection {
     const findValues = [];
 
     // simple update without filtering
-    for (const [key, value] of Object.entries(input._update)) {
-      if (key === 'filter') {
+    for (let [key, value] of Object.entries(input._update ?? {}).concat(Object.entries(input._upload ?? {}))) {
+      console.log('BANANAAAA');
+
+      if (key === 'url') {
+        updateQuery += `icon_label = ?  `;
+        values.push(value);
+        console.log(' qwerty' + updateQuery);
+      } else if (key === 'filter') {
         // handle filtering in update
         // mimik object structure for the function to process filter
         const filter = {};
         filter[key] = value;
+        console.log(JSON.stringify(filter));
 
         const { processedSql, processedValues } = processFilter(filter);
 
         // remove trailing spaces and comma
         updateQuery = updateQuery.slice(0, -2);
         values.push(...processedValues);
+        // update table set icon class = url where condition
+        console.log('hycdbvhesdbvcieas' + updateQuery);
 
         updateQuery += processedSql;
       } else {
+        console.log({ key });
         updateQuery += `${key} = ?, `;
         findQuery += ` ${key} = ? AND `;
         values.push(value);
@@ -190,6 +203,8 @@ export class MySQLConnection {
     }
 
     findQuery = findQuery.slice(0, -5);
+    console.log({ updateQuery });
+    console.log({ values });
 
     try {
       const record = await this.query(updateQuery, values);
@@ -252,21 +267,115 @@ export class MySQLConnection {
     }
   }
 
-  /*   async saveFileToDatabase(fileUrl) {
-    const tableName = 'files'; // Replace 'files' with the name of your table where you want to save the file URLs
-    const sql = `INSERT INTO ${tableName} (fileUrl) VALUES (?)`;
-    const values = [fileUrl];
+  async upload(table, { input }) {
+    //console.log({ input });
+
+    const { file } = input._upload;
+    const { _upload } = input;
+    //const filter = this.filterController(_upload.filter);
+
+    //console.log('File provided:', file ? 'Yes' : 'No');
+
+    if (!file) {
+      throw new Error('No file provided');
+    }
+
+    const { filename, createReadStream, encoding } = await file;
+    console.log('File details:', { filename, encoding });
+
+    // Check if the mimetype is valid (png, jpeg, jpg)
+    const mimeTypes = {
+      png: 'image/png',
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+    };
+
+    const getMimeType = (filename) => {
+      const extension = filename.split('.').pop();
+      return mimeTypes[extension.toLowerCase()];
+    };
+
+    const mimeType = getMimeType(filename);
+    //console.log('Mime type:', mimeType);
+
+    const stream = createReadStream();
 
     try {
-        // Execute the SQL query to insert the file URL into the database
-        await this.query(sql, values);
-        // Log success message
-        logger.info('File URL saved to database:', fileUrl);
-        // Return the file URL
-        return { fileUrl };
+      const key = `icarus/${table}/${filename}`;
+      const uploadStream = createUploadStream(key, mimeType);
+
+      stream.pipe(uploadStream.writeStream);
+
+      const result = await uploadStream.promise;
+      //console.log('Upload result:', result);
+      delete input._upload.file;
+
+      const updatedInput = {
+        input: {
+          _upload: {
+            url: result.Key,
+            ...input._upload,
+          },
+        },
+      };
+
+      //console.log('Updated input:', updatedInput);
+
+      await this.update(table, updatedInput);
+
+      //console.log('File uploaded successfully');
+      return { uploaded: result.Location };
     } catch (error) {
-        // Log any errors that occur during the database operation
-        logger.error('Error saving file URL to database:', error);
-        throw new Error('Failed to save file URL to database');
-    } */
+      console.log(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
+      throw new ApolloError('Error uploading file', 'UPLOAD_ERROR', {
+        errorMessage: error.message,
+      });
+    }
+  }
+
+  /* async updateFileUrl(table, input) {
+    const { url, _update, filter } = input;
+
+    let updateQuery = `UPDATE ${table} SET icon_class = ?`;
+    const findQuery = `SELECT * FROM ${table} WHERE`;
+    const values = [url];
+    const findValues = [];
+
+    // Add additional updates if provided
+    if (_update) {
+      for (const [key, value] of Object.entries(_update)) {
+        updateQuery += `, ${key} = ?`;
+        findQuery += ` ${key} = ? AND `;
+        values.push(value);
+        findValues.push(value);
+      }
+    }
+
+    findQuery = findQuery.slice(0, -5);
+
+    // Process the filter
+    if (filter) {
+      const { processedSql, processedValues } = processFilter(filter);
+
+      // Remove trailing spaces and comma from updateQuery
+      updateQuery = updateQuery.slice(0, -1);
+      values.push(...processedValues);
+
+      updateQuery += ` WHERE ${processedSql}`;
+    }
+
+    try {
+      const res = await this.query(updateQuery, values);
+
+      if (res.changedRows > 0) {
+        const newRecord = await this.query(findQuery, findValues);
+        return { updated: newRecord };
+      }
+
+      return { updated: [] };
+    } catch (error) {
+      logger.error('Error:', error);
+      return null; // Return null if there's an error
+    }
+  } */
 }

@@ -37,6 +37,11 @@
         "name": "created_t",
         "type": "timestamp",
         "nullable": true
+      },
+      {
+        "name": "fileUrl",
+        "type": "string",
+        "nullable": true
       }
     ],
     "backoffice": {

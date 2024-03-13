@@ -37,6 +37,11 @@
         "relationType": "1:1",
         "foreignEntity": "coupons",
         "foreignKey": "promotion_id"
+      },
+      {
+        "name": "fileUrl",
+        "type": "string",
+        "nullable": true
       }
     ],
     "backoffice": {

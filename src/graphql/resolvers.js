@@ -123,12 +123,10 @@ async function autoResolvers(data) {
         // if (!context.currentUser) {
         //   throw new AuthenticationError();
         // }
-        console.log({ args });
-        console.log(JSON.stringify(args));
 
         await validation(args.input); // it validates mutation inputs
         await validation(args.input, 'update'); // it validates update inputs;
-
+        console.log({ args });
         return await controller(table.name, args);
       };
 

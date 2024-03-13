@@ -14,7 +14,7 @@ export const s3 = new S3Client({
   s3ForcePathStyle: true,
 });
 
-export const createUploadStream = (key) => {
+export const createUploadStream = (key, mimeType) => {
   const pass = new stream.PassThrough();
   const upload = new Upload({
     client: s3,
@@ -22,6 +22,7 @@ export const createUploadStream = (key) => {
       Bucket: bucket,
       Key: key,
       Body: pass,
+      ContentType: mimeType,
     },
   });
   return {
@@ -30,3 +31,5 @@ export const createUploadStream = (key) => {
     promise: upload.done(),
   };
 };
+
+const contentType = '.png || .jpeg || .jpg';

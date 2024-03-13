@@ -22,6 +22,11 @@
         "relationType": "1:n",
         "foreignEntity": "users",
         "foreignKey": "role_id"
+      },
+      {
+        "name": "fileUrl",
+        "type": "string",
+        "nullable": true
       }
     ],
     "backoffice": {

@@ -1,12 +1,13 @@
 import { ObjectId } from 'mongodb';
 import { logger } from '../server.js';
 import { createUploadStream } from '../upload/stream.js';
+
 /**
  ** MongoDBConnection class handles connections and operations with MongoDB.
  */
 export class MongoDBConnection {
   /**
-   * Constructor for MongoDBConnection class.
+   ** Constructor for MongoDBConnection class.
    * @param {object} currentTableInfo - Information about the current table.
    * @param {string} currentTableInfo.table - Name of the table.
    * @param {string} currentTableInfo.type - Database type.
@@ -413,59 +414,74 @@ export class MongoDBConnection {
     // This means that the documents will be sorted based on the _id field in ascending order by default
     return {};
   }
-
   async upload(table, { input }) {
     console.log({ input });
-    //const s3Config = data.connections.s3;
-    //console.log({ s3Config });
+
     const { file } = input._upload;
-    console.log({ file });
+    const { _upload } = input;
+    const filter = this.filterController(_upload.filter);
+
+    console.log('File provided:', file ? 'Yes' : 'No');
+
     if (!file) {
       throw new Error('No file provided');
     }
 
-    const { filename, createReadStream } = await file;
+    const { filename, createReadStream, encoding } = await file;
+    console.log('File details:', { filename, encoding });
+
+    // Check if the mimetype is valid (png, jpeg, jpg)
+    const mimeTypes = {
+      png: 'image/png',
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+    };
+
+    const getMimeType = (filename) => {
+      const extension = filename.split('.').pop();
+      return mimeTypes[extension.toLowerCase()];
+    };
+
+    const mimeType = getMimeType(filename);
+    console.log('Mime type:', mimeType);
+
     const stream = createReadStream();
 
     try {
       const key = `icarus/${table}/${filename}`;
-      const uploadStream = createUploadStream(key);
+      const uploadStream = createUploadStream(key, mimeType);
+
       stream.pipe(uploadStream.writeStream);
+
       const result = await uploadStream.promise;
-      // Assuming you have a method in your database connection class to update the fileUrl
-      await this.updateFileUrl(table, filename, result.Key);
-      console.log({ result });
-      /*     ETag: '"b2a180f438b5021938fda644b06230ce"',
-    ServerSideEncryption: 'AES256',
-    Bucket: 'buuckete',
-    Key: 'icarus/authors/qwertgyhjuikol.png',
-    Location: 'https://buuckete.s3.eu-north-1.amazonaws.com/icarus/authors/qwertgyhjuikol.png' */
-      return result;
+      console.log('Upload result:', result);
+
+      await this.updateFileUrl(table, result.Key, filter);
+
+      console.log('File uploaded successfully');
+      return { uploaded: result.Location };
     } catch (error) {
       console.log(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
-      throw new ApolloError('Error uploading file');
+      throw new ApolloError('Error uploading file', 'UPLOAD_ERROR', {
+        errorMessage: error.message,
+      });
     }
   }
-
-  async updateFileUrl(table, filename, key) {
+  async updateFileUrl(table, key, filter) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
+
       // Retrieve the collection object
       const collection = db.collection(table);
 
-      // Assuming you have a field named 'fileUrl' where you want to store the key
-      // Construct a filter to find the document where you want to update the fileUrl
-      const filter = { filename: filename };
       // Construct an update operation
       const updateOperation = { $set: { fileUrl: key } };
 
       // Perform the update operation
-      await collection.updateOne(filter, updateOperation);
-
-      console.log(`File URL updated for ${filename}: ${key}`);
+      await collection.updateMany(filter, updateOperation);
     } catch (error) {
-      console.error(`Error updating file URL for ${filename}: ${error.message}`);
+      logger.error(`Error updating file URL for ${filename}: ${error.message}`);
       throw error;
     }
   }

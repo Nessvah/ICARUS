@@ -8,7 +8,7 @@ function uuidFilenameTransform(filename = '') {
 }
 
 class S3Uploader {
-  constructor(s3, config) {
+  constructor(config) {
     const {
       baseKey = '',
       uploadParams = {},
@@ -16,7 +16,7 @@ class S3Uploader {
       filenameTransform = uuidFilenameTransform,
     } = config;
 
-    this._s3 = s3;
+    this.s3 = s3;
     this._baseKey = baseKey.replace('/$', '');
     this._filenameTransform = filenameTransform;
     this._uploadParams = uploadParams;

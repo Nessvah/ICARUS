@@ -269,14 +269,6 @@ input ${tableName}LogicalOp {
   }
 `;
 
-    const uploadOutput = `
-  type ${tableName}UploadOutput {
-    Bucket: String
-    Key: String
-    Location: String
-
-  }`;
-
     typeDefs.push(
       nestedFiltering,
       ordersCountInput,
@@ -284,7 +276,6 @@ input ${tableName}LogicalOp {
       logicalOperations,
       mutationFilterOptions,
       uploadInput,
-      uploadOutput,
     );
 
     //Define the Update entities input
@@ -328,7 +319,7 @@ type ${tableName}Output {
 	created: [${tableName}]!
 	updated: [${tableName}]!
 	deleted: Int
-  uploaded: ${tableName}UploadOutput
+  uploaded: String
 }`;
 
     typeDefs.push(queryFilterOptions);

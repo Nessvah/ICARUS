@@ -1,24 +1,22 @@
 import { S3Client } from '@aws-sdk/client-s3';
 
-const s3Client = new S3Client({
-  region: process.env.S3_REGION,
+export const s3 = new S3Client({
+  region: 'eu-north-1',
   credentials: {
-    accessKeyId: process.env.S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.S3_ACCESS_KEY_SECRET,
+    accessKeyId: 'AKIA3GNW2CMNR3P4CZHS',
+    secretAccessKey: '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',
   },
 });
 
-const config = {
+export const config = {
   s3: {
-    client: s3Client,
+    client: s3,
     params: {
       ACL: 'public-read',
-      Bucket: process.env.S3_BUCKET,
+      Bucket: 'buuckete',
     },
   },
   app: {
     storageDir: 'tmp',
   },
 };
-
-export default config;
