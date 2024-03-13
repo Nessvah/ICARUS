@@ -99,12 +99,12 @@ fileUrl: ComparisonOperators
     
 
   input AuthorsCount {
+    filter: AuthorsFilter
     _count: Int
   } 
 
 
   type AuthorsCountResult {
-   action: String
     count: Int!
   }
 
@@ -204,12 +204,12 @@ fileUrl: ComparisonOperators
     
 
   input Blog_postsCount {
+    filter: Blog_postsFilter
     _count: Int
   } 
 
 
   type Blog_postsCountResult {
-   action: String
     count: Int!
   }
 
@@ -318,12 +318,12 @@ fileUrl: ComparisonOperators
     
 
   input BrandsCount {
+    filter: BrandsFilter
     _count: Int
   } 
 
 
   type BrandsCountResult {
-   action: String
     count: Int!
   }
 
@@ -430,12 +430,12 @@ icon_label: ComparisonOperators
     
 
   input CategoriesCount {
+    filter: CategoriesFilter
     _count: Int
   } 
 
 
   type CategoriesCountResult {
-   action: String
     count: Int!
   }
 
@@ -532,12 +532,12 @@ fileUrl: ComparisonOperators
     
 
   input CouponsCount {
+    filter: CouponsFilter
     _count: Int
   } 
 
 
   type CouponsCountResult {
-   action: String
     count: Int!
   }
 
@@ -646,12 +646,12 @@ orders: ComparisonOperators
     
 
   input CustomersCount {
+    filter: CustomersFilter
     _count: Int
   } 
 
 
   type CustomersCountResult {
-   action: String
     count: Int!
   }
 
@@ -759,12 +759,12 @@ icon_label: ComparisonOperators
     
 
   input Order_itemsCount {
+    filter: Order_itemsFilter
     _count: Int
   } 
 
 
   type Order_itemsCountResult {
-   action: String
     count: Int!
   }
 
@@ -888,12 +888,12 @@ payment: ComparisonOperators
     
 
   input OrdersCount {
+    filter: OrdersFilter
     _count: Int
   } 
 
 
   type OrdersCountResult {
-   action: String
     count: Int!
   }
 
@@ -1009,12 +1009,12 @@ fileUrl: ComparisonOperators
     
 
   input PaymentCount {
+    filter: PaymentFilter
     _count: Int
   } 
 
 
   type PaymentCountResult {
-   action: String
     count: Int!
   }
 
@@ -1131,12 +1131,12 @@ order_items: ComparisonOperators
     
 
   input ProductsCount {
+    filter: ProductsFilter
     _count: Int
   } 
 
 
   type ProductsCountResult {
-   action: String
     count: Int!
   }
 
@@ -1256,12 +1256,12 @@ icon_label: ComparisonOperators
     
 
   input Product_reviewsCount {
+    filter: Product_reviewsFilter
     _count: Int
   } 
 
 
   type Product_reviewsCountResult {
-   action: String
     count: Int!
   }
 
@@ -1384,12 +1384,12 @@ fileUrl: ComparisonOperators
     
 
   input PromotionsCount {
+    filter: PromotionsFilter
     _count: Int
   } 
 
 
   type PromotionsCountResult {
-   action: String
     count: Int!
   }
 
@@ -1501,12 +1501,12 @@ icon_label: ComparisonOperators
     
 
   input ShipmentsCount {
+    filter: ShipmentsFilter
     _count: Int
   } 
 
 
   type ShipmentsCountResult {
-   action: String
     count: Int!
   }
 
@@ -1613,12 +1613,12 @@ fileUrl: ComparisonOperators
     
 
   input User_roleCount {
+    filter: User_roleFilter
     _count: Int
   } 
 
 
   type User_roleCountResult {
-   action: String
     count: Int!
   }
 
@@ -1713,12 +1713,12 @@ fileUrl: ComparisonOperators
     
 
   input UsersCount {
+    filter: UsersFilter
     _count: Int
   } 
 
 
   type UsersCountResult {
-   action: String
     count: Int!
   }
 

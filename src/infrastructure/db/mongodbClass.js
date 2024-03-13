@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { logger } from '../server.js';
+import { afterResolver } from '../../utils/hooks/afterResolver/afterResolver.js';
 import { createUploadStream } from './s3.js';
 
 /**
@@ -125,7 +126,6 @@ export class MongoDBConnection {
               // For case-insensitive substring match using regular expression
               const regexPattern = `.*${filterValue}.*`;
               query = { $regex: regexPattern, $options: 'i' };
-              console.log(query);
               break;
             /* For comparison operators such as _in and _nin, the code sets the MongoDB operator 
             to $in or $nin and converts the filter value to an array. */
@@ -221,21 +221,10 @@ export class MongoDBConnection {
       // Call the toArray function to retrieve the results as an array
       res = await query.toArray();
 
-      // Check if any documents were found
-      if (res) {
-        // Iterate over each document
-        res.forEach((element) => {
-          if (element._id) {
-            // Update the _id field with an ObjectID
-            const id = element._id;
-            delete element._id; // Remove the _id field
-            element.id = id; // Add an id field with the previous _id value
-          }
-        });
-        return res; // Return the updated documents
-      } else {
-        return false; // Return false if no documents were found
-      }
+      // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
+      const processedRes = afterResolver(res, this.tableData.type);
+
+      return processedRes;
     } catch (error) {
       logger.error(error);
       throw error;
@@ -266,16 +255,10 @@ export class MongoDBConnection {
 
       // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
       // Iterate over each element in the input._create array
-      [input._create].forEach((element) => {
-        if (element._id) {
-          const id = element._id;
-          delete element._id; // Remove the _id field
-          element.id = id; // Add an id field with the previous _id value
-        }
-      });
+      const processedRes = afterResolver([input._create], this.tableData.type);
 
       // Return an object with the created property, containing the inserted data
-      return { created: [input._create] };
+      return { created: processedRes };
     } catch (error) {
       logger.error(error); // Log any errors
       return false; // Return false in case of any errors
@@ -317,15 +300,10 @@ export class MongoDBConnection {
           return false; // Return false if no documents are found
         }
         // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
-        updated.forEach((element) => {
-          if (element._id) {
-            const id = element._id;
-            delete element._id; // Remove the _id field
-            element.id = id; // Add an id field with the previous _id value
-          }
-        });
+        const processedRes = await afterResolver(updated, this.tableData.type);
+
         // Return an object with the updated property containing the updated documents
-        return { updated: updated };
+        return { updated: processedRes };
       } else if (input._upload) {
         // Extract the filter from the input
         const filter = this.filterController(input._upload.filter);
@@ -340,17 +318,11 @@ export class MongoDBConnection {
         if (!updated) {
           return false; // Return false if no documents are found
         }
-        console.log('updated', updated);
         // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
-        updated.forEach((element) => {
-          if (element._id) {
-            const id = element._id;
-            delete element._id; // Remove the _id field
-            element.id = id; // Add an id field with the previous _id value
-          }
-        });
+        const processedRes = await afterResolver(updated, this.tableData.type);
+
         // Return an object with the updated property containing the updated documents
-        return { updated: updated };
+        return { updated: processedRes };
       } else {
         return false; // Return false if neither _update nor _upload is provided
       }
@@ -404,15 +376,35 @@ export class MongoDBConnection {
    * @param {object} options - Additional options.
    * @returns {Promise<number>} - The count of documents in the collection.
    */
-  async count(table, { _ }) {
+  async count(table, { input }) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
       const collection = db.collection(table);
+      let res;
+      let query;
 
-      // Use the countDocuments method to retrieve the count of documents in the collection
-      return await collection.countDocuments({});
+      //* Check if input.filter is empty or not defined
+      /* Retrieve the database and collection objects from the MongoDB client. 
+      Then, it determines whether the input contains a filter or not. If the filter is empty, 
+      it returns all the documents in the collection. 
+      Otherwise, it reorganizes the filter parameter using the filterController function. */
+      if (!input.filter || input.filter === null || Object.keys(input.filter).length === 0) {
+        query = collection.find();
+      } else {
+        // Call the filter function to reorganize the filter parameter
+        const filter = input.filter._and || input.filter._or ? this.filterController(input.filter) : input.filter;
+        const options = {
+          // Set the timeout value in milliseconds
+          maxTimeMS: 60000, // Adjust this value to your desired timeout
+        };
+        query = collection.find(filter, options).maxTimeMS(options.maxTimeMS);
+      }
+
+      // Call the COunt function to retrieve the results value
+      res = await query.count();
+      return res;
     } catch (error) {
       logger.error(error); // Log any errors
       return []; // Return an empty array in case of any errors
@@ -492,7 +484,7 @@ export class MongoDBConnection {
       }
 
       const key = `icarus/${tableName}/${filename}`;
-      const uploadStream = createUploadStream(key, mimeType);
+      const uploadStream = await createUploadStream(key, mimeType);
 
       stream.pipe(uploadStream.writeStream);
 

@@ -1,6 +1,5 @@
 import { MongoDBConnection } from './mongodbClass.js';
 import { MySQLConnection } from './mysqlClass.js';
-import { S3Connection } from './s3.js';
 
 import { MongoClient } from 'mongodb';
 import mysql from 'mysql2/promise';
@@ -10,6 +9,7 @@ import { ImportThemTities } from '../../config/importDemTities.js';
 
 // Call the importAll method to start importing entities
 const importer = new ImportThemTities();
+
 let data;
 (async () => {
   try {
@@ -24,10 +24,9 @@ let data;
     }
     return null;
   } catch (error) {
-    logger.error('error to read file');
+    logger.error('error to read file', error);
   }
 })();
-
 //a pool of many different database connections.
 const pools = [];
 

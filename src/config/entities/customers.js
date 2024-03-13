@@ -1,0 +1,71 @@
+const entity = {
+  tables: {
+    name: 'customers',
+    database: 'mysql',
+    columns: [
+      {
+        name: 'customer_id',
+        type: 'int',
+        primaryKey: true,
+        nullable: false,
+        defaultValue: null,
+        columnType: 'int',
+        extra: 'auto_increment',
+      },
+      {
+        name: 'customer_name',
+        type: 'string',
+        primaryKey: false,
+        nullable: false,
+        defaultValue: null,
+        columnType: 'string',
+        extra: '',
+      },
+      {
+        name: 'email',
+        type: 'string',
+        primaryKey: false,
+        nullable: false,
+        defaultValue: null,
+        columnType: 'string',
+        extra: '',
+      },
+      {
+        name: 'icon_class',
+        type: 'string',
+        primaryKey: false,
+        nullable: true,
+        defaultValue: "'FaUsers'",
+        columnType: 'string',
+        extra: '',
+      },
+      {
+        name: 'icon_label',
+        type: 'string',
+        primaryKey: false,
+        nullable: true,
+        defaultValue: "'Customer'",
+        columnType: 'string',
+        extra: 'key',
+      },
+      {
+        name: 'orders',
+        type: 'object',
+        primaryKey: false,
+        nullable: true,
+        defaultValue: null,
+        columnType: 'object',
+        extra: 'MUL',
+        isObject: true,
+        relationType: '1:n',
+        foreignEntity: 'orders',
+        foreignKey: 'customer_id',
+      },
+    ],
+    backoffice: {
+      icon: 'FaHandshake',
+    },
+  },
+};
+
+export { entity };

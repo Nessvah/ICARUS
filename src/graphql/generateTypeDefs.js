@@ -252,11 +252,11 @@ input ${tableName}LogicalOp {
 
     const ordersCountInput = `
   input ${tableName}Count {
+    filter: ${tableName}Filter
     _count: Int
   } \n
 
   type ${tableName}CountResult {
-   action: String
     count: Int!
   }
 `;

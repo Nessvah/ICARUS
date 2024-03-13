@@ -23,22 +23,27 @@ const importer = new ImportThemTities();
 const JSONAliasDefinition = 'scalar JSON';
 const ISODateAliasDefinition = 'scalar GraphQLDate';
 const MySQLDateAliasDefinition = 'scalar MySQLDate';
-
-const readConfigFile = async () => {
+let config;
+const readConfigFile = async (configPath) => {
   try {
-    const config = await importer.importAll(); // Await the result of importAll()
+    config = await importer.importAll(configPath); // Await the result of importAll()
 
     if (config && config.tables) {
-      // Ensure config.tables is defined
-      //console.log('Config:', config, '______________'); // Log the retrieved config
-      return config;
+      const typeDefsString = generateTypeDefinitions(config);
+      // Prepend the JSON alias definition to the beginning of the generated type definitions
+      const finalTypeDefsString = `${JSONAliasDefinition}\n${ISODateAliasDefinition}\n${MySQLDateAliasDefinition}\n${typeDefsString}`;
+      /**
+       * Writes the type definitions to a file.
+       * @param {string} filePath - The path to the file.
+       * @param {string} typeDefsString - The type definitions.
+       */
+      fs.writeFileSync(path.join(__dirname, './typeDefs.graphql'), finalTypeDefsString);
+      console.log('Type definitions generated successfully.');
     } else {
-      console.error('Config data is missing or incomplete.');
-      return null;
+      console.error('Unable to generate type definitions. Check the configuration file.');
     }
   } catch (error) {
     console.error('Error reading config file:', error);
-    return null;
   }
 };
 
@@ -88,7 +93,6 @@ const mapColumnTypeToGraphQLType = (columnType) => {
  * @param {object} config - The configuration data.
  * @returns {string} The type definitions.
  */
-const typeDefs = [];
 const generateTypeDefinitions = (config) => {
   if (!config || !config.tables || config.tables.length === 0) {
     throw new Error('Invalid or empty configuration provided.');
@@ -193,7 +197,7 @@ input ${tableName}Input {
     ${table.columns
       .filter((column) => column.primaryKey !== true)
       .map((column) => {
-        if (column.type === 'object') {
+        if (column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
           return '';
         }
         const type = mapColumnTypeToGraphQLType(column.type);
@@ -247,11 +251,11 @@ input ${tableName}LogicalOp {
 
     const ordersCountInput = `
   input ${tableName}Count {
+    filter: ${tableName}Filter
     _count: Int
   } \n
 
   type ${tableName}CountResult {
-   action: String
     count: Int!
   }
 `;
@@ -264,7 +268,7 @@ input ${tableName}UpDel {
     ${table.columns
       .filter((column) => column.primaryKey !== true)
       .map((column) => {
-        if (column.type === 'object') {
+        if (column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
           return '';
         }
         const type = mapColumnTypeToGraphQLType(column.type);
@@ -362,27 +366,4 @@ function generateOperators(operators) {
 `;
 }
 
-/**
- * The path to the configuration file.
- */
-const config = await readConfigFile();
-
-if (config) {
-  /**
-   * The generated type definitions.
-   */
-  const typeDefsString = generateTypeDefinitions(config);
-  // Prepend the JSON alias definition to the beginning of the generated type definitions
-  const finalTypeDefsString = `${JSONAliasDefinition}\n${ISODateAliasDefinition}\n${MySQLDateAliasDefinition}\n${typeDefsString}`;
-  /**
-   * Writes the type definitions to a file.
-   * @param {string} filePath - The path to the file.
-   * @param {string} typeDefsString - The type definitions.
-   */
-  fs.writeFileSync(path.join(__dirname, './typeDefs.graphql'), finalTypeDefsString);
-  console.log('Type definitions generated successfully.');
-} else {
-  console.error('Unable to generate type definitions. Check the configuration file.');
-}
-
-export { readConfigFile };
+export { readConfigFile, config };
