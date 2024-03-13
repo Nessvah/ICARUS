@@ -5,6 +5,7 @@ import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 import { ImportThemTities } from '../config/importDemTities.js';
 import { beforeResolver, beforeResolverRelations } from '../utils/hooks/beforeResolver/beforeResolver.js';
 import { AuthorizationError } from '../utils/error-handling/CustomErrors.js';
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
 
 // We initialize a rate limiter instance by calling getGraphQLRateLimiter.
 // This function takes an object as an argument with a property identifyContext that defines
@@ -28,7 +29,7 @@ const capitalize = (str) => {
     const data = await importer.importAll();
     if (data && data.tables) {
       // Ensure data.tables is defined
-      console.log('data:', data, '______________'); // Log the retrieved data
+      //console.log('data:', data, '______________'); // Log the retrieved data
 
       // Call autoResolvers after data is available
       await autoResolvers(data);
@@ -62,59 +63,61 @@ async function autoResolvers(data) {
     },
   };
   resolvers.Upload = GraphQLUpload;
-  (resolvers.Mutation = {
+
+  resolvers.Mutation = {
     authorize: (_, { input }, { authLogin }) => authLogin(input),
-  }),
-    data.tables.forEach((table) => {
-      const countName = `${table.name}Count`;
+  };
 
-      resolvers.Query[table.name] = async (parent, args, context, info) => {
-        try {
-          // Caling function beforeResolver to see if there is hooks for the query called
-          await beforeResolver(table.name, args, 'Query');
+  data.tables.forEach((table) => {
+    const countName = `${table.name}Count`;
 
-          //verify if the user it's exceeding the rate limit calls for seconds.
-          const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
-          if (limitErrorMessage) throw new Error(limitErrorMessage);
+    resolvers.Query[table.name] = async (parent, args, context, info) => {
+      try {
+        // Caling function beforeResolver to see if there is hooks for the query called
+        await beforeResolver(table.name, args, 'Query');
 
-          return await controller(table.name, args);
-        } catch (e) {
-          logger.error(e);
-          throw new AuthorizationError(e);
-        }
-      };
+        //verify if the user it's exceeding the rate limit calls for seconds.
+        const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
+        if (limitErrorMessage) throw new Error(limitErrorMessage);
 
-      resolvers.Query[countName] = async (parent, args, context, info) => {
-        //const res = await myHook(table, input);
-        const result = await controller(table.name, args);
+        return await controller(table.name, args);
+      } catch (e) {
+        logger.error(e);
+        throw new AuthorizationError(e);
+      }
+    };
 
-        return { count: result };
-      };
+    resolvers.Query[countName] = async (parent, args, context, info) => {
+      //const res = await myHook(table, input);
+      const result = await controller(table.name, args);
 
-      resolvers.Mutation[table.name] = async (parent, args, context, info) => {
-        try {
-          // Verifying if there is hooks for the mutation query which is required
-          const argss = await beforeResolver(table.name, args, 'Mutation');
+      return { count: result };
+    };
 
-          //verify if the user it's exceeding the rate limit calls for seconds.
-          const limitErrorMessage = await rateLimiter({ parent, argss, context, info }, rateLimiterConfig);
-          if (limitErrorMessage) throw new Error(limitErrorMessage);
+    resolvers.Mutation[table.name] = async (parent, args, context, info) => {
+      try {
+        // Verifying if there is hooks for the mutation query which is required
+        const argss = await beforeResolver(table.name, args, 'Mutation');
 
-          return await controller(table.name, args, table);
-        } catch (e) {
-          throw new AuthorizationError(e);
-        }
-      };
+        //verify if the user it's exceeding the rate limit calls for seconds.
+        const limitErrorMessage = await rateLimiter({ parent, argss, context, info }, rateLimiterConfig);
+        if (limitErrorMessage) throw new Error(limitErrorMessage);
 
-      nestedObject = {};
+        return await controller(table.name, args, table);
+      } catch (e) {
+        throw new AuthorizationError(e);
+      }
+    };
 
-      // To create the relations based on the column key "isObject"
-      table.columns.forEach((column) => {
-        if (column.isObject) {
-          createRelations(table, column);
-        }
-      });
+    nestedObject = {};
+
+    // To create the relations based on the column key "isObject"
+    table.columns.forEach((column) => {
+      if (column.isObject) {
+        createRelations(table, column);
+      }
     });
+  });
 }
 
 const createRelations = async (table, column) => {

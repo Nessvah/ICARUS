@@ -439,6 +439,7 @@ export class MongoDBConnection {
   }
   async upload(tableName, { input }, table) {
     console.log({ input });
+    console.log(input._upload.file);
 
     const { file } = input._upload;
     const { _upload } = input;
