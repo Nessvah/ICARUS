@@ -291,6 +291,7 @@ export class MongoDBConnection {
    * @returns {Promise<object[]>}
    */
   async update(table, { input }) {
+    console.log('UPDATE', { input });
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
@@ -298,31 +299,64 @@ export class MongoDBConnection {
       const collection = db.collection(table);
 
       // Extract the update and filter from the input
-      const { _update } = input;
-      // Construct a filter object using the filterController method
-      const filter = this.filterController(_update.filter);
+      //const { _update, _upload } = input;
 
-      // Call updateMany method to update matching documents in the collection
-      const res = await collection.updateMany(filter, { $set: _update });
-      if (!res) {
-        return false; // Return false if the operation fails
-      }
+      if (input._update) {
+        // Construct a filter object using the filterController method
+        const filter = this.filterController(input._update.filter);
 
-      // Find all documents that match the updated parameter
-      const updated = await collection.find(_update).toArray();
-      if (!updated) {
-        return false; // Return false if no documents are found
-      }
-      // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
-      updated.forEach((element) => {
-        if (element._id) {
-          const id = element._id;
-          delete element._id; // Remove the _id field
-          element.id = id; // Add an id field with the previous _id value
+        // Call updateMany method to update matching documents in the collection
+        const res = await collection.updateMany(filter, { $set: input._update });
+        if (!res) {
+          return false; // Return false if the operation fails
         }
-      });
-      // Return an object with the updated property containing the updated documents
-      return { updated: updated };
+
+        // Find all documents that match the updated parameter
+        const updated = await collection.find(input._update).toArray();
+        if (!updated) {
+          return false; // Return false if no documents are found
+        }
+        // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
+        updated.forEach((element) => {
+          if (element._id) {
+            const id = element._id;
+            delete element._id; // Remove the _id field
+            element.id = id; // Add an id field with the previous _id value
+          }
+        });
+        // Return an object with the updated property containing the updated documents
+        return { updated: updated };
+      } else if (input._upload) {
+        console.log('CHEGUEEEE');
+        // Extract the filter from the input
+        const filter = this.filterController(input._upload.filter);
+        console.log('filter', filter);
+        // Call updateMany method to update matching documents in the collection
+        delete input._upload.filter;
+        const res = await collection.updateMany(filter, { $set: input._upload });
+        console.log({ res });
+        if (!res) {
+          return false; // Return false if the operation fails
+        }
+        // Find all documents that match the updated parameter
+        const updated = await collection.find(input._upload).toArray();
+        if (!updated) {
+          return false; // Return false if no documents are found
+        }
+        console.log('updated', updated);
+        // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
+        updated.forEach((element) => {
+          if (element._id) {
+            const id = element._id;
+            delete element._id; // Remove the _id field
+            element.id = id; // Add an id field with the previous _id value
+          }
+        });
+        // Return an object with the updated property containing the updated documents
+        return { updated: updated };
+      } else {
+        return false; // Return false if neither _update nor _upload is provided
+      }
     } catch (error) {
       logger.error(error); // Log any errors
       return false; // Return false in case of any errors
@@ -414,7 +448,7 @@ export class MongoDBConnection {
     // This means that the documents will be sorted based on the _id field in ascending order by default
     return {};
   }
-  async upload(table, { input }) {
+  async upload(tableName, { input }, table) {
     console.log({ input });
 
     const { file } = input._upload;
@@ -448,15 +482,38 @@ export class MongoDBConnection {
     const stream = createReadStream();
 
     try {
-      const key = `icarus/${table}/${filename}`;
+      // Find the column with extra === 'key'
+      const keyColumn = table.columns.find((column) => column.extra === 'key');
+      console.log({ keyColumn });
+
+      if (!keyColumn) {
+        throw new Error('No column with extra === "key" found in the table');
+      }
+
+      if (!filter || Object.keys(filter).length <= 0) {
+        throw new Error('No filter provided or filter for the key column is missing');
+      }
+
+      const key = `icarus/${tableName}/${filename}`;
       const uploadStream = createUploadStream(key, mimeType);
 
       stream.pipe(uploadStream.writeStream);
 
       const result = await uploadStream.promise;
-      console.log('Upload result:', result);
+      //console.log('Upload result:', result);
+      delete input._upload.file;
 
-      await this.updateFileUrl(table, result.Key, filter);
+      const updatedInput = {
+        input: {
+          _upload: {
+            url: result.Key,
+            ...input._upload,
+          },
+        },
+      };
+      console.log(JSON.stringify(updatedInput));
+
+      await this.update(tableName, updatedInput);
 
       console.log('File uploaded successfully');
       return { uploaded: result.Location };
@@ -467,7 +524,7 @@ export class MongoDBConnection {
       });
     }
   }
-  async updateFileUrl(table, key, filter) {
+  /* async updateFileUrl(table, key, filter, column) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
@@ -476,13 +533,13 @@ export class MongoDBConnection {
       const collection = db.collection(table);
 
       // Construct an update operation
-      const updateOperation = { $set: { fileUrl: key } };
+      const updateOperation = { $set: { column: key } };
 
       // Perform the update operation
       await collection.updateMany(filter, updateOperation);
     } catch (error) {
-      logger.error(`Error updating file URL for ${filename}: ${error.message}`);
+      logger.error(`Error updating file URL: ${error.message}`);
       throw error;
     }
-  }
+  } */
 }

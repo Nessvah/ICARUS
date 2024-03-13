@@ -31,7 +31,8 @@
       {
         "name": "fileUrl",
         "type": "string",
-        "nullable": true
+        "nullable": true,
+        "extra": "key"
       }
     ],
     "backoffice": {

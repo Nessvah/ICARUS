@@ -72,7 +72,7 @@
         "nullable": true,
         "defaultValue": "'FaBasketShopping'",
         "columnType": "string",
-        "extra": ""
+        "extra": "key"
       },
       {
         "name": "icon_label",

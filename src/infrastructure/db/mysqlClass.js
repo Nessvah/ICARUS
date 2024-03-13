@@ -160,9 +160,10 @@ export class MySQLConnection {
    * @param {{ input: { filter: Object, update: Object } }} data - The input data for the update operation.
    * @returns {Promise<{ updated: Array<Object> } | null>} - A promise that resolves to the updated record(s) or null if there was an error.
    */
-  async update(tableName, { input }) {
+  async update(tableName, { input }, table) {
     console.log('CHEGUEEEE');
     console.log({ input });
+    console.log('HVCNEFDAVNHDFVBDF' + table);
     // UPDATE `table_name` SET `column_name` = `new_value' [WHERE condition];
     let updateQuery = `UPDATE ${tableName} SET `;
     let findQuery = `SELECT * FROM ${tableName} WHERE`;
@@ -174,7 +175,11 @@ export class MySQLConnection {
       console.log('BANANAAAA');
 
       if (key === 'url') {
-        updateQuery += `icon_label = ?  `;
+        const keyColumn = table.columns.find((column) => column.extra === 'key');
+        if (!keyColumn) {
+          throw new Error('No column with extra === "key" found in the table');
+        }
+        updateQuery += `${keyColumn.name} = ?  `;
         values.push(value);
         console.log(' qwerty' + updateQuery);
       } else if (key === 'filter') {
@@ -267,11 +272,10 @@ export class MySQLConnection {
     }
   }
 
-  async upload(table, { input }) {
-    //console.log({ input });
+  async upload(tableName, { input }, table) {
+    console.log({ input });
 
     const { file } = input._upload;
-    const { _upload } = input;
     //const filter = this.filterController(_upload.filter);
 
     //console.log('File provided:', file ? 'Yes' : 'No');
@@ -301,7 +305,19 @@ export class MySQLConnection {
     const stream = createReadStream();
 
     try {
-      const key = `icarus/${table}/${filename}`;
+      // Find the column with extra === 'key'
+      const keyColumn = table.columns.find((column) => column.extra === 'key');
+      console.log({ keyColumn });
+      console.log(input._upload.filter);
+      if (!keyColumn) {
+        throw new Error('No column with extra === "key" found in the table');
+      }
+
+      if (!input._upload.filter || Object.keys(input._upload.filter).length <= 0) {
+        throw new Error('No filter provided or filter for the key column is missing');
+      }
+
+      const key = `icarus/${tableName}/${filename}`;
       const uploadStream = createUploadStream(key, mimeType);
 
       stream.pipe(uploadStream.writeStream);
@@ -319,9 +335,9 @@ export class MySQLConnection {
         },
       };
 
-      //console.log('Updated input:', updatedInput);
+      console.log('Updated input:', updatedInput);
 
-      await this.update(table, updatedInput);
+      await this.update(tableName, updatedInput, table);
 
       //console.log('File uploaded successfully');
       return { uploaded: result.Location };
@@ -332,50 +348,4 @@ export class MySQLConnection {
       });
     }
   }
-
-  /* async updateFileUrl(table, input) {
-    const { url, _update, filter } = input;
-
-    let updateQuery = `UPDATE ${table} SET icon_class = ?`;
-    const findQuery = `SELECT * FROM ${table} WHERE`;
-    const values = [url];
-    const findValues = [];
-
-    // Add additional updates if provided
-    if (_update) {
-      for (const [key, value] of Object.entries(_update)) {
-        updateQuery += `, ${key} = ?`;
-        findQuery += ` ${key} = ? AND `;
-        values.push(value);
-        findValues.push(value);
-      }
-    }
-
-    findQuery = findQuery.slice(0, -5);
-
-    // Process the filter
-    if (filter) {
-      const { processedSql, processedValues } = processFilter(filter);
-
-      // Remove trailing spaces and comma from updateQuery
-      updateQuery = updateQuery.slice(0, -1);
-      values.push(...processedValues);
-
-      updateQuery += ` WHERE ${processedSql}`;
-    }
-
-    try {
-      const res = await this.query(updateQuery, values);
-
-      if (res.changedRows > 0) {
-        const newRecord = await this.query(findQuery, findValues);
-        return { updated: newRecord };
-      }
-
-      return { updated: [] };
-    } catch (error) {
-      logger.error('Error:', error);
-      return null; // Return null if there's an error
-    }
-  } */
 }

@@ -126,8 +126,8 @@ async function autoResolvers(data) {
 
         await validation(args.input); // it validates mutation inputs
         await validation(args.input, 'update'); // it validates update inputs;
-        console.log({ args });
-        return await controller(table.name, args);
+        console.log(args.input);
+        return await controller(table.name, args, table);
       };
 
       nestedObject = {};
