@@ -13,7 +13,6 @@ const beforeResolver = async (table, args, QueryType) => {
   try {
     // Definition of entity path
     const filePath = `config/entities/${table}.js`;
-    console.log(filePath);
 
     // Verifying if the file exists
     if (!fs.existsSync(filePath)) {
