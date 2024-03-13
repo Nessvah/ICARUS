@@ -8,8 +8,8 @@ import cors from 'cors';
 import client from 'prom-client';
 //import { accessLogStream, morganMongoDBStream, morgan } from '../utils/loggers/morganConfig.js';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
-import { resolvers } from '../presentation/resolvers.js';
-import { readConfigFile } from '../presentation/generateTypeDefs.js';
+import { resolvers } from '../graphql/resolvers.js';
+import { readConfigFile } from '../graphql/generateTypeDefs.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
 import { auth } from '../aws/auth/auth.js';
 import { ImportThemTities } from '../config/importDemTities.js';
@@ -42,7 +42,7 @@ const metricsPlugin = await createMetricsPlugin(register);
 
 let typeDefs;
 try {
-  typeDefs = fs.readFileSync('./presentation/typeDefs.graphql', 'utf8');
+  typeDefs = fs.readFileSync('./graphql/typeDefs.graphql', 'utf8');
 } catch (e) {
   logger.error(e);
 }
@@ -76,7 +76,7 @@ app.use(
 await server.start();
 
 // setup express middleware to handle cors, body parsing,
-// and express middleware funtion
+// and express middleware function
 
 app.use(
   '/graphql',
@@ -85,8 +85,9 @@ app.use(
     context: ({ req }) => {
       if (req.body.operationName === 'IntrospectionQuery') {
         return { req };
+      } else {
+        return { req };
       }
-      return auth(req);
     },
   }),
 );

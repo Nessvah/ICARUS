@@ -1,0 +1,1568 @@
+scalar JSON
+scalar GraphQLDate
+scalar MySQLDate
+
+input ComparisonOperators {
+  _eq: String
+  _neq: String
+  _lt: String
+  _lte: String
+  _gt: String
+  _gte: String
+  _in: String
+  _nin: String
+  _like: String
+}
+
+# define the root Query
+type Query {
+  tables: [TableInfo]
+  authors(input: AuthorsListOptions = {}): [Authors]
+  blog_posts(input: Blog_postsListOptions = {}): [Blog_posts]
+  brands(input: BrandsListOptions = {}): [Brands]
+  categories(input: CategoriesListOptions = {}): [Categories]
+  coupons(input: CouponsListOptions = {}): [Coupons]
+  customers(input: CustomersListOptions = {}): [Customers]
+  orders(input: OrdersListOptions = {}): [Orders]
+  order_items(input: Order_itemsListOptions = {}): [Order_items]
+  payment(input: PaymentListOptions = {}): [Payment]
+  products(input: ProductsListOptions = {}): [Products]
+  product_reviews(input: Product_reviewsListOptions = {}): [Product_reviews]
+  promotions(input: PromotionsListOptions = {}): [Promotions]
+  shipments(input: ShipmentsListOptions = {}): [Shipments]
+  users(input: UsersListOptions = {}): [Users]
+  user_role(input: User_roleListOptions = {}): [User_role]
+  authorsCount(input: AuthorsCount): AuthorsCountResult
+  blog_postsCount(input: Blog_postsCount): Blog_postsCountResult
+  brandsCount(input: BrandsCount): BrandsCountResult
+  categoriesCount(input: CategoriesCount): CategoriesCountResult
+  couponsCount(input: CouponsCount): CouponsCountResult
+  customersCount(input: CustomersCount): CustomersCountResult
+  ordersCount(input: OrdersCount): OrdersCountResult
+  order_itemsCount(input: Order_itemsCount): Order_itemsCountResult
+  paymentCount(input: PaymentCount): PaymentCountResult
+  productsCount(input: ProductsCount): ProductsCountResult
+  product_reviewsCount(input: Product_reviewsCount): Product_reviewsCountResult
+  promotionsCount(input: PromotionsCount): PromotionsCountResult
+  shipmentsCount(input: ShipmentsCount): ShipmentsCountResult
+  usersCount(input: UsersCount): UsersCountResult
+  user_roleCount(input: User_roleCount): User_roleCountResult
+}
+
+type Mutation {
+  authorize(input: AuthorizeUser!): AuthPayload!
+  authors(input: AuthorsMutationOptions): AuthorsOutput
+  blog_posts(input: Blog_postsMutationOptions): Blog_postsOutput
+  brands(input: BrandsMutationOptions): BrandsOutput
+  categories(input: CategoriesMutationOptions): CategoriesOutput
+  coupons(input: CouponsMutationOptions): CouponsOutput
+  customers(input: CustomersMutationOptions): CustomersOutput
+  orders(input: OrdersMutationOptions): OrdersOutput
+  order_items(input: Order_itemsMutationOptions): Order_itemsOutput
+  payment(input: PaymentMutationOptions): PaymentOutput
+  products(input: ProductsMutationOptions): ProductsOutput
+  product_reviews(input: Product_reviewsMutationOptions): Product_reviewsOutput
+  promotions(input: PromotionsMutationOptions): PromotionsOutput
+  shipments(input: ShipmentsMutationOptions): ShipmentsOutput
+  users(input: UsersMutationOptions): UsersOutput
+  user_role(input: User_roleMutationOptions): User_roleOutput
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  name: ComparisonOperators
+  email: ComparisonOperators
+  id: ComparisonOperators
+}
+
+input AuthorsCount {
+  _count: Int
+}
+
+type AuthorsCountResult {
+  action: String
+  count: Int!
+}
+
+input AuthorsSortOptions {
+  id: Sort
+  name: Sort
+  email: Sort
+}
+
+input AuthorsLogicalOp {
+  _and: [AuthorsLogicalOp]
+  _or: [AuthorsLogicalOp]
+  id: ComparisonOperators
+  name: ComparisonOperators
+  email: ComparisonOperators
+}
+
+input AuthorsMutationOptions {
+  _create: AuthorsInput
+  _update: AuthorsUpDel
+  _delete: AuthorsDelete
+}
+
+input AuthorsListOptions {
+  filter: AuthorsFilter
+  skip: Int
+  take: Int = 15
+  sort: AuthorsSortOptions
+}
+
+type Authors {
+  id: ID!
+  name: String!
+  email: String!
+  blog_posts(take: Int = 15, skip: Int): [Blog_posts]
+}
+
+input AuthorsInput {
+  name: String!
+  email: String!
+}
+
+input AuthorsFilter {
+  _and: [AuthorsLogicalOp]
+  _or: [AuthorsLogicalOp]
+}
+
+input AuthorsUpDel {
+  name: String
+  email: String
+
+  filter: AuthorsFilter
+}
+
+type AuthorsOutput {
+  created: [Authors]!
+  updated: [Authors]!
+  deleted: Int
+}
+
+input AuthorsDelete {
+  filter: AuthorsFilter
+}
+
+input AuthorsSort {
+  name: Sort
+  email: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  title: ComparisonOperators
+  author_id: ComparisonOperators
+  content: ComparisonOperators
+  publish_date: ComparisonOperators
+}
+
+input Blog_postsCount {
+  _count: Int
+}
+
+type Blog_postsCountResult {
+  action: String
+  count: Int!
+}
+
+input Blog_postsSortOptions {
+  id: Sort
+  title: Sort
+  author_id: Sort
+  content: Sort
+  publish_date: Sort
+}
+
+input Blog_postsLogicalOp {
+  _and: [Blog_postsLogicalOp]
+  _or: [Blog_postsLogicalOp]
+  id: ComparisonOperators
+  title: ComparisonOperators
+  author_id: ComparisonOperators
+  content: ComparisonOperators
+  publish_date: ComparisonOperators
+}
+
+input Blog_postsMutationOptions {
+  _create: Blog_postsInput
+  _update: Blog_postsUpDel
+  _delete: Blog_postsDelete
+}
+
+input Blog_postsListOptions {
+  filter: Blog_postsFilter
+  skip: Int
+  take: Int = 15
+  sort: Blog_postsSortOptions
+}
+
+type Blog_posts {
+  id: ID!
+  title: String!
+  author_id: ID!
+  content: JSON!
+  publish_date: GraphQLDate!
+  authors(take: Int = 15, skip: Int): Authors
+}
+
+input Blog_postsInput {
+  title: String!
+  author_id: ID!
+  content: JSON!
+  publish_date: GraphQLDate!
+}
+
+input Blog_postsFilter {
+  _and: [Blog_postsLogicalOp]
+  _or: [Blog_postsLogicalOp]
+}
+
+input Blog_postsUpDel {
+  title: String
+  author_id: ID
+  content: JSON
+  publish_date: GraphQLDate
+  filter: Blog_postsFilter
+}
+
+type Blog_postsOutput {
+  created: [Blog_posts]!
+  updated: [Blog_posts]!
+  deleted: Int
+}
+
+input Blog_postsDelete {
+  filter: Blog_postsFilter
+}
+
+input Blog_postsSort {
+  title: Sort
+
+  content: Sort
+  publish_date: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  name: ComparisonOperators
+  country: ComparisonOperators
+  founded_year: ComparisonOperators
+  products: ComparisonOperators
+}
+
+input BrandsCount {
+  _count: Int
+}
+
+type BrandsCountResult {
+  action: String
+  count: Int!
+}
+
+input BrandsSortOptions {
+  id: Sort
+  name: Sort
+  country: Sort
+  founded_year: Sort
+  products: Sort
+}
+
+input BrandsLogicalOp {
+  _and: [BrandsLogicalOp]
+  _or: [BrandsLogicalOp]
+  id: ComparisonOperators
+  name: ComparisonOperators
+  country: ComparisonOperators
+  founded_year: ComparisonOperators
+  products: ComparisonOperators
+}
+
+input BrandsMutationOptions {
+  _create: BrandsInput
+  _update: BrandsUpDel
+  _delete: BrandsDelete
+}
+
+input BrandsListOptions {
+  filter: BrandsFilter
+  skip: Int
+  take: Int = 15
+  sort: BrandsSortOptions
+}
+
+type Brands {
+  id: ID!
+  name: String!
+  country: String!
+  founded_year: String!
+  products: JSON!
+}
+
+input BrandsInput {
+  name: String!
+  country: String!
+  founded_year: String!
+  products: JSON!
+}
+
+input BrandsFilter {
+  _and: [BrandsLogicalOp]
+  _or: [BrandsLogicalOp]
+}
+
+input BrandsUpDel {
+  name: String
+  country: String
+  founded_year: String
+  products: JSON
+  filter: BrandsFilter
+}
+
+type BrandsOutput {
+  created: [Brands]!
+  updated: [Brands]!
+  deleted: Int
+}
+
+input BrandsDelete {
+  filter: BrandsFilter
+}
+
+input BrandsSort {
+  name: Sort
+  country: Sort
+  founded_year: Sort
+  products: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  category_name: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+}
+
+input CategoriesCount {
+  _count: Int
+}
+
+type CategoriesCountResult {
+  action: String
+  count: Int!
+}
+
+input CategoriesSortOptions {
+  category_id: Sort
+  category_name: Sort
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input CategoriesLogicalOp {
+  _and: [CategoriesLogicalOp]
+  _or: [CategoriesLogicalOp]
+  category_id: ComparisonOperators
+  category_name: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+}
+
+input CategoriesMutationOptions {
+  _create: CategoriesInput
+  _update: CategoriesUpDel
+  _delete: CategoriesDelete
+}
+
+input CategoriesListOptions {
+  filter: CategoriesFilter
+  skip: Int
+  take: Int = 15
+  sort: CategoriesSortOptions
+}
+
+type Categories {
+  category_id: Int!
+  category_name: String!
+  icon_class: String!
+  icon_label: String!
+}
+
+input CategoriesInput {
+  category_name: String!
+  icon_class: String!
+  icon_label: String!
+}
+
+input CategoriesFilter {
+  _and: [CategoriesLogicalOp]
+  _or: [CategoriesLogicalOp]
+}
+
+input CategoriesUpDel {
+  category_name: String
+  icon_class: String
+  icon_label: String
+  filter: CategoriesFilter
+}
+
+type CategoriesOutput {
+  created: [Categories]!
+  updated: [Categories]!
+  deleted: Int
+}
+
+input CategoriesDelete {
+  filter: CategoriesFilter
+}
+
+input CategoriesSort {
+  category_name: Sort
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  code: ComparisonOperators
+  discount_percent: ComparisonOperators
+  expiration_date: ComparisonOperators
+  promotion_id: ComparisonOperators
+}
+
+input CouponsCount {
+  _count: Int
+}
+
+type CouponsCountResult {
+  action: String
+  count: Int!
+}
+
+input CouponsSortOptions {
+  id: Sort
+  code: Sort
+  discount_percent: Sort
+  expiration_date: Sort
+  promotion_id: Sort
+}
+
+input CouponsLogicalOp {
+  _and: [CouponsLogicalOp]
+  _or: [CouponsLogicalOp]
+  id: ComparisonOperators
+  code: ComparisonOperators
+  discount_percent: ComparisonOperators
+  expiration_date: ComparisonOperators
+  promotion_id: ComparisonOperators
+}
+
+input CouponsMutationOptions {
+  _create: CouponsInput
+  _update: CouponsUpDel
+  _delete: CouponsDelete
+}
+
+input CouponsListOptions {
+  filter: CouponsFilter
+  skip: Int
+  take: Int = 15
+  sort: CouponsSortOptions
+}
+
+type Coupons {
+  id: ID!
+  code: String!
+  discount_percent: Int!
+  expiration_date: String!
+  promotion_id: ID!
+  promotions(take: Int = 15, skip: Int): Promotions
+}
+
+input CouponsInput {
+  code: String!
+  discount_percent: Int!
+  expiration_date: String!
+  promotion_id: ID!
+}
+
+input CouponsFilter {
+  _and: [CouponsLogicalOp]
+  _or: [CouponsLogicalOp]
+}
+
+input CouponsUpDel {
+  code: String
+  discount_percent: Int
+  expiration_date: String
+  promotion_id: ID
+  filter: CouponsFilter
+}
+
+type CouponsOutput {
+  created: [Coupons]!
+  updated: [Coupons]!
+  deleted: Int
+}
+
+input CouponsDelete {
+  filter: CouponsFilter
+}
+
+input CouponsSort {
+  code: Sort
+  discount_percent: Sort
+  expiration_date: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  customer_name: ComparisonOperators
+  email: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+  orders: ComparisonOperators
+}
+
+input CustomersCount {
+  _count: Int
+}
+
+type CustomersCountResult {
+  action: String
+  count: Int!
+}
+
+input CustomersSortOptions {
+  customer_id: Sort
+  customer_name: Sort
+  email: Sort
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input CustomersLogicalOp {
+  _and: [CustomersLogicalOp]
+  _or: [CustomersLogicalOp]
+  customer_id: ComparisonOperators
+  customer_name: ComparisonOperators
+  email: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+}
+
+input CustomersMutationOptions {
+  _create: CustomersInput
+  _update: CustomersUpDel
+  _delete: CustomersDelete
+}
+
+input CustomersListOptions {
+  filter: CustomersFilter
+  skip: Int
+  take: Int = 15
+  sort: CustomersSortOptions
+}
+
+type Customers {
+  customer_id: Int!
+  customer_name: String!
+  email: String!
+  icon_class: String
+  icon_label: String
+  orders(take: Int = 15, skip: Int): [Orders]
+}
+
+input CustomersInput {
+  customer_name: String!
+  email: String!
+  icon_class: String
+  icon_label: String
+}
+
+input CustomersFilter {
+  _and: [CustomersLogicalOp]
+  _or: [CustomersLogicalOp]
+}
+
+input CustomersUpDel {
+  customer_name: String
+  email: String
+  icon_class: String
+  icon_label: String
+
+  filter: CustomersFilter
+}
+
+type CustomersOutput {
+  created: [Customers]!
+  updated: [Customers]!
+  deleted: Int
+}
+
+input CustomersDelete {
+  filter: CustomersFilter
+}
+
+input CustomersSort {
+  customer_name: Sort
+  email: Sort
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  order_date: ComparisonOperators
+  customer_id: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+  order_items: ComparisonOperators
+  shipments: ComparisonOperators
+  payment: ComparisonOperators
+}
+
+input OrdersCount {
+  _count: Int
+}
+
+type OrdersCountResult {
+  action: String
+  count: Int!
+}
+
+input OrdersSortOptions {
+  order_id: Sort
+  order_date: Sort
+  customer_id: Sort
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input OrdersLogicalOp {
+  _and: [OrdersLogicalOp]
+  _or: [OrdersLogicalOp]
+  order_id: ComparisonOperators
+  order_date: ComparisonOperators
+  customer_id: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+}
+
+input OrdersMutationOptions {
+  _create: OrdersInput
+  _update: OrdersUpDel
+  _delete: OrdersDelete
+}
+
+input OrdersListOptions {
+  filter: OrdersFilter
+  skip: Int
+  take: Int = 15
+  sort: OrdersSortOptions
+}
+
+type Orders {
+  order_id: Int!
+  order_date: MySQLDate!
+  customer_id: Int!
+  icon_class: String
+  icon_label: String
+  customers(take: Int = 15, skip: Int): Customers
+  order_items(take: Int = 15, skip: Int): [Order_items]
+  shipments(take: Int = 15, skip: Int): Shipments
+  payment(take: Int = 15, skip: Int): Payment
+}
+
+input OrdersInput {
+  order_date: MySQLDate!
+  customer_id: Int!
+  icon_class: String
+  icon_label: String
+}
+
+input OrdersFilter {
+  _and: [OrdersLogicalOp]
+  _or: [OrdersLogicalOp]
+}
+
+input OrdersUpDel {
+  order_date: MySQLDate
+  customer_id: Int
+  icon_class: String
+  icon_label: String
+
+  filter: OrdersFilter
+}
+
+type OrdersOutput {
+  created: [Orders]!
+  updated: [Orders]!
+  deleted: Int
+}
+
+input OrdersDelete {
+  filter: OrdersFilter
+}
+
+input OrdersSort {
+  order_date: Sort
+
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  order_id: ComparisonOperators
+  product_id: ComparisonOperators
+  quantity: ComparisonOperators
+  price: ComparisonOperators
+  currency_type: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+}
+
+input Order_itemsCount {
+  _count: Int
+}
+
+type Order_itemsCountResult {
+  action: String
+  count: Int!
+}
+
+input Order_itemsSortOptions {
+  order_item_id: Sort
+  order_id: Sort
+  product_id: Sort
+  quantity: Sort
+  price: Sort
+  currency_type: Sort
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input Order_itemsLogicalOp {
+  _and: [Order_itemsLogicalOp]
+  _or: [Order_itemsLogicalOp]
+  order_item_id: ComparisonOperators
+  order_id: ComparisonOperators
+  product_id: ComparisonOperators
+  quantity: ComparisonOperators
+  price: ComparisonOperators
+  currency_type: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+}
+
+input Order_itemsMutationOptions {
+  _create: Order_itemsInput
+  _update: Order_itemsUpDel
+  _delete: Order_itemsDelete
+}
+
+input Order_itemsListOptions {
+  filter: Order_itemsFilter
+  skip: Int
+  take: Int = 15
+  sort: Order_itemsSortOptions
+}
+
+type Order_items {
+  order_item_id: Int!
+  order_id: Int!
+  product_id: Int!
+  quantity: Int!
+  price: Float!
+  currency_type: String!
+  icon_class: String
+  icon_label: String
+  orders(take: Int = 15, skip: Int): Orders
+  products(take: Int = 15, skip: Int): Products
+}
+
+input Order_itemsInput {
+  order_id: Int!
+  product_id: Int!
+  quantity: Int!
+  price: Float!
+  currency_type: String!
+  icon_class: String
+  icon_label: String
+}
+
+input Order_itemsFilter {
+  _and: [Order_itemsLogicalOp]
+  _or: [Order_itemsLogicalOp]
+}
+
+input Order_itemsUpDel {
+  order_id: Int
+  product_id: Int
+  quantity: Int
+  price: Float
+  currency_type: String
+  icon_class: String
+  icon_label: String
+  filter: Order_itemsFilter
+}
+
+type Order_itemsOutput {
+  created: [Order_items]!
+  updated: [Order_items]!
+  deleted: Int
+}
+
+input Order_itemsDelete {
+  filter: Order_itemsFilter
+}
+
+input Order_itemsSort {
+  quantity: Sort
+  price: Sort
+  currency_type: Sort
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  payment_method: ComparisonOperators
+  payment_date: ComparisonOperators
+  amount: ComparisonOperators
+  payment_status: ComparisonOperators
+  order_id: ComparisonOperators
+}
+
+input PaymentCount {
+  _count: Int
+}
+
+type PaymentCountResult {
+  action: String
+  count: Int!
+}
+
+input PaymentSortOptions {
+  id: Sort
+  payment_method: Sort
+  payment_date: Sort
+  amount: Sort
+  payment_status: Sort
+  order_id: Sort
+}
+
+input PaymentLogicalOp {
+  _and: [PaymentLogicalOp]
+  _or: [PaymentLogicalOp]
+  id: ComparisonOperators
+  payment_method: ComparisonOperators
+  payment_date: ComparisonOperators
+  amount: ComparisonOperators
+  payment_status: ComparisonOperators
+  order_id: ComparisonOperators
+}
+
+input PaymentMutationOptions {
+  _create: PaymentInput
+  _update: PaymentUpDel
+  _delete: PaymentDelete
+}
+
+input PaymentListOptions {
+  filter: PaymentFilter
+  skip: Int
+  take: Int = 15
+  sort: PaymentSortOptions
+}
+
+type Payment {
+  id: String!
+  payment_method: String!
+  payment_date: String!
+  amount: Float!
+  payment_status: String!
+  order_id: Int
+  orders(take: Int = 15, skip: Int): Orders
+}
+
+input PaymentInput {
+  payment_method: String!
+  payment_date: String!
+  amount: Float!
+  payment_status: String!
+  order_id: Int
+}
+
+input PaymentFilter {
+  _and: [PaymentLogicalOp]
+  _or: [PaymentLogicalOp]
+}
+
+input PaymentUpDel {
+  payment_method: String
+  payment_date: String
+  amount: Float
+  payment_status: String
+  order_id: Int
+  filter: PaymentFilter
+}
+
+type PaymentOutput {
+  created: [Payment]!
+  updated: [Payment]!
+  deleted: Int
+}
+
+input PaymentDelete {
+  filter: PaymentFilter
+}
+
+input PaymentSort {
+  payment_method: Sort
+  payment_date: Sort
+  amount: Sort
+  payment_status: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  product_name: ComparisonOperators
+  price: ComparisonOperators
+  currency_type: ComparisonOperators
+  description: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+  order_items: ComparisonOperators
+}
+
+input ProductsCount {
+  _count: Int
+}
+
+type ProductsCountResult {
+  action: String
+  count: Int!
+}
+
+input ProductsSortOptions {
+  product_id: Sort
+  product_name: Sort
+  price: Sort
+  currency_type: Sort
+  description: Sort
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input ProductsLogicalOp {
+  _and: [ProductsLogicalOp]
+  _or: [ProductsLogicalOp]
+  product_id: ComparisonOperators
+  product_name: ComparisonOperators
+  price: ComparisonOperators
+  currency_type: ComparisonOperators
+  description: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+}
+
+input ProductsMutationOptions {
+  _create: ProductsInput
+  _update: ProductsUpDel
+  _delete: ProductsDelete
+}
+
+input ProductsListOptions {
+  filter: ProductsFilter
+  skip: Int
+  take: Int = 15
+  sort: ProductsSortOptions
+}
+
+type Products {
+  product_id: Int!
+  product_name: String!
+  price: Float!
+  currency_type: String!
+  description: String
+  icon_class: String
+  icon_label: String
+  order_items(take: Int = 15, skip: Int): [Order_items]
+}
+
+input ProductsInput {
+  product_name: String!
+  price: Float!
+  currency_type: String!
+  description: String
+  icon_class: String
+  icon_label: String
+}
+
+input ProductsFilter {
+  _and: [ProductsLogicalOp]
+  _or: [ProductsLogicalOp]
+}
+
+input ProductsUpDel {
+  product_name: String
+  price: Float
+  currency_type: String
+  description: String
+  icon_class: String
+  icon_label: String
+
+  filter: ProductsFilter
+}
+
+type ProductsOutput {
+  created: [Products]!
+  updated: [Products]!
+  deleted: Int
+}
+
+input ProductsDelete {
+  filter: ProductsFilter
+}
+
+input ProductsSort {
+  product_name: Sort
+  price: Sort
+  currency_type: Sort
+  description: Sort
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  product_id: ComparisonOperators
+  customer_id: ComparisonOperators
+  rating: ComparisonOperators
+  review_text: ComparisonOperators
+  review_date: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+}
+
+input Product_reviewsCount {
+  _count: Int
+}
+
+type Product_reviewsCountResult {
+  action: String
+  count: Int!
+}
+
+input Product_reviewsSortOptions {
+  review_id: Sort
+  product_id: Sort
+  customer_id: Sort
+  rating: Sort
+  review_text: Sort
+  review_date: Sort
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input Product_reviewsLogicalOp {
+  _and: [Product_reviewsLogicalOp]
+  _or: [Product_reviewsLogicalOp]
+  review_id: ComparisonOperators
+  product_id: ComparisonOperators
+  customer_id: ComparisonOperators
+  rating: ComparisonOperators
+  review_text: ComparisonOperators
+  review_date: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+}
+
+input Product_reviewsMutationOptions {
+  _create: Product_reviewsInput
+  _update: Product_reviewsUpDel
+  _delete: Product_reviewsDelete
+}
+
+input Product_reviewsListOptions {
+  filter: Product_reviewsFilter
+  skip: Int
+  take: Int = 15
+  sort: Product_reviewsSortOptions
+}
+
+type Product_reviews {
+  review_id: Int!
+  product_id: Int!
+  customer_id: Int!
+  rating: Int!
+  review_text: String!
+  review_date: GraphQLDate!
+  icon_class: String
+  icon_label: String
+  products(take: Int = 15, skip: Int): Products
+  customers(take: Int = 15, skip: Int): Customers
+}
+
+input Product_reviewsInput {
+  product_id: Int!
+  customer_id: Int!
+  rating: Int!
+  review_text: String!
+  review_date: GraphQLDate!
+  icon_class: String
+  icon_label: String
+}
+
+input Product_reviewsFilter {
+  _and: [Product_reviewsLogicalOp]
+  _or: [Product_reviewsLogicalOp]
+}
+
+input Product_reviewsUpDel {
+  product_id: Int
+  customer_id: Int
+  rating: Int
+  review_text: String
+  review_date: GraphQLDate
+  icon_class: String
+  icon_label: String
+  filter: Product_reviewsFilter
+}
+
+type Product_reviewsOutput {
+  created: [Product_reviews]!
+  updated: [Product_reviews]!
+  deleted: Int
+}
+
+input Product_reviewsDelete {
+  filter: Product_reviewsFilter
+}
+
+input Product_reviewsSort {
+  rating: Sort
+  review_text: Sort
+  review_date: Sort
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  name: ComparisonOperators
+  description: ComparisonOperators
+  start_date: ComparisonOperators
+  end_date: ComparisonOperators
+  id: ComparisonOperators
+}
+
+input PromotionsCount {
+  _count: Int
+}
+
+type PromotionsCountResult {
+  action: String
+  count: Int!
+}
+
+input PromotionsSortOptions {
+  id: Sort
+  name: Sort
+  description: Sort
+  start_date: Sort
+  end_date: Sort
+}
+
+input PromotionsLogicalOp {
+  _and: [PromotionsLogicalOp]
+  _or: [PromotionsLogicalOp]
+  id: ComparisonOperators
+  name: ComparisonOperators
+  description: ComparisonOperators
+  start_date: ComparisonOperators
+  end_date: ComparisonOperators
+}
+
+input PromotionsMutationOptions {
+  _create: PromotionsInput
+  _update: PromotionsUpDel
+  _delete: PromotionsDelete
+}
+
+input PromotionsListOptions {
+  filter: PromotionsFilter
+  skip: Int
+  take: Int = 15
+  sort: PromotionsSortOptions
+}
+
+type Promotions {
+  id: ID!
+  name: String!
+  description: String!
+  start_date: String!
+  end_date: String!
+  coupons(take: Int = 15, skip: Int): Coupons
+}
+
+input PromotionsInput {
+  name: String!
+  description: String!
+  start_date: String!
+  end_date: String!
+}
+
+input PromotionsFilter {
+  _and: [PromotionsLogicalOp]
+  _or: [PromotionsLogicalOp]
+}
+
+input PromotionsUpDel {
+  name: String
+  description: String
+  start_date: String
+  end_date: String
+
+  filter: PromotionsFilter
+}
+
+type PromotionsOutput {
+  created: [Promotions]!
+  updated: [Promotions]!
+  deleted: Int
+}
+
+input PromotionsDelete {
+  filter: PromotionsFilter
+}
+
+input PromotionsSort {
+  name: Sort
+  description: Sort
+  start_date: Sort
+  end_date: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  order_id: ComparisonOperators
+  shipment_date: ComparisonOperators
+  tracking_int: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+}
+
+input ShipmentsCount {
+  _count: Int
+}
+
+type ShipmentsCountResult {
+  action: String
+  count: Int!
+}
+
+input ShipmentsSortOptions {
+  shipment_id: Sort
+  order_id: Sort
+  shipment_date: Sort
+  tracking_int: Sort
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input ShipmentsLogicalOp {
+  _and: [ShipmentsLogicalOp]
+  _or: [ShipmentsLogicalOp]
+  shipment_id: ComparisonOperators
+  order_id: ComparisonOperators
+  shipment_date: ComparisonOperators
+  tracking_int: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
+}
+
+input ShipmentsMutationOptions {
+  _create: ShipmentsInput
+  _update: ShipmentsUpDel
+  _delete: ShipmentsDelete
+}
+
+input ShipmentsListOptions {
+  filter: ShipmentsFilter
+  skip: Int
+  take: Int = 15
+  sort: ShipmentsSortOptions
+}
+
+type Shipments {
+  shipment_id: Int!
+  order_id: Int!
+  shipment_date: MySQLDate!
+  tracking_int: String
+  icon_class: String
+  icon_label: String
+  orders(take: Int = 15, skip: Int): Orders
+}
+
+input ShipmentsInput {
+  order_id: Int!
+  shipment_date: MySQLDate!
+  tracking_int: String
+  icon_class: String
+  icon_label: String
+}
+
+input ShipmentsFilter {
+  _and: [ShipmentsLogicalOp]
+  _or: [ShipmentsLogicalOp]
+}
+
+input ShipmentsUpDel {
+  order_id: Int
+  shipment_date: MySQLDate
+  tracking_int: String
+  icon_class: String
+  icon_label: String
+  filter: ShipmentsFilter
+}
+
+type ShipmentsOutput {
+  created: [Shipments]!
+  updated: [Shipments]!
+  deleted: Int
+}
+
+input ShipmentsDelete {
+  filter: ShipmentsFilter
+}
+
+input ShipmentsSort {
+  shipment_date: Sort
+  tracking_int: Sort
+  icon_class: Sort
+  icon_label: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  password: ComparisonOperators
+  email: ComparisonOperators
+  role_id: ComparisonOperators
+  customer_id: ComparisonOperators
+  created_t: ComparisonOperators
+}
+
+input UsersCount {
+  _count: Int
+}
+
+type UsersCountResult {
+  action: String
+  count: Int!
+}
+
+input UsersSortOptions {
+  id: Sort
+  password: Sort
+  email: Sort
+  role_id: Sort
+  customer_id: Sort
+  created_t: Sort
+}
+
+input UsersLogicalOp {
+  _and: [UsersLogicalOp]
+  _or: [UsersLogicalOp]
+  id: ComparisonOperators
+  password: ComparisonOperators
+  email: ComparisonOperators
+  role_id: ComparisonOperators
+  customer_id: ComparisonOperators
+  created_t: ComparisonOperators
+}
+
+input UsersMutationOptions {
+  _create: UsersInput
+  _update: UsersUpDel
+  _delete: UsersDelete
+}
+
+input UsersListOptions {
+  filter: UsersFilter
+  skip: Int
+  take: Int = 15
+  sort: UsersSortOptions
+}
+
+type Users {
+  id: ID!
+  email: String!
+  role_id: String!
+  customer_id: Int
+  created_t: MySQLDate
+  user_role(take: Int = 15, skip: Int): User_role
+}
+
+input UsersInput {
+  password: String!
+  email: String!
+  role_id: String!
+  customer_id: Int
+  created_t: MySQLDate
+}
+
+input UsersFilter {
+  _and: [UsersLogicalOp]
+  _or: [UsersLogicalOp]
+}
+
+input UsersUpDel {
+  password: String
+  email: String
+  role_id: String
+  customer_id: Int
+  created_t: MySQLDate
+  filter: UsersFilter
+}
+
+type UsersOutput {
+  created: [Users]!
+  updated: [Users]!
+  deleted: Int
+}
+
+input UsersDelete {
+  filter: UsersFilter
+}
+
+input UsersSort {
+  password: Sort
+  email: Sort
+
+  customer_id: Sort
+  created_t: Sort
+}
+
+input NestedFiltering {
+  _and: [NestedFiltering]
+  _or: [NestedFiltering]
+  role_name: ComparisonOperators
+  id: ComparisonOperators
+}
+
+input User_roleCount {
+  _count: Int
+}
+
+type User_roleCountResult {
+  action: String
+  count: Int!
+}
+
+input User_roleSortOptions {
+  id: Sort
+  role_name: Sort
+}
+
+input User_roleLogicalOp {
+  _and: [User_roleLogicalOp]
+  _or: [User_roleLogicalOp]
+  id: ComparisonOperators
+  role_name: ComparisonOperators
+}
+
+input User_roleMutationOptions {
+  _create: User_roleInput
+  _update: User_roleUpDel
+  _delete: User_roleDelete
+}
+
+input User_roleListOptions {
+  filter: User_roleFilter
+  skip: Int
+  take: Int = 15
+  sort: User_roleSortOptions
+}
+
+type User_role {
+  id: ID!
+  role_name: String!
+  users(take: Int = 15, skip: Int): [Users]
+}
+
+input User_roleInput {
+  role_name: String!
+}
+
+input User_roleFilter {
+  _and: [User_roleLogicalOp]
+  _or: [User_roleLogicalOp]
+}
+
+input User_roleUpDel {
+  role_name: String
+
+  filter: User_roleFilter
+}
+
+type User_roleOutput {
+  created: [User_role]!
+  updated: [User_role]!
+  deleted: Int
+}
+
+input User_roleDelete {
+  filter: User_roleFilter
+}
+
+input User_roleSort {
+  role_name: Sort
+}
+
+enum Sort {
+  ASC
+  DESC
+}
+
+input AuthorizeUser {
+  email: String!
+  password: String!
+}
+
+input RoleInput {
+  role: String!
+}
+
+type AuthPayload {
+  token: Token!
+}
+
+type Token {
+  accessToken: String!
+  idToken: String!
+  refreshToken: String!
+}
+
+type TableInfo {
+  table: String
+  structure: String
+  backoffice: String
+}

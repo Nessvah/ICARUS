@@ -1,6 +1,5 @@
 import { ObjectId } from 'mongodb';
 import { logger } from '../server.js';
-import { afterResolver } from '../../utils/hooks/afterResolver/afterResolver.js';
 
 /**
  ** MongoDBConnection class handles connections and operations with MongoDB.
@@ -125,6 +124,7 @@ export class MongoDBConnection {
               // For case-insensitive substring match using regular expression
               const regexPattern = `.*${filterValue}.*`;
               query = { $regex: regexPattern, $options: 'i' };
+              console.log(query);
               break;
             /* For comparison operators such as _in and _nin, the code sets the MongoDB operator 
             to $in or $nin and converts the filter value to an array. */
@@ -220,10 +220,21 @@ export class MongoDBConnection {
       // Call the toArray function to retrieve the results as an array
       res = await query.toArray();
 
-      // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
-      const processedRes = afterResolver(res, this.tableData.type);
-
-      return processedRes;
+      // Check if any documents were found
+      if (res) {
+        // Iterate over each document
+        res.forEach((element) => {
+          if (element._id) {
+            // Update the _id field with an ObjectID
+            const id = element._id;
+            delete element._id; // Remove the _id field
+            element.id = id; // Add an id field with the previous _id value
+          }
+        });
+        return res; // Return the updated documents
+      } else {
+        return false; // Return false if no documents were found
+      }
     } catch (error) {
       logger.error(error);
       throw error;
@@ -254,10 +265,16 @@ export class MongoDBConnection {
 
       // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
       // Iterate over each element in the input._create array
-      const processedRes = afterResolver([input._create], this.tableData.type);
+      [input._create].forEach((element) => {
+        if (element._id) {
+          const id = element._id;
+          delete element._id; // Remove the _id field
+          element.id = id; // Add an id field with the previous _id value
+        }
+      });
 
       // Return an object with the created property, containing the inserted data
-      return { created: processedRes };
+      return { created: [input._create] };
     } catch (error) {
       logger.error(error); // Log any errors
       return false; // Return false in case of any errors
@@ -296,10 +313,15 @@ export class MongoDBConnection {
         return false; // Return false if no documents are found
       }
       // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
-      const processedRes = await afterResolver(updated, this.tableData.type);
-
+      updated.forEach((element) => {
+        if (element._id) {
+          const id = element._id;
+          delete element._id; // Remove the _id field
+          element.id = id; // Add an id field with the previous _id value
+        }
+      });
       // Return an object with the updated property containing the updated documents
-      return { updated: processedRes };
+      return { updated: updated };
     } catch (error) {
       logger.error(error); // Log any errors
       return false; // Return false in case of any errors

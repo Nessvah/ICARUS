@@ -1,0 +1,37 @@
+{
+  "name": "icarus-graphql",
+  "version": "1.0.6",
+  "description": "Graphql server core",
+  "main": "./infrastructure/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./infrastructure/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WillianFischer/icarus2"
+  },
+  "keywords": [
+    "icarus",
+    "server"
+  ],
+  "author": "Eliana Delgado, Pedro Maldonado, Sílvia Costa, Susana Silva, Willian Fischer",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/server": "^4.10.0",
+    "@apollo/subgraph": "^2.6.3",
+    "dotenv": "^16.3.1",
+    "fs": "^0.0.1-security",
+    "graphql": "^16.8.1",
+    "graphql-depth-limit": "^1.1.0",
+    "graphql-scalars": "^1.22.5",
+    "graphql-tag": "^2.12.6",
+    "graphql-type-json": "^0.3.2",
+    "joi": "^17.12.1",
+    "knex": "^3.1.0",
+    "mongodb": "^6.3.0",
+    "mysql2": "^3.9.1",
+    "winston": "^3.11.0",
+    "winston-mongodb": "^5.1.1"
+  }
+}

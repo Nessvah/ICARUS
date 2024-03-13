@@ -3,28 +3,7 @@ import { MySQLConnection } from './mysqlClass.js';
 import { MongoClient } from 'mongodb';
 import mysql from 'mysql2/promise';
 import { logger } from '../server.js';
-
-import { ImportThemTities } from '../../config/importDemTities.js';
-
-// Call the importAll method to start importing entities
-const importer = new ImportThemTities();
-
-let data;
-(async () => {
-  try {
-    data = await importer.importAll();
-    if (data && data.tables) {
-      // Ensure data.tables is defined
-      //console.log('data:', data, '______________'); // Log the retrieved data
-      return data;
-    } else {
-      logger.error('Data is missing or incomplete.');
-    }
-    return null;
-  } catch (error) {
-    logger.error('error to read file', error);
-  }
-})();
+import { config } from '../../graphql/generateTypeDefs.js';
 
 //a pool of many different database connections.
 const pools = [];
@@ -77,6 +56,7 @@ async function controller(table, args) {
 
 //create a pool connection to many databases, based on the config files in the "data" variable.
 async function createDbPool() {
+  let data = config;
   data.tables.forEach(async (table) => {
     let client;
     switch (table.database.type) {
