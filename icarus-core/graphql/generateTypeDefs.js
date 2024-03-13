@@ -197,7 +197,7 @@ input ${tableName}Input {
     ${table.columns
       .filter((column) => column.primaryKey !== true)
       .map((column) => {
-        if (column.type === 'object') {
+        if (column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
           return '';
         }
         const type = mapColumnTypeToGraphQLType(column.type);
@@ -268,7 +268,7 @@ input ${tableName}UpDel {
     ${table.columns
       .filter((column) => column.primaryKey !== true)
       .map((column) => {
-        if (column.type === 'object') {
+        if (column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
           return '';
         }
         const type = mapColumnTypeToGraphQLType(column.type);
