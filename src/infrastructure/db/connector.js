@@ -1,6 +1,6 @@
 import { MongoDBConnection } from './mongodbClass.js';
 import { MySQLConnection } from './mysqlClass.js';
-import { S3Connection } from './s3Class.js';
+import { S3Connection } from './s3.js';
 
 import { MongoClient } from 'mongodb';
 import mysql from 'mysql2/promise';
@@ -33,9 +33,6 @@ const pools = [];
 
 //this function will be called in the resolvers, and will filter the requests to all databases and response properly.
 async function controller(tableName, args, table) {
-  console.log({ tableName });
-  console.log({ args });
-  console.log({ table });
   let connection;
   //find the right database in the pool, base on table name.
   const currentTable = await pools.find((db) => db.table === tableName);
@@ -86,7 +83,6 @@ async function controller(tableName, args, table) {
 //create a pool connection to many databases, based on the config files in the "data" variable.
 async function createDbPool() {
   data.tables.forEach(async (table) => {
-    //console.log({ table });
     let client;
     switch (table.database.type) {
       case 'mongodb':

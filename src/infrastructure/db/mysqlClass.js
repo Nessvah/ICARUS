@@ -7,7 +7,7 @@ import {
   processFilter,
 } from '../../utils/sqlQueries.js';
 import { logger } from '../server.js';
-import { createUploadStream } from '../upload/stream.js';
+import { createUploadStream } from './s3.js';
 
 export class MySQLConnection {
   constructor(currentTableInfo) {
@@ -161,9 +161,6 @@ export class MySQLConnection {
    * @returns {Promise<{ updated: Array<Object> } | null>} - A promise that resolves to the updated record(s) or null if there was an error.
    */
   async update(tableName, { input }, table) {
-    console.log('CHEGUEEEE');
-    console.log({ input });
-    console.log('HVCNEFDAVNHDFVBDF' + table);
     // UPDATE `table_name` SET `column_name` = `new_value' [WHERE condition];
     let updateQuery = `UPDATE ${tableName} SET `;
     let findQuery = `SELECT * FROM ${tableName} WHERE`;
@@ -172,8 +169,6 @@ export class MySQLConnection {
 
     // simple update without filtering
     for (let [key, value] of Object.entries(input._update ?? {}).concat(Object.entries(input._upload ?? {}))) {
-      console.log('BANANAAAA');
-
       if (key === 'url') {
         const keyColumn = table.columns.find((column) => column.extra === 'key');
         if (!keyColumn) {
@@ -195,7 +190,6 @@ export class MySQLConnection {
         updateQuery = updateQuery.slice(0, -2);
         values.push(...processedValues);
         // update table set icon class = url where condition
-        console.log('hycdbvhesdbvcieas' + updateQuery);
 
         updateQuery += processedSql;
       } else {
@@ -208,9 +202,6 @@ export class MySQLConnection {
     }
 
     findQuery = findQuery.slice(0, -5);
-    console.log({ updateQuery });
-    console.log({ values });
-
     try {
       const record = await this.query(updateQuery, values);
 
@@ -285,7 +276,7 @@ export class MySQLConnection {
     }
 
     const { filename, createReadStream, encoding } = await file;
-    console.log('File details:', { filename, encoding });
+    //console.log('File details:', { filename, encoding });
 
     // Check if the mimetype is valid (png, jpeg, jpg)
     const mimeTypes = {
@@ -307,8 +298,7 @@ export class MySQLConnection {
     try {
       // Find the column with extra === 'key'
       const keyColumn = table.columns.find((column) => column.extra === 'key');
-      console.log({ keyColumn });
-      console.log(input._upload.filter);
+
       if (!keyColumn) {
         throw new Error('No column with extra === "key" found in the table');
       }
@@ -334,8 +324,6 @@ export class MySQLConnection {
           },
         },
       };
-
-      console.log('Updated input:', updatedInput);
 
       await this.update(tableName, updatedInput, table);
 

@@ -5,7 +5,7 @@ import { validation } from '../utils/validation/validation.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 import { ImportThemTities } from '../config/importDemTities.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
-import { S3Connection } from '../infrastructure/db/s3Class.js';
+import { S3Connection } from '../infrastructure/db/s3.js';
 
 import { upload } from './upload.js';
 
@@ -73,32 +73,8 @@ async function autoResolvers(data) {
   resolvers.Upload = GraphQLUpload;
   (resolvers.Mutation = {
     authorize: (_, { input }, { authLogin }) => authLogin(input),
-    /*     upload: async (parent, { file }) => {
-      const { filename, createReadStream } = await file;
-
-      const stream = createReadStream();
-
-      try {
-        const uploadStream = createUploadStream(filename);
-        stream.pipe(uploadStream.writeStream);
-        const result = await uploadStream.promise;
-
-        // Extract the Location URL from the result object
-        const fileUrl = result.Location;
-
-        // Return only the file URL
-        console.log({ fileUrl });
-        return fileUrl;
-      } catch (error) {
-        console.log(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
-        throw new ApolloError('Error uploading file');
-      }
-      console.log({ result });
-      return result;
-    }, */
   }),
     data.tables.forEach((table) => {
-      //console.log({ table });
       const countName = `${table.name}Count`;
 
       resolvers.Query[table.name] = async (parent, args, context, info) => {
@@ -126,7 +102,6 @@ async function autoResolvers(data) {
 
         await validation(args.input); // it validates mutation inputs
         await validation(args.input, 'update'); // it validates update inputs;
-        console.log(args.input);
         return await controller(table.name, args, table);
       };
 

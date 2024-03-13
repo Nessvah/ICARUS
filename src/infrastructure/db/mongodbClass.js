@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { logger } from '../server.js';
-import { createUploadStream } from '../upload/stream.js';
+import { createUploadStream } from './s3.js';
 
 /**
  ** MongoDBConnection class handles connections and operations with MongoDB.
@@ -291,7 +291,6 @@ export class MongoDBConnection {
    * @returns {Promise<object[]>}
    */
   async update(table, { input }) {
-    console.log('UPDATE', { input });
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
@@ -306,6 +305,7 @@ export class MongoDBConnection {
         const filter = this.filterController(input._update.filter);
 
         // Call updateMany method to update matching documents in the collection
+        delete input._update.filter;
         const res = await collection.updateMany(filter, { $set: input._update });
         if (!res) {
           return false; // Return false if the operation fails
@@ -327,14 +327,11 @@ export class MongoDBConnection {
         // Return an object with the updated property containing the updated documents
         return { updated: updated };
       } else if (input._upload) {
-        console.log('CHEGUEEEE');
         // Extract the filter from the input
         const filter = this.filterController(input._upload.filter);
-        console.log('filter', filter);
         // Call updateMany method to update matching documents in the collection
         delete input._upload.filter;
         const res = await collection.updateMany(filter, { $set: input._upload });
-        console.log({ res });
         if (!res) {
           return false; // Return false if the operation fails
         }
@@ -484,7 +481,7 @@ export class MongoDBConnection {
     try {
       // Find the column with extra === 'key'
       const keyColumn = table.columns.find((column) => column.extra === 'key');
-      console.log({ keyColumn });
+      //console.log({ keyColumn });
 
       if (!keyColumn) {
         throw new Error('No column with extra === "key" found in the table');
@@ -511,11 +508,11 @@ export class MongoDBConnection {
           },
         },
       };
-      console.log(JSON.stringify(updatedInput));
+      //console.log(JSON.stringify(updatedInput));
 
       await this.update(tableName, updatedInput);
 
-      console.log('File uploaded successfully');
+      //console.log('File uploaded successfully');
       return { uploaded: result.Location };
     } catch (error) {
       console.log(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
@@ -524,22 +521,4 @@ export class MongoDBConnection {
       });
     }
   }
-  /* async updateFileUrl(table, key, filter, column) {
-    try {
-      // Retrieve the database object from the MongoDB client
-      const db = this.client.db(this.dbName);
-
-      // Retrieve the collection object
-      const collection = db.collection(table);
-
-      // Construct an update operation
-      const updateOperation = { $set: { column: key } };
-
-      // Perform the update operation
-      await collection.updateMany(filter, updateOperation);
-    } catch (error) {
-      logger.error(`Error updating file URL: ${error.message}`);
-      throw error;
-    }
-  } */
 }
