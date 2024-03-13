@@ -197,7 +197,7 @@ const validationRules = {
 
   content: (value) =>
     Joi.string()
-      .min(2)
+      .min(6)
       .max(100)
       .messages({
         'string.min': 'It should have a minimum length of {#limit}.',
