@@ -3,7 +3,7 @@ import { logger } from '../infrastructure/server.js';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 import { ImportThemTities } from '../config/importDemTities.js';
-import { beforeResolver, beforeResolverRelations } from '../utils/hooks/beforeResolver/hookExecutor.js';
+import { beforeResolverRelations, hookExecutor } from '../utils/hooks/beforeResolver/hookExecutor.js';
 import { AuthorizationError } from '../utils/error-handling/CustomErrors.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
 
@@ -71,15 +71,22 @@ async function autoResolvers(data) {
   data.tables.forEach((table) => {
     const countName = `${table.name}Count`;
 
-    resolvers.Query[table.name] = async (parent, args, context, info) => {
+    resolvers.Query[table.name] = async (parent, incomeArgs, incomeContext, info) => {
       try {
         // Caling function beforeResolver to see if there is hooks for the query called
-        await beforeResolver(table.name, args, 'Query');
+        const { argss, context } = await hookExecutor(table, 'query', 'beforeResolver', {
+          argss: incomeArgs,
+          context: incomeContext,
+        });
 
         //verify if the user it's exceeding the rate limit calls for seconds.
-        const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
+        const limitErrorMessage = await rateLimiter({ parent, argss, context, info }, rateLimiterConfig);
         if (limitErrorMessage) throw new Error(limitErrorMessage);
 
+        const { args, newContext } = await hookExecutor(table, 'query', 'beforeQuery', {
+          args: argss,
+          newContext: context,
+        });
         return await controller(table.name, args);
       } catch (e) {
         logger.error(e);
@@ -87,21 +94,40 @@ async function autoResolvers(data) {
       }
     };
 
-    resolvers.Query[countName] = async (parent, args, context, info) => {
+    resolvers.Query[countName] = async (parent, incomeArgs, incomeContext, info) => {
       //const res = await myHook(table, input);
+      const { argss, context } = await hookExecutor(table, 'count', 'beforeResolver', {
+        argss: incomeArgs,
+        context: incomeContext,
+      });
+
+      const { args, newContext } = await hookExecutor(table, 'count', 'beforeQuery', {
+        args: argss,
+        newContext: context,
+      });
       const result = await controller(table.name, args);
 
       return { count: result };
     };
 
-    resolvers.Mutation[table.name] = async (parent, args, context, info) => {
+    resolvers.Mutation[table.name] = async (parent, incomeArgs, incomeContext, info) => {
       try {
+        const { input } = incomeArgs;
+        const operationName = Object.keys(input)[0];
         // Verifying if there is hooks for the mutation query which is required
-        const argss = await beforeResolver(table.name, args, 'Mutation');
+        const { argss, context } = await hookExecutor(table, operationName, 'beforeResolver', {
+          argss: incomeArgs,
+          context: incomeContext,
+        });
 
         //verify if the user it's exceeding the rate limit calls for seconds.
         const limitErrorMessage = await rateLimiter({ parent, argss, context, info }, rateLimiterConfig);
         if (limitErrorMessage) throw new Error(limitErrorMessage);
+
+        const { args, newContext } = await hookExecutor(table, operationName, 'beforeQuery', {
+          args: argss,
+          newContext: context,
+        });
 
         return await controller(table.name, args, table);
       } catch (e) {

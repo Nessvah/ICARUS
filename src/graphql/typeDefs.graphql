@@ -2,6 +2,7 @@
   scalar JSON
   scalar GraphQLDate
   scalar MySQLDate
+  scalar Upload
   
     input ComparisonOperators {
       _eq: String
@@ -49,25 +50,42 @@ promotionsCount(input: PromotionsCount): PromotionsCountResult
 shipmentsCount(input: ShipmentsCount): ShipmentsCountResult
 usersCount(input: UsersCount): UsersCountResult
 user_roleCount(input: User_roleCount): User_roleCountResult
+
 }
 
 type Mutation {
   authorize(input: AuthorizeUser!): AuthPayload!
     authors(input: AuthorsMutationOptions): AuthorsOutput
+        
 blog_posts(input: Blog_postsMutationOptions): Blog_postsOutput
+        
 brands(input: BrandsMutationOptions): BrandsOutput
+        
 categories(input: CategoriesMutationOptions): CategoriesOutput
+        
 coupons(input: CouponsMutationOptions): CouponsOutput
+        
 customers(input: CustomersMutationOptions): CustomersOutput
+        
 orders(input: OrdersMutationOptions): OrdersOutput
+        
 order_items(input: Order_itemsMutationOptions): Order_itemsOutput
+        
 payment(input: PaymentMutationOptions): PaymentOutput
+        
 products(input: ProductsMutationOptions): ProductsOutput
+        
 product_reviews(input: Product_reviewsMutationOptions): Product_reviewsOutput
+        
 promotions(input: PromotionsMutationOptions): PromotionsOutput
+        
 shipments(input: ShipmentsMutationOptions): ShipmentsOutput
+        
 users(input: UsersMutationOptions): UsersOutput
+        
 user_role(input: User_roleMutationOptions): User_roleOutput
+        
+
 }
 
       input NestedFiltering {
@@ -76,6 +94,7 @@ user_role(input: User_roleMutationOptions): User_roleOutput
          name: ComparisonOperators
 email: ComparisonOperators
 id: ComparisonOperators
+fileUrl: ComparisonOperators
       }
     
 
@@ -94,6 +113,7 @@ id: ComparisonOperators
       id: Sort
 name: Sort
 email: Sort
+fileUrl: Sort
     }
 
 input AuthorsLogicalOp {
@@ -102,13 +122,22 @@ input AuthorsLogicalOp {
    id: ComparisonOperators
 name: ComparisonOperators
 email: ComparisonOperators
+fileUrl: ComparisonOperators
   }
 
 input AuthorsMutationOptions {
     _create: AuthorsInput
     _update: AuthorsUpDel
     _delete: AuthorsDelete
+    _upload: AuthorsUpload
     }
+
+  input AuthorsUpload {
+    file: Upload
+    filter: AuthorsFilter
+
+  }
+
 
 input AuthorsListOptions {
     filter: AuthorsFilter
@@ -121,6 +150,7 @@ type Authors {
     id: ID!
 name: String!
 email: String!
+fileUrl: String
       blog_posts(take: Int = 15, skip: Int): [Blog_posts]
 }
 
@@ -128,6 +158,7 @@ input AuthorsInput {
     name: String!
 email: String!
 
+fileUrl: String
 }
 
 input AuthorsFilter {
@@ -139,6 +170,7 @@ input AuthorsUpDel {
     name: String
 email: String
 
+fileUrl: String
        filter: AuthorsFilter
 }
 
@@ -146,6 +178,7 @@ type AuthorsOutput {
 	created: [Authors]!
 	updated: [Authors]!
 	deleted: Int
+  uploaded: String
 }
 
 input AuthorsDelete {
@@ -156,6 +189,7 @@ input AuthorsDelete {
          name: Sort
 email: Sort
 
+fileUrl: Sort
      }
 
       input NestedFiltering {
@@ -165,6 +199,7 @@ email: Sort
 author_id: ComparisonOperators
 content: ComparisonOperators
 publish_date: ComparisonOperators
+fileUrl: ComparisonOperators
       }
     
 
@@ -185,6 +220,7 @@ title: Sort
 author_id: Sort
 content: Sort
 publish_date: Sort
+fileUrl: Sort
     }
 
 input Blog_postsLogicalOp {
@@ -195,13 +231,22 @@ title: ComparisonOperators
 author_id: ComparisonOperators
 content: ComparisonOperators
 publish_date: ComparisonOperators
+fileUrl: ComparisonOperators
   }
 
 input Blog_postsMutationOptions {
     _create: Blog_postsInput
     _update: Blog_postsUpDel
     _delete: Blog_postsDelete
+    _upload: Blog_postsUpload
     }
+
+  input Blog_postsUpload {
+    file: Upload
+    filter: Blog_postsFilter
+
+  }
+
 
 input Blog_postsListOptions {
     filter: Blog_postsFilter
@@ -216,6 +261,7 @@ title: String!
 author_id: ID!
 content: JSON!
 publish_date: GraphQLDate!
+fileUrl: String
       authors(take: Int = 15, skip: Int): Authors
 }
 
@@ -224,6 +270,7 @@ input Blog_postsInput {
 author_id: ID!
 content: JSON!
 publish_date: GraphQLDate!
+fileUrl: String
 }
 
 input Blog_postsFilter {
@@ -236,6 +283,7 @@ input Blog_postsUpDel {
 author_id: ID
 content: JSON
 publish_date: GraphQLDate
+fileUrl: String
        filter: Blog_postsFilter
 }
 
@@ -243,6 +291,7 @@ type Blog_postsOutput {
 	created: [Blog_posts]!
 	updated: [Blog_posts]!
 	deleted: Int
+  uploaded: String
 }
 
 input Blog_postsDelete {
@@ -254,6 +303,7 @@ input Blog_postsDelete {
 
 content: Sort
 publish_date: Sort
+fileUrl: Sort
      }
 
       input NestedFiltering {
@@ -263,6 +313,7 @@ publish_date: Sort
 country: ComparisonOperators
 founded_year: ComparisonOperators
 products: ComparisonOperators
+fileUrl: ComparisonOperators
       }
     
 
@@ -283,6 +334,7 @@ name: Sort
 country: Sort
 founded_year: Sort
 products: Sort
+fileUrl: Sort
     }
 
 input BrandsLogicalOp {
@@ -293,13 +345,22 @@ name: ComparisonOperators
 country: ComparisonOperators
 founded_year: ComparisonOperators
 products: ComparisonOperators
+fileUrl: ComparisonOperators
   }
 
 input BrandsMutationOptions {
     _create: BrandsInput
     _update: BrandsUpDel
     _delete: BrandsDelete
+    _upload: BrandsUpload
     }
+
+  input BrandsUpload {
+    file: Upload
+    filter: BrandsFilter
+
+  }
+
 
 input BrandsListOptions {
     filter: BrandsFilter
@@ -314,6 +375,7 @@ name: String!
 country: String!
 founded_year: String!
 products: JSON!
+fileUrl: String
       
 }
 
@@ -322,6 +384,7 @@ input BrandsInput {
 country: String!
 founded_year: String!
 products: JSON!
+fileUrl: String
 }
 
 input BrandsFilter {
@@ -334,6 +397,7 @@ input BrandsUpDel {
 country: String
 founded_year: String
 products: JSON
+fileUrl: String
        filter: BrandsFilter
 }
 
@@ -341,6 +405,7 @@ type BrandsOutput {
 	created: [Brands]!
 	updated: [Brands]!
 	deleted: Int
+  uploaded: String
 }
 
 input BrandsDelete {
@@ -352,6 +417,7 @@ input BrandsDelete {
 country: Sort
 founded_year: Sort
 products: Sort
+fileUrl: Sort
      }
 
       input NestedFiltering {
@@ -394,7 +460,15 @@ input CategoriesMutationOptions {
     _create: CategoriesInput
     _update: CategoriesUpDel
     _delete: CategoriesDelete
+    _upload: CategoriesUpload
     }
+
+  input CategoriesUpload {
+    file: Upload
+    filter: CategoriesFilter
+
+  }
+
 
 input CategoriesListOptions {
     filter: CategoriesFilter
@@ -433,6 +507,7 @@ type CategoriesOutput {
 	created: [Categories]!
 	updated: [Categories]!
 	deleted: Int
+  uploaded: String
 }
 
 input CategoriesDelete {
@@ -452,6 +527,7 @@ icon_label: Sort
 discount_percent: ComparisonOperators
 expiration_date: ComparisonOperators
 promotion_id: ComparisonOperators
+fileUrl: ComparisonOperators
       }
     
 
@@ -472,6 +548,7 @@ code: Sort
 discount_percent: Sort
 expiration_date: Sort
 promotion_id: Sort
+fileUrl: Sort
     }
 
 input CouponsLogicalOp {
@@ -482,13 +559,22 @@ code: ComparisonOperators
 discount_percent: ComparisonOperators
 expiration_date: ComparisonOperators
 promotion_id: ComparisonOperators
+fileUrl: ComparisonOperators
   }
 
 input CouponsMutationOptions {
     _create: CouponsInput
     _update: CouponsUpDel
     _delete: CouponsDelete
+    _upload: CouponsUpload
     }
+
+  input CouponsUpload {
+    file: Upload
+    filter: CouponsFilter
+
+  }
+
 
 input CouponsListOptions {
     filter: CouponsFilter
@@ -503,6 +589,7 @@ code: String!
 discount_percent: Int!
 expiration_date: String!
 promotion_id: ID!
+fileUrl: String
       promotions(take: Int = 15, skip: Int): Promotions
 }
 
@@ -511,6 +598,7 @@ input CouponsInput {
 discount_percent: Int!
 expiration_date: String!
 promotion_id: ID!
+fileUrl: String
 }
 
 input CouponsFilter {
@@ -523,6 +611,7 @@ input CouponsUpDel {
 discount_percent: Int
 expiration_date: String
 promotion_id: ID
+fileUrl: String
        filter: CouponsFilter
 }
 
@@ -530,6 +619,7 @@ type CouponsOutput {
 	created: [Coupons]!
 	updated: [Coupons]!
 	deleted: Int
+  uploaded: String
 }
 
 input CouponsDelete {
@@ -541,6 +631,7 @@ input CouponsDelete {
 discount_percent: Sort
 expiration_date: Sort
 
+fileUrl: Sort
      }
 
       input NestedFiltering {
@@ -587,7 +678,15 @@ input CustomersMutationOptions {
     _create: CustomersInput
     _update: CustomersUpDel
     _delete: CustomersDelete
+    _upload: CustomersUpload
     }
+
+  input CustomersUpload {
+    file: Upload
+    filter: CustomersFilter
+
+  }
+
 
 input CustomersListOptions {
     filter: CustomersFilter
@@ -631,6 +730,7 @@ type CustomersOutput {
 	created: [Customers]!
 	updated: [Customers]!
 	deleted: Int
+  uploaded: String
 }
 
 input CustomersDelete {
@@ -691,7 +791,15 @@ input OrdersMutationOptions {
     _create: OrdersInput
     _update: OrdersUpDel
     _delete: OrdersDelete
+    _upload: OrdersUpload
     }
+
+  input OrdersUpload {
+    file: Upload
+    filter: OrdersFilter
+
+  }
+
 
 input OrdersListOptions {
     filter: OrdersFilter
@@ -742,6 +850,7 @@ type OrdersOutput {
 	created: [Orders]!
 	updated: [Orders]!
 	deleted: Int
+  uploaded: String
 }
 
 input OrdersDelete {
@@ -810,7 +919,15 @@ input Order_itemsMutationOptions {
     _create: Order_itemsInput
     _update: Order_itemsUpDel
     _delete: Order_itemsDelete
+    _upload: Order_itemsUpload
     }
+
+  input Order_itemsUpload {
+    file: Upload
+    filter: Order_itemsFilter
+
+  }
+
 
 input Order_itemsListOptions {
     filter: Order_itemsFilter
@@ -862,6 +979,7 @@ type Order_itemsOutput {
 	created: [Order_items]!
 	updated: [Order_items]!
 	deleted: Int
+  uploaded: String
 }
 
 input Order_itemsDelete {
@@ -886,6 +1004,7 @@ payment_date: ComparisonOperators
 amount: ComparisonOperators
 payment_status: ComparisonOperators
 order_id: ComparisonOperators
+fileUrl: ComparisonOperators
       }
     
 
@@ -907,6 +1026,7 @@ payment_date: Sort
 amount: Sort
 payment_status: Sort
 order_id: Sort
+fileUrl: Sort
     }
 
 input PaymentLogicalOp {
@@ -918,13 +1038,22 @@ payment_date: ComparisonOperators
 amount: ComparisonOperators
 payment_status: ComparisonOperators
 order_id: ComparisonOperators
+fileUrl: ComparisonOperators
   }
 
 input PaymentMutationOptions {
     _create: PaymentInput
     _update: PaymentUpDel
     _delete: PaymentDelete
+    _upload: PaymentUpload
     }
+
+  input PaymentUpload {
+    file: Upload
+    filter: PaymentFilter
+
+  }
+
 
 input PaymentListOptions {
     filter: PaymentFilter
@@ -940,6 +1069,7 @@ payment_date: String!
 amount: Float!
 payment_status: String!
 order_id: Int
+fileUrl: String
       orders(take: Int = 15, skip: Int): Orders
 }
 
@@ -949,6 +1079,7 @@ payment_date: String!
 amount: Float!
 payment_status: String!
 order_id: Int
+fileUrl: String
 }
 
 input PaymentFilter {
@@ -962,6 +1093,7 @@ payment_date: String
 amount: Float
 payment_status: String
 order_id: Int
+fileUrl: String
        filter: PaymentFilter
 }
 
@@ -969,6 +1101,7 @@ type PaymentOutput {
 	created: [Payment]!
 	updated: [Payment]!
 	deleted: Int
+  uploaded: String
 }
 
 input PaymentDelete {
@@ -981,6 +1114,7 @@ payment_date: Sort
 amount: Sort
 payment_status: Sort
 
+fileUrl: Sort
      }
 
       input NestedFiltering {
@@ -1033,7 +1167,15 @@ input ProductsMutationOptions {
     _create: ProductsInput
     _update: ProductsUpDel
     _delete: ProductsDelete
+    _upload: ProductsUpload
     }
+
+  input ProductsUpload {
+    file: Upload
+    filter: ProductsFilter
+
+  }
+
 
 input ProductsListOptions {
     filter: ProductsFilter
@@ -1083,6 +1225,7 @@ type ProductsOutput {
 	created: [Products]!
 	updated: [Products]!
 	deleted: Int
+  uploaded: String
 }
 
 input ProductsDelete {
@@ -1151,7 +1294,15 @@ input Product_reviewsMutationOptions {
     _create: Product_reviewsInput
     _update: Product_reviewsUpDel
     _delete: Product_reviewsDelete
+    _upload: Product_reviewsUpload
     }
+
+  input Product_reviewsUpload {
+    file: Upload
+    filter: Product_reviewsFilter
+
+  }
+
 
 input Product_reviewsListOptions {
     filter: Product_reviewsFilter
@@ -1203,6 +1354,7 @@ type Product_reviewsOutput {
 	created: [Product_reviews]!
 	updated: [Product_reviews]!
 	deleted: Int
+  uploaded: String
 }
 
 input Product_reviewsDelete {
@@ -1227,6 +1379,7 @@ description: ComparisonOperators
 start_date: ComparisonOperators
 end_date: ComparisonOperators
 id: ComparisonOperators
+fileUrl: ComparisonOperators
       }
     
 
@@ -1247,6 +1400,7 @@ name: Sort
 description: Sort
 start_date: Sort
 end_date: Sort
+fileUrl: Sort
     }
 
 input PromotionsLogicalOp {
@@ -1257,13 +1411,22 @@ name: ComparisonOperators
 description: ComparisonOperators
 start_date: ComparisonOperators
 end_date: ComparisonOperators
+fileUrl: ComparisonOperators
   }
 
 input PromotionsMutationOptions {
     _create: PromotionsInput
     _update: PromotionsUpDel
     _delete: PromotionsDelete
+    _upload: PromotionsUpload
     }
+
+  input PromotionsUpload {
+    file: Upload
+    filter: PromotionsFilter
+
+  }
+
 
 input PromotionsListOptions {
     filter: PromotionsFilter
@@ -1278,6 +1441,7 @@ name: String!
 description: String!
 start_date: String!
 end_date: String!
+fileUrl: String
       coupons(take: Int = 15, skip: Int): Coupons
 }
 
@@ -1287,6 +1451,7 @@ description: String!
 start_date: String!
 end_date: String!
 
+fileUrl: String
 }
 
 input PromotionsFilter {
@@ -1300,6 +1465,7 @@ description: String
 start_date: String
 end_date: String
 
+fileUrl: String
        filter: PromotionsFilter
 }
 
@@ -1307,6 +1473,7 @@ type PromotionsOutput {
 	created: [Promotions]!
 	updated: [Promotions]!
 	deleted: Int
+  uploaded: String
 }
 
 input PromotionsDelete {
@@ -1319,6 +1486,7 @@ description: Sort
 start_date: Sort
 end_date: Sort
 
+fileUrl: Sort
      }
 
       input NestedFiltering {
@@ -1367,7 +1535,15 @@ input ShipmentsMutationOptions {
     _create: ShipmentsInput
     _update: ShipmentsUpDel
     _delete: ShipmentsDelete
+    _upload: ShipmentsUpload
     }
+
+  input ShipmentsUpload {
+    file: Upload
+    filter: ShipmentsFilter
+
+  }
+
 
 input ShipmentsListOptions {
     filter: ShipmentsFilter
@@ -1412,6 +1588,7 @@ type ShipmentsOutput {
 	created: [Shipments]!
 	updated: [Shipments]!
 	deleted: Int
+  uploaded: String
 }
 
 input ShipmentsDelete {
@@ -1434,6 +1611,7 @@ email: ComparisonOperators
 role_id: ComparisonOperators
 customer_id: ComparisonOperators
 created_t: ComparisonOperators
+fileUrl: ComparisonOperators
       }
     
 
@@ -1455,6 +1633,7 @@ email: Sort
 role_id: Sort
 customer_id: Sort
 created_t: Sort
+fileUrl: Sort
     }
 
 input UsersLogicalOp {
@@ -1466,13 +1645,22 @@ email: ComparisonOperators
 role_id: ComparisonOperators
 customer_id: ComparisonOperators
 created_t: ComparisonOperators
+fileUrl: ComparisonOperators
   }
 
 input UsersMutationOptions {
     _create: UsersInput
     _update: UsersUpDel
     _delete: UsersDelete
+    _upload: UsersUpload
     }
+
+  input UsersUpload {
+    file: Upload
+    filter: UsersFilter
+
+  }
+
 
 input UsersListOptions {
     filter: UsersFilter
@@ -1487,6 +1675,7 @@ email: String!
 role_id: String!
 customer_id: Int
 created_t: MySQLDate
+fileUrl: String
       user_role(take: Int = 15, skip: Int): User_role
 }
 
@@ -1496,6 +1685,7 @@ email: String!
 role_id: String!
 customer_id: Int
 created_t: MySQLDate
+fileUrl: String
 }
 
 input UsersFilter {
@@ -1509,6 +1699,7 @@ email: String
 role_id: String
 customer_id: Int
 created_t: MySQLDate
+fileUrl: String
        filter: UsersFilter
 }
 
@@ -1516,6 +1707,7 @@ type UsersOutput {
 	created: [Users]!
 	updated: [Users]!
 	deleted: Int
+  uploaded: String
 }
 
 input UsersDelete {
@@ -1528,6 +1720,7 @@ email: Sort
 
 customer_id: Sort
 created_t: Sort
+fileUrl: Sort
      }
 
       input NestedFiltering {
@@ -1535,6 +1728,7 @@ created_t: Sort
         _or: [NestedFiltering]
          role_name: ComparisonOperators
 id: ComparisonOperators
+fileUrl: ComparisonOperators
       }
     
 
@@ -1552,6 +1746,7 @@ id: ComparisonOperators
     input User_roleSortOptions {
       id: Sort
 role_name: Sort
+fileUrl: Sort
     }
 
 input User_roleLogicalOp {
@@ -1559,13 +1754,22 @@ input User_roleLogicalOp {
   _or: [ User_roleLogicalOp]
    id: ComparisonOperators
 role_name: ComparisonOperators
+fileUrl: ComparisonOperators
   }
 
 input User_roleMutationOptions {
     _create: User_roleInput
     _update: User_roleUpDel
     _delete: User_roleDelete
+    _upload: User_roleUpload
     }
+
+  input User_roleUpload {
+    file: Upload
+    filter: User_roleFilter
+
+  }
+
 
 input User_roleListOptions {
     filter: User_roleFilter
@@ -1577,12 +1781,14 @@ input User_roleListOptions {
 type User_role {
     id: ID!
 role_name: String!
+fileUrl: String
       users(take: Int = 15, skip: Int): [Users]
 }
 
 input User_roleInput {
     role_name: String!
 
+fileUrl: String
 }
 
 input User_roleFilter {
@@ -1593,6 +1799,7 @@ input User_roleFilter {
 input User_roleUpDel {
     role_name: String
 
+fileUrl: String
        filter: User_roleFilter
 }
 
@@ -1600,6 +1807,7 @@ type User_roleOutput {
 	created: [User_role]!
 	updated: [User_role]!
 	deleted: Int
+  uploaded: String
 }
 
 input User_roleDelete {
@@ -1609,6 +1817,7 @@ input User_roleDelete {
      input User_roleSort {
          role_name: Sort
 
+fileUrl: Sort
      }
 
   enum Sort {
@@ -1636,8 +1845,12 @@ type Token {
   refreshToken: String!
 }
 
-  type TableInfo {
-    table: String
-    structure: String
-    backoffice: String
-  }
+type TableInfo {
+  table: String
+  structure: String
+  backoffice: String
+}
+  
+
+
+  

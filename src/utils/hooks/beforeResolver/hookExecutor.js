@@ -5,16 +5,20 @@
  * @param {string} QueryType - Query type (Mutation/Query).
  * @returns {Promise<object[]>} - Modified args or same args.
  */
-const hookExecutor = async (table, properties, operation, hook) => {
+const hookExecutor = async (table, operation, hook, properties) => {
   const queryInformation = { ...properties };
   try {
     let callFunction;
+
     if (table.hooks && table.hooks.all && table.hooks.all[hook]) {
+      // Attempt to access the function from the 'all' property of 'table.hooks'
       callFunction = table.hooks.all[hook];
     } else if (table.hooks && table.hooks[operation] && table.hooks[operation][hook]) {
+      // If not found, attempt to access the function from the specific 'operation' property
       callFunction = table.hooks[operation][hook];
     } else {
-      callFunction = undefined; // Ou outro valor padrão, se desejado
+      // If neither 'all' nor 'operation' properties contain the function, set func to undefined
+      callFunction = undefined;
     }
     if (!callFunction) {
       return queryInformation;
