@@ -266,22 +266,22 @@ export class MongoDBConnection {
   }
 
   /**
-   ** update a document or a array of documents in a specific table.
-   * @param {string} table
-   * @param {object} input
-   * @param {object} input._update
-   * @param {object} input._update.filter
-   * @returns {Promise<object[]>}
+   ** Update one or more documents in a specific table or upgrade them.
+   * @param {string} table - The name of the table to update documents in.
+   * @param {object} input - An object containing update information.
+   * @param {object} input._update - An object specifying the update operation.
+   * @param {object} input._update.filter - The filter criteria to match documents for update.
+   * @param {object} input._upgrade - An object specifying the upgrade operation.
+   * @param {object} input._upgrade.filter - The filter criteria to match documents for upgrade.
+   * @returns {Promise<object[]>} - A promise resolving to an array of updated documents.
    */
+
   async update(table, { input }) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
       const collection = db.collection(table);
-
-      // Extract the update and filter from the input
-      //const { _update, _upload } = input;
 
       if (input._update) {
         // Construct a filter object using the filterController method
@@ -437,22 +437,28 @@ export class MongoDBConnection {
     // This means that the documents will be sorted based on the _id field in ascending order by default
     return {};
   }
-  async upload(tableName, { input }, table) {
-    console.log({ input });
-    console.log(input._upload.file);
 
+  /**
+   ** Uploads a file to S3 and updates the database with the uploaded file's location.
+   *
+   * @param {string} tableName - The name of the table that the file is being uploaded to.
+   * @param {object} input - The input object containing the file and filter criteria.
+   * @param {object} input._upload - The upload criteria object.
+   * @param {object} input._upload.file - The file to be uploaded.
+   * @param {object} input._upload.filter - The filter criteria to select the rows to be updated.
+   * @param {object} table - The table structure, used to determine the column with the "key" extra.
+   * @returns {Promise<{ uploaded: string }|ApolloError>} - A promise that resolves to an object with the uploaded file's location, or an ApolloError if the upload fails.
+   */
+  async upload(tableName, { input }, table) {
     const { file } = input._upload;
     const { _upload } = input;
     const filter = this.filterController(_upload.filter);
-
-    console.log('File provided:', file ? 'Yes' : 'No');
 
     if (!file) {
       throw new Error('No file provided');
     }
 
     const { filename, createReadStream, encoding } = await file;
-    console.log('File details:', { filename, encoding });
 
     // Check if the mimetype is valid (png, jpeg, jpg)
     const mimeTypes = {
@@ -465,34 +471,44 @@ export class MongoDBConnection {
       const extension = filename.split('.').pop();
       return mimeTypes[extension.toLowerCase()];
     };
-
+    /**
+     ** Returns the mime type of a file based on its filename.
+     * @param {string} filename - The filename of the file.
+     * @returns {string} - The mime type of the file.
+     */
     const mimeType = getMimeType(filename);
-    console.log('Mime type:', mimeType);
 
     const stream = createReadStream();
 
     try {
       // Find the column with extra === 'key'
       const keyColumn = table.columns.find((column) => column.extra === 'key');
-      //console.log({ keyColumn });
 
       if (!keyColumn) {
         throw new Error('No column with extra === "key" found in the table');
       }
 
+      // Ensure a filter is provided
       if (!filter || Object.keys(filter).length <= 0) {
-        throw new Error('No filter provided or filter for the key column is missing');
+        throw new Error('No filter provided');
       }
 
+      // Create the S3 key for the uploaded file
       const key = `icarus/${tableName}/${filename}`;
+
+      // Create an upload stream to S3
       const uploadStream = await createUploadStream(key, mimeType);
 
+      // Pipe the file read stream to the upload stream
       stream.pipe(uploadStream.writeStream);
 
+      // Wait for the upload to finish and get the S3 location
       const result = await uploadStream.promise;
-      //console.log('Upload result:', result);
+
+      // Remove the file object from the input data
       delete input._upload.file;
 
+      // Add the S3 location to the input data
       const updatedInput = {
         input: {
           _upload: {
@@ -501,14 +517,15 @@ export class MongoDBConnection {
           },
         },
       };
-      //console.log(JSON.stringify(updatedInput));
 
+      // Update the database table with the new input data
       await this.update(tableName, updatedInput);
 
-      //console.log('File uploaded successfully');
+      // Return the S3 location
       return { uploaded: result.Location };
     } catch (error) {
-      console.log(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
+      logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
+      // Throw an ApolloError if upload fails
       throw new ApolloError('Error uploading file', 'UPLOAD_ERROR', {
         errorMessage: error.message,
       });

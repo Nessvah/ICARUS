@@ -10,16 +10,26 @@ import initializeLogger from '../utils/loggers/winstonConfig.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+//set the __dirname to the current directory
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-// initialize winston before anything else
+// initialize winston before anything else (logger)
 export const logger = await initializeLogger;
 logger.debug('Logger initialized correctly.');
 
-// create a database pool connection.
-
+/**
+ * Initialize the Apollo server
+ * @param {string} configPath - The path to the configuration file
+ * @returns {ApolloServer} The Apollo server instance
+ */
 const startGraphqlServer = async (configPath) => {
+  /**
+   * Reads the configuration file and sets the environment variables accordingly.
+   * @param {string} configPath - The path to the configuration file.
+   */
   await readConfigFile(configPath);
+  //Generates the resolvers for the GraphQL schema based on the available resolver files.
   await autoResolvers();
+  // create a database pool connection.
   await createDbPool();
 
   let typeDefs;
