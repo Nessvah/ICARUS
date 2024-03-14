@@ -38,6 +38,12 @@ export default {
         foreignEntity: 'coupons',
         foreignKey: 'promotion_id',
       },
+      {
+        name: 'fileUrl',
+        type: 'string',
+        nullable: true,
+        extra: 'key',
+      },
     ],
     backoffice: {
       icon: 'FaRocket',

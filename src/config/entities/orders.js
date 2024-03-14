@@ -50,7 +50,7 @@ export default {
         nullable: true,
         defaultValue: "'Order'",
         columnType: 'string',
-        extra: '',
+        extra: 'key',
       },
       {
         name: 'order_items',

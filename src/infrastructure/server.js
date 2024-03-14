@@ -19,6 +19,8 @@ import fs from 'fs';
 import { createDbPool } from './db/connector.js';
 import depthLimit from 'graphql-depth-limit';
 
+import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
+
 const app = express();
 //create a new typedef file.
 new ImportThemTities();
@@ -54,6 +56,8 @@ const server = new ApolloServer({
   formatError: customFormatError,
   validationRules: [depthLimit(3)],
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer }), metricsPlugin],
+  csrfPrevention: false,
+  upload: true,
 });
 
 // setup express middleware for morgan http logs
@@ -65,7 +69,7 @@ const server = new ApolloServer({
 app.use(
   cors({
     origin: '*',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
     credentials: true, // Allow credentials 'Bearer Token'
     optionSuccessStatus: 200,
@@ -81,6 +85,7 @@ await server.start();
 app.use(
   '/graphql',
   express.json(),
+  graphqlUploadExpress(),
   expressMiddleware(server, {
     context: ({ req }) => {
       if (req.body.operationName === 'IntrospectionQuery') {

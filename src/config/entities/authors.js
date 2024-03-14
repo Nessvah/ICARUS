@@ -28,6 +28,12 @@ export default {
         foreignEntity: 'blog_posts',
         foreignKey: 'author_id',
       },
+      {
+        name: 'fileUrl',
+        type: 'string',
+        nullable: true,
+        extra: 'key',
+      },
     ],
     backoffice: {
       icon: 'FaIdCardAlt',

@@ -42,6 +42,12 @@ export default {
         foreignEntity: 'orders',
         foreignKey: 'order_id',
       },
+      {
+        name: 'fileUrl',
+        type: 'string',
+        nullable: true,
+        extra: 'key',
+      },
     ],
     backoffice: {
       icon: 'FaCreditCard',

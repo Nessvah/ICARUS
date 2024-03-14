@@ -29,6 +29,12 @@ export default {
         type: 'array',
         nullable: false,
       },
+      {
+        name: 'fileUrl',
+        type: 'string',
+        nullable: true,
+        extra: 'key',
+      },
     ],
     backoffice: {
       icon: 'FaBlackTie',

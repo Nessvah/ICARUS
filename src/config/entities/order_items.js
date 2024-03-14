@@ -81,7 +81,7 @@ export default {
         nullable: true,
         defaultValue: "'Order Item'",
         columnType: 'string',
-        extra: '',
+        extra: 'key',
       },
     ],
     backoffice: {

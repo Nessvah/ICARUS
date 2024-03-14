@@ -64,7 +64,7 @@ export default {
         nullable: true,
         defaultValue: "'Product'",
         columnType: 'string',
-        extra: '',
+        extra: 'key',
       },
       {
         name: 'order_items',

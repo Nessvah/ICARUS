@@ -59,7 +59,7 @@ export default {
         nullable: true,
         defaultValue: "'Shipment'",
         columnType: 'string',
-        extra: '',
+        extra: 'key',
       },
     ],
     backoffice: {

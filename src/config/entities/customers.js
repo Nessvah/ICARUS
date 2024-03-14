@@ -46,7 +46,7 @@ export default {
         nullable: true,
         defaultValue: "'Customer'",
         columnType: 'string',
-        extra: '',
+        extra: 'key',
       },
       {
         name: 'orders',

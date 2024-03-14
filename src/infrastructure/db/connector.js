@@ -1,5 +1,6 @@
 import { MongoDBConnection } from './mongodbClass.js';
 import { MySQLConnection } from './mysqlClass.js';
+
 import { MongoClient } from 'mongodb';
 import mysql from 'mysql2/promise';
 import { logger } from '../server.js';
@@ -15,7 +16,8 @@ let data;
     data = await importer.importAll();
     if (data && data.tables) {
       // Ensure data.tables is defined
-      //console.log('data:', data, '______________'); // Log the retrieved data
+      //console.log('data:', data.tables, '______________'); // Log the retrieved data
+      //console.log(data.connections.s3);
       return data;
     } else {
       logger.error('Data is missing or incomplete.');
@@ -25,15 +27,15 @@ let data;
     logger.error('error to read file', error);
   }
 })();
-
 //a pool of many different database connections.
 const pools = [];
 
 //this function will be called in the resolvers, and will filter the requests to all databases and response properly.
-async function controller(table, args) {
+async function controller(tableName, args, table) {
   let connection;
   //find the right database in the pool, base on table name.
-  const currentTable = await pools.find((db) => db.table === table);
+  const currentTable = await pools.find((db) => db.table === tableName);
+  //console.log({ currentTable });
 
   //create a connection class to the specific database type, that will have all the CRUD functions to be use.
   try {
@@ -58,15 +60,18 @@ async function controller(table, args) {
     //filter the CRUD function passed in the action input.
     switch (action) {
       case 'filter':
-        return await connection.find(table, args);
+        return await connection.find(tableName, args);
       case '_count':
-        return await connection.count(table, args);
+        return await connection.count(tableName, args);
       case '_create':
-        return await connection.create(table, args);
+        return await connection.create(tableName, args);
       case '_update':
-        return await connection.update(table, args);
+        return await connection.update(tableName, args);
       case '_delete':
-        return await connection.delete(table, args);
+        return await connection.delete(tableName, args);
+      case '_upload':
+        return await connection.upload(tableName, args, table);
+
       default:
         return 'Action not defined';
     }
@@ -74,7 +79,6 @@ async function controller(table, args) {
     logger.error(error);
   }
 }
-
 //create a pool connection to many databases, based on the config files in the "data" variable.
 async function createDbPool() {
   data.tables.forEach(async (table) => {

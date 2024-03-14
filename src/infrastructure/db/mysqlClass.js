@@ -7,6 +7,7 @@ import {
   processFilter,
 } from '../../utils/sqlQueries.js';
 import { logger } from '../server.js';
+import { createUploadStream } from './s3.js';
 
 export class MySQLConnection {
   constructor(currentTableInfo) {
@@ -159,7 +160,7 @@ export class MySQLConnection {
    * @param {{ input: { filter: Object, update: Object } }} data - The input data for the update operation.
    * @returns {Promise<{ updated: Array<Object> } | null>} - A promise that resolves to the updated record(s) or null if there was an error.
    */
-  async update(tableName, { input }) {
+  async update(tableName, { input }, table) {
     // UPDATE `table_name` SET `column_name` = `new_value' [WHERE condition];
     let updateQuery = `UPDATE ${tableName} SET `;
     let findQuery = `SELECT * FROM ${tableName} WHERE`;
@@ -167,21 +168,32 @@ export class MySQLConnection {
     const findValues = [];
 
     // simple update without filtering
-    for (const [key, value] of Object.entries(input._update)) {
-      if (key === 'filter') {
+    for (let [key, value] of Object.entries(input._update ?? {}).concat(Object.entries(input._upload ?? {}))) {
+      if (key === 'url') {
+        const keyColumn = table.columns.find((column) => column.extra === 'key');
+        if (!keyColumn) {
+          throw new Error('No column with extra === "key" found in the table');
+        }
+        updateQuery += `${keyColumn.name} = ?  `;
+        values.push(value);
+        console.log(' qwerty' + updateQuery);
+      } else if (key === 'filter') {
         // handle filtering in update
         // mimik object structure for the function to process filter
         const filter = {};
         filter[key] = value;
+        console.log(JSON.stringify(filter));
 
         const { processedSql, processedValues } = processFilter(filter);
 
         // remove trailing spaces and comma
         updateQuery = updateQuery.slice(0, -2);
         values.push(...processedValues);
+        // update table set icon class = url where condition
 
         updateQuery += processedSql;
       } else {
+        console.log({ key });
         updateQuery += `${key} = ?, `;
         findQuery += ` ${key} = ? AND `;
         values.push(value);
@@ -190,7 +202,6 @@ export class MySQLConnection {
     }
 
     findQuery = findQuery.slice(0, -5);
-
     try {
       const record = await this.query(updateQuery, values);
 
@@ -263,6 +274,80 @@ export class MySQLConnection {
     } catch (error) {
       logger.error('Error:', error);
       return error; // this will return the error message and null
+    }
+  }
+
+  async upload(tableName, { input }, table) {
+    console.log({ input });
+
+    const { file } = input._upload;
+    //const filter = this.filterController(_upload.filter);
+
+    //console.log('File provided:', file ? 'Yes' : 'No');
+
+    if (!file) {
+      throw new Error('No file provided');
+    }
+
+    const { filename, createReadStream, encoding } = await file;
+    //console.log('File details:', { filename, encoding });
+
+    // Check if the mimetype is valid (png, jpeg, jpg)
+    const mimeTypes = {
+      png: 'image/png',
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+    };
+
+    const getMimeType = (filename) => {
+      const extension = filename.split('.').pop();
+      return mimeTypes[extension.toLowerCase()];
+    };
+
+    const mimeType = getMimeType(filename);
+    //console.log('Mime type:', mimeType);
+
+    const stream = createReadStream();
+
+    try {
+      // Find the column with extra === 'key'
+      const keyColumn = table.columns.find((column) => column.extra === 'key');
+
+      if (!keyColumn) {
+        throw new Error('No column with extra === "key" found in the table');
+      }
+
+      if (!input._upload.filter || Object.keys(input._upload.filter).length <= 0) {
+        throw new Error('No filter provided or filter for the key column is missing');
+      }
+
+      const key = `icarus/${tableName}/${filename}`;
+      const uploadStream = await createUploadStream(key, mimeType);
+
+      stream.pipe(uploadStream.writeStream);
+
+      const result = await uploadStream.promise;
+      //console.log('Upload result:', result);
+      delete input._upload.file;
+
+      const updatedInput = {
+        input: {
+          _upload: {
+            url: result.Key,
+            ...input._upload,
+          },
+        },
+      };
+
+      await this.update(tableName, updatedInput, table);
+
+      //console.log('File uploaded successfully');
+      return { uploaded: result.Location };
+    } catch (error) {
+      console.log(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
+      throw new ApolloError('Error uploading file', 'UPLOAD_ERROR', {
+        errorMessage: error.message,
+      });
     }
   }
 }

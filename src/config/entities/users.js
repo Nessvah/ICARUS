@@ -38,6 +38,12 @@ export default {
         type: 'timestamp',
         nullable: true,
       },
+      {
+        name: 'fileUrl',
+        type: 'string',
+        nullable: true,
+        extra: 'key',
+      },
     ],
     backoffice: {
       icon: 'FaUserFriends',

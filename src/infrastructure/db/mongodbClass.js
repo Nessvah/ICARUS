@@ -1,13 +1,14 @@
 import { ObjectId } from 'mongodb';
 import { logger } from '../server.js';
 import { afterResolver } from '../../utils/hooks/afterResolver/afterResolver.js';
+import { createUploadStream } from './s3.js';
 
 /**
  ** MongoDBConnection class handles connections and operations with MongoDB.
  */
 export class MongoDBConnection {
   /**
-   * Constructor for MongoDBConnection class.
+   ** Constructor for MongoDBConnection class.
    * @param {object} currentTableInfo - Information about the current table.
    * @param {string} currentTableInfo.table - Name of the table.
    * @param {string} currentTableInfo.type - Database type.
@@ -280,26 +281,51 @@ export class MongoDBConnection {
       const collection = db.collection(table);
 
       // Extract the update and filter from the input
-      const { _update } = input;
-      // Construct a filter object using the filterController method
-      const filter = this.filterController(_update.filter);
+      //const { _update, _upload } = input;
 
-      // Call updateMany method to update matching documents in the collection
-      const res = await collection.updateMany(filter, { $set: _update });
-      if (!res) {
-        return false; // Return false if the operation fails
+      if (input._update) {
+        // Construct a filter object using the filterController method
+        const filter = this.filterController(input._update.filter);
+
+        // Call updateMany method to update matching documents in the collection
+        delete input._update.filter;
+        const res = await collection.updateMany(filter, { $set: input._update });
+        if (!res) {
+          return false; // Return false if the operation fails
+        }
+
+        // Find all documents that match the updated parameter
+        const updated = await collection.find(input._update).toArray();
+        if (!updated) {
+          return false; // Return false if no documents are found
+        }
+        // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
+        const processedRes = await afterResolver(updated, this.tableData.type);
+
+        // Return an object with the updated property containing the updated documents
+        return { updated: processedRes };
+      } else if (input._upload) {
+        // Extract the filter from the input
+        const filter = this.filterController(input._upload.filter);
+        // Call updateMany method to update matching documents in the collection
+        delete input._upload.filter;
+        const res = await collection.updateMany(filter, { $set: input._upload });
+        if (!res) {
+          return false; // Return false if the operation fails
+        }
+        // Find all documents that match the updated parameter
+        const updated = await collection.find(input._upload).toArray();
+        if (!updated) {
+          return false; // Return false if no documents are found
+        }
+        // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
+        const processedRes = await afterResolver(updated, this.tableData.type);
+
+        // Return an object with the updated property containing the updated documents
+        return { updated: processedRes };
+      } else {
+        return false; // Return false if neither _update nor _upload is provided
       }
-
-      // Find all documents that match the updated parameter
-      const updated = await collection.find(_update).toArray();
-      if (!updated) {
-        return false; // Return false if no documents are found
-      }
-      // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
-      const processedRes = await afterResolver(updated, this.tableData.type);
-
-      // Return an object with the updated property containing the updated documents
-      return { updated: processedRes };
     } catch (error) {
       logger.error(error); // Log any errors
       return false; // Return false in case of any errors
@@ -410,5 +436,82 @@ export class MongoDBConnection {
     // If the input object does not contain a sort property, return an empty object
     // This means that the documents will be sorted based on the _id field in ascending order by default
     return {};
+  }
+  async upload(tableName, { input }, table) {
+    console.log({ input });
+    console.log(input._upload.file);
+
+    const { file } = input._upload;
+    const { _upload } = input;
+    const filter = this.filterController(_upload.filter);
+
+    console.log('File provided:', file ? 'Yes' : 'No');
+
+    if (!file) {
+      throw new Error('No file provided');
+    }
+
+    const { filename, createReadStream, encoding } = await file;
+    console.log('File details:', { filename, encoding });
+
+    // Check if the mimetype is valid (png, jpeg, jpg)
+    const mimeTypes = {
+      png: 'image/png',
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+    };
+
+    const getMimeType = (filename) => {
+      const extension = filename.split('.').pop();
+      return mimeTypes[extension.toLowerCase()];
+    };
+
+    const mimeType = getMimeType(filename);
+    console.log('Mime type:', mimeType);
+
+    const stream = createReadStream();
+
+    try {
+      // Find the column with extra === 'key'
+      const keyColumn = table.columns.find((column) => column.extra === 'key');
+      //console.log({ keyColumn });
+
+      if (!keyColumn) {
+        throw new Error('No column with extra === "key" found in the table');
+      }
+
+      if (!filter || Object.keys(filter).length <= 0) {
+        throw new Error('No filter provided or filter for the key column is missing');
+      }
+
+      const key = `icarus/${tableName}/${filename}`;
+      const uploadStream = await createUploadStream(key, mimeType);
+
+      stream.pipe(uploadStream.writeStream);
+
+      const result = await uploadStream.promise;
+      //console.log('Upload result:', result);
+      delete input._upload.file;
+
+      const updatedInput = {
+        input: {
+          _upload: {
+            url: result.Key,
+            ...input._upload,
+          },
+        },
+      };
+      //console.log(JSON.stringify(updatedInput));
+
+      await this.update(tableName, updatedInput);
+
+      //console.log('File uploaded successfully');
+      return { uploaded: result.Location };
+    } catch (error) {
+      console.log(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
+      throw new ApolloError('Error uploading file', 'UPLOAD_ERROR', {
+        errorMessage: error.message,
+      });
+    }
   }
 }

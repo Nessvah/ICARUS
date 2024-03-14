@@ -37,7 +37,7 @@ export default {
         nullable: false,
         defaultValue: "'Category'",
         columnType: 'string',
-        extra: '',
+        extra: 'key',
       },
     ],
     backoffice: {

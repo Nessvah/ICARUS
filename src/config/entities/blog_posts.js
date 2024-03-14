@@ -33,6 +33,12 @@ export default {
         type: 'date',
         nullable: false,
       },
+      {
+        name: 'fileUrl',
+        type: 'string',
+        nullable: true,
+        extra: 'key',
+      },
     ],
     backoffice: {
       icon: 'FaEdit',

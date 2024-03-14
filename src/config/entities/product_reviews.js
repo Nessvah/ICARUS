@@ -81,7 +81,7 @@ export default {
         nullable: true,
         defaultValue: "'Product Review'",
         columnType: 'string',
-        extra: '',
+        extra: 'key',
       },
     ],
     backoffice: {

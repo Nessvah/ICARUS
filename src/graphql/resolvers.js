@@ -5,6 +5,7 @@ import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 import { ImportThemTities } from '../config/importDemTities.js';
 import { beforeResolver, beforeResolverRelations } from '../utils/hooks/beforeResolver/hookExecutor.js';
 import { AuthorizationError } from '../utils/error-handling/CustomErrors.js';
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
 
 // We initialize a rate limiter instance by calling getGraphQLRateLimiter.
 // This function takes an object as an argument with a property identifyContext that defines
@@ -61,6 +62,7 @@ async function autoResolvers(data) {
       return tablesInfo;
     },
   };
+  resolvers.Upload = GraphQLUpload;
 
   resolvers.Mutation = {
     authorize: (_, { input }, { authLogin }) => authLogin(input),
@@ -101,7 +103,7 @@ async function autoResolvers(data) {
         const limitErrorMessage = await rateLimiter({ parent, argss, context, info }, rateLimiterConfig);
         if (limitErrorMessage) throw new Error(limitErrorMessage);
 
-        return await controller(table.name, args);
+        return await controller(table.name, args, table);
       } catch (e) {
         throw new AuthorizationError(e);
       }

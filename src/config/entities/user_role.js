@@ -23,6 +23,12 @@ export default {
         foreignEntity: 'users',
         foreignKey: 'role_id',
       },
+      {
+        name: 'fileUrl',
+        type: 'string',
+        nullable: true,
+        extra: 'key',
+      },
     ],
     backoffice: {
       icon: 'FaCrown',

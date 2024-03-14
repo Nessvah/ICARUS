@@ -33,6 +33,12 @@ export default {
         foreignEntity: 'promotions',
         foreignKey: 'id',
       },
+      {
+        name: 'fileUrl',
+        type: 'string',
+        nullable: true,
+        extra: 'key',
+      },
     ],
     backoffice: {
       icon: 'FaTicketAlt',

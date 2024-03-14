@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "npx jest",
+    "test": "jest --config jest.config.mjs",
     "lint": "eslint . --fix --max-warnings=0",
     "format": "prettier . --write",
     "prepare": "husky install",
@@ -35,7 +35,9 @@
     "supertest": "^6.3.4"
   },
   "dependencies": {
+    "aws-jwt-verify": "^4.0.1",
     "dotenv": "^16.3.1",
-    "graphql": "^16.8.1"
+    "graphql": "^16.8.1",
+    "jsonwebtoken": "^9.0.2"
   }
 }
