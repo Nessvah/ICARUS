@@ -74,7 +74,7 @@ async function autoResolvers(data) {
 
     resolvers.Query[table.name] = async (parent, incomeArgs, incomeContext, info) => {
       try {
-        // Caling function beforeResolver to see if there is hooks for the query called
+        // Calling function hookExecutor to see if there is hooks beforeResolver
         const { argss, context } = await hookExecutor(table, 'query', 'beforeResolver', {
           argss: incomeArgs,
           context: incomeContext,
@@ -84,11 +84,25 @@ async function autoResolvers(data) {
         const limitErrorMessage = await rateLimiter({ parent, argss, context, info }, rateLimiterConfig);
         if (limitErrorMessage) throw new Error(limitErrorMessage);
 
+        // Calling function hookExecutor to see if there is hooks beforeQuery
         const { args, newContext } = await hookExecutor(table, 'query', 'beforeQuery', {
           args: argss,
           newContext: context,
         });
-        return await controller(table.name, args);
+        // Making query
+        let res = await controller(table.name, args);
+
+        // Calling function hookExecutor to see if there is hooks afterQuery
+        const { res: changedRes } = await hookExecutor(table, 'query', 'afterQuery', {
+          args,
+          argss,
+          res,
+          context: newContext,
+          incomeContext,
+        });
+
+        // Sending modified result
+        return changedRes;
       } catch (e) {
         logger.error(e);
         throw new AuthorizationError(e);
@@ -96,26 +110,41 @@ async function autoResolvers(data) {
     };
 
     resolvers.Query[countName] = async (parent, incomeArgs, incomeContext, info) => {
-      //const res = await myHook(table, input);
+      // Calling function hookExecutor to see if there is hooks beforeResolver
       const { argss, context } = await hookExecutor(table, 'count', 'beforeResolver', {
         argss: incomeArgs,
         context: incomeContext,
       });
 
+      // Calling function hookExecutor to see if there is hooks beforeQuery
       const { args, newContext } = await hookExecutor(table, 'count', 'beforeQuery', {
         args: argss,
         newContext: context,
       });
-      const result = await controller(table.name, args);
 
-      return { count: result };
+      // Making query
+      let res = await controller(table.name, args);
+
+      // Calling function hookExecutor to see if there is hooks afterQuery
+      const { res: changedRes } = await hookExecutor(table, 'count', 'afterQuery', {
+        args,
+        argss,
+        res,
+        context: newContext,
+        incomeContext,
+      });
+
+      // Sending modified result
+      return { count: changedRes };
     };
 
     resolvers.Mutation[table.name] = async (parent, incomeArgs, incomeContext, info) => {
       try {
+        // Extracting the operation which is being made "_update, _create or _delete"
         const { input } = incomeArgs;
         const operationName = Object.keys(input)[0];
-        // Verifying if there is hooks for the mutation query which is required
+
+        // Calling function hookExecutor to see if there is hooks beforeResolver
         const { argss, context } = await hookExecutor(table, operationName, 'beforeResolver', {
           argss: incomeArgs,
           context: incomeContext,
@@ -128,12 +157,26 @@ async function autoResolvers(data) {
         await validation(argss.input); // it validates mutation inputs
         await validation(argss.input, '_update'); // it validates update inputs;
 
+        // Calling function hookExecutor to see if there is hooks beforeQuery
         const { args, newContext } = await hookExecutor(table, operationName, 'beforeQuery', {
           args: argss,
           newContext: context,
         });
 
-        return await controller(table.name, args, table);
+        // Making query
+        let res = await controller(table.name, args, table);
+
+        // Calling function hookExecutor to see if there is hooks afterQuery
+        const { res: changedRes } = await hookExecutor(table, operationName, 'afterQuery', {
+          args,
+          argss,
+          res,
+          context: newContext,
+          incomeContext,
+        });
+
+        // Sending modified result
+        return changedRes;
       } catch (e) {
         throw new AuthorizationError(e);
       }

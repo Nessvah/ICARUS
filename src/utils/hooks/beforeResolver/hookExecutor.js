@@ -9,21 +9,24 @@
 const hookExecutor = async (table, operation, hook, properties) => {
   const queryInformation = { ...properties };
   try {
+    // To call the function inside the entity
     let callFunction;
 
     if (table.hooks && table.hooks.all && table.hooks.all[hook]) {
-      // Attempt to access the function from the 'all' property of 'table.hooks'
+      // Accessing the parameter 'all' of 'table.hooks'
       callFunction = table.hooks.all[hook];
     } else if (table.hooks && table.hooks[operation] && table.hooks[operation][hook]) {
-      // If not found, attempt to access the function from the specific 'operation' property
+      // If there is not, accessing the 'operation' property
       callFunction = table.hooks[operation][hook];
     } else {
-      // If neither 'all' nor 'operation' properties contain the function, set func to undefined
+      // If there arent all or operation function, set callFunction to undefined
       callFunction = undefined;
     }
+    // If there is not callFunction, return the properties as it came
     if (!callFunction) {
       return queryInformation;
     }
+    // If there is, call the function
     return (await callFunction(queryInformation)) || queryInformation;
   } catch (error) {
     throw new Error(error);

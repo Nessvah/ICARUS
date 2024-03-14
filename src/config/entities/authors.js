@@ -39,4 +39,12 @@ export default {
       icon: 'FaIdCardAlt',
     },
   },
+  /* hooks: {
+    count: {
+      async afterQuery(props) {
+        props.res = 10;
+        return props;
+      },
+    },
+  }, */
 };
