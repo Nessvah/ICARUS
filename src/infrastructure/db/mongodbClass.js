@@ -165,7 +165,7 @@ export class MongoDBConnection {
 
   /**
    ** find a specific value or a array of values in a document, in a specific table.
-   * @param {string} table
+   * @param {string} tableName
    * @param {object} input
    * @param {object} input.filter
    * @param {object} input.sort
@@ -173,12 +173,12 @@ export class MongoDBConnection {
    * @param {number} input.take
    * @returns {Promise<object[]>}
    */
-  async find(table, { input }) {
+  async find(tableName, { input }) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
-      const collection = db.collection(table);
+      const collection = db.collection(tableName);
       let res;
       let query;
 
@@ -233,17 +233,17 @@ export class MongoDBConnection {
 
   /**
    ** insert a new document or a array of new documents, in a specific table.
-   * @param {string} table
+   * @param {string} tableName
    * @param {object} input
    * @param {object[]} input._create
    * @returns {Promise<object[]>}
    */
-  async create(table, { input }) {
+  async create(tableName, { input }) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
-      const collection = db.collection(table);
+      const collection = db.collection(tableName);
 
       // Insert the data into the collection
       const res = await collection.insertMany([input._create]);
@@ -267,7 +267,7 @@ export class MongoDBConnection {
 
   /**
    ** Update one or more documents in a specific table or upgrade them.
-   * @param {string} table - The name of the table to update documents in.
+   * @param {string} tableName - The name of the table to update documents in.
    * @param {object} input - An object containing update information.
    * @param {object} input._update - An object specifying the update operation.
    * @param {object} input._update.filter - The filter criteria to match documents for update.
@@ -276,12 +276,12 @@ export class MongoDBConnection {
    * @returns {Promise<object[]>} - A promise resolving to an array of updated documents.
    */
 
-  async update(table, { input }) {
+  async update(tableName, { input }) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
-      const collection = db.collection(table);
+      const collection = db.collection(tableName);
 
       if (input._update) {
         // Construct a filter object using the filterController method
@@ -340,12 +340,12 @@ export class MongoDBConnection {
    * @param {object} input._delete.filter - The filter criteria to select documents for deletion.
    * @returns {Promise<{ deleted: number }|boolean>} - A promise that resolves to an object with the count of deleted documents, or false if deletion fails.
    */
-  async delete(table, { input }) {
+  async delete(tableName, { input }) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
-      const collection = db.collection(table);
+      const collection = db.collection(tableName);
 
       // Extract the delete criteria from the input
       const { _delete } = input;
@@ -372,16 +372,16 @@ export class MongoDBConnection {
 
   /**
    ** Counts the number of documents in a collection.
-   * @param {string} table - The name of the collection.
+   * @param {string} tableName - The name of the collection.
    * @param {object} options - Additional options.
    * @returns {Promise<number>} - The count of documents in the collection.
    */
-  async count(table, { input }) {
+  async count(tableName, { input }) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
-      const collection = db.collection(table);
+      const collection = db.collection(tableName);
       let res;
       let query;
 

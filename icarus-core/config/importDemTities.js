@@ -6,21 +6,36 @@ import { fileURLToPath, URL } from 'url'; // Module to convert a file URL to a f
 // Define a class for importing entities
 export class ImportThemTities {
   constructor() {
-    // Initialize the directory name using the current file URL
-    this.path = path.dirname(fileURLToPath(import.meta.url));
+    /**
+     * The directory name of the current file
+     * @type {string}
+     */
+    this.__dirname = path.dirname(fileURLToPath(import.meta.url));
+    /**
+     * Set of processed files
+     * @type {Set<string>}
+     */
+    this.processedFiles = new Set();
   }
+
   /**
-   * @param {string} configPath  - the path to the config file.
+   ** Imports all entities
+   * @returns {Promise<{tables: importThemTities.Table[], connections: importThemTities.Connection[]}>} The imported entities
    */
-  // Method to import all entities
-  async importAll(configPath) {
+  async importAll() {
     try {
       // Array to store table information
       const tables = [];
+      const connections = [];
 
       // Read all connection files from the db folder
-      const dbFolderPath = path.join(configPath, '/db');
+      const dbFolderPath = path.join(this.__dirname, './db');
       const connectionFiles = await fs.readdir(dbFolderPath);
+
+      // Throw an error if there are no connection files
+      if (connectionFiles.length === 0) {
+        throw new Error('No connection files found');
+      }
 
       // Object to store database information extracted from connection files
       const databaseInfo = {};
@@ -38,14 +53,19 @@ export class ImportThemTities {
       }
 
       // Read entities files from the entities folder
-      const entitiesFolderPath = path.join(configPath, '/entities');
+      const entitiesFolderPath = path.join(this.__dirname, './entities');
       const entitiesFiles = await fs.readdir(entitiesFolderPath);
+
+      // Throw an error if there are no entities files
+      if (entitiesFiles.length === 0) {
+        throw new Error('No entities files found');
+      }
 
       // Loop through each entities file
       for (let file of entitiesFiles) {
         // Check if the file is a JSON file
         if (file.endsWith('.js')) {
-          // All information from .js file in module
+          // Construct the full absolute path of .js entity
           const fileAbsolutePath = path.join(entitiesFolderPath, file);
           // Transforming absolute path in something readable to import()
           const filePathURL = new URL(`file://${fileAbsolutePath}`);
@@ -60,13 +80,32 @@ export class ImportThemTities {
             database: databaseInfo[databaseName],
             columns: module.default.tables.columns,
             backoffice: module.default.tables.backoffice,
+            hooks: module.default.hooks,
           };
           // Add table information to the tables array
           tables.push(tableInfo);
         }
       }
 
-      return { tables };
+      // Loop through each connection file again
+      for (let file of connectionFiles) {
+        // Construct the full path to the connection file
+        const connectionFilePath = path.join(dbFolderPath, file);
+        // Read connection file data
+        const connectionData = await fs.readFile(connectionFilePath, 'utf-8');
+        // Extract the file name
+        const fileName = path.parse(file).name;
+        // Parse connection data and store it in the connections array
+        const connectionInfo = JSON.parse(connectionData);
+        connections[fileName] = connectionInfo; // Assign connection info by name
+        // Add the processed file to the set
+        this.processedFiles.add(file);
+      }
+      /*       console.log({ connections });
+      console.log({ tables }); */
+
+      // Return the imported tables and connections
+      return { tables, connections };
       // Log the extracted tables information
     } catch (e) {
       // Log any errors that occur during execution

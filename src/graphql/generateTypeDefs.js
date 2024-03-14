@@ -360,7 +360,7 @@ if (config) {
   //Generate the typeDefs based on the entities configuration data
   const typeDefsString = generateTypeDefinitions(config);
   /**
-   * Writes the type definitions to a file.
+   ** Writes the type definitions to a file.
    * @param {string} filePath - The path to the file.
    * @param {string} typeDefsString - The type definitions.
    */
