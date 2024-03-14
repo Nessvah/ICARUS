@@ -3,7 +3,7 @@ import { logger } from '../infrastructure/server.js';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 import { ImportThemTities } from '../config/importDemTities.js';
-import { beforeResolver, beforeResolverRelations } from '../utils/hooks/beforeResolver/beforeResolver.js';
+import { beforeResolver, beforeResolverRelations } from '../utils/hooks/beforeResolver/hookExecutor.js';
 import { AuthorizationError } from '../utils/error-handling/CustomErrors.js';
 
 // We initialize a rate limiter instance by calling getGraphQLRateLimiter.

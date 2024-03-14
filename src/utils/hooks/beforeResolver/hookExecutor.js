@@ -7,7 +7,6 @@
  */
 const hookExecutor = async (table, properties, operation, hook) => {
   const queryInformation = { ...properties };
-  console.log(queryInformation);
   try {
     let callFunction;
     if (table.hooks && table.hooks.all && table.hooks.all[hook]) {
