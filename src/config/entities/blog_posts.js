@@ -1,4 +1,4 @@
-const entity = {
+export default {
   tables: {
     name: 'blog_posts',
     database: 'mongodb',
@@ -44,12 +44,36 @@ const entity = {
       icon: 'FaEdit',
     },
   },
+  hooks: {
+    all: {
+      async beforeResolver(props) {
+        const roles = ['admin', 'manager', 'user'];
+        if (!roles.includes('admin')) throw new Error('User not authorized to make this query');
+      },
+      beforeQuery: '',
+      afterQuery: '',
+      afterResolver: '',
+    },
+    query: '',
+    _update: {
+      async beforeQuery(props) {
+        return;
+      },
+    },
+    _create: {
+      async beforeQuery(props) {
+        const currentDate = new Date();
+        props.args.input._create.publish_date = currentDate;
+        return props;
+      },
+    },
+    _delete: '',
+  },
 };
 
-const blog_posts_create = async function (args) {
+/* const blog_posts_create = async function (args) {
   const currentDate = new Date();
   args.input._create.publish_date = currentDate;
   return args;
 };
-
-export { entity, blog_posts_create };
+ */

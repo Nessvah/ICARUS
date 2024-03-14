@@ -1,4 +1,4 @@
-const entity = {
+export default {
   tables: {
     name: 'authors',
     database: 'mongodb',
@@ -39,6 +39,12 @@ const entity = {
       icon: 'FaIdCardAlt',
     },
   },
+  /* hooks: {
+    count: {
+      async afterQuery(props) {
+        props.res = 10;
+        return props;
+      },
+    },
+  }, */
 };
-
-export { entity };

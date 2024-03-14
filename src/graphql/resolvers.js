@@ -3,9 +3,10 @@ import { logger } from '../infrastructure/server.js';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 import { ImportThemTities } from '../config/importDemTities.js';
-import { beforeResolver, beforeResolverRelations } from '../utils/hooks/beforeResolver/beforeResolver.js';
+import { beforeResolverRelations, hookExecutor } from '../utils/hooks/beforeResolver/hookExecutor.js';
 import { AuthorizationError } from '../utils/error-handling/CustomErrors.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
+import { validation } from '../utils/validation/validation.js';
 
 // We initialize a rate limiter instance by calling getGraphQLRateLimiter.
 // This function takes an object as an argument with a property identifyContext that defines
@@ -71,39 +72,111 @@ async function autoResolvers(data) {
   data.tables.forEach((table) => {
     const countName = `${table.name}Count`;
 
-    resolvers.Query[table.name] = async (parent, args, context, info) => {
+    resolvers.Query[table.name] = async (parent, incomeArgs, incomeContext, info) => {
       try {
-        // Caling function beforeResolver to see if there is hooks for the query called
-        await beforeResolver(table.name, args, 'Query');
+        // Calling function hookExecutor to see if there is hooks beforeResolver
+        const { argss, context } = await hookExecutor(table, 'query', 'beforeResolver', {
+          argss: incomeArgs,
+          context: incomeContext,
+        });
 
         //verify if the user it's exceeding the rate limit calls for seconds.
-        const limitErrorMessage = await rateLimiter({ parent, args, context, info }, rateLimiterConfig);
+        const limitErrorMessage = await rateLimiter({ parent, argss, context, info }, rateLimiterConfig);
         if (limitErrorMessage) throw new Error(limitErrorMessage);
 
-        return await controller(table.name, args);
+        // Calling function hookExecutor to see if there is hooks beforeQuery
+        const { args, newContext } = await hookExecutor(table, 'query', 'beforeQuery', {
+          args: argss,
+          newContext: context,
+        });
+        // Making query
+        let res = await controller(table.name, args);
+
+        // Calling function hookExecutor to see if there is hooks afterQuery
+        const { res: changedRes } = await hookExecutor(table, 'query', 'afterQuery', {
+          args,
+          argss,
+          res,
+          context: newContext,
+          incomeContext,
+        });
+
+        // Sending modified result
+        return changedRes;
       } catch (e) {
         logger.error(e);
         throw new AuthorizationError(e);
       }
     };
 
-    resolvers.Query[countName] = async (parent, args, context, info) => {
-      //const res = await myHook(table, input);
-      const result = await controller(table.name, args);
+    resolvers.Query[countName] = async (parent, incomeArgs, incomeContext, info) => {
+      // Calling function hookExecutor to see if there is hooks beforeResolver
+      const { argss, context } = await hookExecutor(table, 'count', 'beforeResolver', {
+        argss: incomeArgs,
+        context: incomeContext,
+      });
 
-      return { count: result };
+      // Calling function hookExecutor to see if there is hooks beforeQuery
+      const { args, newContext } = await hookExecutor(table, 'count', 'beforeQuery', {
+        args: argss,
+        newContext: context,
+      });
+
+      // Making query
+      let res = await controller(table.name, args);
+
+      // Calling function hookExecutor to see if there is hooks afterQuery
+      const { res: changedRes } = await hookExecutor(table, 'count', 'afterQuery', {
+        args,
+        argss,
+        res,
+        context: newContext,
+        incomeContext,
+      });
+
+      // Sending modified result
+      return { count: changedRes };
     };
 
-    resolvers.Mutation[table.name] = async (parent, args, context, info) => {
+    resolvers.Mutation[table.name] = async (parent, incomeArgs, incomeContext, info) => {
       try {
-        // Verifying if there is hooks for the mutation query which is required
-        const argss = await beforeResolver(table.name, args, 'Mutation');
+        // Extracting the operation which is being made "_update, _create or _delete"
+        const { input } = incomeArgs;
+        const operationName = Object.keys(input)[0];
+
+        // Calling function hookExecutor to see if there is hooks beforeResolver
+        const { argss, context } = await hookExecutor(table, operationName, 'beforeResolver', {
+          argss: incomeArgs,
+          context: incomeContext,
+        });
 
         //verify if the user it's exceeding the rate limit calls for seconds.
         const limitErrorMessage = await rateLimiter({ parent, argss, context, info }, rateLimiterConfig);
         if (limitErrorMessage) throw new Error(limitErrorMessage);
 
-        return await controller(table.name, args, table);
+        await validation(argss.input); // it validates mutation inputs
+        await validation(argss.input, '_update'); // it validates update inputs;
+
+        // Calling function hookExecutor to see if there is hooks beforeQuery
+        const { args, newContext } = await hookExecutor(table, operationName, 'beforeQuery', {
+          args: argss,
+          newContext: context,
+        });
+
+        // Making query
+        let res = await controller(table.name, args, table);
+
+        // Calling function hookExecutor to see if there is hooks afterQuery
+        const { res: changedRes } = await hookExecutor(table, operationName, 'afterQuery', {
+          args,
+          argss,
+          res,
+          context: newContext,
+          incomeContext,
+        });
+
+        // Sending modified result
+        return changedRes;
       } catch (e) {
         throw new AuthorizationError(e);
       }

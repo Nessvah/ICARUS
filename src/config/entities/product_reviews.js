@@ -1,4 +1,4 @@
-const entity = {
+export default {
   tables: {
     name: 'product_reviews',
     database: 'mysql',
@@ -88,12 +88,16 @@ const entity = {
       icon: 'FaStar',
     },
   },
+  hooks: {
+    query: '',
+    _update: '',
+    _create: {
+      async beforeQuery(props) {
+        const currentDate = new Date();
+        props.args.input._create.review_date = currentDate;
+        return props;
+      },
+    },
+    _delete: '',
+  },
 };
-
-const product_reviews_create = async function (args) {
-  const currentDate = new Date();
-  args.input._create.review_date = currentDate;
-  return args;
-};
-
-export { entity, product_reviews_create };

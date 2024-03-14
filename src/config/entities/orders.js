@@ -1,4 +1,4 @@
-const entity = {
+export default {
   tables: {
     name: 'orders',
     database: 'mysql',
@@ -97,12 +97,16 @@ const entity = {
       currency: 'euro',
     },
   },
+  hooks: {
+    query: '',
+    _update: '',
+    _create: {
+      async beforeQuery(props) {
+        const currentDate = new Date();
+        props.args.input._create.order_date = currentDate;
+        return props;
+      },
+    },
+    _delete: '',
+  },
 };
-
-const orders_create = async function (args) {
-  const currentDate = new Date();
-  args.input._create.order_date = currentDate;
-  return args;
-};
-
-export { entity, orders_create };
