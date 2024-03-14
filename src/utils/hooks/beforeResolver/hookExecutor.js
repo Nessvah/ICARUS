@@ -1,8 +1,9 @@
 /**
  * Constructor for MongoDBConnection class.
- * @param {string} table - Name of current table.
- * @param {object} args - Args with input information.
- * @param {string} QueryType - Query type (Mutation/Query).
+ * @param {string} table - Information of current table.
+ * @param {string} operation - query, _update, _delete, _create.
+ * @param {string} hook - Hook name (beforeQuery, beforeResolver..).
+ * @param {object} properties - Args + context information.
  * @returns {Promise<object[]>} - Modified args or same args.
  */
 const hookExecutor = async (table, operation, hook, properties) => {

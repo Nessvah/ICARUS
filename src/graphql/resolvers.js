@@ -6,6 +6,7 @@ import { ImportThemTities } from '../config/importDemTities.js';
 import { beforeResolverRelations, hookExecutor } from '../utils/hooks/beforeResolver/hookExecutor.js';
 import { AuthorizationError } from '../utils/error-handling/CustomErrors.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
+import { validation } from '../utils/validation/validation.js';
 
 // We initialize a rate limiter instance by calling getGraphQLRateLimiter.
 // This function takes an object as an argument with a property identifyContext that defines
@@ -123,6 +124,9 @@ async function autoResolvers(data) {
         //verify if the user it's exceeding the rate limit calls for seconds.
         const limitErrorMessage = await rateLimiter({ parent, argss, context, info }, rateLimiterConfig);
         if (limitErrorMessage) throw new Error(limitErrorMessage);
+
+        await validation(argss.input); // it validates mutation inputs
+        await validation(argss.input, '_update'); // it validates update inputs;
 
         const { args, newContext } = await hookExecutor(table, operationName, 'beforeQuery', {
           args: argss,
