@@ -10,18 +10,25 @@ import initializeLogger from '../utils/loggers/winstonConfig.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// create a dirname to complete the path to the current file.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 // initialize winston before anything else
 export const logger = await initializeLogger;
 logger.debug('Logger initialized correctly.');
 
-// create a database pool connection.
-
+/**
+ * @param {string} configPath  - the path to the config file.
+ * @returns {ApolloServer} server - Returns a apollo server instance, configured.
+ */
 const startGraphqlServer = async (configPath) => {
+  // read the config file and generate the typeDefs and the 'data' information, that will be used in other parts of the application.
   await readConfigFile(configPath);
+  // generate the resolvers that will be used in the apollo server.
   await autoResolvers();
+  // create a database pool connection.
   await createDbPool();
-
+  // import the typeDefs that will be used in the apollo server.
   let typeDefs;
   try {
     typeDefs = fs.readFileSync(path.join(__dirname, '../graphql/typeDefs.graphql'), 'utf8');
@@ -29,16 +36,17 @@ const startGraphqlServer = async (configPath) => {
     logger.error(e);
   }
 
-  // initialize apollo server but adding the drain plugin for out httpserver
+  //create a new apollo server instance.
   const server = new ApolloServer({
     typeDefs,
     resolvers,
     formatError: customFormatError,
-    validationRules: [depthLimit(3)],
+    validationRules: [depthLimit(3)], //config the depth limit of the graphql query to 3.
   });
 
-  // start our server and await for it to resolve
+  // start the apollo server.
   await server.start();
+  //return the apollo server instance started.
   return server;
 };
 

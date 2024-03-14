@@ -9,7 +9,9 @@ export class ImportThemTities {
     // Initialize the directory name using the current file URL
     this.path = path.dirname(fileURLToPath(import.meta.url));
   }
-
+  /**
+   * @param {string} configPath  - the path to the config file.
+   */
   // Method to import all entities
   async importAll(configPath) {
     try {

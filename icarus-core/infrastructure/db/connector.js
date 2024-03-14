@@ -8,7 +8,11 @@ import { config } from '../../graphql/generateTypeDefs.js';
 //a pool of many different database connections.
 const pools = [];
 
-//this function will be called in the resolvers, and will filter the requests to all databases and response properly.
+/**
+ * this function will be called in the resolvers, and will filter the requests to all databases and response properly.
+ * @param {string} table - name of the table.
+ * @param {object} args - args have all the information passed to the query or mutation, and define the action that will be made in the controllers.
+ */
 async function controller(table, args) {
   let connection;
   //find the right database in the pool, base on table name.
@@ -24,7 +28,7 @@ async function controller(table, args) {
         connection = new MySQLConnection(currentTable);
         break;
     }
-
+    //define the CRUD function based on the _action passed in the input.
     let action;
     for (const key in args.input) {
       if (key.startsWith('_')) {
@@ -54,7 +58,10 @@ async function controller(table, args) {
   }
 }
 
-//create a pool connection to many databases, based on the config files in the "data" variable.
+/**
+ * create a pool connection to many databases, based on the config files in the "data" variable.
+ * @param {object} config - is a object with the tables configurations to create the database pool.
+ */
 async function createDbPool() {
   let data = config;
   data.tables.forEach(async (table) => {
