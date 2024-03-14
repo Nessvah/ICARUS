@@ -1,4 +1,4 @@
-const entity = {
+export default {
   tables: {
     name: 'blog_posts',
     database: 'mongodb',
@@ -40,10 +40,9 @@ const entity = {
   },
 };
 
-const blog_posts_create = async function (args) {
+/* const blog_posts_create = async function (args) {
   const currentDate = new Date();
   args.input._create.publish_date = currentDate;
   return args;
 };
-
-export { entity, blog_posts_create };
+ */

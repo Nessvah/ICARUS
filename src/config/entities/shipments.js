@@ -1,4 +1,4 @@
-const entity = {
+export default {
   tables: {
     name: 'shipments',
     database: 'mysql',
@@ -68,5 +68,3 @@ const entity = {
     },
   },
 };
-
-export { entity };

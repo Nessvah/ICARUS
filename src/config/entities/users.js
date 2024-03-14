@@ -1,4 +1,4 @@
-const entity = {
+export default {
   tables: {
     name: 'users',
     database: 'mongodb',
@@ -43,9 +43,24 @@ const entity = {
       icon: 'FaUserFriends',
     },
   },
+  hooks: {
+    all: {
+      async beforeResolver(args) {
+        const roles = ['admin', 'manager', 'user'];
+        if (!roles.includes('admin')) throw new Error('User not authorized to make this query');
+      },
+      beforeQuery: '',
+      afterQuery: '',
+      afterResolver: '',
+    },
+    query: '',
+    update: '',
+    create: '',
+    delete: '',
+  },
 };
 
-const usersPermissionQuery = async function (context) {
+/* const usersPermissionQuery = async function (context) {
   const roles = ['admin', 'manager', 'user'];
   if (!roles.includes('admin')) return false;
   return true;
@@ -66,5 +81,6 @@ const users_create = async function (args) {
 const users_update = async function () {
   const currentDate = new Date();
 };
-
-export { entity, usersPermissionQuery, users_create, users_update, usersPermissionMutation };
+ */
+/* export { usersPermissionQuery, users_create, users_update, usersPermissionMutation };
+ */

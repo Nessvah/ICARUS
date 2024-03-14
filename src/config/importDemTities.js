@@ -61,13 +61,14 @@ export class ImportThemTities {
           const module = await import(filePathURL);
 
           // Extract table information from parsed JSON data
-          const tableName = module.entity.tables.name;
-          const databaseName = module.entity.tables.database;
+          const tableName = module.default.tables.name;
+          const databaseName = module.default.tables.database;
           const tableInfo = {
             name: tableName,
             database: databaseInfo[databaseName],
-            columns: module.entity.tables.columns,
-            backoffice: module.entity.tables.backoffice,
+            columns: module.default.tables.columns,
+            backoffice: module.default.tables.backoffice,
+            hooks: module.default.hooks,
           };
           // Add table information to the tables array
           tables.push(tableInfo);

@@ -1,7 +1,3 @@
-import fs from 'fs';
-import { permissionHook } from './permissionHook.js';
-import { beforeResolverMutation } from './beforeResolverMutation.js';
-
 /**
  * Constructor for MongoDBConnection class.
  * @param {string} table - Name of current table.
@@ -9,28 +5,22 @@ import { beforeResolverMutation } from './beforeResolverMutation.js';
  * @param {string} QueryType - Query type (Mutation/Query).
  * @returns {Promise<object[]>} - Modified args or same args.
  */
-const beforeResolver = async (table, args, QueryType) => {
+const hookExecutor = async (table, properties, operation, hook) => {
+  const queryInformation = { ...properties };
+  console.log(queryInformation);
   try {
-    // Definition of entity path
-    const filePath = `config/entities/${table}.js`;
-
-    // Verifying if the file exists
-    if (!fs.existsSync(filePath)) {
-      throw new Error(`File not found: ${filePath}`);
+    let callFunction;
+    if (table.hooks && table.hooks.all && table.hooks.all[hook]) {
+      callFunction = table.hooks.all[hook];
+    } else if (table.hooks && table.hooks[operation] && table.hooks[operation][hook]) {
+      callFunction = table.hooks[operation][hook];
+    } else {
+      callFunction = undefined; // Ou outro valor padrão, se desejado
     }
-
-    // Importing entity informations
-    const entityInfo = await import(`../../../${filePath}`);
-
-    // Verifying if there is a permission hook for this Query
-    await permissionHook(entityInfo, table, args, QueryType);
-
-    // Verification if the query is a mutation query
-    if (QueryType === 'Mutation') {
-      const res = await beforeResolverMutation(table, entityInfo, args);
-      return res;
+    if (!callFunction) {
+      return queryInformation;
     }
-    return args;
+    return (await callFunction(queryInformation)) || queryInformation;
   } catch (error) {
     throw new Error(error);
   }
@@ -61,4 +51,4 @@ const beforeResolverRelations = async (table, args, column, parent) => {
   return args;
 };
 
-export { beforeResolver, beforeResolverRelations };
+export { hookExecutor, beforeResolverRelations };

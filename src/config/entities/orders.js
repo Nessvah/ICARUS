@@ -1,4 +1,4 @@
-const entity = {
+export default {
   tables: {
     name: 'orders',
     database: 'mysql',
@@ -99,10 +99,9 @@ const entity = {
   },
 };
 
-const orders_create = async function (args) {
+/* const orders_create = async function (args) {
   const currentDate = new Date();
   args.input._create.order_date = currentDate;
   return args;
 };
-
-export { entity, orders_create };
+ */

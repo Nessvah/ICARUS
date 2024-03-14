@@ -1,4 +1,4 @@
-const entity = {
+export default {
   tables: {
     name: 'payment',
     database: 'mongodb',
@@ -50,10 +50,8 @@ const entity = {
   },
 };
 
-const payment_create = async function (args) {
+/* const payment_create = async function (args) {
   const currentDate = new Date();
   args.input._create.payment_date = currentDate;
   return args;
-};
-
-export { entity, payment_create };
+}; */
