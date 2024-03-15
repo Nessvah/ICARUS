@@ -224,6 +224,7 @@ export class MongoDBConnection {
       // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
       const processedRes = afterResolver(res, this.tableData.type);
 
+      // Return the processed results
       return processedRes;
     } catch (error) {
       logger.error(error);
@@ -258,6 +259,7 @@ export class MongoDBConnection {
       const processedRes = afterResolver([input._create], this.tableData.type);
 
       // Return an object with the created property, containing the inserted data
+      return { created: processedRes };
       return { created: processedRes };
     } catch (error) {
       logger.error(error); // Log any errors
