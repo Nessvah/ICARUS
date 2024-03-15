@@ -3,7 +3,6 @@ import { validation } from '../utils/validation/validation.js';
 //import { AuthenticationError } from '../utils/error-handling/CustomErrors.js';
 import { config } from './generateTypeDefs.js';
 import { hookExecutor, beforeResolverRelations } from '../utils/hooks/beforeResolver/hookExecutor.js';
-import { getGraphQLRateLimiter } from 'graphql-rate-limit';
 import { AuthorizationError } from '../utils/error-handling/CustomErrors.js';
 import { logger } from '../infrastructure/server.js';
 
@@ -15,11 +14,6 @@ const capitalize = (str) => {
 let nestedObject = {};
 export const resolvers = {};
 
-const rateLimiter = getGraphQLRateLimiter({
-  identifyContext: (ctx) => ctx.currentUser,
-});
-
-const rateLimiterConfig = { max: 10, window: '1s' };
 /**
  * this function use the "data" parameter and create the resolvers dynamically.
  * @param {object} data - is a object with the tables configurations to create the resolvers dynamically.
@@ -59,10 +53,6 @@ async function autoResolvers() {
           argss: incomeArgs,
           context: incomeContext,
         });
-
-        //verify if the user it's exceeding the rate limit calls for seconds.
-        const limitErrorMessage = await rateLimiter({ parent, argss, context, info }, rateLimiterConfig);
-        if (limitErrorMessage) throw new Error(limitErrorMessage);
 
         // Calling function hookExecutor to see if there is hooks beforeQuery
         const { args, newContext } = await hookExecutor(table, 'query', 'beforeQuery', {
@@ -129,10 +119,6 @@ async function autoResolvers() {
           argss: incomeArgs,
           context: incomeContext,
         });
-
-        //verify if the user it's exceeding the rate limit calls for seconds.
-        const limitErrorMessage = await rateLimiter({ parent, argss, context, info }, rateLimiterConfig);
-        if (limitErrorMessage) throw new Error(limitErrorMessage);
 
         await validation(argss.input); // it validates mutation inputs
         await validation(argss.input, '_update'); // it validates update inputs;
