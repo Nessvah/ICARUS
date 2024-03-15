@@ -138,7 +138,6 @@ ${config.tables
 
   # Define the root Mutation 
 type Mutation {
-  authorize(input: AuthorizeUser!): AuthPayload!
 ${config.tables
   .map((table) => {
     const tableName = table.name;
@@ -314,32 +313,12 @@ type ${tableName}CountResult {
     );
   });
 
-  // Statically generate typedef's for enums and actions like Auth and providing table info
+  // Statically generate typedef's for enums and providing table info
   typeDefs.push(`
 
 enum Sort {
   ASC
   DESC
-}
-
-  ## Necessary type defs for Auth resolvers
-input AuthorizeUser {
-  email: String!
-  password: String!
-}
-
-input RoleInput {
-  role: String!
-}
-
-type AuthPayload {
-  token: Token!
-}
-
-type Token {
-  accessToken: String!
-  idToken: String!
-  refreshToken: String!
 }
 
   ## Necessary type defs for providing the backOffice with table structure
