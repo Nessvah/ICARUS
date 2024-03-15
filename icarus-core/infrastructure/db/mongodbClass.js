@@ -1,13 +1,14 @@
 import { ObjectId } from 'mongodb';
 import { logger } from '../server.js';
 import { afterResolver } from '../../utils/hooks/afterResolver/afterResolver.js';
+import { createUploadStream } from './s3.js';
 
 /**
  ** MongoDBConnection class handles connections and operations with MongoDB.
  */
 export class MongoDBConnection {
   /**
-   * Constructor for MongoDBConnection class.
+   ** Constructor for MongoDBConnection class.
    * @param {object} currentTableInfo - Information about the current table.
    * @param {string} currentTableInfo.table - Name of the table.
    * @param {string} currentTableInfo.type - Database type.
@@ -125,7 +126,6 @@ export class MongoDBConnection {
               // For case-insensitive substring match using regular expression
               const regexPattern = `.*${filterValue}.*`;
               query = { $regex: regexPattern, $options: 'i' };
-              console.log(query);
               break;
             /* For comparison operators such as _in and _nin, the code sets the MongoDB operator 
             to $in or $nin and converts the filter value to an array. */
@@ -165,7 +165,7 @@ export class MongoDBConnection {
 
   /**
    ** find a specific value or a array of values in a document, in a specific table.
-   * @param {string} table
+   * @param {string} tableName
    * @param {object} input
    * @param {object} input.filter
    * @param {object} input.sort
@@ -173,12 +173,12 @@ export class MongoDBConnection {
    * @param {number} input.take
    * @returns {Promise<object[]>}
    */
-  async find(table, { input }) {
+  async find(tableName, { input }) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
-      const collection = db.collection(table);
+      const collection = db.collection(tableName);
       let res;
       let query;
 
@@ -224,6 +224,7 @@ export class MongoDBConnection {
       // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
       const processedRes = afterResolver(res, this.tableData.type);
 
+      // Return the processed results
       return processedRes;
     } catch (error) {
       logger.error(error);
@@ -233,17 +234,17 @@ export class MongoDBConnection {
 
   /**
    ** insert a new document or a array of new documents, in a specific table.
-   * @param {string} table
+   * @param {string} tableName
    * @param {object} input
    * @param {object[]} input._create
    * @returns {Promise<object[]>}
    */
-  async create(table, { input }) {
+  async create(tableName, { input }) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
-      const collection = db.collection(table);
+      const collection = db.collection(tableName);
 
       // Insert the data into the collection
       const res = await collection.insertMany([input._create]);
@@ -259,6 +260,7 @@ export class MongoDBConnection {
 
       // Return an object with the created property, containing the inserted data
       return { created: processedRes };
+      return { created: processedRes };
     } catch (error) {
       logger.error(error); // Log any errors
       return false; // Return false in case of any errors
@@ -266,41 +268,66 @@ export class MongoDBConnection {
   }
 
   /**
-   ** update a document or a array of documents in a specific table.
-   * @param {string} table
-   * @param {object} input
-   * @param {object} input._update
-   * @param {object} input._update.filter
-   * @returns {Promise<object[]>}
+   ** Update one or more documents in a specific table or upgrade them.
+   * @param {string} tableName - The name of the table to update documents in.
+   * @param {object} input - An object containing update information.
+   * @param {object} input._update - An object specifying the update operation.
+   * @param {object} input._update.filter - The filter criteria to match documents for update.
+   * @param {object} input._upgrade - An object specifying the upgrade operation.
+   * @param {object} input._upgrade.filter - The filter criteria to match documents for upgrade.
+   * @returns {Promise<object[]>} - A promise resolving to an array of updated documents.
    */
-  async update(table, { input }) {
+
+  async update(tableName, { input }) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
-      const collection = db.collection(table);
+      const collection = db.collection(tableName);
 
-      // Extract the update and filter from the input
-      const { _update } = input;
-      // Construct a filter object using the filterController method
-      const filter = this.filterController(_update.filter);
+      if (input._update) {
+        // Construct a filter object using the filterController method
+        const filter = this.filterController(input._update.filter);
 
-      // Call updateMany method to update matching documents in the collection
-      const res = await collection.updateMany(filter, { $set: _update });
-      if (!res) {
-        return false; // Return false if the operation fails
+        // Call updateMany method to update matching documents in the collection
+        delete input._update.filter;
+        const res = await collection.updateMany(filter, { $set: input._update });
+        if (!res) {
+          return false; // Return false if the operation fails
+        }
+
+        // Find all documents that match the updated parameter
+        const updated = await collection.find(input._update).toArray();
+        if (!updated) {
+          return false; // Return false if no documents are found
+        }
+        // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
+        const processedRes = await afterResolver(updated, this.tableData.type);
+
+        // Return an object with the updated property containing the updated documents
+        return { updated: processedRes };
+      } else if (input._upload) {
+        // Extract the filter from the input
+        const filter = this.filterController(input._upload.filter);
+        // Call updateMany method to update matching documents in the collection
+        delete input._upload.filter;
+        const res = await collection.updateMany(filter, { $set: input._upload });
+        if (!res) {
+          return false; // Return false if the operation fails
+        }
+        // Find all documents that match the updated parameter
+        const updated = await collection.find(input._upload).toArray();
+        if (!updated) {
+          return false; // Return false if no documents are found
+        }
+        // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
+        const processedRes = await afterResolver(updated, this.tableData.type);
+
+        // Return an object with the updated property containing the updated documents
+        return { updated: processedRes };
+      } else {
+        return false; // Return false if neither _update nor _upload is provided
       }
-
-      // Find all documents that match the updated parameter
-      const updated = await collection.find(_update).toArray();
-      if (!updated) {
-        return false; // Return false if no documents are found
-      }
-      // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
-      const processedRes = await afterResolver(updated, this.tableData.type);
-
-      // Return an object with the updated property containing the updated documents
-      return { updated: processedRes };
     } catch (error) {
       logger.error(error); // Log any errors
       return false; // Return false in case of any errors
@@ -315,12 +342,12 @@ export class MongoDBConnection {
    * @param {object} input._delete.filter - The filter criteria to select documents for deletion.
    * @returns {Promise<{ deleted: number }|boolean>} - A promise that resolves to an object with the count of deleted documents, or false if deletion fails.
    */
-  async delete(table, { input }) {
+  async delete(tableName, { input }) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
-      const collection = db.collection(table);
+      const collection = db.collection(tableName);
 
       // Extract the delete criteria from the input
       const { _delete } = input;
@@ -347,16 +374,16 @@ export class MongoDBConnection {
 
   /**
    ** Counts the number of documents in a collection.
-   * @param {string} table - The name of the collection.
+   * @param {string} tableName - The name of the collection.
    * @param {object} options - Additional options.
    * @returns {Promise<number>} - The count of documents in the collection.
    */
-  async count(table, { input }) {
+  async count(tableName, { input }) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
-      const collection = db.collection(table);
+      const collection = db.collection(tableName);
       let res;
       let query;
 
@@ -411,5 +438,99 @@ export class MongoDBConnection {
     // If the input object does not contain a sort property, return an empty object
     // This means that the documents will be sorted based on the _id field in ascending order by default
     return {};
+  }
+
+  /**
+   ** Uploads a file to S3 and updates the database with the uploaded file's location.
+   *
+   * @param {string} tableName - The name of the table that the file is being uploaded to.
+   * @param {object} input - The input object containing the file and filter criteria.
+   * @param {object} input._upload - The upload criteria object.
+   * @param {object} input._upload.file - The file to be uploaded.
+   * @param {object} input._upload.filter - The filter criteria to select the rows to be updated.
+   * @param {object} table - The table structure, used to determine the column with the "key" extra.
+   * @returns {Promise<{ uploaded: string }|ApolloError>} - A promise that resolves to an object with the uploaded file's location, or an ApolloError if the upload fails.
+   */
+  async upload(tableName, { input }, table) {
+    const { file } = input._upload;
+    const { _upload } = input;
+    const filter = this.filterController(_upload.filter);
+
+    if (!file) {
+      throw new Error('No file provided');
+    }
+
+    const { filename, createReadStream, encoding } = await file;
+
+    // Check if the mimetype is valid (png, jpeg, jpg)
+    const mimeTypes = {
+      png: 'image/png',
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+    };
+
+    const getMimeType = (filename) => {
+      const extension = filename.split('.').pop();
+      return mimeTypes[extension.toLowerCase()];
+    };
+    /**
+     ** Returns the mime type of a file based on its filename.
+     * @param {string} filename - The filename of the file.
+     * @returns {string} - The mime type of the file.
+     */
+    const mimeType = getMimeType(filename);
+
+    const stream = createReadStream();
+
+    try {
+      // Find the column with extra === 'key'
+      const keyColumn = table.columns.find((column) => column.extra === 'key');
+
+      if (!keyColumn) {
+        throw new Error('No column with extra === "key" found in the table');
+      }
+
+      // Ensure a filter is provided
+      if (!filter || Object.keys(filter).length <= 0) {
+        throw new Error('No filter provided');
+      }
+
+      // Create the S3 key for the uploaded file
+      const key = `icarus/${tableName}/${filename}`;
+
+      // Create an upload stream to S3
+      const uploadStream = await createUploadStream(key, mimeType);
+
+      // Pipe the file read stream to the upload stream
+      stream.pipe(uploadStream.writeStream);
+
+      // Wait for the upload to finish and get the S3 location
+      const result = await uploadStream.promise;
+
+      // Remove the file object from the input data
+      delete input._upload.file;
+
+      // Add the S3 location to the input data
+      const updatedInput = {
+        input: {
+          _upload: {
+            url: result.Key,
+            ...input._upload,
+          },
+        },
+      };
+
+      // Update the database table with the new input data
+      await this.update(tableName, updatedInput);
+
+      // Return the S3 location
+      return { uploaded: result.Location };
+    } catch (error) {
+      logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
+      // Throw an ApolloError if upload fails
+      throw new ApolloError('Error uploading file', 'UPLOAD_ERROR', {
+        errorMessage: error.message,
+      });
+    }
   }
 }

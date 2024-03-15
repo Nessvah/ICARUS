@@ -6,12 +6,22 @@ import { fileURLToPath, URL } from 'url'; // Module to convert a file URL to a f
 // Define a class for importing entities
 export class ImportThemTities {
   constructor() {
-    // Initialize the directory name using the current file URL
+    /**
+     * The directory name of the current file
+     * @type {string}
+     */
     this.__dirname = path.dirname(fileURLToPath(import.meta.url));
+    /**
+     * Set of processed files
+     * @type {Set<string>}
+     */
     this.processedFiles = new Set();
   }
 
-  // Method to import all entities
+  /**
+   ** Imports all entities
+   * @returns {Promise<{tables: importThemTities.Table[], connections: importThemTities.Connection[]}>} The imported entities
+   */
   async importAll() {
     try {
       // Array to store table information
@@ -77,17 +87,24 @@ export class ImportThemTities {
         }
       }
 
+      // Loop through each connection file again
       for (let file of connectionFiles) {
+        // Construct the full path to the connection file
         const connectionFilePath = path.join(dbFolderPath, file);
+        // Read connection file data
         const connectionData = await fs.readFile(connectionFilePath, 'utf-8');
+        // Extract the file name
         const fileName = path.parse(file).name;
+        // Parse connection data and store it in the connections array
         const connectionInfo = JSON.parse(connectionData);
         connections[fileName] = connectionInfo; // Assign connection info by name
+        // Add the processed file to the set
         this.processedFiles.add(file);
       }
       /*       console.log({ connections });
       console.log({ tables }); */
 
+      // Return the imported tables and connections
       return { tables, connections };
       // Log the extracted tables information
     } catch (e) {

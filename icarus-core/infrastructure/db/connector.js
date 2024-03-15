@@ -9,7 +9,7 @@ import { config } from '../../graphql/generateTypeDefs.js';
 const pools = [];
 
 /**
- * this function will be called in the resolvers, and will filter the requests to all databases and response properly.
+ ** This function will be called in the resolvers, and will filter the requests to all databases and response properly.
  * @param {string} table - name of the table.
  * @param {object} args - args have all the information passed to the query or mutation, and define the action that will be made in the controllers.
  */
@@ -59,7 +59,7 @@ async function controller(table, args) {
 }
 
 /**
- * create a pool connection to many databases, based on the config files in the "data" variable.
+ ** Create a pool connection to many databases, based on the config files in the "data" variable.
  * @param {object} config - is a object with the tables configurations to create the database pool.
  */
 async function createDbPool() {

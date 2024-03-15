@@ -12,19 +12,19 @@ import { fileURLToPath } from 'url';
 
 // create a dirname to complete the path to the current file.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// initialize winston before anything else
+// initialize winston before anything else (logger)
 export const logger = await initializeLogger;
 logger.debug('Logger initialized correctly.');
 
 /**
- * @param {string} configPath  - the path to the config file.
- * @returns {ApolloServer} server - Returns a apollo server instance, configured.
+ ** Initialize the Apollo server
+ * @param {string} configPath - The path to the configuration file
+ * @returns {ApolloServer} The Apollo server instance
  */
 const startGraphqlServer = async (configPath) => {
   // read the config file and generate the typeDefs and the 'data' information, that will be used in other parts of the application.
   await readConfigFile(configPath);
-  // generate the resolvers that will be used in the apollo server.
+  //Generates the resolvers for the GraphQL schema that will be used in the apollo server based on the available resolver files.
   await autoResolvers();
   // create a database pool connection.
   await createDbPool();

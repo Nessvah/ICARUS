@@ -1,5 +1,9 @@
 import { GraphQLScalarType, Kind } from 'graphql';
 
+/**
+ ** Custom GraphQL scalar representing a date and time in ISO-8601 string format.
+ * @type {GraphQLScalarType}
+ */
 const GraphQLDate = new GraphQLScalarType({
   name: 'GraphQLDate',
   description: 'A date and time, represented as an ISO-8601 string',
@@ -14,26 +18,10 @@ const GraphQLDate = new GraphQLScalarType({
 });
 export { GraphQLDate };
 
-const GraphQLJSON = new GraphQLScalarType({
-  name: 'JSON',
-  description:
-    'The `JSON` scalar type represents JSON values as specified by [ECMA-404](https://ecma-international.org/publications-and-standards/standards/ecma-404/).',
-  serialize: (value) => JSON.stringify(value),
-  parseValue: (value) => {
-    if (typeof value === 'string') {
-      return JSON.parse(value);
-    }
-    return null;
-  },
-  parseLiteral: (ast) => {
-    if (ast.kind === Kind.STRING) {
-      return JSON.parse(ast.value);
-    }
-    return null;
-  },
-});
-export { GraphQLJSON };
-
+/**
+ ** Custom GraphQL scalar representing a date in MySQL format (YYYY-MM-DD).
+ * @type {GraphQLScalarType}
+ */
 const MySQLDate = new GraphQLScalarType({
   name: 'MySQLDate',
   description: 'A date in MySQL format (YYYY-MM-DD)',
@@ -57,22 +45,14 @@ const MySQLDate = new GraphQLScalarType({
 });
 export { MySQLDate };
 
-export const json = () => GraphQLJSON;
-
 // Usage examples
 /* 
 const mongodbDate = new Date(); // Current date
 const mysqlDate = new Date('2022-01-01'); // MySQL date
-const obj = { name: 'John', age: 30 }; // Object
-const arr = [1, 2, 3, 4, 5]; // Array
 
 const serializedMongodbDate = GraphQLDate.serialize(mongodbDate);
 const serializedMysqlDate = MySQLDate.serialize(mysqlDate);
-const serializedObj = GraphQLJSON.serialize(obj);
-const serializedArr = GraphQLJSON.serialize(arr);
 
 console.log(serializedMongodbDate); // Output: "2022-08-01T12:00:00.000Z"
 console.log(serializedMysqlDate); // Output: "2022-01-01"
-console.log(serializedObj); // Output: "{\"name\":\"John\",\"age\":30}"
-console.log(serializedArr); // Output: "[1,2,3,4,5]"
  */

@@ -15,7 +15,7 @@ let nestedObject = {};
 export const resolvers = {};
 
 /**
- * this function use the "data" parameter and create the resolvers dynamically.
+ ** This function use the "data" parameter and create the resolvers dynamically.
  * @param {object} data - is a object with the tables configurations to create the resolvers dynamically.
  */
 async function autoResolvers() {
@@ -39,7 +39,7 @@ async function autoResolvers() {
   resolvers.Mutation = {};
 
   /**
-   * add query's and mutations to the resolvers.
+   ** Add query's and mutations to the resolvers.
    * @param {string} table - name of the table.
    * @param {object} args - args have all the information passed to the query or mutation, and define the action that will be made in the controllers.
    */
@@ -159,7 +159,7 @@ async function autoResolvers() {
   });
 }
 /**
- *  create the subQueries based on the column key "isObject".
+ **  Create the subQueries based on the column key "isObject".
  * @param {string} table - name of the table
  * @param {object} column - information about the column
  */
