@@ -60,6 +60,7 @@ export class ImportThemTities {
             database: databaseInfo[databaseName],
             columns: module.default.tables.columns,
             backoffice: module.default.tables.backoffice,
+            hooks: module.default.hooks,
           };
           // Add table information to the tables array
           tables.push(tableInfo);
