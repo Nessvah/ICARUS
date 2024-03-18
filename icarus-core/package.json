@@ -20,11 +20,12 @@
   "dependencies": {
     "@apollo/server": "^4.10.0",
     "@apollo/subgraph": "^2.6.3",
+    "@aws-sdk/client-s3": "^3.534.0",
+    "@aws-sdk/lib-storage": "^3.534.0",
     "dotenv": "^16.3.1",
     "fs": "^0.0.1-security",
     "graphql": "^16.8.1",
     "graphql-depth-limit": "^1.1.0",
-    "graphql-rate-limit": "^3.3.0",
     "graphql-scalars": "^1.22.5",
     "graphql-tag": "^2.12.6",
     "graphql-type-json": "^0.3.2",
