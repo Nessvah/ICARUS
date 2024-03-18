@@ -41,15 +41,17 @@ async function controller(table, args) {
     //filter the CRUD function passed in the action input.
     switch (action) {
       case 'filter':
-        return await connection.find(table, args);
+        return await connection.find(tableName, args);
       case '_count':
-        return await connection.count(table, args);
+        return await connection.count(tableName, args);
       case '_create':
-        return await connection.create(table, args);
+        return await connection.create(tableName, args);
       case '_update':
-        return await connection.update(table, args);
+        return await connection.update(tableName, args);
       case '_delete':
-        return await connection.delete(table, args);
+        return await connection.delete(tableName, args);
+      case '_upload':
+        return await connection.upload(tableName, args, table);
       default:
         return 'Action not defined';
     }
