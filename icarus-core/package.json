@@ -7,6 +7,9 @@
   "scripts": {
     "start": "node ./infrastructure/server.js"
   },
+  "engines": {
+    "node": ">=20 <21"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/WillianFischer/icarus2"
