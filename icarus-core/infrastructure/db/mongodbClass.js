@@ -260,7 +260,6 @@ export class MongoDBConnection {
 
       // Return an object with the created property, containing the inserted data
       return { created: processedRes };
-      return { created: processedRes };
     } catch (error) {
       logger.error(error); // Log any errors
       return false; // Return false in case of any errors
