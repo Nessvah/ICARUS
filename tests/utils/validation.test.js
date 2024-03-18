@@ -1,4 +1,4 @@
-import { validationRules } from '../../src/utils/validation/validationRules.js';
+import { validationRules } from '../../icarus-core/utils/validation/validationRules.js';
 
 // unit tests for validation rules, one by one
 describe('Validation Rules', () => {
@@ -193,20 +193,6 @@ describe('Validation Rules', () => {
 
     it('should invalidate incorrect names', () => {
       const { error } = validationRules.name('V');
-      expect(error).toBeDefined();
-      expect(error.details[0].message).toContain('It should have a minimum length of');
-    });
-  });
-
-  // Content Validation
-  describe('content', () => {
-    it('should validate correct content', () => {
-      const { error } = validationRules.content('This is valid content with enough characters.');
-      expect(error).toBeUndefined();
-    });
-
-    it('should invalidate incorrect content', () => {
-      const { error } = validationRules.content('short');
       expect(error).toBeDefined();
       expect(error.details[0].message).toContain('It should have a minimum length of');
     });

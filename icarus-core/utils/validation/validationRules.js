@@ -195,16 +195,6 @@ const validationRules = {
       })
       .validate(value),
 
-  content: (value) =>
-    Joi.string()
-      .min(2)
-      .max(100)
-      .messages({
-        'string.min': 'It should have a minimum length of {#limit}.',
-        'string.max': 'It should have a maximum length of {#limit}.',
-      })
-      .validate(value),
-
   title: (value) =>
     Joi.string()
       .min(2)
