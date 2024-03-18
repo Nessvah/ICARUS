@@ -13,7 +13,7 @@ const pools = [];
  * @param {string} table - name of the table.
  * @param {object} args - args have all the information passed to the query or mutation, and define the action that will be made in the controllers.
  */
-async function controller(table, args) {
+async function controller(tableName, args, table) {
   let connection;
   //find the right database in the pool, base on table name.
   const currentTable = await pools.find((db) => db.table === table);
