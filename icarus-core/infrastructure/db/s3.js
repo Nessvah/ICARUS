@@ -10,10 +10,8 @@ import { config } from '../../graphql/generateTypeDefs.js';
  */
 const s3Data = async () => {
   try {
-    console.log('Config11111:', config, '______________'); // Log the retrieved config
     if (config && config.tables) {
       // Ensure config.tables is defined
-      console.log('Config:', config, '______________'); // Log the retrieved config
       return config.connections.s3;
     } else {
       console.error('Config data is missing or incomplete.');

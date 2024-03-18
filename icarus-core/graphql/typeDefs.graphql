@@ -1,101 +1,99 @@
+scalar JSON
+scalar GraphQLDate
+scalar MySQLDate
+scalar Upload
 
-  scalar JSON
-  scalar GraphQLDate
-  scalar MySQLDate
-  scalar Upload
-  
-    input ComparisonOperators {
-      _eq: String
-_neq: String
-_lt: String
-_lte: String
-_gt: String
-_gte: String
-_in: String
-_nin: String
-_like: String
-    }
+input ComparisonOperators {
+  _eq: String
+  _neq: String
+  _lt: String
+  _lte: String
+  _gt: String
+  _gte: String
+  _in: String
+  _nin: String
+  _like: String
+}
 
-
-  # Define the root Query
+# Define the root Query
 type Query {
   tables: [TableInfo]
-authors(input: AuthorsQueryOptions = {}): [Authors]
-blog_posts(input: Blog_postsQueryOptions = {}): [Blog_posts]
-brands(input: BrandsQueryOptions = {}): [Brands]
-categories(input: CategoriesQueryOptions = {}): [Categories]
-coupons(input: CouponsQueryOptions = {}): [Coupons]
-customers(input: CustomersQueryOptions = {}): [Customers]
-order_items(input: Order_itemsQueryOptions = {}): [Order_items]
-orders(input: OrdersQueryOptions = {}): [Orders]
-payment(input: PaymentQueryOptions = {}): [Payment]
-products(input: ProductsQueryOptions = {}): [Products]
-product_reviews(input: Product_reviewsQueryOptions = {}): [Product_reviews]
-promotions(input: PromotionsQueryOptions = {}): [Promotions]
-shipments(input: ShipmentsQueryOptions = {}): [Shipments]
-user_role(input: User_roleQueryOptions = {}): [User_role]
-users(input: UsersQueryOptions = {}): [Users]
-authorsCount(input: AuthorsCount): AuthorsCountResult
-blog_postsCount(input: Blog_postsCount): Blog_postsCountResult
-brandsCount(input: BrandsCount): BrandsCountResult
-categoriesCount(input: CategoriesCount): CategoriesCountResult
-couponsCount(input: CouponsCount): CouponsCountResult
-customersCount(input: CustomersCount): CustomersCountResult
-order_itemsCount(input: Order_itemsCount): Order_itemsCountResult
-ordersCount(input: OrdersCount): OrdersCountResult
-paymentCount(input: PaymentCount): PaymentCountResult
-productsCount(input: ProductsCount): ProductsCountResult
-product_reviewsCount(input: Product_reviewsCount): Product_reviewsCountResult
-promotionsCount(input: PromotionsCount): PromotionsCountResult
-shipmentsCount(input: ShipmentsCount): ShipmentsCountResult
-user_roleCount(input: User_roleCount): User_roleCountResult
-usersCount(input: UsersCount): UsersCountResult
-    }
+  authors(input: AuthorsQueryOptions = {}): [Authors]
+  blog_posts(input: Blog_postsQueryOptions = {}): [Blog_posts]
+  brands(input: BrandsQueryOptions = {}): [Brands]
+  categories(input: CategoriesQueryOptions = {}): [Categories]
+  coupons(input: CouponsQueryOptions = {}): [Coupons]
+  customers(input: CustomersQueryOptions = {}): [Customers]
+  order_items(input: Order_itemsQueryOptions = {}): [Order_items]
+  orders(input: OrdersQueryOptions = {}): [Orders]
+  payment(input: PaymentQueryOptions = {}): [Payment]
+  products(input: ProductsQueryOptions = {}): [Products]
+  product_reviews(input: Product_reviewsQueryOptions = {}): [Product_reviews]
+  promotions(input: PromotionsQueryOptions = {}): [Promotions]
+  shipments(input: ShipmentsQueryOptions = {}): [Shipments]
+  user_role(input: User_roleQueryOptions = {}): [User_role]
+  users(input: UsersQueryOptions = {}): [Users]
+  authorsCount(input: AuthorsCount): AuthorsCountResult
+  blog_postsCount(input: Blog_postsCount): Blog_postsCountResult
+  brandsCount(input: BrandsCount): BrandsCountResult
+  categoriesCount(input: CategoriesCount): CategoriesCountResult
+  couponsCount(input: CouponsCount): CouponsCountResult
+  customersCount(input: CustomersCount): CustomersCountResult
+  order_itemsCount(input: Order_itemsCount): Order_itemsCountResult
+  ordersCount(input: OrdersCount): OrdersCountResult
+  paymentCount(input: PaymentCount): PaymentCountResult
+  productsCount(input: ProductsCount): ProductsCountResult
+  product_reviewsCount(input: Product_reviewsCount): Product_reviewsCountResult
+  promotionsCount(input: PromotionsCount): PromotionsCountResult
+  shipmentsCount(input: ShipmentsCount): ShipmentsCountResult
+  user_roleCount(input: User_roleCount): User_roleCountResult
+  usersCount(input: UsersCount): UsersCountResult
+}
 
-  # Define the root Mutation 
+# Define the root Mutation
 type Mutation {
-authors(input: AuthorsMutationOptions): AuthorsOutput
-blog_posts(input: Blog_postsMutationOptions): Blog_postsOutput
-brands(input: BrandsMutationOptions): BrandsOutput
-categories(input: CategoriesMutationOptions): CategoriesOutput
-coupons(input: CouponsMutationOptions): CouponsOutput
-customers(input: CustomersMutationOptions): CustomersOutput
-order_items(input: Order_itemsMutationOptions): Order_itemsOutput
-orders(input: OrdersMutationOptions): OrdersOutput
-payment(input: PaymentMutationOptions): PaymentOutput
-products(input: ProductsMutationOptions): ProductsOutput
-product_reviews(input: Product_reviewsMutationOptions): Product_reviewsOutput
-promotions(input: PromotionsMutationOptions): PromotionsOutput
-shipments(input: ShipmentsMutationOptions): ShipmentsOutput
-user_role(input: User_roleMutationOptions): User_roleOutput
-users(input: UsersMutationOptions): UsersOutput
+  authors(input: AuthorsMutationOptions): AuthorsOutput
+  blog_posts(input: Blog_postsMutationOptions): Blog_postsOutput
+  brands(input: BrandsMutationOptions): BrandsOutput
+  categories(input: CategoriesMutationOptions): CategoriesOutput
+  coupons(input: CouponsMutationOptions): CouponsOutput
+  customers(input: CustomersMutationOptions): CustomersOutput
+  order_items(input: Order_itemsMutationOptions): Order_itemsOutput
+  orders(input: OrdersMutationOptions): OrdersOutput
+  payment(input: PaymentMutationOptions): PaymentOutput
+  products(input: ProductsMutationOptions): ProductsOutput
+  product_reviews(input: Product_reviewsMutationOptions): Product_reviewsOutput
+  promotions(input: PromotionsMutationOptions): PromotionsOutput
+  shipments(input: ShipmentsMutationOptions): ShipmentsOutput
+  user_role(input: User_roleMutationOptions): User_roleOutput
+  users(input: UsersMutationOptions): UsersOutput
 }
 
 type Authors {
-id: ID!
-name: String!
-email: String!
-fileUrl: String
-blog_posts(take: Int = 15, skip: Int): [Blog_posts]
+  id: ID!
+  name: String!
+  email: String!
+  fileUrl: String
+  blog_posts(take: Int = 15, skip: Int): [Blog_posts]
 }
 
-  # Filters for Authors logical operations
+# Filters for Authors logical operations
 input AuthorsFilter {
-  _and: [ AuthorsLogicalOp]
-  _or: [ AuthorsLogicalOp]
+  _and: [AuthorsLogicalOp]
+  _or: [AuthorsLogicalOp]
 }
 
-  # Nested Filters for Authors logical and comparison operations
+# Nested Filters for Authors logical and comparison operations
 input AuthorsLogicalOp {
-  _and: [ AuthorsLogicalOp]
-  _or: [ AuthorsLogicalOp]
-id: ComparisonOperators
-name: ComparisonOperators
-email: ComparisonOperators
-fileUrl: ComparisonOperators
+  _and: [AuthorsLogicalOp]
+  _or: [AuthorsLogicalOp]
+  id: ComparisonOperators
+  name: ComparisonOperators
+  email: ComparisonOperators
+  fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for Authors
+# Allowed query operations for Authors
 input AuthorsQueryOptions {
   filter: AuthorsFilter
   skip: Int
@@ -103,23 +101,23 @@ input AuthorsQueryOptions {
   sort: AuthorsSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input AuthorsSortOptions {
-id: Sort
-name: Sort
-email: Sort
-fileUrl: Sort
+  id: Sort
+  name: Sort
+  email: Sort
+  fileUrl: Sort
 }
 
-  # Define the mutations output type for Authors
+# Define the mutations output type for Authors
 type AuthorsOutput {
-	created: [Authors]!
-	updated: [Authors]!
-	deleted: Int
+  created: [Authors]!
+  updated: [Authors]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on Authors
+# Define the input options for the mutation operations on Authors
 input AuthorsMutationOptions {
   _create: AuthorsCreate
   _update: AuthorsUpdate
@@ -127,75 +125,75 @@ input AuthorsMutationOptions {
   _upload: AuthorsUpload
 }
 
-  # Input logic for create operations on Authors
+# Input logic for create operations on Authors
 input AuthorsCreate {
-name: String!
-email: String!
+  name: String!
+  email: String!
 
-fileUrl: String
+  fileUrl: String
 }
 
-  # Input logic for update operations on Authors
+# Input logic for update operations on Authors
 input AuthorsUpdate {
   filter: AuthorsFilter
-name: String
-email: String
+  name: String
+  email: String
 
-fileUrl: String
+  fileUrl: String
 }
 
-  # Input logic for delete operations on Authors
+# Input logic for delete operations on Authors
 input AuthorsDelete {
   filter: AuthorsFilter
 }
 
-  # Input logic for upload operations on Authors
+# Input logic for upload operations on Authors
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input AuthorsUpload {
   filter: AuthorsFilter
   file: Upload
 }
 
-  # Input logic for count operations on Authors
+# Input logic for count operations on Authors
 input AuthorsCount {
   filter: AuthorsFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on Authors
+# Output the count operations on Authors
 type AuthorsCountResult {
   count: Int!
 }
 
 type Blog_posts {
-id: ID!
-title: String!
-author_id: ID!
-content: JSON!
-publish_date: GraphQLDate!
-fileUrl: String
-authors(take: Int = 15, skip: Int): Authors
+  id: ID!
+  title: String!
+  author_id: ID!
+  content: JSON!
+  publish_date: GraphQLDate!
+  fileUrl: String
+  authors(take: Int = 15, skip: Int): Authors
 }
 
-  # Filters for Blog_posts logical operations
+# Filters for Blog_posts logical operations
 input Blog_postsFilter {
-  _and: [ Blog_postsLogicalOp]
-  _or: [ Blog_postsLogicalOp]
+  _and: [Blog_postsLogicalOp]
+  _or: [Blog_postsLogicalOp]
 }
 
-  # Nested Filters for Blog_posts logical and comparison operations
+# Nested Filters for Blog_posts logical and comparison operations
 input Blog_postsLogicalOp {
-  _and: [ Blog_postsLogicalOp]
-  _or: [ Blog_postsLogicalOp]
-id: ComparisonOperators
-title: ComparisonOperators
-author_id: ComparisonOperators
-content: ComparisonOperators
-publish_date: ComparisonOperators
-fileUrl: ComparisonOperators
+  _and: [Blog_postsLogicalOp]
+  _or: [Blog_postsLogicalOp]
+  id: ComparisonOperators
+  title: ComparisonOperators
+  author_id: ComparisonOperators
+  content: ComparisonOperators
+  publish_date: ComparisonOperators
+  fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for Blog_posts
+# Allowed query operations for Blog_posts
 input Blog_postsQueryOptions {
   filter: Blog_postsFilter
   skip: Int
@@ -203,25 +201,25 @@ input Blog_postsQueryOptions {
   sort: Blog_postsSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input Blog_postsSortOptions {
-id: Sort
-title: Sort
-author_id: Sort
-content: Sort
-publish_date: Sort
-fileUrl: Sort
+  id: Sort
+  title: Sort
+  author_id: Sort
+  content: Sort
+  publish_date: Sort
+  fileUrl: Sort
 }
 
-  # Define the mutations output type for Blog_posts
+# Define the mutations output type for Blog_posts
 type Blog_postsOutput {
-	created: [Blog_posts]!
-	updated: [Blog_posts]!
-	deleted: Int
+  created: [Blog_posts]!
+  updated: [Blog_posts]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on Blog_posts
+# Define the input options for the mutation operations on Blog_posts
 input Blog_postsMutationOptions {
   _create: Blog_postsCreate
   _update: Blog_postsUpdate
@@ -229,77 +227,76 @@ input Blog_postsMutationOptions {
   _upload: Blog_postsUpload
 }
 
-  # Input logic for create operations on Blog_posts
+# Input logic for create operations on Blog_posts
 input Blog_postsCreate {
-title: String!
-author_id: ID!
-content: JSON!
+  title: String!
+  author_id: ID!
+  content: JSON!
 
-fileUrl: String
+  fileUrl: String
 }
 
-  # Input logic for update operations on Blog_posts
+# Input logic for update operations on Blog_posts
 input Blog_postsUpdate {
   filter: Blog_postsFilter
-title: String
-author_id: ID
-content: JSON
+  title: String
+  author_id: ID
+  content: JSON
 
-fileUrl: String
+  fileUrl: String
 }
 
-  # Input logic for delete operations on Blog_posts
+# Input logic for delete operations on Blog_posts
 input Blog_postsDelete {
   filter: Blog_postsFilter
 }
 
-  # Input logic for upload operations on Blog_posts
+# Input logic for upload operations on Blog_posts
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input Blog_postsUpload {
   filter: Blog_postsFilter
   file: Upload
 }
 
-  # Input logic for count operations on Blog_posts
+# Input logic for count operations on Blog_posts
 input Blog_postsCount {
   filter: Blog_postsFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on Blog_posts
+# Output the count operations on Blog_posts
 type Blog_postsCountResult {
   count: Int!
 }
 
 type Brands {
-id: ID!
-name: String!
-country: String!
-founded_year: String!
-products: JSON!
-fileUrl: String
-
+  id: ID!
+  name: String!
+  country: String!
+  founded_year: String!
+  products: JSON!
+  fileUrl: String
 }
 
-  # Filters for Brands logical operations
+# Filters for Brands logical operations
 input BrandsFilter {
-  _and: [ BrandsLogicalOp]
-  _or: [ BrandsLogicalOp]
+  _and: [BrandsLogicalOp]
+  _or: [BrandsLogicalOp]
 }
 
-  # Nested Filters for Brands logical and comparison operations
+# Nested Filters for Brands logical and comparison operations
 input BrandsLogicalOp {
-  _and: [ BrandsLogicalOp]
-  _or: [ BrandsLogicalOp]
-id: ComparisonOperators
-name: ComparisonOperators
-country: ComparisonOperators
-founded_year: ComparisonOperators
-products: ComparisonOperators
-fileUrl: ComparisonOperators
+  _and: [BrandsLogicalOp]
+  _or: [BrandsLogicalOp]
+  id: ComparisonOperators
+  name: ComparisonOperators
+  country: ComparisonOperators
+  founded_year: ComparisonOperators
+  products: ComparisonOperators
+  fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for Brands
+# Allowed query operations for Brands
 input BrandsQueryOptions {
   filter: BrandsFilter
   skip: Int
@@ -307,25 +304,25 @@ input BrandsQueryOptions {
   sort: BrandsSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input BrandsSortOptions {
-id: Sort
-name: Sort
-country: Sort
-founded_year: Sort
-products: Sort
-fileUrl: Sort
+  id: Sort
+  name: Sort
+  country: Sort
+  founded_year: Sort
+  products: Sort
+  fileUrl: Sort
 }
 
-  # Define the mutations output type for Brands
+# Define the mutations output type for Brands
 type BrandsOutput {
-	created: [Brands]!
-	updated: [Brands]!
-	deleted: Int
+  created: [Brands]!
+  updated: [Brands]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on Brands
+# Define the input options for the mutation operations on Brands
 input BrandsMutationOptions {
   _create: BrandsCreate
   _update: BrandsUpdate
@@ -333,73 +330,72 @@ input BrandsMutationOptions {
   _upload: BrandsUpload
 }
 
-  # Input logic for create operations on Brands
+# Input logic for create operations on Brands
 input BrandsCreate {
-name: String!
-country: String!
-founded_year: String!
-products: JSON!
-fileUrl: String
+  name: String!
+  country: String!
+  founded_year: String!
+  products: JSON!
+  fileUrl: String
 }
 
-  # Input logic for update operations on Brands
+# Input logic for update operations on Brands
 input BrandsUpdate {
   filter: BrandsFilter
-name: String
-country: String
-founded_year: String
-products: JSON
-fileUrl: String
+  name: String
+  country: String
+  founded_year: String
+  products: JSON
+  fileUrl: String
 }
 
-  # Input logic for delete operations on Brands
+# Input logic for delete operations on Brands
 input BrandsDelete {
   filter: BrandsFilter
 }
 
-  # Input logic for upload operations on Brands
+# Input logic for upload operations on Brands
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input BrandsUpload {
   filter: BrandsFilter
   file: Upload
 }
 
-  # Input logic for count operations on Brands
+# Input logic for count operations on Brands
 input BrandsCount {
   filter: BrandsFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on Brands
+# Output the count operations on Brands
 type BrandsCountResult {
   count: Int!
 }
 
 type Categories {
-category_id: Int!
-category_name: String!
-icon_class: String!
-icon_label: String!
-
+  category_id: Int!
+  category_name: String!
+  icon_class: String!
+  icon_label: String!
 }
 
-  # Filters for Categories logical operations
+# Filters for Categories logical operations
 input CategoriesFilter {
-  _and: [ CategoriesLogicalOp]
-  _or: [ CategoriesLogicalOp]
+  _and: [CategoriesLogicalOp]
+  _or: [CategoriesLogicalOp]
 }
 
-  # Nested Filters for Categories logical and comparison operations
+# Nested Filters for Categories logical and comparison operations
 input CategoriesLogicalOp {
-  _and: [ CategoriesLogicalOp]
-  _or: [ CategoriesLogicalOp]
-category_id: ComparisonOperators
-category_name: ComparisonOperators
-icon_class: ComparisonOperators
-icon_label: ComparisonOperators
+  _and: [CategoriesLogicalOp]
+  _or: [CategoriesLogicalOp]
+  category_id: ComparisonOperators
+  category_name: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
 }
 
-  # Allowed query operations for Categories
+# Allowed query operations for Categories
 input CategoriesQueryOptions {
   filter: CategoriesFilter
   skip: Int
@@ -407,23 +403,23 @@ input CategoriesQueryOptions {
   sort: CategoriesSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input CategoriesSortOptions {
-category_id: Sort
-category_name: Sort
-icon_class: Sort
-icon_label: Sort
+  category_id: Sort
+  category_name: Sort
+  icon_class: Sort
+  icon_label: Sort
 }
 
-  # Define the mutations output type for Categories
+# Define the mutations output type for Categories
 type CategoriesOutput {
-	created: [Categories]!
-	updated: [Categories]!
-	deleted: Int
+  created: [Categories]!
+  updated: [Categories]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on Categories
+# Define the input options for the mutation operations on Categories
 input CategoriesMutationOptions {
   _create: CategoriesCreate
   _update: CategoriesUpdate
@@ -431,73 +427,73 @@ input CategoriesMutationOptions {
   _upload: CategoriesUpload
 }
 
-  # Input logic for create operations on Categories
+# Input logic for create operations on Categories
 input CategoriesCreate {
-category_name: String!
-icon_class: String!
-icon_label: String!
+  category_name: String!
+  icon_class: String!
+  icon_label: String!
 }
 
-  # Input logic for update operations on Categories
+# Input logic for update operations on Categories
 input CategoriesUpdate {
   filter: CategoriesFilter
-category_name: String
-icon_class: String
-icon_label: String
+  category_name: String
+  icon_class: String
+  icon_label: String
 }
 
-  # Input logic for delete operations on Categories
+# Input logic for delete operations on Categories
 input CategoriesDelete {
   filter: CategoriesFilter
 }
 
-  # Input logic for upload operations on Categories
+# Input logic for upload operations on Categories
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input CategoriesUpload {
   filter: CategoriesFilter
   file: Upload
 }
 
-  # Input logic for count operations on Categories
+# Input logic for count operations on Categories
 input CategoriesCount {
   filter: CategoriesFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on Categories
+# Output the count operations on Categories
 type CategoriesCountResult {
   count: Int!
 }
 
 type Coupons {
-id: ID!
-code: String!
-discount_percent: Int!
-expiration_date: String!
-promotion_id: ID!
-fileUrl: String
-promotions(take: Int = 15, skip: Int): Promotions
+  id: ID!
+  code: String!
+  discount_percent: Int!
+  expiration_date: String!
+  promotion_id: ID!
+  fileUrl: String
+  promotions(take: Int = 15, skip: Int): Promotions
 }
 
-  # Filters for Coupons logical operations
+# Filters for Coupons logical operations
 input CouponsFilter {
-  _and: [ CouponsLogicalOp]
-  _or: [ CouponsLogicalOp]
+  _and: [CouponsLogicalOp]
+  _or: [CouponsLogicalOp]
 }
 
-  # Nested Filters for Coupons logical and comparison operations
+# Nested Filters for Coupons logical and comparison operations
 input CouponsLogicalOp {
-  _and: [ CouponsLogicalOp]
-  _or: [ CouponsLogicalOp]
-id: ComparisonOperators
-code: ComparisonOperators
-discount_percent: ComparisonOperators
-expiration_date: ComparisonOperators
-promotion_id: ComparisonOperators
-fileUrl: ComparisonOperators
+  _and: [CouponsLogicalOp]
+  _or: [CouponsLogicalOp]
+  id: ComparisonOperators
+  code: ComparisonOperators
+  discount_percent: ComparisonOperators
+  expiration_date: ComparisonOperators
+  promotion_id: ComparisonOperators
+  fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for Coupons
+# Allowed query operations for Coupons
 input CouponsQueryOptions {
   filter: CouponsFilter
   skip: Int
@@ -505,25 +501,25 @@ input CouponsQueryOptions {
   sort: CouponsSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input CouponsSortOptions {
-id: Sort
-code: Sort
-discount_percent: Sort
-expiration_date: Sort
-promotion_id: Sort
-fileUrl: Sort
+  id: Sort
+  code: Sort
+  discount_percent: Sort
+  expiration_date: Sort
+  promotion_id: Sort
+  fileUrl: Sort
 }
 
-  # Define the mutations output type for Coupons
+# Define the mutations output type for Coupons
 type CouponsOutput {
-	created: [Coupons]!
-	updated: [Coupons]!
-	deleted: Int
+  created: [Coupons]!
+  updated: [Coupons]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on Coupons
+# Define the input options for the mutation operations on Coupons
 input CouponsMutationOptions {
   _create: CouponsCreate
   _update: CouponsUpdate
@@ -531,75 +527,75 @@ input CouponsMutationOptions {
   _upload: CouponsUpload
 }
 
-  # Input logic for create operations on Coupons
+# Input logic for create operations on Coupons
 input CouponsCreate {
-code: String!
-discount_percent: Int!
-expiration_date: String!
-promotion_id: ID!
-fileUrl: String
+  code: String!
+  discount_percent: Int!
+  expiration_date: String!
+  promotion_id: ID!
+  fileUrl: String
 }
 
-  # Input logic for update operations on Coupons
+# Input logic for update operations on Coupons
 input CouponsUpdate {
   filter: CouponsFilter
-code: String
-discount_percent: Int
-expiration_date: String
-promotion_id: ID
-fileUrl: String
+  code: String
+  discount_percent: Int
+  expiration_date: String
+  promotion_id: ID
+  fileUrl: String
 }
 
-  # Input logic for delete operations on Coupons
+# Input logic for delete operations on Coupons
 input CouponsDelete {
   filter: CouponsFilter
 }
 
-  # Input logic for upload operations on Coupons
+# Input logic for upload operations on Coupons
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input CouponsUpload {
   filter: CouponsFilter
   file: Upload
 }
 
-  # Input logic for count operations on Coupons
+# Input logic for count operations on Coupons
 input CouponsCount {
   filter: CouponsFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on Coupons
+# Output the count operations on Coupons
 type CouponsCountResult {
   count: Int!
 }
 
 type Customers {
-customer_id: Int!
-customer_name: String!
-email: String!
-icon_class: String
-icon_label: String
-orders(take: Int = 15, skip: Int): [Orders]
+  customer_id: Int!
+  customer_name: String!
+  email: String!
+  icon_class: String
+  icon_label: String
+  orders(take: Int = 15, skip: Int): [Orders]
 }
 
-  # Filters for Customers logical operations
+# Filters for Customers logical operations
 input CustomersFilter {
-  _and: [ CustomersLogicalOp]
-  _or: [ CustomersLogicalOp]
+  _and: [CustomersLogicalOp]
+  _or: [CustomersLogicalOp]
 }
 
-  # Nested Filters for Customers logical and comparison operations
+# Nested Filters for Customers logical and comparison operations
 input CustomersLogicalOp {
-  _and: [ CustomersLogicalOp]
-  _or: [ CustomersLogicalOp]
-customer_id: ComparisonOperators
-customer_name: ComparisonOperators
-email: ComparisonOperators
-icon_class: ComparisonOperators
-icon_label: ComparisonOperators
+  _and: [CustomersLogicalOp]
+  _or: [CustomersLogicalOp]
+  customer_id: ComparisonOperators
+  customer_name: ComparisonOperators
+  email: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
 }
 
-  # Allowed query operations for Customers
+# Allowed query operations for Customers
 input CustomersQueryOptions {
   filter: CustomersFilter
   skip: Int
@@ -607,24 +603,24 @@ input CustomersQueryOptions {
   sort: CustomersSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input CustomersSortOptions {
-customer_id: Sort
-customer_name: Sort
-email: Sort
-icon_class: Sort
-icon_label: Sort
+  customer_id: Sort
+  customer_name: Sort
+  email: Sort
+  icon_class: Sort
+  icon_label: Sort
 }
 
-  # Define the mutations output type for Customers
+# Define the mutations output type for Customers
 type CustomersOutput {
-	created: [Customers]!
-	updated: [Customers]!
-	deleted: Int
+  created: [Customers]!
+  updated: [Customers]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on Customers
+# Define the input options for the mutation operations on Customers
 input CustomersMutationOptions {
   _create: CustomersCreate
   _update: CustomersUpdate
@@ -632,82 +628,80 @@ input CustomersMutationOptions {
   _upload: CustomersUpload
 }
 
-  # Input logic for create operations on Customers
+# Input logic for create operations on Customers
 input CustomersCreate {
-customer_name: String!
-email: String!
-icon_class: String
-icon_label: String
-
+  customer_name: String!
+  email: String!
+  icon_class: String
+  icon_label: String
 }
 
-  # Input logic for update operations on Customers
+# Input logic for update operations on Customers
 input CustomersUpdate {
   filter: CustomersFilter
-customer_name: String
-email: String
-icon_class: String
-icon_label: String
-
+  customer_name: String
+  email: String
+  icon_class: String
+  icon_label: String
 }
 
-  # Input logic for delete operations on Customers
+# Input logic for delete operations on Customers
 input CustomersDelete {
   filter: CustomersFilter
 }
 
-  # Input logic for upload operations on Customers
+# Input logic for upload operations on Customers
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input CustomersUpload {
   filter: CustomersFilter
   file: Upload
 }
 
-  # Input logic for count operations on Customers
+# Input logic for count operations on Customers
 input CustomersCount {
   filter: CustomersFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on Customers
+# Output the count operations on Customers
 type CustomersCountResult {
   count: Int!
 }
 
 type Order_items {
-order_item_id: Int!
-order_id: Int!
-product_id: Int!
-quantity: Int!
-price: Float!
-currency_type: String!
-icon_class: String
-icon_label: String
-orders(take: Int = 15, skip: Int): Orders
-products(take: Int = 15, skip: Int): Products
+  order_item_id: Int!
+  order_id: Int!
+  product_id: Int!
+  quantity: Int!
+  price: Float!
+  currency_type: String!
+  icon_class: String
+  icon_label: String
+  orders(take: Int = 15, skip: Int): Orders
+  products(take: Int = 15, skip: Int): Products
 }
 
-  # Filters for Order_items logical operations
+# Filters for Order_items logical operations
 input Order_itemsFilter {
-  _and: [ Order_itemsLogicalOp]
-  _or: [ Order_itemsLogicalOp]
+  _and: [Order_itemsLogicalOp]
+  _or: [Order_itemsLogicalOp]
 }
 
-  # Nested Filters for Order_items logical and comparison operations
+# Nested Filters for Order_items logical and comparison operations
 input Order_itemsLogicalOp {
-  _and: [ Order_itemsLogicalOp]
-  _or: [ Order_itemsLogicalOp]
-order_item_id: ComparisonOperators
-order_id: ComparisonOperators
-product_id: ComparisonOperators
-quantity: ComparisonOperators
-price: ComparisonOperators
-currency_type: ComparisonOperators
-icon_class: ComparisonOperators
-icon_label: ComparisonOperators
+  _and: [Order_itemsLogicalOp]
+  _or: [Order_itemsLogicalOp]
+  order_item_id: ComparisonOperators
+  order_id: ComparisonOperators
+  product_id: ComparisonOperators
+  quantity: ComparisonOperators
+  price: ComparisonOperators
+  currency_type: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
 }
 
-  # Allowed query operations for Order_items
+# Allowed query operations for Order_items
 input Order_itemsQueryOptions {
   filter: Order_itemsFilter
   skip: Int
@@ -715,27 +709,27 @@ input Order_itemsQueryOptions {
   sort: Order_itemsSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input Order_itemsSortOptions {
-order_item_id: Sort
-order_id: Sort
-product_id: Sort
-quantity: Sort
-price: Sort
-currency_type: Sort
-icon_class: Sort
-icon_label: Sort
+  order_item_id: Sort
+  order_id: Sort
+  product_id: Sort
+  quantity: Sort
+  price: Sort
+  currency_type: Sort
+  icon_class: Sort
+  icon_label: Sort
 }
 
-  # Define the mutations output type for Order_items
+# Define the mutations output type for Order_items
 type Order_itemsOutput {
-	created: [Order_items]!
-	updated: [Order_items]!
-	deleted: Int
+  created: [Order_items]!
+  updated: [Order_items]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on Order_items
+# Define the input options for the mutation operations on Order_items
 input Order_itemsMutationOptions {
   _create: Order_itemsCreate
   _update: Order_itemsUpdate
@@ -743,82 +737,82 @@ input Order_itemsMutationOptions {
   _upload: Order_itemsUpload
 }
 
-  # Input logic for create operations on Order_items
+# Input logic for create operations on Order_items
 input Order_itemsCreate {
-order_id: Int!
-product_id: Int!
-quantity: Int!
-price: Float!
-currency_type: String!
-icon_class: String
-icon_label: String
+  order_id: Int!
+  product_id: Int!
+  quantity: Int!
+  price: Float!
+  currency_type: String!
+  icon_class: String
+  icon_label: String
 }
 
-  # Input logic for update operations on Order_items
+# Input logic for update operations on Order_items
 input Order_itemsUpdate {
   filter: Order_itemsFilter
-order_id: Int
-product_id: Int
-quantity: Int
-price: Float
-currency_type: String
-icon_class: String
-icon_label: String
+  order_id: Int
+  product_id: Int
+  quantity: Int
+  price: Float
+  currency_type: String
+  icon_class: String
+  icon_label: String
 }
 
-  # Input logic for delete operations on Order_items
+# Input logic for delete operations on Order_items
 input Order_itemsDelete {
   filter: Order_itemsFilter
 }
 
-  # Input logic for upload operations on Order_items
+# Input logic for upload operations on Order_items
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input Order_itemsUpload {
   filter: Order_itemsFilter
   file: Upload
 }
 
-  # Input logic for count operations on Order_items
+# Input logic for count operations on Order_items
 input Order_itemsCount {
   filter: Order_itemsFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on Order_items
+# Output the count operations on Order_items
 type Order_itemsCountResult {
   count: Int!
 }
 
 type Orders {
-order_id: Int!
-order_date: MySQLDate!
-customer_id: Int!
-icon_class: String
-icon_label: String
-customers(take: Int = 15, skip: Int): Customers
-order_items(take: Int = 15, skip: Int): [Order_items]
-shipments(take: Int = 15, skip: Int): Shipments
-payment(take: Int = 15, skip: Int): Payment
+  order_id: Int!
+  order_date: MySQLDate!
+  customer_id: Int!
+  icon_class: String
+  icon_label: String
+  customers(take: Int = 15, skip: Int): Customers
+  order_items(take: Int = 15, skip: Int): [Order_items]
+  shipments(take: Int = 15, skip: Int): Shipments
+  payment(take: Int = 15, skip: Int): Payment
 }
 
-  # Filters for Orders logical operations
+# Filters for Orders logical operations
 input OrdersFilter {
-  _and: [ OrdersLogicalOp]
-  _or: [ OrdersLogicalOp]
+  _and: [OrdersLogicalOp]
+  _or: [OrdersLogicalOp]
 }
 
-  # Nested Filters for Orders logical and comparison operations
+# Nested Filters for Orders logical and comparison operations
 input OrdersLogicalOp {
-  _and: [ OrdersLogicalOp]
-  _or: [ OrdersLogicalOp]
-order_id: ComparisonOperators
-order_date: ComparisonOperators
-customer_id: ComparisonOperators
-icon_class: ComparisonOperators
-icon_label: ComparisonOperators
+  _and: [OrdersLogicalOp]
+  _or: [OrdersLogicalOp]
+  order_id: ComparisonOperators
+  order_date: ComparisonOperators
+  customer_id: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
 }
 
-  # Allowed query operations for Orders
+# Allowed query operations for Orders
 input OrdersQueryOptions {
   filter: OrdersFilter
   skip: Int
@@ -826,24 +820,24 @@ input OrdersQueryOptions {
   sort: OrdersSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input OrdersSortOptions {
-order_id: Sort
-order_date: Sort
-customer_id: Sort
-icon_class: Sort
-icon_label: Sort
+  order_id: Sort
+  order_date: Sort
+  customer_id: Sort
+  icon_class: Sort
+  icon_label: Sort
 }
 
-  # Define the mutations output type for Orders
+# Define the mutations output type for Orders
 type OrdersOutput {
-	created: [Orders]!
-	updated: [Orders]!
-	deleted: Int
+  created: [Orders]!
+  updated: [Orders]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on Orders
+# Define the input options for the mutation operations on Orders
 input OrdersMutationOptions {
   _create: OrdersCreate
   _update: OrdersUpdate
@@ -851,83 +845,76 @@ input OrdersMutationOptions {
   _upload: OrdersUpload
 }
 
-  # Input logic for create operations on Orders
+# Input logic for create operations on Orders
 input OrdersCreate {
-
-customer_id: Int!
-icon_class: String
-icon_label: String
-
-
-
+  customer_id: Int!
+  icon_class: String
+  icon_label: String
 }
 
-  # Input logic for update operations on Orders
+# Input logic for update operations on Orders
 input OrdersUpdate {
   filter: OrdersFilter
 
-customer_id: Int
-icon_class: String
-icon_label: String
-
-
-
+  customer_id: Int
+  icon_class: String
+  icon_label: String
 }
 
-  # Input logic for delete operations on Orders
+# Input logic for delete operations on Orders
 input OrdersDelete {
   filter: OrdersFilter
 }
 
-  # Input logic for upload operations on Orders
+# Input logic for upload operations on Orders
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input OrdersUpload {
   filter: OrdersFilter
   file: Upload
 }
 
-  # Input logic for count operations on Orders
+# Input logic for count operations on Orders
 input OrdersCount {
   filter: OrdersFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on Orders
+# Output the count operations on Orders
 type OrdersCountResult {
   count: Int!
 }
 
 type Payment {
-id: String!
-payment_method: String!
-payment_date: String!
-amount: Float!
-payment_status: String!
-order_id: Int
-fileUrl: String
-orders(take: Int = 15, skip: Int): Orders
+  id: String!
+  payment_method: String!
+  payment_date: String!
+  amount: Float!
+  payment_status: String!
+  order_id: Int
+  fileUrl: String
+  orders(take: Int = 15, skip: Int): Orders
 }
 
-  # Filters for Payment logical operations
+# Filters for Payment logical operations
 input PaymentFilter {
-  _and: [ PaymentLogicalOp]
-  _or: [ PaymentLogicalOp]
+  _and: [PaymentLogicalOp]
+  _or: [PaymentLogicalOp]
 }
 
-  # Nested Filters for Payment logical and comparison operations
+# Nested Filters for Payment logical and comparison operations
 input PaymentLogicalOp {
-  _and: [ PaymentLogicalOp]
-  _or: [ PaymentLogicalOp]
-id: ComparisonOperators
-payment_method: ComparisonOperators
-payment_date: ComparisonOperators
-amount: ComparisonOperators
-payment_status: ComparisonOperators
-order_id: ComparisonOperators
-fileUrl: ComparisonOperators
+  _and: [PaymentLogicalOp]
+  _or: [PaymentLogicalOp]
+  id: ComparisonOperators
+  payment_method: ComparisonOperators
+  payment_date: ComparisonOperators
+  amount: ComparisonOperators
+  payment_status: ComparisonOperators
+  order_id: ComparisonOperators
+  fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for Payment
+# Allowed query operations for Payment
 input PaymentQueryOptions {
   filter: PaymentFilter
   skip: Int
@@ -935,26 +922,26 @@ input PaymentQueryOptions {
   sort: PaymentSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input PaymentSortOptions {
-id: Sort
-payment_method: Sort
-payment_date: Sort
-amount: Sort
-payment_status: Sort
-order_id: Sort
-fileUrl: Sort
+  id: Sort
+  payment_method: Sort
+  payment_date: Sort
+  amount: Sort
+  payment_status: Sort
+  order_id: Sort
+  fileUrl: Sort
 }
 
-  # Define the mutations output type for Payment
+# Define the mutations output type for Payment
 type PaymentOutput {
-	created: [Payment]!
-	updated: [Payment]!
-	deleted: Int
+  created: [Payment]!
+  updated: [Payment]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on Payment
+# Define the input options for the mutation operations on Payment
 input PaymentMutationOptions {
   _create: PaymentCreate
   _update: PaymentUpdate
@@ -962,81 +949,81 @@ input PaymentMutationOptions {
   _upload: PaymentUpload
 }
 
-  # Input logic for create operations on Payment
+# Input logic for create operations on Payment
 input PaymentCreate {
-payment_method: String!
+  payment_method: String!
 
-amount: Float!
-payment_status: String!
-order_id: Int
-fileUrl: String
+  amount: Float!
+  payment_status: String!
+  order_id: Int
+  fileUrl: String
 }
 
-  # Input logic for update operations on Payment
+# Input logic for update operations on Payment
 input PaymentUpdate {
   filter: PaymentFilter
-payment_method: String
+  payment_method: String
 
-amount: Float
-payment_status: String
-order_id: Int
-fileUrl: String
+  amount: Float
+  payment_status: String
+  order_id: Int
+  fileUrl: String
 }
 
-  # Input logic for delete operations on Payment
+# Input logic for delete operations on Payment
 input PaymentDelete {
   filter: PaymentFilter
 }
 
-  # Input logic for upload operations on Payment
+# Input logic for upload operations on Payment
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input PaymentUpload {
   filter: PaymentFilter
   file: Upload
 }
 
-  # Input logic for count operations on Payment
+# Input logic for count operations on Payment
 input PaymentCount {
   filter: PaymentFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on Payment
+# Output the count operations on Payment
 type PaymentCountResult {
   count: Int!
 }
 
 type Products {
-product_id: Int!
-product_name: String!
-price: Float!
-currency_type: String!
-description: String
-icon_class: String
-icon_label: String
-order_items(take: Int = 15, skip: Int): [Order_items]
+  product_id: Int!
+  product_name: String!
+  price: Float!
+  currency_type: String!
+  description: String
+  icon_class: String
+  icon_label: String
+  order_items(take: Int = 15, skip: Int): [Order_items]
 }
 
-  # Filters for Products logical operations
+# Filters for Products logical operations
 input ProductsFilter {
-  _and: [ ProductsLogicalOp]
-  _or: [ ProductsLogicalOp]
+  _and: [ProductsLogicalOp]
+  _or: [ProductsLogicalOp]
 }
 
-  # Nested Filters for Products logical and comparison operations
+# Nested Filters for Products logical and comparison operations
 input ProductsLogicalOp {
-  _and: [ ProductsLogicalOp]
-  _or: [ ProductsLogicalOp]
-product_id: ComparisonOperators
-product_name: ComparisonOperators
-price: ComparisonOperators
-currency_type: ComparisonOperators
-description: ComparisonOperators
-icon_class: ComparisonOperators
-icon_label: ComparisonOperators
+  _and: [ProductsLogicalOp]
+  _or: [ProductsLogicalOp]
+  product_id: ComparisonOperators
+  product_name: ComparisonOperators
+  price: ComparisonOperators
+  currency_type: ComparisonOperators
+  description: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
 }
 
-  # Allowed query operations for Products
+# Allowed query operations for Products
 input ProductsQueryOptions {
   filter: ProductsFilter
   skip: Int
@@ -1044,26 +1031,26 @@ input ProductsQueryOptions {
   sort: ProductsSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input ProductsSortOptions {
-product_id: Sort
-product_name: Sort
-price: Sort
-currency_type: Sort
-description: Sort
-icon_class: Sort
-icon_label: Sort
+  product_id: Sort
+  product_name: Sort
+  price: Sort
+  currency_type: Sort
+  description: Sort
+  icon_class: Sort
+  icon_label: Sort
 }
 
-  # Define the mutations output type for Products
+# Define the mutations output type for Products
 type ProductsOutput {
-	created: [Products]!
-	updated: [Products]!
-	deleted: Int
+  created: [Products]!
+  updated: [Products]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on Products
+# Define the input options for the mutation operations on Products
 input ProductsMutationOptions {
   _create: ProductsCreate
   _update: ProductsUpdate
@@ -1071,86 +1058,84 @@ input ProductsMutationOptions {
   _upload: ProductsUpload
 }
 
-  # Input logic for create operations on Products
+# Input logic for create operations on Products
 input ProductsCreate {
-product_name: String!
-price: Float!
-currency_type: String!
-description: String
-icon_class: String
-icon_label: String
-
+  product_name: String!
+  price: Float!
+  currency_type: String!
+  description: String
+  icon_class: String
+  icon_label: String
 }
 
-  # Input logic for update operations on Products
+# Input logic for update operations on Products
 input ProductsUpdate {
   filter: ProductsFilter
-product_name: String
-price: Float
-currency_type: String
-description: String
-icon_class: String
-icon_label: String
-
+  product_name: String
+  price: Float
+  currency_type: String
+  description: String
+  icon_class: String
+  icon_label: String
 }
 
-  # Input logic for delete operations on Products
+# Input logic for delete operations on Products
 input ProductsDelete {
   filter: ProductsFilter
 }
 
-  # Input logic for upload operations on Products
+# Input logic for upload operations on Products
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input ProductsUpload {
   filter: ProductsFilter
   file: Upload
 }
 
-  # Input logic for count operations on Products
+# Input logic for count operations on Products
 input ProductsCount {
   filter: ProductsFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on Products
+# Output the count operations on Products
 type ProductsCountResult {
   count: Int!
 }
 
 type Product_reviews {
-review_id: Int!
-product_id: Int!
-customer_id: Int!
-rating: Int!
-review_text: String!
-review_date: GraphQLDate!
-icon_class: String
-icon_label: String
-products(take: Int = 15, skip: Int): Products
-customers(take: Int = 15, skip: Int): Customers
+  review_id: Int!
+  product_id: Int!
+  customer_id: Int!
+  rating: Int!
+  review_text: String!
+  review_date: GraphQLDate!
+  icon_class: String
+  icon_label: String
+  products(take: Int = 15, skip: Int): Products
+  customers(take: Int = 15, skip: Int): Customers
 }
 
-  # Filters for Product_reviews logical operations
+# Filters for Product_reviews logical operations
 input Product_reviewsFilter {
-  _and: [ Product_reviewsLogicalOp]
-  _or: [ Product_reviewsLogicalOp]
+  _and: [Product_reviewsLogicalOp]
+  _or: [Product_reviewsLogicalOp]
 }
 
-  # Nested Filters for Product_reviews logical and comparison operations
+# Nested Filters for Product_reviews logical and comparison operations
 input Product_reviewsLogicalOp {
-  _and: [ Product_reviewsLogicalOp]
-  _or: [ Product_reviewsLogicalOp]
-review_id: ComparisonOperators
-product_id: ComparisonOperators
-customer_id: ComparisonOperators
-rating: ComparisonOperators
-review_text: ComparisonOperators
-review_date: ComparisonOperators
-icon_class: ComparisonOperators
-icon_label: ComparisonOperators
+  _and: [Product_reviewsLogicalOp]
+  _or: [Product_reviewsLogicalOp]
+  review_id: ComparisonOperators
+  product_id: ComparisonOperators
+  customer_id: ComparisonOperators
+  rating: ComparisonOperators
+  review_text: ComparisonOperators
+  review_date: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
 }
 
-  # Allowed query operations for Product_reviews
+# Allowed query operations for Product_reviews
 input Product_reviewsQueryOptions {
   filter: Product_reviewsFilter
   skip: Int
@@ -1158,27 +1143,27 @@ input Product_reviewsQueryOptions {
   sort: Product_reviewsSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input Product_reviewsSortOptions {
-review_id: Sort
-product_id: Sort
-customer_id: Sort
-rating: Sort
-review_text: Sort
-review_date: Sort
-icon_class: Sort
-icon_label: Sort
+  review_id: Sort
+  product_id: Sort
+  customer_id: Sort
+  rating: Sort
+  review_text: Sort
+  review_date: Sort
+  icon_class: Sort
+  icon_label: Sort
 }
 
-  # Define the mutations output type for Product_reviews
+# Define the mutations output type for Product_reviews
 type Product_reviewsOutput {
-	created: [Product_reviews]!
-	updated: [Product_reviews]!
-	deleted: Int
+  created: [Product_reviews]!
+  updated: [Product_reviews]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on Product_reviews
+# Define the input options for the mutation operations on Product_reviews
 input Product_reviewsMutationOptions {
   _create: Product_reviewsCreate
   _update: Product_reviewsUpdate
@@ -1186,81 +1171,81 @@ input Product_reviewsMutationOptions {
   _upload: Product_reviewsUpload
 }
 
-  # Input logic for create operations on Product_reviews
+# Input logic for create operations on Product_reviews
 input Product_reviewsCreate {
-product_id: Int!
-customer_id: Int!
-rating: Int!
-review_text: String!
+  product_id: Int!
+  customer_id: Int!
+  rating: Int!
+  review_text: String!
 
-icon_class: String
-icon_label: String
+  icon_class: String
+  icon_label: String
 }
 
-  # Input logic for update operations on Product_reviews
+# Input logic for update operations on Product_reviews
 input Product_reviewsUpdate {
   filter: Product_reviewsFilter
-product_id: Int
-customer_id: Int
-rating: Int
-review_text: String
+  product_id: Int
+  customer_id: Int
+  rating: Int
+  review_text: String
 
-icon_class: String
-icon_label: String
+  icon_class: String
+  icon_label: String
 }
 
-  # Input logic for delete operations on Product_reviews
+# Input logic for delete operations on Product_reviews
 input Product_reviewsDelete {
   filter: Product_reviewsFilter
 }
 
-  # Input logic for upload operations on Product_reviews
+# Input logic for upload operations on Product_reviews
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input Product_reviewsUpload {
   filter: Product_reviewsFilter
   file: Upload
 }
 
-  # Input logic for count operations on Product_reviews
+# Input logic for count operations on Product_reviews
 input Product_reviewsCount {
   filter: Product_reviewsFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on Product_reviews
+# Output the count operations on Product_reviews
 type Product_reviewsCountResult {
   count: Int!
 }
 
 type Promotions {
-id: ID!
-name: String!
-description: String!
-start_date: String!
-end_date: String!
-fileUrl: String
-coupons(take: Int = 15, skip: Int): Coupons
+  id: ID!
+  name: String!
+  description: String!
+  start_date: String!
+  end_date: String!
+  fileUrl: String
+  coupons(take: Int = 15, skip: Int): Coupons
 }
 
-  # Filters for Promotions logical operations
+# Filters for Promotions logical operations
 input PromotionsFilter {
-  _and: [ PromotionsLogicalOp]
-  _or: [ PromotionsLogicalOp]
+  _and: [PromotionsLogicalOp]
+  _or: [PromotionsLogicalOp]
 }
 
-  # Nested Filters for Promotions logical and comparison operations
+# Nested Filters for Promotions logical and comparison operations
 input PromotionsLogicalOp {
-  _and: [ PromotionsLogicalOp]
-  _or: [ PromotionsLogicalOp]
-id: ComparisonOperators
-name: ComparisonOperators
-description: ComparisonOperators
-start_date: ComparisonOperators
-end_date: ComparisonOperators
-fileUrl: ComparisonOperators
+  _and: [PromotionsLogicalOp]
+  _or: [PromotionsLogicalOp]
+  id: ComparisonOperators
+  name: ComparisonOperators
+  description: ComparisonOperators
+  start_date: ComparisonOperators
+  end_date: ComparisonOperators
+  fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for Promotions
+# Allowed query operations for Promotions
 input PromotionsQueryOptions {
   filter: PromotionsFilter
   skip: Int
@@ -1268,25 +1253,25 @@ input PromotionsQueryOptions {
   sort: PromotionsSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input PromotionsSortOptions {
-id: Sort
-name: Sort
-description: Sort
-start_date: Sort
-end_date: Sort
-fileUrl: Sort
+  id: Sort
+  name: Sort
+  description: Sort
+  start_date: Sort
+  end_date: Sort
+  fileUrl: Sort
 }
 
-  # Define the mutations output type for Promotions
+# Define the mutations output type for Promotions
 type PromotionsOutput {
-	created: [Promotions]!
-	updated: [Promotions]!
-	deleted: Int
+  created: [Promotions]!
+  updated: [Promotions]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on Promotions
+# Define the input options for the mutation operations on Promotions
 input PromotionsMutationOptions {
   _create: PromotionsCreate
   _update: PromotionsUpdate
@@ -1294,79 +1279,79 @@ input PromotionsMutationOptions {
   _upload: PromotionsUpload
 }
 
-  # Input logic for create operations on Promotions
+# Input logic for create operations on Promotions
 input PromotionsCreate {
-name: String!
-description: String!
-start_date: String!
-end_date: String!
+  name: String!
+  description: String!
+  start_date: String!
+  end_date: String!
 
-fileUrl: String
+  fileUrl: String
 }
 
-  # Input logic for update operations on Promotions
+# Input logic for update operations on Promotions
 input PromotionsUpdate {
   filter: PromotionsFilter
-name: String
-description: String
-start_date: String
-end_date: String
+  name: String
+  description: String
+  start_date: String
+  end_date: String
 
-fileUrl: String
+  fileUrl: String
 }
 
-  # Input logic for delete operations on Promotions
+# Input logic for delete operations on Promotions
 input PromotionsDelete {
   filter: PromotionsFilter
 }
 
-  # Input logic for upload operations on Promotions
+# Input logic for upload operations on Promotions
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input PromotionsUpload {
   filter: PromotionsFilter
   file: Upload
 }
 
-  # Input logic for count operations on Promotions
+# Input logic for count operations on Promotions
 input PromotionsCount {
   filter: PromotionsFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on Promotions
+# Output the count operations on Promotions
 type PromotionsCountResult {
   count: Int!
 }
 
 type Shipments {
-shipment_id: Int!
-order_id: Int!
-shipment_date: MySQLDate!
-tracking_int: String
-icon_class: String
-icon_label: String
-orders(take: Int = 15, skip: Int): Orders
+  shipment_id: Int!
+  order_id: Int!
+  shipment_date: MySQLDate!
+  tracking_int: String
+  icon_class: String
+  icon_label: String
+  orders(take: Int = 15, skip: Int): Orders
 }
 
-  # Filters for Shipments logical operations
+# Filters for Shipments logical operations
 input ShipmentsFilter {
-  _and: [ ShipmentsLogicalOp]
-  _or: [ ShipmentsLogicalOp]
+  _and: [ShipmentsLogicalOp]
+  _or: [ShipmentsLogicalOp]
 }
 
-  # Nested Filters for Shipments logical and comparison operations
+# Nested Filters for Shipments logical and comparison operations
 input ShipmentsLogicalOp {
-  _and: [ ShipmentsLogicalOp]
-  _or: [ ShipmentsLogicalOp]
-shipment_id: ComparisonOperators
-order_id: ComparisonOperators
-shipment_date: ComparisonOperators
-tracking_int: ComparisonOperators
-icon_class: ComparisonOperators
-icon_label: ComparisonOperators
+  _and: [ShipmentsLogicalOp]
+  _or: [ShipmentsLogicalOp]
+  shipment_id: ComparisonOperators
+  order_id: ComparisonOperators
+  shipment_date: ComparisonOperators
+  tracking_int: ComparisonOperators
+  icon_class: ComparisonOperators
+  icon_label: ComparisonOperators
 }
 
-  # Allowed query operations for Shipments
+# Allowed query operations for Shipments
 input ShipmentsQueryOptions {
   filter: ShipmentsFilter
   skip: Int
@@ -1374,25 +1359,25 @@ input ShipmentsQueryOptions {
   sort: ShipmentsSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input ShipmentsSortOptions {
-shipment_id: Sort
-order_id: Sort
-shipment_date: Sort
-tracking_int: Sort
-icon_class: Sort
-icon_label: Sort
+  shipment_id: Sort
+  order_id: Sort
+  shipment_date: Sort
+  tracking_int: Sort
+  icon_class: Sort
+  icon_label: Sort
 }
 
-  # Define the mutations output type for Shipments
+# Define the mutations output type for Shipments
 type ShipmentsOutput {
-	created: [Shipments]!
-	updated: [Shipments]!
-	deleted: Int
+  created: [Shipments]!
+  updated: [Shipments]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on Shipments
+# Define the input options for the mutation operations on Shipments
 input ShipmentsMutationOptions {
   _create: ShipmentsCreate
   _update: ShipmentsUpdate
@@ -1400,71 +1385,71 @@ input ShipmentsMutationOptions {
   _upload: ShipmentsUpload
 }
 
-  # Input logic for create operations on Shipments
+# Input logic for create operations on Shipments
 input ShipmentsCreate {
-order_id: Int!
+  order_id: Int!
 
-tracking_int: String
-icon_class: String
-icon_label: String
+  tracking_int: String
+  icon_class: String
+  icon_label: String
 }
 
-  # Input logic for update operations on Shipments
+# Input logic for update operations on Shipments
 input ShipmentsUpdate {
   filter: ShipmentsFilter
-order_id: Int
+  order_id: Int
 
-tracking_int: String
-icon_class: String
-icon_label: String
+  tracking_int: String
+  icon_class: String
+  icon_label: String
 }
 
-  # Input logic for delete operations on Shipments
+# Input logic for delete operations on Shipments
 input ShipmentsDelete {
   filter: ShipmentsFilter
 }
 
-  # Input logic for upload operations on Shipments
+# Input logic for upload operations on Shipments
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input ShipmentsUpload {
   filter: ShipmentsFilter
   file: Upload
 }
 
-  # Input logic for count operations on Shipments
+# Input logic for count operations on Shipments
 input ShipmentsCount {
   filter: ShipmentsFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on Shipments
+# Output the count operations on Shipments
 type ShipmentsCountResult {
   count: Int!
 }
 
 type User_role {
-id: ID!
-role_name: String!
-fileUrl: String
-users(take: Int = 15, skip: Int): [Users]
+  id: ID!
+  role_name: String!
+  fileUrl: String
+  users(take: Int = 15, skip: Int): [Users]
 }
 
-  # Filters for User_role logical operations
+# Filters for User_role logical operations
 input User_roleFilter {
-  _and: [ User_roleLogicalOp]
-  _or: [ User_roleLogicalOp]
+  _and: [User_roleLogicalOp]
+  _or: [User_roleLogicalOp]
 }
 
-  # Nested Filters for User_role logical and comparison operations
+# Nested Filters for User_role logical and comparison operations
 input User_roleLogicalOp {
-  _and: [ User_roleLogicalOp]
-  _or: [ User_roleLogicalOp]
-id: ComparisonOperators
-role_name: ComparisonOperators
-fileUrl: ComparisonOperators
+  _and: [User_roleLogicalOp]
+  _or: [User_roleLogicalOp]
+  id: ComparisonOperators
+  role_name: ComparisonOperators
+  fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for User_role
+# Allowed query operations for User_role
 input User_roleQueryOptions {
   filter: User_roleFilter
   skip: Int
@@ -1472,22 +1457,22 @@ input User_roleQueryOptions {
   sort: User_roleSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input User_roleSortOptions {
-id: Sort
-role_name: Sort
-fileUrl: Sort
+  id: Sort
+  role_name: Sort
+  fileUrl: Sort
 }
 
-  # Define the mutations output type for User_role
+# Define the mutations output type for User_role
 type User_roleOutput {
-	created: [User_role]!
-	updated: [User_role]!
-	deleted: Int
+  created: [User_role]!
+  updated: [User_role]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on User_role
+# Define the input options for the mutation operations on User_role
 input User_roleMutationOptions {
   _create: User_roleCreate
   _update: User_roleUpdate
@@ -1495,74 +1480,74 @@ input User_roleMutationOptions {
   _upload: User_roleUpload
 }
 
-  # Input logic for create operations on User_role
+# Input logic for create operations on User_role
 input User_roleCreate {
-role_name: String!
+  role_name: String!
 
-fileUrl: String
+  fileUrl: String
 }
 
-  # Input logic for update operations on User_role
+# Input logic for update operations on User_role
 input User_roleUpdate {
   filter: User_roleFilter
-role_name: String
+  role_name: String
 
-fileUrl: String
+  fileUrl: String
 }
 
-  # Input logic for delete operations on User_role
+# Input logic for delete operations on User_role
 input User_roleDelete {
   filter: User_roleFilter
 }
 
-  # Input logic for upload operations on User_role
+# Input logic for upload operations on User_role
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input User_roleUpload {
   filter: User_roleFilter
   file: Upload
 }
 
-  # Input logic for count operations on User_role
+# Input logic for count operations on User_role
 input User_roleCount {
   filter: User_roleFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on User_role
+# Output the count operations on User_role
 type User_roleCountResult {
   count: Int!
 }
 
 type Users {
-id: ID!
-email: String!
-role_id: String!
-customer_id: Int
-created_t: MySQLDate
-fileUrl: String
-user_role(take: Int = 15, skip: Int): User_role
+  id: ID!
+  email: String!
+  role_id: String!
+  customer_id: Int
+  created_t: MySQLDate
+  fileUrl: String
+  user_role(take: Int = 15, skip: Int): User_role
 }
 
-  # Filters for Users logical operations
+# Filters for Users logical operations
 input UsersFilter {
-  _and: [ UsersLogicalOp]
-  _or: [ UsersLogicalOp]
+  _and: [UsersLogicalOp]
+  _or: [UsersLogicalOp]
 }
 
-  # Nested Filters for Users logical and comparison operations
+# Nested Filters for Users logical and comparison operations
 input UsersLogicalOp {
-  _and: [ UsersLogicalOp]
-  _or: [ UsersLogicalOp]
-id: ComparisonOperators
-password: ComparisonOperators
-email: ComparisonOperators
-role_id: ComparisonOperators
-customer_id: ComparisonOperators
-created_t: ComparisonOperators
-fileUrl: ComparisonOperators
+  _and: [UsersLogicalOp]
+  _or: [UsersLogicalOp]
+  id: ComparisonOperators
+  password: ComparisonOperators
+  email: ComparisonOperators
+  role_id: ComparisonOperators
+  customer_id: ComparisonOperators
+  created_t: ComparisonOperators
+  fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for Users
+# Allowed query operations for Users
 input UsersQueryOptions {
   filter: UsersFilter
   skip: Int
@@ -1570,26 +1555,26 @@ input UsersQueryOptions {
   sort: UsersSortOptions
 }
 
-  # Define 'sort by' options ( ASC or DESC )
+# Define 'sort by' options ( ASC or DESC )
 input UsersSortOptions {
-id: Sort
-password: Sort
-email: Sort
-role_id: Sort
-customer_id: Sort
-created_t: Sort
-fileUrl: Sort
+  id: Sort
+  password: Sort
+  email: Sort
+  role_id: Sort
+  customer_id: Sort
+  created_t: Sort
+  fileUrl: Sort
 }
 
-  # Define the mutations output type for Users
+# Define the mutations output type for Users
 type UsersOutput {
-	created: [Users]!
-	updated: [Users]!
-	deleted: Int
+  created: [Users]!
+  updated: [Users]!
+  deleted: Int
   uploaded: String
 }
 
-  # Define the input options for the mutation operations on Users
+# Define the input options for the mutation operations on Users
 input UsersMutationOptions {
   _create: UsersCreate
   _update: UsersUpdate
@@ -1597,57 +1582,56 @@ input UsersMutationOptions {
   _upload: UsersUpload
 }
 
-  # Input logic for create operations on Users
+# Input logic for create operations on Users
 input UsersCreate {
-password: String!
-email: String!
-role_id: String!
-customer_id: Int
+  password: String!
+  email: String!
+  role_id: String!
+  customer_id: Int
 
-fileUrl: String
+  fileUrl: String
 }
 
-  # Input logic for update operations on Users
+# Input logic for update operations on Users
 input UsersUpdate {
   filter: UsersFilter
-password: String
-email: String
-role_id: String
-customer_id: Int
+  password: String
+  email: String
+  role_id: String
+  customer_id: Int
 
-fileUrl: String
+  fileUrl: String
 }
 
-  # Input logic for delete operations on Users
+# Input logic for delete operations on Users
 input UsersDelete {
   filter: UsersFilter
 }
 
-  # Input logic for upload operations on Users
+# Input logic for upload operations on Users
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input UsersUpload {
   filter: UsersFilter
   file: Upload
 }
 
-  # Input logic for count operations on Users
+# Input logic for count operations on Users
 input UsersCount {
   filter: UsersFilter
   _count: Int
-} 
+}
 
-    # Output the count operations on Users
+# Output the count operations on Users
 type UsersCountResult {
   count: Int!
 }
-
 
 enum Sort {
   ASC
   DESC
 }
 
-  ## Necessary type defs for providing the backOffice with table structure
+## Necessary type defs for providing the backOffice with table structure
 type TableInfo {
   table: String
   structure: String

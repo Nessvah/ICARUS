@@ -109,7 +109,6 @@ async function autoResolvers() {
     };
 
     resolvers.Mutation[table.name] = async (parent, incomeArgs, incomeContext, info) => {
-      console.log('incomeArgs', incomeArgs);
       try {
         // Extracting the operation which is being made "_update, _create or _delete"
         const { input } = incomeArgs;
