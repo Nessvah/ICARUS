@@ -101,8 +101,8 @@ export class ImportThemTities {
         // Add the processed file to the set
         this.processedFiles.add(file);
       }
-      /*       console.log({ connections });
-      console.log({ tables }); */
+      console.log({ connections });
+      //console.log({ tables });
 
       // Return the imported tables and connections
       return { tables, connections };
