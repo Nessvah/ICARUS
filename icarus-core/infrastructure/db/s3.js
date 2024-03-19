@@ -12,7 +12,8 @@ const s3Data = async () => {
   try {
     if (config && config.tables) {
       // Ensure config.tables is defined
-      return config.connections.s3;
+      const s3 = config.connections.find((connection) => connection.type === 's3');
+      return s3;
     } else {
       console.error('Config data is missing or incomplete.');
       return null;

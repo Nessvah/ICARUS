@@ -49,6 +49,7 @@ export class ImportThemTities {
           const filePathURL = new URL(`file://${fileAbsolutePath}`);
           // All information from .js file in module
           const module = await import(filePathURL);
+          //console.log({ module })
           databaseInfo[module.default.type] = module.default;
           connections.push(module.default);
         }
