@@ -56,6 +56,7 @@ export class ImportThemTities {
       const entitiesFolderPath = path.join(configPath, '/entities');
       const entitiesFiles = await fs.readdir(entitiesFolderPath);
 
+      console.log(entitiesFiles);
       // Throw an error if there are no entities files
       if (entitiesFiles.length === 0) {
         throw new Error('No entities files found');
@@ -63,6 +64,7 @@ export class ImportThemTities {
 
       // Loop through each entities file
       for (let file of entitiesFiles) {
+        console.log(file, 'file');
         // Check if the file is a JSON file
         if (file.endsWith('.js')) {
           // Construct the full absolute path of .js entity
@@ -75,41 +77,51 @@ export class ImportThemTities {
           // Extract table information from parsed JSON data
           const tableName = module.default.tables.name;
           const databaseName = module.default.tables.database;
+
+          let tableConnectors = {};
+          // see if the entity has some connector
+          if (module.default.tables.connectors) {
+            // get all the config for that connector
+
+            // get the default folder where the config for connectors should be
+            const connectorsFolder = path.join(configPath, '/connectors');
+            const connectorsFiles = await fs.readdir(connectorsFolder);
+
+            // loop trough each file if more than one connector
+            for (let connectorFile of connectorsFiles) {
+              const connectorName = connectorFile.replace(/\.[^/.]+$/, '');
+              // read each connector if more than one
+              const fullPath = `${connectorsFolder}/${connectorFile}`;
+              const connectorFilePathURL = new URL(`file://${fullPath}`);
+
+              const connectorModule = await import(connectorFilePathURL);
+
+              // Check if the connector matches the connector name for this table
+              if (module.default.tables.connectors.includes(connectorName)) {
+                tableConnectors[connectorName] = connectorModule.default.connector[connectorName];
+              }
+            }
+          }
+
           const tableInfo = {
             name: tableName,
             database: databaseInfo[databaseName],
             columns: module.default.tables.columns,
             backoffice: module.default.tables.backoffice,
             hooks: module.default.hooks,
+            connectors: tableConnectors,
           };
+
           // Add table information to the tables array
           tables.push(tableInfo);
         }
       }
 
-      // Loop through each connection file again
-      for (let file of connectionFiles) {
-        // Construct the full path to the connection file
-        const connectionFilePath = path.join(dbFolderPath, file);
-        // Read connection file data
-        const connectionData = await fs.readFile(connectionFilePath, 'utf-8');
-        // Extract the file name
-        const fileName = path.parse(file).name;
-        // Parse connection data and store it in the connections array
-        const connectionInfo = JSON.parse(connectionData);
-        connections[fileName] = connectionInfo; // Assign connection info by name
-        // Add the processed file to the set
-        this.processedFiles.add(file);
-      }
-      /*       console.log({ connections });
-      console.log({ tables }); */
-
       // Return the imported tables and connections
       return { tables, connections };
       // Log the extracted tables information
-    } catch (e) {
-      // Log any errors that occur during execution
-      console.error(e);
+    } catch (err) {
+      console.error(err);
     }
   }
 }
