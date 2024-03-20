@@ -4,6 +4,7 @@ import { resolvers, autoResolvers } from '../graphql/resolvers.js';
 import { readConfigFile } from '../graphql/generateTypeDefs.js';
 import { customFormatError } from '../utils/error-handling/formatError.js';
 import fs from 'fs';
+
 import { createDbPool } from './db/connector.js';
 import depthLimit from 'graphql-depth-limit';
 import initializeLogger from '../utils/loggers/winstonConfig.js';
@@ -29,6 +30,7 @@ const startGraphqlServer = async (configPath) => {
   // create a database pool connection.
   await createDbPool();
   // import the typeDefs that will be used in the apollo server.
+
   let typeDefs;
   try {
     typeDefs = fs.readFileSync(path.join(__dirname, '../graphql/typeDefs.graphql'), 'utf8');
@@ -42,6 +44,8 @@ const startGraphqlServer = async (configPath) => {
     resolvers,
     formatError: customFormatError,
     validationRules: [depthLimit(3)], //config the depth limit of the graphql query to 3.
+    csrfPrevention: false,
+    upload: true,
   });
 
   // start the apollo server.

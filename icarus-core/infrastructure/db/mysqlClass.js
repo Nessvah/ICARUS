@@ -168,7 +168,7 @@ export class MySQLConnection {
    * @param {object} table - The table schema information.
    * @returns {Promise<{ updated: Array<Object> } | null>} - A promise that resolves to the updated record(s) or null if there was an error.
    */
-  async update(tableName, { input }) {
+  async update(tableName, { input }, table) {
     // UPDATE `table_name` SET `column_name` = `new_value' [WHERE condition];
     let updateQuery = `UPDATE ${tableName} SET `;
     let findQuery = `SELECT * FROM ${tableName} WHERE`;
@@ -301,7 +301,7 @@ export class MySQLConnection {
 
   async upload(tableName, { input }, table) {
     // Check if a file object is provided in the input data, if not, throw an error
-    const { file } = input._upload;
+    const { file } = input._upload.file;
     if (!file) {
       throw new Error('No file provided');
     }
