@@ -91,7 +91,7 @@ app.use(
       if (req.body.operationName === 'IntrospectionQuery') {
         return { req };
       } else {
-        return auth(req);
+        return { req };
       }
     },
   }),
