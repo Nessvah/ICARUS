@@ -64,7 +64,6 @@ export class ImportThemTities {
 
       // Loop through each entities file
       for (let file of entitiesFiles) {
-        console.log(file, 'file');
         // Check if the file is a JSON file
         if (file.endsWith('.js')) {
           // Construct the full absolute path of .js entity
@@ -72,6 +71,7 @@ export class ImportThemTities {
           // Transforming absolute path in something readable to import()
           const filePathURL = new URL(`file://${fileAbsolutePath}`);
           // All information from .js file in module
+          // eslint-disable-next-line node/no-unsupported-features/es-syntax
           const module = await import(filePathURL);
 
           // Extract table information from parsed JSON data
@@ -94,6 +94,7 @@ export class ImportThemTities {
               const fullPath = `${connectorsFolder}/${connectorFile}`;
               const connectorFilePathURL = new URL(`file://${fullPath}`);
 
+              // eslint-disable-next-line node/no-unsupported-features/es-syntax
               const connectorModule = await import(connectorFilePathURL);
 
               // Check if the connector matches the connector name for this table

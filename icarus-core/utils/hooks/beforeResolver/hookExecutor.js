@@ -8,11 +8,20 @@
  */
 const hookExecutor = async (table, operation, hook, properties) => {
   const queryInformation = { ...properties };
+
   try {
     // To call the function inside the entity
     let callFunction;
 
     if (table.hooks && table.hooks.all && table.hooks.all[hook]) {
+      console.log(1, table.hooks.all.beforeQuery);
+
+      for (let hook of table.hooks.all.beforeQuery) {
+        const func = hook;
+
+        const data = await func();
+        console.log(data);
+      }
       // Accessing the parameter 'all' of 'table.hooks'
       callFunction = table.hooks.all[hook];
     } else if (table.hooks && table.hooks[operation] && table.hooks[operation][hook]) {
