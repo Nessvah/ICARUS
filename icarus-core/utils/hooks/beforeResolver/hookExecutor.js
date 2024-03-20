@@ -14,14 +14,6 @@ const hookExecutor = async (table, operation, hook, properties) => {
     let callFunction;
 
     if (table.hooks && table.hooks.all && table.hooks.all[hook]) {
-      console.log(1, table.hooks.all.beforeQuery);
-
-      for (let hook of table.hooks.all.beforeQuery) {
-        const func = hook;
-
-        const data = await func();
-        console.log(data);
-      }
       // Accessing the parameter 'all' of 'table.hooks'
       callFunction = table.hooks.all[hook];
     } else if (table.hooks && table.hooks[operation] && table.hooks[operation][hook]) {
@@ -54,7 +46,7 @@ const beforeResolverRelations = async (table, args, column, parent) => {
   // for mongodb searching parents
   if (table.database.type === 'mongodb') {
     //const idValue = ObjectId.isValid(parent[column.name]) ? parent[column.name].toString() : parent[column.name];
-    args = { input: { filter: { _and: { [column.foreignKey]: { _eq: parent.id } } } } };
+    args = { input: { filter: { _and: [{ [column.foreignKey]: { _eq: parent[column.name] } }] } } };
     // for MySQL searching parents
   } else {
     args = { input: { filter: { [column.foreignKey]: parent[column.foreignKey] } } };

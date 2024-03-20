@@ -1,22 +1,19 @@
 import stream from 'stream';
 import { S3Client } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
-import { ImportThemTities } from '../../config/importDemTities.js';
+import { config } from '../../graphql/generateTypeDefs.js';
 
 // Call the importAll method to start importing entities
-const importer = new ImportThemTities();
 /**
  ** Retrieves the S3 connection data from the configuration file.
  * @returns {object} The S3 connection data.
  */
 const s3Data = async () => {
   try {
-    const config = await importer.importAll(); // Await the result of importAll()
-
     if (config && config.tables) {
       // Ensure config.tables is defined
-      //console.log('Config:', config, '______________'); // Log the retrieved config
-      return config.connections.s3;
+      const s3 = config.connections.find((connection) => connection.type === 's3');
+      return s3;
     } else {
       console.error('Config data is missing or incomplete.');
       return null;
