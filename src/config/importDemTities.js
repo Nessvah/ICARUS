@@ -87,25 +87,8 @@ export class ImportThemTities {
         }
       }
 
-      // Loop through each connection file again
-      for (let file of connectionFiles) {
-        // Construct the full path to the connection file
-        const connectionFilePath = path.join(dbFolderPath, file);
-        // Read connection file data
-        const connectionData = await fs.readFile(connectionFilePath, 'utf-8');
-        // Extract the file name
-        const fileName = path.parse(file).name;
-        // Parse connection data and store it in the connections array
-        const connectionInfo = JSON.parse(connectionData);
-        connections[fileName] = connectionInfo; // Assign connection info by name
-        // Add the processed file to the set
-        this.processedFiles.add(file);
-      }
-      /*       console.log({ connections });
-      console.log({ tables }); */
-
       // Return the imported tables and connections
-      return { tables, connections };
+      return { tables };
       // Log the extracted tables information
     } catch (e) {
       // Log any errors that occur during execution

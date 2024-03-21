@@ -452,15 +452,16 @@ export class MongoDBConnection {
    * @returns {Promise<{ uploaded: string }|ApolloError>} - A promise that resolves to an object with the uploaded file's location, or an ApolloError if the upload fails.
    */
   async upload(tableName, { input }, table) {
-    const { file } = input._upload;
+    const { file } = input._upload.file;
     const { _upload } = input;
+
     const filter = this.filterController(_upload.filter);
 
     if (!file) {
       throw new Error('No file provided');
     }
 
-    const { filename, createReadStream, encoding } = await file;
+    const { filename, createReadStream } = await file;
 
     // Check if the mimetype is valid (png, jpeg, jpg)
     const mimeTypes = {
