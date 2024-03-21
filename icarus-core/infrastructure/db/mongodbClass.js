@@ -405,27 +405,27 @@ export class MongoDBConnection {
       // Retrieve the collection object
       const collection = db.collection(tableName);
       let res;
-      let query;
 
       //* Check if input.filter is empty or not defined
       /* Retrieve the database and collection objects from the MongoDB client. 
       Then, it determines whether the input contains a filter or not. If the filter is empty, 
       it returns all the documents in the collection. 
       Otherwise, it reorganizes the filter parameter using the filterController function. */
-      if (!input.filter || input.filter === null || Object.keys(input.filter).length === 0) {
-        query = collection.find();
+      if (!input.filter || Object.keys(input.filter).length === 0) {
+        //! cursor.count is deprecated and will be removed in the next major version
+        // If no filter is provided, use countDocuments() to count all documents
+        res = await collection.countDocuments();
       } else {
         // Call the filter function to reorganize the filter parameter
         const filter = input.filter._and || input.filter._or ? this.filterController(input.filter) : input.filter;
+
         const options = {
           // Set the timeout value in milliseconds
           maxTimeMS: 60000, // Adjust this value to your desired timeout
         };
-        query = collection.find(filter, options).maxTimeMS(options.maxTimeMS);
+        res = await collection.countDocuments(filter, options);
       }
 
-      // Call the COunt function to retrieve the results value
-      res = await query.count();
       return res;
     } catch (error) {
       logger.error(error); // Log any errors
