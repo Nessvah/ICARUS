@@ -62,3 +62,5 @@ export const createUploadStream = async (key, mimeType) => {
     promise: upload.done(),
   };
 };
+
+//TODO: Create a filesystem uploader
