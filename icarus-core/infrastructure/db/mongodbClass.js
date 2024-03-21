@@ -181,7 +181,7 @@ export class MongoDBConnection {
       const collection = db.collection(tableName);
       let res;
       let query;
-
+      console.log('chegueeiiii');
       //* Check if input.filter is empty or not defined
       /* Retrieve the database and collection objects from the MongoDB client. 
       Then, it determines whether the input contains a filter or not. If the filter is empty, 
@@ -239,12 +239,33 @@ export class MongoDBConnection {
    * @param {object[]} input._create
    * @returns {Promise<object[]>}
    */
-  async create(tableName, { input }) {
+  async create(tableName, { input }, table) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
       const collection = db.collection(tableName);
+
+      // TODO: Refactor this!
+      // check if it's trying to create an user
+      if (input._create.role_name) {
+        const { role_name } = input._create;
+
+        // get the info from the column that will have the foreign entity info
+        const foreignColumn = table.columns.find((column) => column.foreignEntity);
+
+        const role = role_name.toLowerCase();
+        const roleCollection = db.collection(foreignColumn.foreignEntity);
+        try {
+          const filter = { role_name: role };
+          // get the specified role info
+          const roleInfo = await roleCollection.findOne(filter);
+          console.log({ roleInfo });
+          input._create.role_id = roleInfo._id;
+        } catch (ee) {
+          throw new Error(ee);
+        }
+      }
 
       // Insert the data into the collection
       const res = await collection.insertMany([input._create]);
