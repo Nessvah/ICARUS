@@ -4,9 +4,8 @@
   scalar MySQLDate
   scalar Upload
   
-  # Define allowed operations for comparison operators
-input ComparisonOperators {
-_eq: String
+    input ComparisonOperators {
+      _eq: String
 _neq: String
 _lt: String
 _lte: String
@@ -15,7 +14,7 @@ _gte: String
 _in: String
 _nin: String
 _like: String
-}
+    }
 
 
   # Define the root Query
@@ -55,7 +54,6 @@ usersCount(input: UsersCount): UsersCountResult
 
   # Define the root Mutation 
 type Mutation {
-  authorize(input: AuthorizeUser!): AuthPayload!
 authors(input: AuthorsMutationOptions): AuthorsOutput
 blog_posts(input: Blog_postsMutationOptions): Blog_postsOutput
 brands(input: BrandsMutationOptions): BrandsOutput
@@ -234,9 +232,9 @@ input Blog_postsMutationOptions {
   # Input logic for create operations on Blog_posts
 input Blog_postsCreate {
 title: String!
-author_id: ID!
+
 content: JSON!
-publish_date: GraphQLDate!
+
 fileUrl: String
 }
 
@@ -246,7 +244,7 @@ input Blog_postsUpdate {
 title: String
 author_id: ID
 content: JSON
-publish_date: GraphQLDate
+
 fileUrl: String
 }
 
@@ -538,7 +536,7 @@ input CouponsCreate {
 code: String!
 discount_percent: Int!
 expiration_date: String!
-promotion_id: ID!
+
 fileUrl: String
 }
 
@@ -747,8 +745,8 @@ input Order_itemsMutationOptions {
 
   # Input logic for create operations on Order_items
 input Order_itemsCreate {
-order_id: Int!
-product_id: Int!
+
+
 quantity: Int!
 price: Float!
 currency_type: String!
@@ -855,8 +853,8 @@ input OrdersMutationOptions {
 
   # Input logic for create operations on Orders
 input OrdersCreate {
-order_date: MySQLDate!
-customer_id: Int!
+
+
 icon_class: String
 icon_label: String
 
@@ -867,7 +865,7 @@ icon_label: String
   # Input logic for update operations on Orders
 input OrdersUpdate {
   filter: OrdersFilter
-order_date: MySQLDate
+
 customer_id: Int
 icon_class: String
 icon_label: String
@@ -967,10 +965,10 @@ input PaymentMutationOptions {
   # Input logic for create operations on Payment
 input PaymentCreate {
 payment_method: String!
-payment_date: String!
+
 amount: Float!
 payment_status: String!
-order_id: Int
+
 fileUrl: String
 }
 
@@ -978,7 +976,7 @@ fileUrl: String
 input PaymentUpdate {
   filter: PaymentFilter
 payment_method: String
-payment_date: String
+
 amount: Float
 payment_status: String
 order_id: Int
@@ -1190,11 +1188,11 @@ input Product_reviewsMutationOptions {
 
   # Input logic for create operations on Product_reviews
 input Product_reviewsCreate {
-product_id: Int!
-customer_id: Int!
+
+
 rating: Int!
 review_text: String!
-review_date: GraphQLDate!
+
 icon_class: String
 icon_label: String
 }
@@ -1206,7 +1204,7 @@ product_id: Int
 customer_id: Int
 rating: Int
 review_text: String
-review_date: GraphQLDate
+
 icon_class: String
 icon_label: String
 }
@@ -1404,8 +1402,8 @@ input ShipmentsMutationOptions {
 
   # Input logic for create operations on Shipments
 input ShipmentsCreate {
-order_id: Int!
-shipment_date: MySQLDate!
+
+
 tracking_int: String
 icon_class: String
 icon_label: String
@@ -1415,7 +1413,7 @@ icon_label: String
 input ShipmentsUpdate {
   filter: ShipmentsFilter
 order_id: Int
-shipment_date: MySQLDate
+
 tracking_int: String
 icon_class: String
 icon_label: String
@@ -1537,9 +1535,10 @@ type User_roleCountResult {
 
 type Users {
 id: ID!
+name: String!
 email: String!
+role_name: String!
 role_id: String!
-customer_id: Int
 created_t: MySQLDate
 fileUrl: String
 user_role(take: Int = 15, skip: Int): User_role
@@ -1556,10 +1555,10 @@ input UsersLogicalOp {
   _and: [ UsersLogicalOp]
   _or: [ UsersLogicalOp]
 id: ComparisonOperators
-password: ComparisonOperators
+name: ComparisonOperators
 email: ComparisonOperators
+role_name: ComparisonOperators
 role_id: ComparisonOperators
-customer_id: ComparisonOperators
 created_t: ComparisonOperators
 fileUrl: ComparisonOperators
 }
@@ -1575,10 +1574,10 @@ input UsersQueryOptions {
   # Define 'sort by' options ( ASC or DESC )
 input UsersSortOptions {
 id: Sort
-password: Sort
+name: Sort
 email: Sort
+role_name: Sort
 role_id: Sort
-customer_id: Sort
 created_t: Sort
 fileUrl: Sort
 }
@@ -1601,22 +1600,22 @@ input UsersMutationOptions {
 
   # Input logic for create operations on Users
 input UsersCreate {
-password: String!
+name: String!
 email: String!
-role_id: String!
-customer_id: Int
-created_t: MySQLDate
+role_name: String!
+
+
 fileUrl: String
 }
 
   # Input logic for update operations on Users
 input UsersUpdate {
   filter: UsersFilter
-password: String
+name: String
 email: String
+role_name: String
 role_id: String
-customer_id: Int
-created_t: MySQLDate
+
 fileUrl: String
 }
 
@@ -1647,26 +1646,6 @@ type UsersCountResult {
 enum Sort {
   ASC
   DESC
-}
-
-  ## Necessary type defs for Auth resolvers
-input AuthorizeUser {
-  email: String!
-  password: String!
-}
-
-input RoleInput {
-  role: String!
-}
-
-type AuthPayload {
-  token: Token!
-}
-
-type Token {
-  accessToken: String!
-  idToken: String!
-  refreshToken: String!
 }
 
   ## Necessary type defs for providing the backOffice with table structure

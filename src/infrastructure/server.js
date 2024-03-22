@@ -90,9 +90,8 @@ app.use(
     context: ({ req }) => {
       if (req.body.operationName === 'IntrospectionQuery') {
         return { req };
-      } else {
-        return auth(req);
       }
+      return auth(req);
     },
   }),
 );
