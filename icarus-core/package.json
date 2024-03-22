@@ -1,6 +1,6 @@
 {
   "name": "icarus-graphql",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Graphql server core",
   "main": "./infrastructure/server.js",
   "type": "module",
