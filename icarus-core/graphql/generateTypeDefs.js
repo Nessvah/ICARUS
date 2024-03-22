@@ -342,4 +342,4 @@ function generateOperators(operators) {
 `;
 }
 
-export { readConfigFile, config };
+export { readConfigFile, config, generateTypeDefinitions };

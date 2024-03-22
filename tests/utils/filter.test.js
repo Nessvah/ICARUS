@@ -1,4 +1,4 @@
-import { filterUndefinedValues } from '../../src/utils/filter';
+import { filterUndefinedValues } from '../../icarus-core/utils/filter';
 
 describe('filterUndefinedValues()', () => {
   it('returns a new object without undefined values', () => {
