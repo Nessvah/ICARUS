@@ -146,6 +146,13 @@ ${config.tables
     return `${tableName}(input: ${resolvers}): ${capitalizedTableName}Output`;
   })
   .join('\n')}
+}
+
+# list Entities
+enum Folders {
+${config.tables
+  .map((table) => `${table.name.toUpperCase()}`) // Convert table names to uppercase for enum values
+  .join('\n')}
 }`);
 
   // Dynamically generate the necessary typedef's for the root types
@@ -252,11 +259,14 @@ input ${tableName}MutationOptions {
   # Input logic for create operations on ${tableName}
 input ${tableName}Create {
 ${table.columns
-  .filter((column) => column.primaryKey !== true)
+  .filter((column) => column.primaryKey !== true || column.extra === 'folder')
   .map((column) => {
     if (column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
       return '';
     }
+    /*     if (column.extra === 'folder') {
+      return `${column.name}: Entities`;
+    } */
     const type = mapColumnTypeToGraphQLType(column.type);
     return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
   })
@@ -286,8 +296,9 @@ input ${tableName}Delete {
   # Input logic for upload operations on ${tableName}
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input ${tableName}Upload {
-  filter: ${tableName}Filter
   file: Upload
+  filter: ${tableName}Filter
+  folder: Folders
 }`;
 
     const countInput = `
@@ -339,7 +350,7 @@ function generateOperators(operators) {
     input ComparisonOperators {
       ${operatorsStr.join('\n')}
     }
-`;
+  `;
 }
 
 export { readConfigFile, config };

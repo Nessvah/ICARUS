@@ -260,7 +260,6 @@ export class MongoDBConnection {
 
       // Return an object with the created property, containing the inserted data
       return { created: processedRes };
-      return { created: processedRes };
     } catch (error) {
       logger.error(error); // Log any errors
       return false; // Return false in case of any errors
@@ -466,7 +465,7 @@ export class MongoDBConnection {
     // Check if the mimetype is valid (png, jpeg, jpg)
     const mimeTypes = {
       png: 'image/png',
-      jpg: 'image/jpeg',
+      jpg: 'image/jpg',
       jpeg: 'image/jpeg',
     };
 
@@ -515,7 +514,7 @@ export class MongoDBConnection {
       const updatedInput = {
         input: {
           _upload: {
-            url: result.Key,
+            url: result.Location,
             ...input._upload,
           },
         },

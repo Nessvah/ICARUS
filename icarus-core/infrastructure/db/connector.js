@@ -16,6 +16,11 @@ const pools = [];
  * @param {object} args - args have all the information passed to the query or mutation, and define the action that will be made in the controllers.
  */
 async function controller(tableName, args, table) {
+  console.log({ tableName });
+  console.log({ args });
+  console.log({ table });
+  let folder = args.input._upload.folder.toLowerCase();
+  console.log('Folder', folder);
   let connection;
   //find the right database in the pool, base on table name.
   const currentTable = await pools.find((db) => db.table === tableName);
@@ -30,6 +35,17 @@ async function controller(tableName, args, table) {
         break;
       case 's3':
         connection = new S3Connection(currentTable);
+        const nani = await pools.find((db) => db.table === folder);
+        switch (nani.type) {
+          case 'mysql':
+            connection = new MySQLConnection(nani);
+            break;
+          case 'mongodb':
+            connection = new MongoDBConnection(nani);
+            break;
+          default:
+            throw Error('Invalid NHEQUINI Type');
+        }
         break;
       default:
         throw Error('Invalid Database Type');
@@ -58,6 +74,17 @@ async function controller(tableName, args, table) {
         return await connection.delete(tableName, args);
       case '_upload':
         return await connection.upload(tableName, args, table);
+      /* // Update the respective database with the S3 URL
+      if (table.upload.type === 's3') {
+        return await connection.s3UploadLogic(tableName, args, table);
+
+} (table.upload.type === 'filesystem'){
+  return await connection.fsUploadLogic(tableName, args, table);
+
+}
+return { uploaded: s3Url };
+ */
+
       default:
         return 'Action not defined';
     }
@@ -118,6 +145,7 @@ async function createDbPool() {
           table: table.name,
           type: table.database.type,
           bucket: table.database.bucket,
+          region: table.database.region,
           columns: table.columns,
           pool: client,
         });

@@ -312,7 +312,7 @@ export class MySQLConnection {
     // Check if the mimetype is valid (png, jpeg, jpg)
     const mimeTypes = {
       png: 'image/png',
-      jpg: 'image/jpeg',
+      jpg: 'image/jpg',
       jpeg: 'image/jpeg',
     };
 
@@ -363,7 +363,7 @@ export class MySQLConnection {
       const updatedInput = {
         input: {
           _upload: {
-            url: result.Key,
+            url: result.Location,
             ...input._upload,
           },
         },
