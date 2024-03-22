@@ -363,7 +363,7 @@ export class MySQLConnection {
       const updatedInput = {
         input: {
           _upload: {
-            url: result.Key,
+            url: result.Location,
             ...input._upload,
           },
         },
@@ -377,9 +377,6 @@ export class MySQLConnection {
     } catch (error) {
       // Log any errors and return an ApolloError
       logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
-      throw new ApolloError('Error uploading file', 'UPLOAD_ERROR', {
-        errorMessage: error.message,
-      });
     }
   }
 }

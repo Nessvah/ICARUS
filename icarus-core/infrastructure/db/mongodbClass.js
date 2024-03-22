@@ -535,7 +535,7 @@ export class MongoDBConnection {
       const updatedInput = {
         input: {
           _upload: {
-            url: result.Key,
+            url: result.Location,
             ...input._upload,
           },
         },
@@ -548,10 +548,6 @@ export class MongoDBConnection {
       return { uploaded: result.Location };
     } catch (error) {
       logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
-      // Throw an ApolloError if upload fails
-      throw new ApolloError('Error uploading file', 'UPLOAD_ERROR', {
-        errorMessage: error.message,
-      });
     }
   }
 }
