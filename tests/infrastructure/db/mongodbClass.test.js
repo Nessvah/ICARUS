@@ -19,6 +19,14 @@ jest.mock('../../../icarus-core/infrastructure/server', () => ({
   },
 }));
 
+// Mock the generateTypeDefs.js file
+jest.mock('../../../icarus-core/graphql/generateTypeDefs.js', () => ({
+  config: {
+    // Mock the behavior of import.meta.url
+    __dirname: '/ICARUS/icarus-core/graphql',
+  },
+}));
+
 // Mock MongoDB pool object
 const pool = {
   connect: jest.fn(),

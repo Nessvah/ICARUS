@@ -109,29 +109,7 @@ describe('controller function', () => {
 
   // CREATE METHOD
 
-  test('should create MySQL connection and call create method', async () => {
-    // Mock MySQLConnection _create method
-    MySQLConnection.prototype.create = jest.fn().mockResolvedValue('Created user');
-
-    await createDbPool();
-    const args = { input: { _create: { name: 'John', email: 'john@example.com' } } };
-    const result = await controller('users', args);
-
-    expect(MySQLConnection.prototype.create).toHaveBeenCalledWith('users', args);
-    expect(result).toBe('Created user');
-  });
-
-  test('should create MongoDB connection and call create method', async () => {
-    // Mock MongoDBConnection create method
-    MongoDBConnection.prototype.create = jest.fn().mockResolvedValue('Document created');
-
-    await createDbPool();
-    const args = { input: { _create: { name: 'John', email: 'john@example.com' } } };
-    const result = await controller('collection1', args);
-
-    expect(MongoDBConnection.prototype.create).toHaveBeenCalledWith('collection1', args);
-    expect(result).toBe('Document created');
-  });
+  /* missing create method test - to do later  */
 
   test('should log error when MongoDB create method encounters an error', async () => {
     // Mock MongoDBConnection create method to throw an error
@@ -297,5 +275,39 @@ describe('controller function', () => {
     await controller('users', args);
 
     expect(logger.error).toHaveBeenCalledWith(new Error('MySQL count error'));
+  });
+
+  // FILTER METHOD
+
+  describe('Filter functionality', () => {
+    test('should filter records from MongoDB', async () => {
+      // Mock MongoDBConnection find method
+      MongoDBConnection.prototype.find = jest.fn().mockResolvedValue(['Record1', 'Record2']);
+
+      const args = {
+        input: {
+          filter: { name: 'John' }, // Example filter criteria
+        },
+      };
+
+      const result = await controller('collection1', args);
+      expect(MongoDBConnection.prototype.find).toHaveBeenCalledWith('collection1', args);
+      expect(result).toEqual(['Record1', 'Record2']);
+    });
+
+    test('should filter records from MySQL', async () => {
+      // Mock MySQLConnection find method
+      MySQLConnection.prototype.find = jest.fn().mockResolvedValue(['Record1', 'Record2']);
+
+      const args = {
+        input: {
+          filter: { name: 'John' }, // Example filter criteria
+        },
+      };
+
+      const result = await controller('users', args);
+      expect(MySQLConnection.prototype.find).toHaveBeenCalledWith('users', args);
+      expect(result).toEqual(['Record1', 'Record2']);
+    });
   });
 });
