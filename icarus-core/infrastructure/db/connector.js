@@ -15,6 +15,7 @@ const pools = [];
  */
 async function controller(tableName, args, table) {
   let connection;
+
   //find the right database in the pool, base on table name.
   const currentTable = await pools.find((db) => db.table === tableName);
 
@@ -45,7 +46,7 @@ async function controller(tableName, args, table) {
       case '_count':
         return await connection.count(tableName, args);
       case '_create':
-        return await connection.create(tableName, args);
+        return await connection.create(tableName, args, table);
       case '_update':
         return await connection.update(tableName, args);
       case '_delete':

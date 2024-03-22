@@ -181,7 +181,7 @@ export class MongoDBConnection {
       const collection = db.collection(tableName);
       let res;
       let query;
-
+      console.log('chegueeiiii');
       //* Check if input.filter is empty or not defined
       /* Retrieve the database and collection objects from the MongoDB client. 
       Then, it determines whether the input contains a filter or not. If the filter is empty, 
@@ -239,12 +239,33 @@ export class MongoDBConnection {
    * @param {object[]} input._create
    * @returns {Promise<object[]>}
    */
-  async create(tableName, { input }) {
+  async create(tableName, { input }, table) {
     try {
       // Retrieve the database object from the MongoDB client
       const db = this.client.db(this.dbName);
       // Retrieve the collection object
       const collection = db.collection(tableName);
+
+      // TODO: Refactor this!
+      // check if it's trying to create an user
+      if (input._create.role_name) {
+        const { role_name } = input._create;
+
+        // get the info from the column that will have the foreign entity info
+        const foreignColumn = table.columns.find((column) => column.foreignEntity);
+
+        const role = role_name.toLowerCase();
+        const roleCollection = db.collection(foreignColumn.foreignEntity);
+        try {
+          const filter = { role_name: role };
+          // get the specified role info
+          const roleInfo = await roleCollection.findOne(filter);
+          console.log({ roleInfo });
+          input._create.role_id = roleInfo._id;
+        } catch (ee) {
+          throw new Error(ee);
+        }
+      }
 
       // Insert the data into the collection
       const res = await collection.insertMany([input._create]);
@@ -259,7 +280,6 @@ export class MongoDBConnection {
       const processedRes = afterResolver([input._create], this.tableData.type);
 
       // Return an object with the created property, containing the inserted data
-      return { created: processedRes };
       return { created: processedRes };
     } catch (error) {
       logger.error(error); // Log any errors
@@ -385,27 +405,27 @@ export class MongoDBConnection {
       // Retrieve the collection object
       const collection = db.collection(tableName);
       let res;
-      let query;
 
       //* Check if input.filter is empty or not defined
       /* Retrieve the database and collection objects from the MongoDB client. 
       Then, it determines whether the input contains a filter or not. If the filter is empty, 
       it returns all the documents in the collection. 
       Otherwise, it reorganizes the filter parameter using the filterController function. */
-      if (!input.filter || input.filter === null || Object.keys(input.filter).length === 0) {
-        query = collection.find();
+      if (!input.filter || Object.keys(input.filter).length === 0) {
+        //! cursor.count is deprecated and will be removed in the next major version
+        // If no filter is provided, use countDocuments() to count all documents
+        res = await collection.countDocuments();
       } else {
         // Call the filter function to reorganize the filter parameter
         const filter = input.filter._and || input.filter._or ? this.filterController(input.filter) : input.filter;
+
         const options = {
           // Set the timeout value in milliseconds
           maxTimeMS: 60000, // Adjust this value to your desired timeout
         };
-        query = collection.find(filter, options).maxTimeMS(options.maxTimeMS);
+        res = await collection.countDocuments(filter, options);
       }
 
-      // Call the COunt function to retrieve the results value
-      res = await query.count();
       return res;
     } catch (error) {
       logger.error(error); // Log any errors
@@ -515,7 +535,7 @@ export class MongoDBConnection {
       const updatedInput = {
         input: {
           _upload: {
-            url: result.Key,
+            url: result.Location,
             ...input._upload,
           },
         },
@@ -528,10 +548,6 @@ export class MongoDBConnection {
       return { uploaded: result.Location };
     } catch (error) {
       logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
-      // Throw an ApolloError if upload fails
-      throw new ApolloError('Error uploading file', 'UPLOAD_ERROR', {
-        errorMessage: error.message,
-      });
     }
   }
 }

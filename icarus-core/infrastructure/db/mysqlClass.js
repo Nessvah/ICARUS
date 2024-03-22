@@ -358,19 +358,6 @@ export class MySQLConnection {
       // Wait for the upload to finish and get the S3 location
       const result = await uploadStream.promise;
 
-      // Remove the file object from the input data
-      //delete input._upload.file;
-
-      // Add the S3 location to the input data
-      const updatedInput = {
-        input: {
-          _upload: {
-            url: result.Location,
-            ...input._upload,
-          },
-        },
-      };
-
       // Construct the update query
       const updateQuery = `UPDATE ${tableName} SET icon_label = ?`;
       const updateValues = [result.Location];
@@ -383,7 +370,6 @@ export class MySQLConnection {
     } catch (error) {
       // Log any errors and return an ApolloError
       logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
-      throw new ApolloError('An error occurred during file upload', 'UPLOAD_ERROR');
     }
   }
 }

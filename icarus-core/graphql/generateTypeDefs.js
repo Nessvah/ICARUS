@@ -254,7 +254,7 @@ input ${tableName}Create {
 ${table.columns
   .filter((column) => column.primaryKey !== true)
   .map((column) => {
-    if (column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
+    if (column.isObject || column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
       return '';
     }
     const type = mapColumnTypeToGraphQLType(column.type);
@@ -342,4 +342,4 @@ function generateOperators(operators) {
 `;
 }
 
-export { readConfigFile, config };
+export { readConfigFile, config, generateTypeDefinitions };

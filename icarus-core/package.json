@@ -1,11 +1,14 @@
 {
   "name": "icarus-graphql",
-  "version": "1.0.7",
+  "version": "1.0.10",
   "description": "Graphql server core",
   "main": "./infrastructure/server.js",
   "type": "module",
   "scripts": {
     "start": "node ./infrastructure/server.js"
+  },
+  "engines": {
+    "node": ">=20 <21"
   },
   "repository": {
     "type": "git",
