@@ -102,4 +102,4 @@ async function createDbPool() {
   });
 }
 
-export { controller, createDbPool };
+export { controller, createDbPool, pools };
