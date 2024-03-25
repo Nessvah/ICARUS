@@ -34,6 +34,7 @@ export function processFilter(input) {
   Object.keys(filter).forEach((key) => {
     // check for the logical operators
     if (key === '_and' || key === '_or') {
+      console.log({ condition: filter[key] });
       // if we have logical operators we expect an array
       // with some nested ojects or just objects
 
@@ -44,7 +45,7 @@ export function processFilter(input) {
     } else {
       // in this scenario the user didnt provide an 'and' or 'or' logical operator
       // so we can assume that its an and. so we can expect only objects
-
+      console.log({ damn: filter[key] });
       values.push(filter[key]);
       sql += ` WHERE ${key} = ?`;
     }
