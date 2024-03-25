@@ -208,14 +208,23 @@ ${table.columns
     return `${column.name}: ComparisonOperators`;
   })
   .join('\n')}
+}
+
+input ${tableName}UploadFilter {
+${table.columns
+  .filter((column) => column.extra === 'key')
+  .map((column) => {
+    return `${column.name}: String`;
+  })
+  .join('\n')}
 }`;
 
     //QUERY
     //type defs for query operations
     const queryOptions = `
-  # Allowed query operations for ${tableName}
+    # Allowed query operations for ${tableName}
 input ${tableName}QueryOptions {
-  filter: ${tableName}Filter
+  filter: ${table.database.type === 's3' ? `${tableName}UploadFilter` : `${tableName}Filter`}
   skip: Int
   take: Int = 15
   sort: ${tableName}SortOptions
@@ -297,7 +306,7 @@ input ${tableName}Delete {
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input ${tableName}Upload {
   file: Upload
-  filter: ${tableName}Filter
+  filter: ${tableName}UploadFilter
   folder: Folders
 }`;
 

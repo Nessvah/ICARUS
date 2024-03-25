@@ -15,7 +15,7 @@ const s3Data = async () => {
 
     if (config && config.tables) {
       // Ensure config.tables is defined
-      //console.log('Config:', config, '______________'); // Log the retrieved config
+      console.log('Config:', config, '______________'); // Log the retrieved config
       return config.connections.s3;
     } else {
       console.error('Config data is missing or incomplete.');

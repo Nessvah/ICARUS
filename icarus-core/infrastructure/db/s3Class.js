@@ -19,43 +19,73 @@ export class S3Connection {
    * @param {object} input - The input object containing filter options.
    * @returns {function} - A filter function for S3 objects.
    */
-  processFilter(input) {
+  async processFilter(input) {
     //console.log({ input });
     try {
-      const find = {};
-      Object.keys(input).forEach((fieldName) => {
-        const operator = this.ComparisonOperators[fieldName];
-        console.log('OPERATOR', operator);
-        if (operator) {
-          // If it's a comparison operator, assign the operator and value
-          find[operator] = input[fieldName].value;
-        } else if (fieldName === '_and' || fieldName === '_or') {
-          // If it's a logical operator, recursively process nested filter criteria
-          const nestedFilters = input[fieldName].map((filter) => this.processFilter(filter));
-          find[operator] = nestedFilters;
-        }
-        // Add other cases for other filters if needed
-      });
-      return find;
+      // Check if input is empty or null, return all objects if true
+      if (!input || (Object.keys(input).length === 0 && input.constructor === Object)) {
+        let listObjectsCommand = new ListObjectsV2Command({
+          Bucket: this._bucket,
+        });
+
+        const { Contents } = await this._pool.send(listObjectsCommand);
+        return Contents;
+      }
+
+      // If only input.name is provided without input.directory, return an error
+      if (input.name && !input.directory) {
+        return 'Cannot filter by name without specifying directory.';
+      }
+
+      let filter = {};
+
+      // Check if input.directory exists
+      if (input.directory) {
+        filter.Prefix = input.directory;
+      }
+
+      const { Contents } = await this._pool.send(
+        new ListObjectsV2Command({
+          Bucket: this._bucket,
+          ...filter,
+        }),
+      );
+
+      // Filter Contents based on the name
+      if (input.name) {
+        const filteredContents = Contents.filter((content) => {
+          const keyParts = content.Key.split('/');
+          const fileName = keyParts[keyParts.length - 1];
+          return fileName.startsWith(input.name);
+        });
+
+        //console.log({ filteredContents });
+        return filteredContents;
+      }
+
+      //console.log({ Contents });
+      return Contents;
     } catch (error) {
       console.error('Error processing filter:', error);
-      return {};
+      throw error; // Re-throw the error to propagate it
     }
   }
 
   async find(_, { input }) {
     //console.log({ input });
     try {
-      const s3Client = this._pool; // Assuming you're passing the S3 client directly, not as an array
+      const filter = await this.processFilter(input.filter);
+      console.log({ filter });
+
       let command;
       command = new ListObjectsV2Command({
         Bucket: this._bucket,
       }); // Create ListObjectsCommand instance
-      const { Contents } = await s3Client.send(command); // Execute the command
+      const { Contents } = await this._pool.send(command); // Execute the command
 
       let files = [];
-      if (Contents) {
-        files = Contents.map((content) => {
+      if (filter) {
+        files = filter.map((content) => {
           const directory = content.Key.split('/').slice(0, -1).join('/'); // Extract directory from Key
           const name = content.Key.split('/').pop(); // Extract file name from Key
           const type = name.split('.').pop(); // Extract file type from file name

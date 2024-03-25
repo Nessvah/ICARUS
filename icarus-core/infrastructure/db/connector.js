@@ -16,11 +16,6 @@ const pools = [];
  * @param {object} args - args have all the information passed to the query or mutation, and define the action that will be made in the controllers.
  */
 async function controller(tableName, args, table) {
-  console.log({ tableName });
-  console.log({ args });
-  console.log({ table });
-  let folder = args.input._upload.folder.toLowerCase();
-  console.log('Folder', folder);
   let connection;
   //find the right database in the pool, base on table name.
   const currentTable = await pools.find((db) => db.table === tableName);
@@ -35,17 +30,6 @@ async function controller(tableName, args, table) {
         break;
       case 's3':
         connection = new S3Connection(currentTable);
-        const nani = await pools.find((db) => db.table === folder);
-        switch (nani.type) {
-          case 'mysql':
-            connection = new MySQLConnection(nani);
-            break;
-          case 'mongodb':
-            connection = new MongoDBConnection(nani);
-            break;
-          default:
-            throw Error('Invalid NHEQUINI Type');
-        }
         break;
       default:
         throw Error('Invalid Database Type');
