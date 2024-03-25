@@ -197,4 +197,52 @@ export class S3Connection {
       return null;
     }
   }
+  //add update
+  async update(tablename, { input }) {
+    //console.log({ input });
+    const s3Client = this._pool;
+    const objects = input.files.map((file) => {
+      return { Key: file };
+    });
+
+    const command = new CopyObjectCommand({
+      Bucket: this._bucket,
+      CopySource: `${this._bucket}/${objects[0].Key}`,
+      Key: objects[0].Key,
+    });
+    //todo: delete old file
+    try {
+      const { CopyObjectResult } = await s3Client.send(command);
+      //console.log({ CopyObjectResult });
+      return { updated: CopyObjectResult.LastModified };
+    } catch (error) {
+      logger.error('Error updating object:', error);
+      return null;
+    }
+  }
+
+  //add delete
+  async delete(tablename, { input }) {
+    //console.log({ input });
+    const s3Client = this._pool;
+    const objects = input.files.map((file) => {
+      return { Key: file };
+    });
+
+    const command = new DeleteObjectsCommand({
+      Bucket: this._bucket,
+      Delete: {
+        Objects: objects,
+      },
+    });
+
+    try {
+      const { Deleted } = await s3Client.send(command);
+      //console.log({ Deleted });
+      return { deleted: Deleted.map((file) => file.Key) };
+    } catch (error) {
+      logger.error('Error deleting object:', error);
+      return null;
+    }
+  }
 }

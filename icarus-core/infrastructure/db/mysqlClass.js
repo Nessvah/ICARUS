@@ -285,84 +285,87 @@ export class MySQLConnection {
   async upload(tableName, { input }, table) {
     // Check if a file object is provided in the input data, if not, throw an error
     const { file } = input._upload.file;
+    const location = input._upload.location.toLowerCase();
     if (!file) {
       throw new Error('No file provided');
     }
 
     // Extract necessary information from the file object: filename, createReadStream, encoding
     const { filename, createReadStream } = await file;
-
-    // Check if the mimetype is valid (png, jpeg, jpg)
-    const mimeTypes = {
-      png: 'image/png',
-      jpg: 'image/jpg',
-      jpeg: 'image/jpeg',
-    };
-
-    /**
-     ** Returns the mime type of a file based on its filename.
-     * @param {string} filename - The filename of the file.
-     * @returns {string} - The mime type of the file.
-     */
-    const getMimeType = (filename) => {
-      const extension = filename.split('.').pop();
-      return mimeTypes[extension.toLowerCase()];
-    };
-
-    // Create a read stream from the file data
-    const stream = createReadStream();
-
-    try {
-      // Find the column with extra === 'key'
-      const keyColumn = table.columns.find((column) => column.extra === 'key');
-
-      if (!keyColumn) {
-        throw new Error('No column with extra === "key" found in the table');
-      }
-
-      // Find the filter for the key column
-      if (!input._upload.filter || Object.keys(input._upload.filter).length <= 0) {
-        throw new Error('No filter provided');
-      }
-
-      // Create the S3 key for the uploaded file
-      const key = `icarus/${tableName}/${filename}`;
-
-      // Create an upload stream to S3
-      const uploadStream = await createUploadStream(key, getMimeType(filename));
-
-      // Pipe the file read stream to the upload stream
-      stream.pipe(uploadStream.writeStream);
-
-      // Wait for the upload to finish and get the S3 location
-      const result = await uploadStream.promise;
-
-      // Remove the file object from the input data
-      delete input._upload.file;
-
-      // Add the S3 location to the input data
-      const updatedInput = {
-        input: {
-          _upload: {
-            url: result.Location,
-            ...input._upload,
-          },
-        },
+    if (location === 's3') {
+      // Check if the mimetype is valid (png, jpeg, jpg)
+      const mimeTypes = {
+        png: 'image/png',
+        jpg: 'image/jpg',
+        jpeg: 'image/jpeg',
       };
 
-      // Construct the update query
-      const updateQuery = `UPDATE ${tableName} SET url = ? WHERE ${keyColumn.name} = ?`;
-      const updateValues = [result.Location, input._upload.filter[keyColumn.name]];
+      /**
+       ** Returns the mime type of a file based on its filename.
+       * @param {string} filename - The filename of the file.
+       * @returns {string} - The mime type of the file.
+       */
+      const getMimeType = (filename) => {
+        const extension = filename.split('.').pop();
+        return mimeTypes[extension.toLowerCase()];
+      };
 
-      // Execute the update query
-      await this.query(updateQuery, updateValues);
+      // Create a read stream from the file data
+      const stream = createReadStream();
 
-      // Return the S3 location
-      return { uploaded: result.Location };
-    } catch (error) {
-      // Log any errors and return an ApolloError
-      logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
-      throw new ApolloError('An error occurred during file upload', 'UPLOAD_ERROR');
+      try {
+        // Find the column with extra === 'key'
+        const keyColumn = table.columns.find((column) => column.extra === 'key');
+
+        if (!keyColumn) {
+          throw new Error('No column with extra === "key" found in the table');
+        }
+
+        // Find the filter for the key column
+        if (!input._upload.filter || Object.keys(input._upload.filter).length <= 0) {
+          throw new Error('No filter provided');
+        }
+
+        // Create the S3 key for the uploaded file
+        const key = `icarus/${tableName}/${filename}`;
+
+        // Create an upload stream to S3
+        const uploadStream = await createUploadStream(key, getMimeType(filename));
+
+        // Pipe the file read stream to the upload stream
+        stream.pipe(uploadStream.writeStream);
+
+        // Wait for the upload to finish and get the S3 location
+        const result = await uploadStream.promise;
+
+        // Remove the file object from the input data
+        delete input._upload.file;
+
+        // Add the S3 location to the input data
+        const updatedInput = {
+          input: {
+            _upload: {
+              url: result.Location,
+              ...input._upload,
+            },
+          },
+        };
+
+        // Construct the update query
+        const updateQuery = `UPDATE ${tableName} SET icon_label = ?`;
+        const updateValues = [result.Location];
+
+        // Execute the update query
+        await this.query(updateQuery, updateValues);
+
+        // Return the S3 location
+        return { uploaded: result.Location };
+      } catch (error) {
+        // Log any errors and return an ApolloError
+        logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
+      }
+    } else if (location === 'fs') {
+      //Apply the upload to filesystem logic
     }
   }
 }

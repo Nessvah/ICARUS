@@ -308,6 +308,7 @@ export class MongoDBConnection {
       } else if (input._upload) {
         // Extract the filter from the input
         const filter = this.filterController(input._upload.filter);
+        console.log(filter);
         // Call updateMany method to update matching documents in the collection
         delete input._upload.filter;
         const res = await collection.updateMany(filter, { $set: input._upload });
@@ -451,9 +452,11 @@ export class MongoDBConnection {
    * @returns {Promise<{ uploaded: string }|ApolloError>} - A promise that resolves to an object with the uploaded file's location, or an ApolloError if the upload fails.
    */
   async upload(tableName, { input }, table) {
+    console.log({ input });
     const { file } = input._upload.file;
     const { _upload } = input;
-
+    console.log({ _upload });
+    const location = _upload.location.toLowerCase();
     const filter = this.filterController(_upload.filter);
 
     if (!file) {
@@ -461,72 +464,77 @@ export class MongoDBConnection {
     }
 
     const { filename, createReadStream } = await file;
+    if (location === 's3') {
+      try {
+        // Check if the mimetype is valid (png, jpeg, jpg)
+        const mimeTypes = {
+          png: 'image/png',
+          jpg: 'image/jpg',
+          jpeg: 'image/jpeg',
+        };
 
-    // Check if the mimetype is valid (png, jpeg, jpg)
-    const mimeTypes = {
-      png: 'image/png',
-      jpg: 'image/jpg',
-      jpeg: 'image/jpeg',
-    };
+        const getMimeType = (filename) => {
+          const extension = filename.split('.').pop();
+          return mimeTypes[extension.toLowerCase()];
+        };
+        /**
+         ** Returns the mime type of a file based on its filename.
+         * @param {string} filename - The filename of the file.
+         * @returns {string} - The mime type of the file.
+         */
+        const mimeType = getMimeType(filename);
 
-    const getMimeType = (filename) => {
-      const extension = filename.split('.').pop();
-      return mimeTypes[extension.toLowerCase()];
-    };
-    /**
-     ** Returns the mime type of a file based on its filename.
-     * @param {string} filename - The filename of the file.
-     * @returns {string} - The mime type of the file.
-     */
-    const mimeType = getMimeType(filename);
+        const stream = createReadStream();
 
-    const stream = createReadStream();
+        // Find the column with extra === 'key'
+        const keyColumn = table.columns.find((column) => column.extra === 'key');
 
-    try {
-      // Find the column with extra === 'key'
-      const keyColumn = table.columns.find((column) => column.extra === 'key');
+        if (!keyColumn) {
+          throw new Error('No column with extra === "key" found in the table');
+        }
 
-      if (!keyColumn) {
-        throw new Error('No column with extra === "key" found in the table');
-      }
+        // Ensure a filter is provided
+        if (!filter || Object.keys(filter).length <= 0) {
+          throw new Error('No filter provided');
+        }
 
-      // Ensure a filter is provided
-      if (!filter || Object.keys(filter).length <= 0) {
-        throw new Error('No filter provided');
-      }
+        // Create the S3 key for the uploaded file
+        const key = `icarus/${tableName}/${filename}`;
 
-      // Create the S3 key for the uploaded file
-      const key = `icarus/${tableName}/${filename}`;
+        // Create an upload stream to S3
+        const uploadStream = await createUploadStream(key, mimeType);
 
-      // Create an upload stream to S3
-      const uploadStream = await createUploadStream(key, mimeType);
+        // Pipe the file read stream to the upload stream
+        stream.pipe(uploadStream.writeStream);
 
-      // Pipe the file read stream to the upload stream
-      stream.pipe(uploadStream.writeStream);
+        // Wait for the upload to finish and get the S3 location
+        const result = await uploadStream.promise;
 
-      // Wait for the upload to finish and get the S3 location
-      const result = await uploadStream.promise;
+        // Remove the file object from the input data
+        delete input._upload.file;
 
-      // Remove the file object from the input data
-      delete input._upload.file;
-
-      // Add the S3 location to the input data
-      const updatedInput = {
-        input: {
-          _upload: {
-            url: result.Location,
-            ...input._upload,
+        // Add the S3 location to the input data
+        const updatedInput = {
+          input: {
+            _upload: {
+              fileUrl: result.Location,
+              ...input._upload,
+            },
           },
-        },
-      };
+        };
 
-      // Update the database table with the new input data
-      await this.update(tableName, updatedInput);
+        console.log({ updatedInput });
 
-      // Return the S3 location
-      return { uploaded: result.Location };
-    } catch (error) {
-      logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
+        // Update the database table with the new input data
+        await this.update(tableName, updatedInput);
+
+        // Return the S3 location
+        return { uploaded: result.Location };
+      } catch (error) {
+        logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
+      }
+    } else if (location === 'fs') {
+      //Apply the upload to filesystem logic
     }
   }
 }

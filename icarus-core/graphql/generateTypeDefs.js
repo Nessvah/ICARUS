@@ -306,8 +306,8 @@ input ${tableName}Delete {
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input ${tableName}Upload {
   file: Upload
-  filter: ${tableName}UploadFilter
-  folder: Folders
+  filter: ${table.database.type === 's3' ? `${tableName}UploadFilter` : `${tableName}Filter`}
+  ${table.database.type === 's3' ? `folder: Folders` : `location: UploadLocation`}
 }`;
 
     const countInput = `
@@ -335,6 +335,10 @@ type ${tableName}CountResult {
 
   // Statically generate typedef's for enums and providing table info
   typeDefs.push(`
+enum UploadLocation{
+  FS
+  S3
+}
 
 enum Sort {
   ASC
