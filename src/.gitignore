@@ -3,3 +3,5 @@ package-lock.json
 src/config/db/
 
 
+#ignore autogerated typedefs
+graphql/typeDefs.graphql
