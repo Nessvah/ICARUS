@@ -284,7 +284,7 @@ export class MySQLConnection {
    */
   async upload(tableName, { input }, table) {
     // Check if a file object is provided in the input data, if not, throw an error
-    const filter = input._upload.filter;
+    const filter = input._upload;
     const { file } = input._upload.file;
     const location = input._upload.location.toLowerCase();
     if (!file) {
