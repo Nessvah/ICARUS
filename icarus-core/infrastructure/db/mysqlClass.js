@@ -8,6 +8,8 @@ import {
 } from '../../utils/sqlQueries.js';
 import { logger } from '../server.js';
 import { createUploadStream } from './s3.js';
+import { getMimeType, hasNestedObjects } from '../../utils/fileUtils.js';
+import { IMAGES_TYPES } from '../../utils/enums/enums.js';
 
 export class MySQLConnection {
   constructor(currentTableInfo) {
@@ -283,38 +285,30 @@ export class MySQLConnection {
    * @returns {Promise<{ uploaded: string } | ApolloError>} - A promise that resolves to the uploaded file URL or an ApolloError if there was an error.
    */
   async upload(tableName, { input }, table) {
-    // Check if a file object is provided in the input data, if not, throw an error
-    const filter = input._upload;
-    const { file } = input._upload.file;
+    console.log(JSON.stringify(input));
+    // Get all the necessary data
+    const filter = input._upload?.filter;
+    const file = input._upload?.file;
     const location = input._upload.location.toLowerCase();
-    if (!file) {
-      throw new Error('No file provided');
-    }
+
+    // check if we have any missing data from the user
+    //! { filter: { _and: null }, -> this will pass the error for empty filter
+    // we need a more granular control on what it's being passed on the nested obj
+    if (!hasNestedObjects(filter)) throw new Error('Filter is mandatory');
+
+    if (!file) throw new Error('You need to provide a file');
 
     // Extract necessary information from the file object: filename, createReadStream, encoding
-    const { filename, createReadStream } = await file;
+    const { filename, createReadStream } = await file.file;
+
     if (location === 's3') {
-      // Check if the mimetype is valid (png, jpeg, jpg)
-      const mimeTypes = {
-        png: 'image/png',
-        jpg: 'image/jpg',
-        jpeg: 'image/jpeg',
-      };
-
-      /**
-       ** Returns the mime type of a file based on its filename.
-       * @param {string} filename - The filename of the file.
-       * @returns {string} - The mime type of the file.
-       */
-      const getMimeType = (filename) => {
-        const extension = filename.split('.').pop();
-        return mimeTypes[extension.toLowerCase()];
-      };
-
-      // Create a read stream from the file data
-      const stream = createReadStream();
-
       try {
+        // Check if the mimetype is valid (png, jpeg, jpg)
+        const mimeType = getMimeType(filename, IMAGES_TYPES);
+
+        // Create a read stream from the file data
+        const stream = createReadStream();
+
         // Find the column with extra === 'key'
         const keyColumn = table.columns.find((column) => column.extra === 'key');
         console.log({ keyColumn });
@@ -323,16 +317,11 @@ export class MySQLConnection {
           throw new Error('No column with extra === "key" found in the table');
         }
 
-        // Find the filter for the key column
-        if (!input._upload.filter || Object.keys(input._upload.filter).length <= 0) {
-          throw new Error('No filter provided');
-        }
-
         // Create the S3 key for the uploaded file
         const key = `${tableName}/${filename}`;
 
         // Create an upload stream to S3
-        const uploadStream = await createUploadStream(key, getMimeType(filename));
+        const uploadStream = createUploadStream(key, mimeType);
 
         // Pipe the file read stream to the upload stream
         stream.pipe(uploadStream.writeStream);
