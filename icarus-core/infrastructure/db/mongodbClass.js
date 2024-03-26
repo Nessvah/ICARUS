@@ -452,10 +452,8 @@ export class MongoDBConnection {
    * @returns {Promise<{ uploaded: string }|ApolloError>} - A promise that resolves to an object with the uploaded file's location, or an ApolloError if the upload fails.
    */
   async upload(tableName, { input }, table) {
-    console.log({ input });
     const { file } = input._upload.file;
     const { _upload } = input;
-    console.log({ _upload });
     const location = _upload.location.toLowerCase();
     const filter = this.filterController(_upload.filter);
 
@@ -499,7 +497,7 @@ export class MongoDBConnection {
         }
 
         // Create the S3 key for the uploaded file
-        const key = `icarus/${tableName}/${filename}`;
+        const key = `${tableName}/${filename}`;
 
         // Create an upload stream to S3
         const uploadStream = await createUploadStream(key, mimeType);
@@ -512,6 +510,7 @@ export class MongoDBConnection {
 
         // Remove the file object from the input data
         delete input._upload.file;
+        delete input._upload.location;
 
         // Add the S3 location to the input data
         const updatedInput = {

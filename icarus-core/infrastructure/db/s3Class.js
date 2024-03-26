@@ -1,5 +1,5 @@
 import stream from 'stream';
-import { S3, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { S3, ListObjectsV2Command, CopyObjectCommand, DeleteObjectsCommand } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import { logger } from '../server.js';
 
@@ -117,14 +117,12 @@ export class S3Connection {
   }
 
   async createUploadStream(key, mimeType) {
-    // Retrieve S3 connection data
-    const s3Connection = this._pool;
     // Create a writable stream for S3 upload
     const pass = new stream.PassThrough();
 
     // Initialize S3 upload instance
     const upload = new Upload({
-      client: s3Connection,
+      client: this._pool,
       params: {
         Bucket: this._bucket,
         Key: key,
@@ -141,7 +139,7 @@ export class S3Connection {
     };
   }
 
-  async upload(tableName, { input }) {
+  async upload(_, { input }) {
     //console.log({ input });
     const { file } = input._upload.file;
     const folder = input._upload.folder.toLowerCase();
@@ -198,48 +196,62 @@ export class S3Connection {
     }
   }
   //add update
-  async update(tablename, { input }) {
-    //console.log({ input });
-    const s3Client = this._pool;
-    const objects = input.files.map((file) => {
-      return { Key: file };
-    });
-
-    const command = new CopyObjectCommand({
-      Bucket: this._bucket,
-      CopySource: `${this._bucket}/${objects[0].Key}`,
-      Key: objects[0].Key,
-    });
-    //todo: delete old file
+  async update(_, { input }) {
     try {
-      const { CopyObjectResult } = await s3Client.send(command);
-      //console.log({ CopyObjectResult });
-      return { updated: CopyObjectResult.LastModified };
+      const filter = await this.processFilter(input.filter); // Apply filter
+      if (!filter || filter.length === 0) {
+        throw new Error('No matching objects found for update');
+      }
+      const objectKey = filter[0].Key; // Assuming only one object is matched by the filter
+      // Implement your update logic here, such as updating metadata or content
+      // For example, you might want to use CopyObjectCommand to update metadata or SetObjectAclCommand to update permissions
+
+      // For demonstration, let's say you update the metadata
+      const command = new CopyObjectCommand({
+        Bucket: this._bucket,
+        CopySource: `${this._bucket}/${objectKey}`,
+        Key: objectKey,
+        MetadataDirective: 'REPLACE', // Specify to replace metadata
+        Metadata: { newMetadata: 'value' }, // New metadata
+      });
+
+      const { CopyObjectResult } = await this._pool.send(command);
+      console.log({ CopyObjectResult });
+      return { updated: CopyObjectResult };
     } catch (error) {
-      logger.error('Error updating object:', error);
+      console.error('Error updating object:', error);
       return null;
     }
   }
 
-  //add delete
-  async delete(tablename, { input }) {
-    //console.log({ input });
-    const s3Client = this._pool;
-    const objects = input.files.map((file) => {
-      return { Key: file };
-    });
-
-    const command = new DeleteObjectsCommand({
-      Bucket: this._bucket,
-      Delete: {
-        Objects: objects,
-      },
-    });
-
+  async delete(_, { input }) {
     try {
-      const { Deleted } = await s3Client.send(command);
-      //console.log({ Deleted });
-      return { deleted: Deleted.map((file) => file.Key) };
+      const { file } = input._upload;
+      const folder = input._upload.folder.toLowerCase();
+      const name = input.name;
+
+      if (!file || !name) {
+        throw new Error('Both file and name must be provided');
+      }
+      // You can still utilize the processFilter logic here if needed
+      const filter = { directory: folder, name: name };
+      const filteredObjects = await this.processFilter(filter);
+      if (!filter || filter.length === 0) {
+        throw new Error('No matching objects found for delete');
+      }
+      const objectsToDelete = filter.map((content) => ({ Key: content.Key }));
+
+      const command = new DeleteObjectsCommand({
+        Bucket: this._bucket,
+        Delete: {
+          Objects: objectsToDelete,
+          Quiet: false, // Specify whether to return information about the deleted objects
+        },
+      });
+
+      const { Deleted } = await this._pool.send(command);
+      console.log({ Deleted });
+      return { deleted: Deleted.length };
     } catch (error) {
       logger.error('Error deleting object:', error);
       return null;

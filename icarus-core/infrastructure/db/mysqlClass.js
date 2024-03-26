@@ -284,6 +284,7 @@ export class MySQLConnection {
    */
   async upload(tableName, { input }, table) {
     // Check if a file object is provided in the input data, if not, throw an error
+    const filter = input._upload.filter;
     const { file } = input._upload.file;
     const location = input._upload.location.toLowerCase();
     if (!file) {
@@ -316,6 +317,7 @@ export class MySQLConnection {
       try {
         // Find the column with extra === 'key'
         const keyColumn = table.columns.find((column) => column.extra === 'key');
+        console.log({ keyColumn });
 
         if (!keyColumn) {
           throw new Error('No column with extra === "key" found in the table');
@@ -327,7 +329,7 @@ export class MySQLConnection {
         }
 
         // Create the S3 key for the uploaded file
-        const key = `icarus/${tableName}/${filename}`;
+        const key = `${tableName}/${filename}`;
 
         // Create an upload stream to S3
         const uploadStream = await createUploadStream(key, getMimeType(filename));
@@ -352,7 +354,7 @@ export class MySQLConnection {
         };
 
         // Construct the update query
-        const updateQuery = `UPDATE ${tableName} SET icon_label = ?`;
+        const updateQuery = `UPDATE ${tableName} SET ${keyColumn.column_name} = ? WHERE = ?`;
         const updateValues = [result.Location];
 
         // Execute the update query

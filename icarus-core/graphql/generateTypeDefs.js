@@ -268,7 +268,7 @@ input ${tableName}MutationOptions {
   # Input logic for create operations on ${tableName}
 input ${tableName}Create {
 ${table.columns
-  .filter((column) => column.primaryKey !== true || column.extra === 'folder')
+  .filter((column) => column.primaryKey !== true)
   .map((column) => {
     if (column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
       return '';
@@ -284,22 +284,31 @@ ${table.columns
 
   # Input logic for update operations on ${tableName}
 input ${tableName}Update {
-  filter: ${tableName}Filter
-${table.columns
-  .filter((column) => column.primaryKey !== true)
-  .map((column) => {
-    if (column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
-      return '';
-    }
-    const type = mapColumnTypeToGraphQLType(column.type);
-    return `${column.name}: ${type}`;
-  })
-  .join('\n')}
+  filter:  ${table.database.type === 's3' ? `${tableName}UploadFilter` : `${tableName}Filter`}
+${
+  table.database.type === 's3'
+    ? `${table.columns
+        .filter((column) => column.extra === 'key')
+        .map((column) => {
+          return `${column.name}: String`;
+        })
+        .join('\n')}`
+    : `${table.columns
+        .filter((column) => column.primaryKey !== true)
+        .map((column) => {
+          if (column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
+            return '';
+          }
+          const type = mapColumnTypeToGraphQLType(column.type);
+          return `${column.name}: ${type}`;
+        })
+        .join('\n')}`
+}
 }
 
   # Input logic for delete operations on ${tableName}
 input ${tableName}Delete {
-  filter: ${tableName}Filter
+  filter:  ${table.database.type === 's3' ? `${tableName}UploadFilter` : `${tableName}Filter`}
 }
 
   # Input logic for upload operations on ${tableName}
