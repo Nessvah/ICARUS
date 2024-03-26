@@ -294,9 +294,9 @@ export class MySQLConnection {
     // check if we have any missing data from the user
     //! { filter: { _and: null }, -> this will pass the error for empty filter
     // we need a more granular control on what it's being passed on the nested obj
-    if (!hasNestedObjects(filter)) return { uploaded: 'Filter is mandatory for uploading files' };
+    if (!hasNestedObjects(filter)) return { uploaded: { data: 'Filter is mandatory for uploading files' } };
 
-    if (!file) return { uploaded: 'You need to provide a file' };
+    if (!file) return { uploaded: { data: 'You need to provide a file' } };
 
     // Extract necessary information from the file object: filename, createReadStream, encoding
     const { filename, createReadStream } = await file.file;
@@ -309,7 +309,7 @@ export class MySQLConnection {
         // Find the column with extra === 'key'
         const keyColumn = table.columns.find((column) => column.extra === 'key');
 
-        if (!keyColumn) return { uploaded: 'No column with extra === "key" found in the table' };
+        if (!keyColumn) return { uploaded: { data: 'No column with extra === "key" found in the table' } };
 
         // Create the S3 key for the uploaded file
         const key = `${tableName}/${filename}`;
@@ -325,10 +325,13 @@ export class MySQLConnection {
           if (uploadStream && (await uploadStream.writeStream)) {
             // Pipe the file read stream to the upload stream
             stream.pipe(uploadStream.writeStream);
-          } else return { uploaded: 'Server Error: Upload stream or its writeStream is undefined' };
+          } else
+            return {
+              uploaded: { data: 'Server Error: Upload stream or its writeStream is undefined' },
+            };
         } else
           return {
-            uploaded: 'Server Error: Stream is undefined',
+            uploaded: { data: 'Server Error: Stream is undefined' },
           };
 
         // Wait for the upload to finish and get the S3 location
@@ -343,7 +346,6 @@ export class MySQLConnection {
           url: result.Location,
           ...input._upload,
         };
-        console.log(JSON.stringify(input));
 
         // Construct the update query
         let updateQuery = `UPDATE ${tableName} SET ${keyColumn.name} = ? `;
@@ -363,17 +365,15 @@ export class MySQLConnection {
             updateValues.push(...processedValues);
           } else continue;
 
-          console.log({ updateQuery, updateValues });
-
           // Execute the update query
-          await this.query(updateQuery, updateValues);
-
+          const updateResults = await this.query(updateQuery, updateValues);
           // Return the S3 location
-          return { uploaded: result.Location };
+          return { uploaded: { changedRows: updateResults.changedRows, data: result.Location } };
         }
       } catch (error) {
         // Log any errors and return an ApolloError
         logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
+        return { uploaded: { data: error.message } };
       }
     } else if (location === 'fs') {
       //Apply the upload to filesystem logic

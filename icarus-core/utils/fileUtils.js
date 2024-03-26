@@ -24,7 +24,6 @@ export const hasNestedObjects = (obj) => {
  */
 export const getMimeType = (filename, mimeTypes) => {
   const extension = filename.split('.').pop();
-  console.log({ extension, type: mimeTypes[extension] });
   if (!mimeTypes[extension.toLowerCase()]) throw new Error('Extension not supported');
 
   return mimeTypes[extension.toLowerCase()];
