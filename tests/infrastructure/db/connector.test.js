@@ -3,19 +3,6 @@ import { MongoDBConnection } from '../../../icarus-core/infrastructure/db/mongod
 import { MySQLConnection } from '../../../icarus-core/infrastructure/db/mysqlClass';
 import { logger } from '../../../icarus-core/infrastructure/server';
 
-let pools = [];
-
-// Mock the ImportThemTities class
-jest.mock('../../../icarus-core/config/importDemTities.js', () => ({
-  ImportThemTities: jest.fn().mockImplementation(() => ({
-    // Mock the importAll method
-    importAll: jest.fn().mockResolvedValue({
-      tables: [], // Mock the tables array
-      connections: [], // Mock the connections array
-    }),
-  })),
-}));
-
 // Mock logger
 jest.mock('../../../icarus-core/infrastructure/server', () => ({
   logger: {
@@ -53,10 +40,9 @@ jest.mock('../../../icarus-core/graphql/generateTypeDefs', () => ({
 }));
 
 describe('controller function', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     // Clear mocks and reset pools array before each test
-    jest.clearAllMocks();
-    pools.length = 0;
+    await createDbPool();
   });
 
   // FIND METHOD
@@ -65,7 +51,6 @@ describe('controller function', () => {
     // Mock MongoDBConnection find method
     MongoDBConnection.prototype.find = jest.fn().mockResolvedValue('MongoDB find result');
 
-    await createDbPool();
     const args = { input: { filter: {} } };
     const result = await controller('collection1', args);
 
@@ -77,7 +62,6 @@ describe('controller function', () => {
     // Mock MySQLConnection find method
     MySQLConnection.prototype.find = jest.fn().mockResolvedValue('MySQL find result');
 
-    await createDbPool();
     const args = { input: { filter: {} } };
     const result = await controller('users', args);
 
@@ -89,7 +73,6 @@ describe('controller function', () => {
     // Mock MongoDBConnection find method to throw an error
     MongoDBConnection.prototype.find = jest.fn().mockRejectedValue(new Error('MongoDB connection error'));
 
-    await createDbPool();
     const args = { input: { filter: {} } };
     await controller('collection1', args);
 
@@ -100,7 +83,6 @@ describe('controller function', () => {
     // Mock MySQLConnection find method to throw an error
     MySQLConnection.prototype.find = jest.fn().mockRejectedValue(new Error('MySQL connection error'));
 
-    await createDbPool();
     const args = { input: { filter: {} } };
     await controller('users', args);
 
@@ -115,7 +97,6 @@ describe('controller function', () => {
     // Mock MongoDBConnection create method to throw an error
     MongoDBConnection.prototype.create = jest.fn().mockRejectedValue(new Error('MongoDB create error'));
 
-    await createDbPool();
     const args = { input: { _create: { name: 'John', email: 'john@example.com' } } };
     await controller('collection1', args);
 
@@ -126,7 +107,6 @@ describe('controller function', () => {
     // Mock MySQLConnection create method to throw an error
     MySQLConnection.prototype.create = jest.fn().mockRejectedValue(new Error('MySQL create error'));
 
-    await createDbPool();
     const args = { input: { _create: { name: 'John', email: 'john@example.com' } } };
     await controller('users', args);
 
@@ -139,7 +119,6 @@ describe('controller function', () => {
     // Mock MongoDBConnection _update method
     MongoDBConnection.prototype.update = jest.fn().mockResolvedValue('Updated document');
 
-    await createDbPool();
     const args = { input: { _update: { id: '123', data: { name: 'New Name' } } } };
     const result = await controller('collection1', args);
 
@@ -151,7 +130,6 @@ describe('controller function', () => {
     // Mock MySQLConnection update method
     MySQLConnection.prototype.update = jest.fn().mockResolvedValue('Updated user');
 
-    await createDbPool();
     const args = { input: { _update: { id: '123', data: { name: 'New Name' } } } };
     const result = await controller('users', args);
 
@@ -163,7 +141,6 @@ describe('controller function', () => {
     // Mock MongoDBConnection update method to throw an error
     MongoDBConnection.prototype.update = jest.fn().mockRejectedValue(new Error('MongoDB update error'));
 
-    await createDbPool();
     const args = { input: { _update: { id: '123', data: { name: 'New Name' } } } };
     await controller('collection1', args);
 
@@ -174,7 +151,6 @@ describe('controller function', () => {
     // Mock MySQLConnection update method to throw an error
     MySQLConnection.prototype.update = jest.fn().mockRejectedValue(new Error('MySQL update error'));
 
-    await createDbPool();
     const args = { input: { _update: { id: '123', data: { name: 'New Name' } } } };
     await controller('users', args);
 
@@ -187,7 +163,6 @@ describe('controller function', () => {
     // Mock MySQLConnection _delete method
     MySQLConnection.prototype.delete = jest.fn().mockResolvedValue('Deleted user');
 
-    await createDbPool();
     const args = { input: { _delete: { id: '123' } } };
     const result = await controller('users', args);
 
@@ -199,7 +174,6 @@ describe('controller function', () => {
     // Mock MongoDBConnection delete method
     MongoDBConnection.prototype.delete = jest.fn().mockResolvedValue('Deleted document');
 
-    await createDbPool();
     const args = { input: { _delete: { id: '123' } } };
     const result = await controller('collection1', args);
 
@@ -211,7 +185,6 @@ describe('controller function', () => {
     // Mock MySQLConnection delete method to throw an error
     MySQLConnection.prototype.delete = jest.fn().mockRejectedValue(new Error('MySQL delete error'));
 
-    await createDbPool();
     const args = { input: { _delete: { id: '123' } } };
     await controller('users', args);
 
@@ -222,7 +195,6 @@ describe('controller function', () => {
     // Mock MongoDBConnection delete method to throw an error
     MongoDBConnection.prototype.delete = jest.fn().mockRejectedValue(new Error('MongoDB delete error'));
 
-    await createDbPool();
     const args = { input: { _delete: { id: '123' } } };
     await controller('collection1', args);
 
@@ -235,7 +207,6 @@ describe('controller function', () => {
     // Mock MongoDBConnection _count method
     MongoDBConnection.prototype.count = jest.fn().mockResolvedValue(5);
 
-    await createDbPool();
     const args = { input: { _count: {} } };
     const result = await controller('collection1', args);
 
@@ -247,7 +218,6 @@ describe('controller function', () => {
     // Mock MySQLConnection count method
     MySQLConnection.prototype.count = jest.fn().mockResolvedValue(10);
 
-    await createDbPool();
     const args = { input: { _count: {} } };
     const result = await controller('users', args);
 
@@ -259,7 +229,6 @@ describe('controller function', () => {
     // Mock MongoDBConnection count method to throw an error
     MongoDBConnection.prototype.count = jest.fn().mockRejectedValue(new Error('MongoDB count error'));
 
-    await createDbPool();
     const args = { input: { _count: {} } };
     await controller('collection1', args);
 
@@ -270,7 +239,6 @@ describe('controller function', () => {
     // Mock MySQLConnection count method to throw an error
     MySQLConnection.prototype.count = jest.fn().mockRejectedValue(new Error('MySQL count error'));
 
-    await createDbPool();
     const args = { input: { _count: {} } };
     await controller('users', args);
 
@@ -279,35 +247,33 @@ describe('controller function', () => {
 
   // FILTER METHOD
 
-  describe('Filter functionality', () => {
-    test('should filter records from MongoDB', async () => {
-      // Mock MongoDBConnection find method
-      MongoDBConnection.prototype.find = jest.fn().mockResolvedValue(['Record1', 'Record2']);
+  test('should filter records from MongoDB', async () => {
+    // Mock MongoDBConnection find method
+    MongoDBConnection.prototype.find = jest.fn().mockResolvedValue(['Record1', 'Record2']);
 
-      const args = {
-        input: {
-          filter: { name: 'John' }, // Example filter criteria
-        },
-      };
+    const args = {
+      input: {
+        filter: { name: 'John' }, // Example filter criteria
+      },
+    };
 
-      const result = await controller('collection1', args);
-      expect(MongoDBConnection.prototype.find).toHaveBeenCalledWith('collection1', args);
-      expect(result).toEqual(['Record1', 'Record2']);
-    });
+    const result = await controller('collection1', args);
+    expect(MongoDBConnection.prototype.find).toHaveBeenCalledWith('collection1', args);
+    expect(result).toEqual(['Record1', 'Record2']);
+  });
 
-    test('should filter records from MySQL', async () => {
-      // Mock MySQLConnection find method
-      MySQLConnection.prototype.find = jest.fn().mockResolvedValue(['Record1', 'Record2']);
+  test('should filter records from MySQL', async () => {
+    // Mock MySQLConnection find method
+    MySQLConnection.prototype.find = jest.fn().mockResolvedValue(['Record1', 'Record2']);
 
-      const args = {
-        input: {
-          filter: { name: 'John' }, // Example filter criteria
-        },
-      };
+    const args = {
+      input: {
+        filter: { name: 'John' }, // Example filter criteria
+      },
+    };
 
-      const result = await controller('users', args);
-      expect(MySQLConnection.prototype.find).toHaveBeenCalledWith('users', args);
-      expect(result).toEqual(['Record1', 'Record2']);
-    });
+    const result = await controller('users', args);
+    expect(MySQLConnection.prototype.find).toHaveBeenCalledWith('users', args);
+    expect(result).toEqual(['Record1', 'Record2']);
   });
 });

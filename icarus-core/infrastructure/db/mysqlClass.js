@@ -168,55 +168,45 @@ export class MySQLConnection {
    * @param {object} table - The table schema information.
    * @returns {Promise<{ updated: Array<Object> } | null>} - A promise that resolves to the updated record(s) or null if there was an error.
    */
-  async update(tableName, { input }, table) {
+  async update(tableName, { input }) {
     // UPDATE `table_name` SET `column_name` = `new_value' [WHERE condition];
     let updateQuery = `UPDATE ${tableName} SET `;
     let findQuery = `SELECT * FROM ${tableName} WHERE`;
+    let conditionQuery = '';
+    let conditionValues = [];
     const values = [];
     const findValues = [];
 
-    // Process the update values and conditions
-    for (let [key, value] of Object.entries(input._update ?? {}).concat(Object.entries(input._upload ?? {}))) {
-      if (key === 'url') {
-        // Handle the 'url' key separately
-        const keyColumn = table.columns.find((column) => column.extra === 'key');
-        if (!keyColumn) {
-          throw new Error('No column with extra === "key" found in the table');
-        }
-        updateQuery += `${keyColumn.name} = ?  `;
-        values.push(value);
-        console.log(' qwerty' + updateQuery);
-      } else if (key === 'filter') {
+    // simple update without filtering
+    for (const [key, value] of Object.entries(input._update)) {
+      if (key === 'filter') {
         // handle filtering in update
         // mimik object structure for the function to process filter
         const filter = {};
         filter[key] = value;
-        console.log(JSON.stringify(filter));
 
-        // Process the filter object and get the processed SQL and values
         const { processedSql, processedValues } = processFilter(filter);
 
-        // remove trailing spaces and comma
-        updateQuery = updateQuery.slice(0, -2);
-        values.push(...processedValues);
-
-        // update table set icon class = url where condition
-        updateQuery += processedSql;
+        conditionValues.push(...processedValues);
+        // eslint-disable-next-line no-unused-vars
+        conditionQuery += processedSql;
       } else {
-        // Handle other keys and values
-        console.log({ key });
         updateQuery += `${key} = ?, `;
         findQuery += ` ${key} = ? AND `;
         values.push(value);
         findValues.push(value);
+
+        updateQuery = updateQuery.slice(0, -2);
       }
     }
 
-    // Remove the last ',' and 'AND' from the queries
+    updateQuery += conditionQuery;
+
+    values.push(...conditionValues);
+
     findQuery = findQuery.slice(0, -5);
 
     try {
-      // Execute the update query
       const record = await this.query(updateQuery, values);
 
       if (record.changedRows > 0) {
@@ -300,25 +290,24 @@ export class MySQLConnection {
    */
 
   async upload(tableName, { input }, table) {
+    console.log({ input });
+    console.log(input._upload.file);
     // Check if a file object is provided in the input data, if not, throw an error
-    const { file } = input._upload.file;
+    const { file } = input._upload;
+    console.log(typeof file);
+
     if (!file) {
       throw new Error('No file provided');
     }
-
     // Extract necessary information from the file object: filename, createReadStream, encoding
     const { filename, createReadStream } = await file;
+    console.log(filename);
 
     // Check if the mimetype is valid (png, jpeg, jpg)
     const mimeTypes = {
       png: 'image/png',
-      jpg: 'image/jpeg',
+      jpg: 'image/jpg',
       jpeg: 'image/jpeg',
-    };
-
-    const getMimeType = (filename) => {
-      const extension = filename.split('.').pop();
-      return mimeTypes[extension.toLowerCase()];
     };
 
     /**
@@ -326,7 +315,10 @@ export class MySQLConnection {
      * @param {string} filename - The filename of the file.
      * @returns {string} - The mime type of the file.
      */
-    const mimeType = getMimeType(filename);
+    const getMimeType = (filename) => {
+      const extension = filename.split('.').pop();
+      return mimeTypes[extension.toLowerCase()];
+    };
 
     // Create a read stream from the file data
     const stream = createReadStream();
@@ -348,7 +340,7 @@ export class MySQLConnection {
       const key = `icarus/${tableName}/${filename}`;
 
       // Create an upload stream to S3
-      const uploadStream = await createUploadStream(key, mimeType);
+      const uploadStream = await createUploadStream(key, getMimeType(filename));
 
       // Pipe the file read stream to the upload stream
       stream.pipe(uploadStream.writeStream);
@@ -356,21 +348,12 @@ export class MySQLConnection {
       // Wait for the upload to finish and get the S3 location
       const result = await uploadStream.promise;
 
-      // Remove the file object from the input data
-      delete input._upload.file;
+      // Construct the update query
+      const updateQuery = `UPDATE ${tableName} SET icon_label = ?`;
+      const updateValues = [result.Location];
 
-      // Add the S3 location to the input data
-      const updatedInput = {
-        input: {
-          _upload: {
-            url: result.Location,
-            ...input._upload,
-          },
-        },
-      };
-
-      // Update the database table with the new input data
-      await this.update(tableName, updatedInput, table);
+      // Execute the update query
+      await this.query(updateQuery, updateValues);
 
       // Return the S3 location
       return { uploaded: result.Location };

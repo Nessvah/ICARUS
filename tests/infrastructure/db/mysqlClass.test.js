@@ -1,17 +1,6 @@
 import { MySQLConnection } from '../../../icarus-core/infrastructure/db/mysqlClass';
 import { logger } from '../../../icarus-core/infrastructure/server';
 
-// Mock the ImportThemTities class
-jest.mock('../../../icarus-core/config/importDemTities.js', () => ({
-  ImportThemTities: jest.fn().mockImplementation(() => ({
-    // Mock the importAll method
-    importAll: jest.fn().mockResolvedValue({
-      tables: [], // Mock the tables array
-      connections: [], // Mock the connections array
-    }),
-  })),
-}));
-
 jest.mock('../../../icarus-core/infrastructure/server', () => ({
   logger: {
     warn: jest.fn(),
