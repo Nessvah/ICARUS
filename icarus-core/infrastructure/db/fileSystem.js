@@ -52,34 +52,6 @@ export class FileSystemClass {
     return result;
   }
 
-  async create(tableName, { input }) {
-    try {
-      // Retrieve the database object from the MongoDB client
-      const db = this.client.db(this.dbName);
-      // Retrieve the collection object
-      const collection = db.collection(tableName);
-
-      // Insert the data into the collection
-      const res = await collection.insertMany([input._create]);
-
-      // Check if the operation is successful
-      if (!res) {
-        return false; // Return false if the operation fails
-      }
-
-      // Transform the "_id" key into an "id" key, to match the schema defined in the GraphQL schema
-      // Iterate over each element in the input._create array
-      const processedRes = afterResolver([input._create], this.tableData.type);
-
-      // Return an object with the created property, containing the inserted data
-      return { created: processedRes };
-      return { created: processedRes };
-    } catch (error) {
-      logger.error(error); // Log any errors
-      return false; // Return false in case of any errors
-    }
-  }
-
   async update(tableName, { input }) {
     try {
       // Retrieve the database object from the MongoDB client
