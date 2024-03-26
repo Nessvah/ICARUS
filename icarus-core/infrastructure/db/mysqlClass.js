@@ -285,7 +285,6 @@ export class MySQLConnection {
    * @returns {string} - A promise that resolves to the uploaded file URL or an ApolloError if there was an error.
    */
   async upload(tableName, { input }, table) {
-    console.log(JSON.stringify(input));
     // Get all the necessary data
     const filter = input._upload?.filter;
     const file = input._upload?.file;

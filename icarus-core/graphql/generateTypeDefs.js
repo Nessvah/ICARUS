@@ -250,7 +250,7 @@ type ${tableName}Output {
 	created: [${tableName}]!
 	updated: [${tableName}]!
 	deleted: Int
-  uploaded: UpdatedResult
+  uploaded: UploadResult
 }`;
 
     //Define the input options for the mutation operations
@@ -330,7 +330,7 @@ type ${tableName}CountResult {
   count: Int!
 }
     # output of the file upload
-    type UpdatedResult {
+    type UploadResult {
     changedRows: Int
     data: String! } `;
 
