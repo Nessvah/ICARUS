@@ -282,7 +282,7 @@ export class MySQLConnection {
    * @param {string} tableName - The name of the table to update with the file URL.
    * @param {{ input: { _upload: { file: object, filter: object } } }} data - The input data for the upload operation.
    * @param {object} table - The table schema information.
-   * @returns {Promise<{ uploaded: string } | ApolloError>} - A promise that resolves to the uploaded file URL or an ApolloError if there was an error.
+   * @returns {string} - A promise that resolves to the uploaded file URL or an ApolloError if there was an error.
    */
   async upload(tableName, { input }, table) {
     console.log(JSON.stringify(input));
@@ -294,9 +294,9 @@ export class MySQLConnection {
     // check if we have any missing data from the user
     //! { filter: { _and: null }, -> this will pass the error for empty filter
     // we need a more granular control on what it's being passed on the nested obj
-    if (!hasNestedObjects(filter)) throw new Error('Filter is mandatory');
+    if (!hasNestedObjects(filter)) return { uploaded: 'Filter is mandatory for uploading files' };
 
-    if (!file) throw new Error('You need to provide a file');
+    if (!file) return { uploaded: 'You need to provide a file' };
 
     // Extract necessary information from the file object: filename, createReadStream, encoding
     const { filename, createReadStream } = await file.file;
@@ -306,51 +306,71 @@ export class MySQLConnection {
         // Check if the mimetype is valid (png, jpeg, jpg)
         const mimeType = getMimeType(filename, IMAGES_TYPES);
 
-        // Create a read stream from the file data
-        const stream = createReadStream();
-
         // Find the column with extra === 'key'
         const keyColumn = table.columns.find((column) => column.extra === 'key');
-        console.log({ keyColumn });
 
-        if (!keyColumn) {
-          throw new Error('No column with extra === "key" found in the table');
-        }
+        if (!keyColumn) return { uploaded: 'No column with extra === "key" found in the table' };
 
         // Create the S3 key for the uploaded file
         const key = `${tableName}/${filename}`;
 
-        // Create an upload stream to S3
-        const uploadStream = createUploadStream(key, mimeType);
+        // Create a read stream from the file data
+        const stream = createReadStream();
+        let uploadStream = undefined;
+        if (stream) {
+          // Create an upload stream to S3
+          uploadStream = await createUploadStream(key, mimeType);
 
-        // Pipe the file read stream to the upload stream
-        stream.pipe(uploadStream.writeStream);
+          // check if upload stream and write stream are defined before piping
+          if (uploadStream && (await uploadStream.writeStream)) {
+            // Pipe the file read stream to the upload stream
+            stream.pipe(uploadStream.writeStream);
+          } else return { uploaded: 'Server Error: Upload stream or its writeStream is undefined' };
+        } else
+          return {
+            uploaded: 'Server Error: Stream is undefined',
+          };
 
         // Wait for the upload to finish and get the S3 location
         const result = await uploadStream.promise;
 
-        // Remove the file object from the input data
+        // Remove the file object from the input data and the location so it doesn't mess it up on
+        // the processFilter logic
         delete input._upload.file;
-
+        delete input._upload.location;
         // Add the S3 location to the input data
-        const updatedInput = {
-          input: {
-            _upload: {
-              url: result.Location,
-              ...input._upload,
-            },
-          },
+        input._upload = {
+          url: result.Location,
+          ...input._upload,
         };
+        console.log(JSON.stringify(input));
 
         // Construct the update query
-        const updateQuery = `UPDATE ${tableName} SET ${keyColumn.column_name} = ? WHERE = ?`;
+        let updateQuery = `UPDATE ${tableName} SET ${keyColumn.name} = ? `;
         const updateValues = [result.Location];
 
-        // Execute the update query
-        await this.query(updateQuery, updateValues);
+        for (const [key, value] of Object.entries(input._upload)) {
+          if (key === 'filter') {
+            // handle filtering in update
+            // mimic object structure for the function to process filter
+            const filter = {};
+            filter[key] = value;
 
-        // Return the S3 location
-        return { uploaded: result.Location };
+            const { processedSql, processedValues } = processFilter(filter);
+
+            // remove trailing spaces and comma
+            updateQuery += processedSql;
+            updateValues.push(...processedValues);
+          } else continue;
+
+          console.log({ updateQuery, updateValues });
+
+          // Execute the update query
+          await this.query(updateQuery, updateValues);
+
+          // Return the S3 location
+          return { uploaded: result.Location };
+        }
       } catch (error) {
         // Log any errors and return an ApolloError
         logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
