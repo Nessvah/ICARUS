@@ -8,6 +8,8 @@ import {
 } from '../../utils/sqlQueries.js';
 import { logger } from '../server.js';
 import { createUploadStream } from './s3.js';
+import { getMimeType, hasNestedObjects } from '../../utils/fileUtils.js';
+import { IMAGES_TYPES } from '../../utils/enums/enums.js';
 
 export class MySQLConnection {
   constructor(currentTableInfo) {
@@ -174,14 +176,16 @@ export class MySQLConnection {
     let findQuery = `SELECT * FROM ${tableName} WHERE`;
     let conditionQuery = '';
     let conditionValues = [];
+
     const values = [];
     const findValues = [];
 
     // simple update without filtering
+
     for (const [key, value] of Object.entries(input._update)) {
       if (key === 'filter') {
         // handle filtering in update
-        // mimik object structure for the function to process filter
+        // mimic object structure for the function to process filter
         const filter = {};
         filter[key] = value;
 
@@ -190,9 +194,14 @@ export class MySQLConnection {
         conditionValues.push(...processedValues);
         // eslint-disable-next-line no-unused-vars
         conditionQuery += processedSql;
+        // remove trailing spaces and comma
+        updateQuery = updateQuery.slice(0, -2);
+        values.push(...processedValues);
+
+        updateQuery += processedSql;
       } else {
         updateQuery += `${key} = ?, `;
-        findQuery += ` ${key} = ? AND `;
+        findQuery += `${key} = ? AND `;
         values.push(value);
         findValues.push(value);
 
@@ -286,81 +295,100 @@ export class MySQLConnection {
    * @param {string} tableName - The name of the table to update with the file URL.
    * @param {{ input: { _upload: { file: object, filter: object } } }} data - The input data for the upload operation.
    * @param {object} table - The table schema information.
-   * @returns {Promise<{ uploaded: string } | ApolloError>} - A promise that resolves to the uploaded file URL or an ApolloError if there was an error.
+   * @returns {string} - A promise that resolves to the uploaded file URL or an ApolloError if there was an error.
    */
-
   async upload(tableName, { input }, table) {
-    // console.log({ input });
-    // console.log(input._upload.file);
-    // // Check if a file object is provided in the input data, if not, throw an error
-    // const { file } = input._upload;
-    // console.log(typeof file);
+    // Get all the necessary data
+    const filter = input._upload?.filter;
+    const file = input._upload?.file;
+    const location = input._upload.location.toLowerCase();
 
-    // if (!file) {
-    //   throw new Error('No file provided');
-    // }
-    // // Extract necessary information from the file object: filename, createReadStream, encoding
-    // const { filename, createReadStream } = await file;
-    // console.log(filename);
+    // check if we have any missing data from the user
+    //! { filter: { _and: null }, -> this will pass the error for empty filter
+    // we need a more granular control on what it's being passed on the nested obj
+    if (!hasNestedObjects(filter)) return { uploaded: { data: 'Filter is mandatory for uploading files' } };
 
-    // // Check if the mimetype is valid (png, jpeg, jpg)
-    // const mimeTypes = {
-    //   png: 'image/png',
-    //   jpg: 'image/jpg',
-    //   jpeg: 'image/jpeg',
-    // };
+    if (!file) return { uploaded: { data: 'You need to provide a file' } };
 
-    // /**
-    //  ** Returns the mime type of a file based on its filename.
-    //  * @param {string} filename - The filename of the file.
-    //  * @returns {string} - The mime type of the file.
-    //  */
-    // const getMimeType = (filename) => {
-    //   const extension = filename.split('.').pop();
-    //   return mimeTypes[extension.toLowerCase()];
-    // };
+    // Extract necessary information from the file object: filename, createReadStream, encoding
+    const { filename, createReadStream } = await file.file;
 
-    // // Create a read stream from the file data
-    // const stream = createReadStream();
+    if (location === 's3') {
+      try {
+        // Check if the mimetype is valid (png, jpeg, jpg)
+        const mimeType = getMimeType(filename, IMAGES_TYPES);
 
-    // try {
-    //   // Find the column with extra === 'key'
-    //   const keyColumn = table.columns.find((column) => column.extra === 'key');
+        // Find the column with extra === 'key'
+        const keyColumn = table.columns.find((column) => column.extra === 'key');
 
-    //   if (!keyColumn) {
-    //     throw new Error('No column with extra === "key" found in the table');
-    //   }
+        if (!keyColumn) return { uploaded: { data: 'No column with extra === "key" found in the table' } };
 
-    //   // Find the filter for the key column
-    //   if (!input._upload.filter || Object.keys(input._upload.filter).length <= 0) {
-    //     throw new Error('No filter provided');
-    //   }
+        // Create the S3 key for the uploaded file
+        const key = `${tableName}/${filename}`;
 
-    //   // Create the S3 key for the uploaded file
-    //   const key = `icarus/${tableName}/${filename}`;
+        // Create a read stream from the file data
+        const stream = createReadStream();
+        let uploadStream = undefined;
+        if (stream) {
+          // Create an upload stream to S3
+          uploadStream = await createUploadStream(key, mimeType);
 
-    //   // Create an upload stream to S3
-    //   const uploadStream = await createUploadStream(key, getMimeType(filename));
+          // check if upload stream and write stream are defined before piping
+          if (uploadStream && (await uploadStream.writeStream)) {
+            // Pipe the file read stream to the upload stream
+            stream.pipe(uploadStream.writeStream);
+          } else
+            return {
+              uploaded: { data: 'Server Error: Upload stream or its writeStream is undefined' },
+            };
+        } else
+          return {
+            uploaded: { data: 'Server Error: Stream is undefined' },
+          };
 
-    //   // Pipe the file read stream to the upload stream
-    //   stream.pipe(uploadStream.writeStream);
+        // Wait for the upload to finish and get the S3 location
+        const result = await uploadStream.promise;
 
-    //   // Wait for the upload to finish and get the S3 location
-    //   const result = await uploadStream.promise;
+        // Remove the file object from the input data and the location so it doesn't mess it up on
+        // the processFilter logic
+        delete input._upload.file;
+        delete input._upload.location;
+        // Add the S3 location to the input data
+        input._upload = {
+          url: result.Location,
+          ...input._upload,
+        };
 
-    //   // Construct the update query
-    //   const updateQuery = `UPDATE ${tableName} SET icon_label = ?`;
-    //   const updateValues = [result.Location];
+        // Construct the update query
+        let updateQuery = `UPDATE ${tableName} SET ${keyColumn.name} = ? `;
+        const updateValues = [result.Location];
 
-    //   // Execute the update query
-    //   await this.query(updateQuery, updateValues);
+        for (const [key, value] of Object.entries(input._upload)) {
+          if (key === 'filter') {
+            // handle filtering in update
+            // mimic object structure for the function to process filter
+            const filter = {};
+            filter[key] = value;
 
-    //   // Return the S3 location
-    //   return { uploaded: result.Location };
-    // } catch (error) {
-    //   // Log any errors and return an ApolloError
-    //   logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
-    // }
-    return { uploaded: 'Not working Pitches' };
+            const { processedSql, processedValues } = processFilter(filter);
+
+            // remove trailing spaces and comma
+            updateQuery += processedSql;
+            updateValues.push(...processedValues);
+          } else continue;
+
+          // Execute the update query
+          const updateResults = await this.query(updateQuery, updateValues);
+          // Return the S3 location
+          return { uploaded: { changedRows: updateResults.changedRows, data: result.Location } };
+        }
+      } catch (error) {
+        // Log any errors and return an ApolloError
+        logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
+        return { uploaded: { data: error.message } };
+      }
+    } else if (location === 'fs') {
+      //Apply the upload to filesystem logic
+    }
   }
 }

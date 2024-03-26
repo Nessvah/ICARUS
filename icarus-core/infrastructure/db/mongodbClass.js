@@ -329,6 +329,7 @@ export class MongoDBConnection {
       } else if (input._upload) {
         // Extract the filter from the input
         const filter = this.filterController(input._upload.filter);
+        console.log(filter);
         // Call updateMany method to update matching documents in the collection
         delete input._upload.filter;
         const res = await collection.updateMany(filter, { $set: input._upload });
@@ -469,86 +470,92 @@ export class MongoDBConnection {
    * @param {object} input._upload.file - The file to be uploaded.
    * @param {object} input._upload.filter - The filter criteria to select the rows to be updated.
    * @param {object} table - The table structure, used to determine the column with the "key" extra.
-   * @returns {Promise<{ uploaded: string }|ApolloError>} - A promise that resolves to an object with the uploaded file's location, or an ApolloError if the upload fails.
+   * @returns {Promise<{uploaded: {changedRows: *, data: *}}>} - A promise that resolves to an object with the uploaded file's location, or an ApolloError if the upload fails.
    */
   async upload(tableName, { input }, table) {
-    //   const { file } = input._upload.file;
-    //   const { _upload } = input;
+    const { file } = input._upload.file;
+    const { _upload } = input;
+    const location = _upload.location.toLowerCase();
+    const filter = this.filterController(_upload.filter);
 
-    //   const filter = this.filterController(_upload.filter);
+    if (!file) {
+      throw new Error('No file provided');
+    }
 
-    //   if (!file) {
-    //     throw new Error('No file provided');
-    //   }
+    const { filename, createReadStream } = await file;
+    if (location === 's3') {
+      try {
+        // Check if the mimetype is valid (png, jpeg, jpg)
+        const mimeTypes = {
+          png: 'image/png',
+          jpg: 'image/jpg',
+          jpeg: 'image/jpeg',
+        };
 
-    //   const { filename, createReadStream } = await file;
+        const getMimeType = (filename) => {
+          const extension = filename.split('.').pop();
+          return mimeTypes[extension.toLowerCase()];
+        };
+        /**
+         ** Returns the mime type of a file based on its filename.
+         * @param {string} filename - The filename of the file.
+         * @returns {string} - The mime type of the file.
+         */
+        const mimeType = getMimeType(filename);
 
-    //   // Check if the mimetype is valid (png, jpeg, jpg)
-    //   const mimeTypes = {
-    //     png: 'image/png',
-    //     jpg: 'image/jpeg',
-    //     jpeg: 'image/jpeg',
-    //   };
+        const stream = createReadStream();
 
-    //   const getMimeType = (filename) => {
-    //     const extension = filename.split('.').pop();
-    //     return mimeTypes[extension.toLowerCase()];
-    //   };
-    //   /**
-    //    ** Returns the mime type of a file based on its filename.
-    //    * @param {string} filename - The filename of the file.
-    //    * @returns {string} - The mime type of the file.
-    //    */
-    //   const mimeType = getMimeType(filename);
+        // Find the column with extra === 'key'
+        const keyColumn = table.columns.find((column) => column.extra === 'key');
 
-    //   const stream = createReadStream();
+        if (!keyColumn) {
+          throw new Error('No column with extra === "key" found in the table');
+        }
 
-    //   try {
-    //     // Find the column with extra === 'key'
-    //     const keyColumn = table.columns.find((column) => column.extra === 'key');
+        // Ensure a filter is provided
+        if (!filter || Object.keys(filter).length <= 0) {
+          throw new Error('No filter provided');
+        }
 
-    //     if (!keyColumn) {
-    //       throw new Error('No column with extra === "key" found in the table');
-    //     }
+        // Create the S3 key for the uploaded file
+        const key = `${tableName}/${filename}`;
 
-    //     // Ensure a filter is provided
-    //     if (!filter || Object.keys(filter).length <= 0) {
-    //       throw new Error('No filter provided');
-    //     }
+        // Create an upload stream to S3
+        const uploadStream = await createUploadStream(key, mimeType);
 
-    //     // Create the S3 key for the uploaded file
-    //     const key = `icarus/${tableName}/${filename}`;
+        // Pipe the file read stream to the upload stream
+        stream.pipe(uploadStream.writeStream);
 
-    //     // Create an upload stream to S3
-    //     const uploadStream = await createUploadStream(key, mimeType);
+        // Wait for the upload to finish and get the S3 location
+        const result = await uploadStream.promise;
 
-    //     // Pipe the file read stream to the upload stream
-    //     stream.pipe(uploadStream.writeStream);
+        // Remove the file object from the input data
+        delete input._upload.file;
+        delete input._upload.location;
 
-    //     // Wait for the upload to finish and get the S3 location
-    //     const result = await uploadStream.promise;
+        // Add the S3 location to the input data
+        const updatedInput = {
+          input: {
+            _upload: {
+              fileUrl: result.Location,
+              ...input._upload,
+            },
+          },
+        };
 
-    //     // Remove the file object from the input data
-    //     delete input._upload.file;
+        console.log({ updatedInput });
 
-    //     // Add the S3 location to the input data
-    //     const updatedInput = {
-    //       input: {
-    //         _upload: {
-    //           url: result.Location,
-    //           ...input._upload,
-    //         },
-    //       },
-    //     };
+        // Update the database table with the new input data
+        const updateResults = await this.update(tableName, updatedInput);
 
-    //     // Update the database table with the new input data
-    //     await this.update(tableName, updatedInput);
-
-    //     // Return the S3 location
-    //     return { uploaded: result.Location };
-    //   } catch (error) {
-    //     logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
-    //   }
-    return { uploaded: 'Not working Pitches' };
+        // Return the S3 location
+        return { uploaded: { changedRows: updateResults.changedRows, data: result.Location } };
+      } catch (error) {
+        logger.error(`[Error]: Message: ${error.message}, Stack: ${error.stack}`);
+        return { uploaded: { data: error.message } };
+      }
+    } else if (location === 'fs') {
+      //Apply the upload to filesystem logic
+    }
   }
 }

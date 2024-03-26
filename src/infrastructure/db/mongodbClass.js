@@ -512,7 +512,7 @@ export class MongoDBConnection {
       const updatedInput = {
         input: {
           _upload: {
-            url: result.Key,
+            url: result.Location,
             ...input._upload,
           },
         },

@@ -1,9 +1,11 @@
 import { MongoDBConnection } from './mongodbClass.js';
 import { MySQLConnection } from './mysqlClass.js';
+import { S3Connection } from './s3Class.js';
 import { MongoClient } from 'mongodb';
 import mysql from 'mysql2/promise';
 import { logger } from '../server.js';
 import { config } from '../../graphql/generateTypeDefs.js';
+import { S3 } from '@aws-sdk/client-s3';
 
 //a pool of many different database connections.
 const pools = [];
@@ -18,7 +20,6 @@ async function controller(tableName, args, table) {
 
   //find the right database in the pool, base on table name.
   const currentTable = await pools.find((db) => db.table === tableName);
-
   //create a connection class to the specific database type, that will have all the CRUD functions to be use.
   try {
     switch (currentTable.type) {
@@ -28,6 +29,11 @@ async function controller(tableName, args, table) {
       case 'mysql':
         connection = new MySQLConnection(currentTable);
         break;
+      case 's3':
+        connection = new S3Connection(currentTable);
+        break;
+      default:
+        throw Error('Invalid Database Type');
     }
     //define the CRUD function based on the _action passed in the input.
     let action;
@@ -53,6 +59,17 @@ async function controller(tableName, args, table) {
         return await connection.delete(tableName, args);
       case '_upload':
         return await connection.upload(tableName, args, table);
+      /* // Update the respective database with the S3 URL
+      if (table.upload.type === 's3') {
+        return await connection.s3UploadLogic(tableName, args, table);
+
+} (table.upload.type === 'filesystem'){
+  return await connection.fsUploadLogic(tableName, args, table);
+
+}
+return { uploaded: s3Url };
+ */
+
       default:
         return 'Action not defined';
     }
@@ -98,6 +115,28 @@ async function createDbPool() {
           pool: client,
         });
         break;
+      case 's3':
+        client = new S3({
+          region: table.database.region,
+          credentials: {
+            accessKeyId: table.database.accessKeyId,
+            secretAccessKey: table.database.secretAccessKey,
+          },
+          sslEnabled: false,
+          s3ForcePathStyle: true,
+          bucket: table.database.bucket,
+        });
+        pools.push({
+          table: table.name,
+          type: table.database.type,
+          bucket: table.database.bucket,
+          region: table.database.region,
+          columns: table.columns,
+          pool: client,
+        });
+        break;
+      default:
+        throw Error('Invalid Database Type');
     }
   });
 }

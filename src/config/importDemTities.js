@@ -22,14 +22,14 @@ export class ImportThemTities {
    ** Imports all entities
    * @returns {Promise<{tables: importThemTities.Table[], connections: importThemTities.Connection[]}>} The imported entities
    */
-  async importAll() {
+  async importAll(configPath) {
     try {
       // Array to store table information
       const tables = [];
       const connections = [];
 
       // Read all connection files from the db folder
-      const dbFolderPath = path.join(this.__dirname, './db');
+      const dbFolderPath = path.join(configPath, '/db');
       const connectionFiles = await fs.readdir(dbFolderPath);
 
       // Throw an error if there are no connection files
@@ -42,18 +42,21 @@ export class ImportThemTities {
 
       // Loop through each connection file
       for (let file of connectionFiles) {
-        // Extract the file name
-        const fileName = path.parse(file).name;
-        // Construct the full path to the connection file
-        const connectionFilePath = path.join(dbFolderPath, file);
-        // Read connection file data
-        const connectionData = await fs.readFile(connectionFilePath, 'utf-8');
-        // Parse connection file data and store it in the databaseInfo object
-        databaseInfo[fileName] = JSON.parse(connectionData);
+        if (file.endsWith('.js')) {
+          // Construct the full absolute path of .js db
+          const fileAbsolutePath = path.join(dbFolderPath, file);
+          // Transforming absolute path in something readable to import()
+          const filePathURL = new URL(`file://${fileAbsolutePath}`);
+          // All information from .js file in module
+          const module = await import(filePathURL);
+          //console.log({ module })
+          databaseInfo[module.default.type] = module.default;
+          connections.push(module.default);
+        }
       }
 
       // Read entities files from the entities folder
-      const entitiesFolderPath = path.join(this.__dirname, './entities');
+      const entitiesFolderPath = path.join(configPath, '/entities');
       const entitiesFiles = await fs.readdir(entitiesFolderPath);
 
       // Throw an error if there are no entities files
@@ -63,7 +66,7 @@ export class ImportThemTities {
 
       // Loop through each entities file
       for (let file of entitiesFiles) {
-        // Check if the file is a JSON file
+        // Check if the file is a JS file
         if (file.endsWith('.js')) {
           // Construct the full absolute path of .js entity
           const fileAbsolutePath = path.join(entitiesFolderPath, file);
@@ -86,9 +89,8 @@ export class ImportThemTities {
           tables.push(tableInfo);
         }
       }
-
       // Return the imported tables and connections
-      return { tables };
+      return { tables, connections };
       // Log the extracted tables information
     } catch (e) {
       // Log any errors that occur during execution

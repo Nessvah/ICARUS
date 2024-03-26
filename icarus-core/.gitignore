@@ -132,3 +132,7 @@ dist
 
 # idea for jetbrains products
 .idea/
+
+
+#ignore autogerated typedefs
+graphql/typeDefs.graphql

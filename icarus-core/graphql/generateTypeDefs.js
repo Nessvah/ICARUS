@@ -146,6 +146,13 @@ ${config.tables
     return `${tableName}(input: ${resolvers}): ${capitalizedTableName}Output`;
   })
   .join('\n')}
+}
+
+# list Entities
+enum Folders {
+${config.tables
+  .map((table) => `${table.name.toUpperCase()}`) // Convert table names to uppercase for enum values
+  .join('\n')}
 }`);
 
   // Dynamically generate the necessary typedef's for the root types
@@ -201,14 +208,23 @@ ${table.columns
     return `${column.name}: ComparisonOperators`;
   })
   .join('\n')}
+}
+
+input ${tableName}UploadFilter {
+${table.columns
+  .filter((column) => column.extra === 'key')
+  .map((column) => {
+    return `${column.name}: String`;
+  })
+  .join('\n')}
 }`;
 
     //QUERY
     //type defs for query operations
     const queryOptions = `
-  # Allowed query operations for ${tableName}
+    # Allowed query operations for ${tableName}
 input ${tableName}QueryOptions {
-  filter: ${tableName}Filter
+  filter: ${table.database.type === 's3' ? `${tableName}UploadFilter` : `${tableName}Filter`}
   skip: Int
   take: Int = 15
   sort: ${tableName}SortOptions
@@ -234,7 +250,7 @@ type ${tableName}Output {
 	created: [${tableName}]!
 	updated: [${tableName}]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }`;
 
     //Define the input options for the mutation operations
@@ -257,6 +273,9 @@ ${table.columns
     if (column.isObject || column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
       return '';
     }
+    /*     if (column.extra === 'folder') {
+      return `${column.name}: Entities`;
+    } */
     const type = mapColumnTypeToGraphQLType(column.type);
     return `${column.name}: ${column.nullable ? type : new GraphQLNonNull(type)}`;
   })
@@ -265,29 +284,39 @@ ${table.columns
 
   # Input logic for update operations on ${tableName}
 input ${tableName}Update {
-  filter: ${tableName}Filter
-${table.columns
-  .filter((column) => column.primaryKey !== true)
-  .map((column) => {
-    if (column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
-      return '';
-    }
-    const type = mapColumnTypeToGraphQLType(column.type);
-    return `${column.name}: ${type}`;
-  })
-  .join('\n')}
+  filter:  ${table.database.type === 's3' ? `${tableName}UploadFilter` : `${tableName}Filter`}
+${
+  table.database.type === 's3'
+    ? `${table.columns
+        .filter((column) => column.extra === 'key')
+        .map((column) => {
+          return `${column.name}: String`;
+        })
+        .join('\n')}`
+    : `${table.columns
+        .filter((column) => column.primaryKey !== true)
+        .map((column) => {
+          if (column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
+            return '';
+          }
+          const type = mapColumnTypeToGraphQLType(column.type);
+          return `${column.name}: ${type}`;
+        })
+        .join('\n')}`
+}
 }
 
   # Input logic for delete operations on ${tableName}
 input ${tableName}Delete {
-  filter: ${tableName}Filter
+  filter:  ${table.database.type === 's3' ? `${tableName}UploadFilter` : `${tableName}Filter`}
 }
 
   # Input logic for upload operations on ${tableName}
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input ${tableName}Upload {
-  filter: ${tableName}Filter
   file: Upload
+  filter: ${table.database.type === 's3' ? `${tableName}UploadFilter` : `${tableName}Filter`}
+  ${table.database.type === 's3' ? `folder: Folders` : `location: UploadLocation`}
 }`;
 
     const countInput = `
@@ -299,7 +328,11 @@ input ${tableName}Count {
     # Output the count operations on ${tableName}
 type ${tableName}CountResult {
   count: Int!
-}`;
+}
+    # output of the file upload
+    type UploadResult {
+    changedRows: Int
+    data: String! } `;
 
     typeDefs.push(
       entitiesFields,
@@ -315,6 +348,10 @@ type ${tableName}CountResult {
 
   // Statically generate typedef's for enums and providing table info
   typeDefs.push(`
+enum UploadLocation{
+  FS
+  S3
+}
 
 enum Sort {
   ASC
@@ -339,7 +376,7 @@ function generateOperators(operators) {
     input ComparisonOperators {
       ${operatorsStr.join('\n')}
     }
-`;
+  `;
 }
 
 export { readConfigFile, config, generateTypeDefinitions };
