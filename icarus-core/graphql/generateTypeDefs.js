@@ -316,7 +316,7 @@ input ${tableName}Delete {
 input ${tableName}Upload {
   file: Upload
   filter: ${table.database.type === 's3' ? `${tableName}UploadFilter` : `${tableName}Filter`}
-  ${table.database.type === 's3' ? `folder: Folders` : `location: UploadLocation`}
+  ${table.database.type === 's3' ? `directory: Folders` : `location: UploadLocation`}!
 }`;
 
     const countInput = `

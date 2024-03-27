@@ -70,6 +70,17 @@ export class S3Connection {
       throw error; // Re-throw the error to propagate it
     }
   }
+  getMimeType(filename) {
+    // Check if the mimetype is valid (png, jpeg, jpg)
+    const mimeTypes = {
+      png: 'image/png',
+      jpg: 'image/jpeg', // Corrected mime type for jpg
+      jpeg: 'image/jpeg',
+    };
+
+    const extension = filename.split('.').pop(); // Convert extension to lowercase for consistency
+    return mimeTypes[extension] || 'application/octet-stream'; // Default to octet-stream if not found
+  }
 
   async find(_, { input }) {
     //console.log({ input });
@@ -81,7 +92,7 @@ export class S3Connection {
       command = new ListObjectsV2Command({
         Bucket: this._bucket,
       }); // Create ListObjectsCommand instance
-      const { Contents } = await this._pool.send(command); // Execute the command
+      await this._pool.send(command); // Execute the command
 
       let files = [];
       if (filter) {
@@ -153,23 +164,13 @@ export class S3Connection {
     const { filename, createReadStream } = await file; // Extract filename directly from the file object
     //console.log({ filename });
     //console.log({ createReadStream });
-    // Check if the mimetype is valid (png, jpeg, jpg)
-    const mimeTypes = {
-      png: 'image/png',
-      jpg: 'image/jpeg', // Corrected mime type for jpg
-      jpeg: 'image/jpeg',
-    };
 
-    const getMimeType = (filename) => {
-      const extension = filename.split('.').pop(); // Convert extension to lowercase for consistency
-      return mimeTypes[extension];
-    };
     /**
      ** Returns the mime type of a file based on its filename.
      * @param {string} filename - The filename of the file.
      * @returns {string} - The mime type of the file.
      */
-    const mimeType = getMimeType(filename);
+    const mimeType = this.getMimeType(filename);
 
     const stream = createReadStream();
 
@@ -197,26 +198,43 @@ export class S3Connection {
   }
   //add update
   async update(_, { input }) {
+    console.log({ input });
     try {
-      const filter = await this.processFilter(input.filter); // Apply filter
+      const directory = input._update.directory;
+      const name = input._update.name;
+      console.log({ name });
+      console.log({ directory });
+      if (!directory || !name) {
+        throw new Error('Both directory and file name must be provided');
+      }
+
+      const filter = await this.processFilter(input._update.filter);
+      console.log({ filter });
       if (!filter || filter.length === 0) {
         throw new Error('No matching objects found for update');
       }
-      const objectKey = filter[0].Key; // Assuming only one object is matched by the filter
-      // Implement your update logic here, such as updating metadata or content
-      // For example, you might want to use CopyObjectCommand to update metadata or SetObjectAclCommand to update permissions
+      const objectKey = filter[0].Key;
+      console.log({ objectKey });
+      const newKey = `${directory}/${name}.${objectKey.split('.').pop()}`;
+      console.log({ newKey });
+      /*      const mimetype = this.getMimeType(objectKey);
+      console.log({ mimetype }); */
 
-      // For demonstration, let's say you update the metadata
       const command = new CopyObjectCommand({
         Bucket: this._bucket,
         CopySource: `${this._bucket}/${objectKey}`,
-        Key: objectKey,
-        MetadataDirective: 'REPLACE', // Specify to replace metadata
-        Metadata: { newMetadata: 'value' }, // New metadata
+        Key: newKey,
+        /*         MetadataDirective: 'REPLACE', // Specify to replace metadata
+        ContentType: mimetype, */
       });
 
       const { CopyObjectResult } = await this._pool.send(command);
-      console.log({ CopyObjectResult });
+
+      // Now, fetch the updated object's metadata to ensure ContentType is set correctly
+      const getObjectResult = await this._pool.send(new ListObjectsV2Command({ Bucket: this._bucket, Key: newKey }));
+
+      console.log({ getObjectResult });
+      console.log(getObjectResult.Contents);
       return { updated: CopyObjectResult };
     } catch (error) {
       console.error('Error updating object:', error);
@@ -226,19 +244,12 @@ export class S3Connection {
 
   async delete(_, { input }) {
     try {
-      const { file } = input._upload;
-      const folder = input._upload.folder.toLowerCase();
-      const name = input.name;
-
-      if (!file || !name) {
-        throw new Error('Both file and name must be provided');
-      }
-      // You can still utilize the processFilter logic here if needed
-      const filter = { directory: folder, name: name };
-      const filteredObjects = await this.processFilter(filter);
+      const filter = await this.processFilter(input._delete.filter);
+      console.log({ filter });
       if (!filter || filter.length === 0) {
-        throw new Error('No matching objects found for delete');
+        throw new Error('No matching objects found for update');
       }
+
       const objectsToDelete = filter.map((content) => ({ Key: content.Key }));
 
       const command = new DeleteObjectsCommand({
