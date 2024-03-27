@@ -228,14 +228,33 @@ export class S3Connection {
         ContentType: mimetype, */
       });
 
-      const { CopyObjectResult } = await this._pool.send(command);
+      await this._pool.send(command);
 
-      // Now, fetch the updated object's metadata to ensure ContentType is set correctly
-      const getObjectResult = await this._pool.send(new ListObjectsV2Command({ Bucket: this._bucket, Key: newKey }));
+      let list;
+      list = new ListObjectsV2Command({
+        Bucket: this._bucket,
+      }); // Create ListObjectsCommand instance
+      await this._pool.send(list); // Execute the command
 
-      console.log({ getObjectResult });
-      console.log(getObjectResult.Contents);
-      return { updated: CopyObjectResult };
+      let files = [];
+      if (filter) {
+        files = filter.map((content) => {
+          const directory = content.Key.split('/').slice(0, -1).join('/'); // Extract directory from Key
+          const name = content.Key.split('/').pop(); // Extract file name from Key
+          const type = name.split('.').pop(); // Extract file type from file name
+          const location = `https://${this._bucket}.s3.${this._region}.amazonaws.com/${content.Key}`;
+
+          return {
+            directory: directory,
+            name: name,
+            lastModified: content.LastModified,
+            size: content.Size,
+            type: type,
+            location: location,
+          };
+        });
+      }
+      return { updated: files };
     } catch (error) {
       console.error('Error updating object:', error);
       return null;
