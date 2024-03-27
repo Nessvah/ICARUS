@@ -217,24 +217,29 @@ export class S3Connection {
       console.log({ objectKey });
       const newKey = `${directory}/${name}.${objectKey.split('.').pop()}`;
       console.log({ newKey });
-      /*      const mimetype = this.getMimeType(objectKey);
-      console.log({ mimetype }); */
 
-      const command = new CopyObjectCommand({
+      const copy = new CopyObjectCommand({
         Bucket: this._bucket,
         CopySource: `${this._bucket}/${objectKey}`,
         Key: newKey,
-        /*         MetadataDirective: 'REPLACE', // Specify to replace metadata
-        ContentType: mimetype, */
       });
 
-      await this._pool.send(command);
+      await this._pool.send(copy);
+
+      const uncreate = new DeleteObjectsCommand({
+        Bucket: this._bucket,
+        Delete: {
+          Objects: [{ Key: objectKey }],
+          Quiet: false,
+        },
+      });
+      await this._pool.send(uncreate);
 
       let list;
       list = new ListObjectsV2Command({
         Bucket: this._bucket,
-      }); // Create ListObjectsCommand instance
-      await this._pool.send(list); // Execute the command
+      });
+      await this._pool.send(list);
 
       let files = [];
       if (filter) {
