@@ -1,4 +1,4 @@
-import { startTimer, getDurationInSecs } from '../../src/utils/timers';
+import { startTimer, getDurationInSecs } from '../../icarus-core/utils/timers';
 
 describe('timers.js', () => {
   describe('startTimer()', () => {

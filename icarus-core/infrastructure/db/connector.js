@@ -17,6 +17,7 @@ const pools = [];
  */
 async function controller(tableName, args, table) {
   let connection;
+
   //find the right database in the pool, base on table name.
   const currentTable = await pools.find((db) => db.table === tableName);
   //create a connection class to the specific database type, that will have all the CRUD functions to be use.
@@ -51,7 +52,7 @@ async function controller(tableName, args, table) {
       case '_count':
         return await connection.count(tableName, args);
       case '_create':
-        return await connection.create(tableName, args);
+        return await connection.create(tableName, args, table);
       case '_update':
         return await connection.update(tableName, args);
       case '_delete':
@@ -140,4 +141,4 @@ async function createDbPool() {
   });
 }
 
-export { controller, createDbPool };
+export { controller, createDbPool, pools };

@@ -112,6 +112,7 @@ async function autoResolvers() {
       try {
         // Extracting the operation which is being made "_update, _create or _delete"
         const { input } = incomeArgs;
+
         const operationName = Object.keys(input)[0];
 
         // Calling function hookExecutor to see if there is hooks beforeResolver

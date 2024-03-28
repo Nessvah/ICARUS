@@ -7,7 +7,6 @@ import {
   processFilter,
 } from '../../utils/sqlQueries.js';
 import { logger } from '../server.js';
-import { createUploadStream } from './s3.js';
 
 export class MySQLConnection {
   constructor(currentTableInfo) {
@@ -28,25 +27,18 @@ export class MySQLConnection {
    */
   async query(sql, values) {
     const connection = await this.getConnection();
-    // Get a connection from the connection pool
 
     try {
-      // Attempt to execute the SQL query using the acquired connection
+      //console.log('Executing SQL query:', sql);
+      //console.log('SQL query values:', values);
+      // get only the rows with the info and not the schema
       const [rows] = await connection.query(sql, values);
-      // Execute the SQL query with provided values and retrieve the result rows
-
       return rows;
-      // Return the result rows of the executed query
     } catch (error) {
-      // If an error occurs during the execution of the SQL query
       logger.error('Error executing SQL query:', error);
-      // Log the error message
-
       throw new Error('Error executing SQL query');
-      // Throw a new error indicating the failure in executing the SQL query
     } finally {
       connection.release();
-      // Release the acquired connection back to the connection pool
     }
   }
 
@@ -162,59 +154,44 @@ export class MySQLConnection {
   }
 
   /**
-   ** Updates a record in the specified table based on the specified filter criteria.
+   * * Updates a record in the specified table based on the specified filter criteria.
    * @param {string} tableName - The name of the table to update a record in.
    * @param {{ input: { filter: Object, update: Object } }} data - The input data for the update operation.
-   * @param {object} table - The table schema information.
    * @returns {Promise<{ updated: Array<Object> } | null>} - A promise that resolves to the updated record(s) or null if there was an error.
    */
-  async update(tableName, { input }, table) {
+  async update(tableName, { input }) {
     // UPDATE `table_name` SET `column_name` = `new_value' [WHERE condition];
     let updateQuery = `UPDATE ${tableName} SET `;
     let findQuery = `SELECT * FROM ${tableName} WHERE`;
     const values = [];
     const findValues = [];
 
-    // Process the update values and conditions
-    for (let [key, value] of Object.entries(input._update ?? {}).concat(Object.entries(input._upload ?? {}))) {
-      if (key === 'url') {
-        // Handle the 'url' key separately
-        const keyColumn = table.columns.find((column) => column.extra === 'key');
-        if (!keyColumn) {
-          throw new Error('No column with extra === "key" found in the table');
-        }
-        updateQuery += `${keyColumn.name} = ?  `;
-        values.push(value);
-        console.log(' qwerty' + updateQuery);
-      } else if (key === 'filter') {
+    // simple update without filtering
+    for (const [key, value] of Object.entries(input._update)) {
+      if (key === 'filter') {
         // handle filtering in update
         // mimik object structure for the function to process filter
         const filter = {};
         filter[key] = value;
-        console.log(JSON.stringify(filter));
 
-        // Process the filter object and get the processed SQL and values
         const { processedSql, processedValues } = processFilter(filter);
 
         // remove trailing spaces and comma
         updateQuery = updateQuery.slice(0, -2);
         values.push(...processedValues);
 
-        // update table set icon class = url where condition
         updateQuery += processedSql;
       } else {
-        // Handle other keys and values
-        console.log({ key });
         updateQuery += `${key} = ?, `;
         findQuery += ` ${key} = ? AND `;
         values.push(value);
         findValues.push(value);
       }
     }
-    // Remove the last ',' and 'AND' from the queries
+
     findQuery = findQuery.slice(0, -5);
+
     try {
-      // Execute the update query
       const record = await this.query(updateQuery, values);
 
       if (record.changedRows > 0) {

@@ -8,6 +8,7 @@
  */
 const hookExecutor = async (table, operation, hook, properties) => {
   const queryInformation = { ...properties };
+
   try {
     // To call the function inside the entity
     let callFunction;

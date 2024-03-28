@@ -250,7 +250,7 @@ type ${tableName}Output {
 	created: [${tableName}]!
 	updated: [${tableName}]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }`;
 
     //Define the input options for the mutation operations
@@ -270,7 +270,7 @@ input ${tableName}Create {
 ${table.columns
   .filter((column) => column.primaryKey !== true)
   .map((column) => {
-    if (column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
+    if (column.isObject || column.type === 'object' || column.extra === 'DEFAULT_GENERATED') {
       return '';
     }
     /*     if (column.extra === 'folder') {
@@ -328,7 +328,11 @@ input ${tableName}Count {
     # Output the count operations on ${tableName}
 type ${tableName}CountResult {
   count: Int!
-}`;
+}
+    # output of the file upload
+    type UploadResult {
+    changedRows: Int
+    data: String! } `;
 
     typeDefs.push(
       entitiesFields,
@@ -375,4 +379,4 @@ function generateOperators(operators) {
   `;
 }
 
-export { readConfigFile, config };
+export { readConfigFile, config, generateTypeDefinitions };
