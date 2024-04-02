@@ -322,17 +322,18 @@ input ${tableName}Upload {
     const countInput = `
   # Input logic for count operations on ${tableName}
 input ${tableName}Count {
-  filter: ${tableName}Filter
+  filter: ${table.database.type === 's3' ? `${tableName}UploadFilter` : `${tableName}Filter`}
   _count: Int
 } \n
     # Output the count operations on ${tableName}
 type ${tableName}CountResult {
   count: Int!
 }
-    # output of the file upload
-    type UploadResult {
-    changedRows: Int
-    data: String! } `;
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} `;
 
     typeDefs.push(
       entitiesFields,

@@ -14,13 +14,13 @@ export class S3Connection {
   }
 
   /**
-   * Processes the filter object to construct a filter function for S3 objects.
+   ** Processes a filter object and returns a filtered list of objects.
    *
-   * @param {object} input - The input object containing filter options.
-   * @returns {function} - A filter function for S3 objects.
+   * @param {object} input - The input filter object.
+   * @returns {object[]} - A list of filtered objects.
    */
   async processFilter(input) {
-    //console.log({ input });
+    // Check if input is empty or null, return all objects if true
     try {
       // Check if input is empty or null, return all objects if true
       if (!input || (Object.keys(input).length === 0 && input.constructor === Object)) {
@@ -70,6 +70,12 @@ export class S3Connection {
       throw error; // Re-throw the error to propagate it
     }
   }
+
+  /**
+   ** Returns the mime type of a file based on its filename.
+   * @param {string} filename - The filename of the file.
+   * @returns {string} - The mime type of the file.
+   */
   getMimeType(filename) {
     // Check if the mimetype is valid (png, jpeg, jpg)
     const mimeTypes = {
@@ -82,14 +88,22 @@ export class S3Connection {
     return mimeTypes[extension] || 'application/octet-stream'; // Default to octet-stream if not found
   }
 
+  /**
+   ** Returns a list of objects in an S3 bucket.
+   *
+   * @param {object} input - The input object containing filter options.
+   * @param {string} input.bucket - The name of the S3 bucket.
+   * @param {string} [input.directory] - The directory within the S3 bucket to search.
+   * @param {string} [input.name] - The name of the object to search for within the directory.
+   * @returns {object[]} - A list of objects in the S3 bucket.
+   */
   async find(_, { input }) {
     //console.log({ input });
     try {
       const filter = await this.processFilter(input.filter);
-      console.log({ filter });
 
-      let command;
-      command = new ListObjectsV2Command({
+      // Construct the S3 command to list objects in the bucket
+      let command = new ListObjectsV2Command({
         Bucket: this._bucket,
       }); // Create ListObjectsCommand instance
       await this._pool.send(command); // Execute the command
@@ -113,12 +127,6 @@ export class S3Connection {
         });
       }
 
-      console.log('BANANAAA' + JSON.stringify(input.filter));
-
-      if (input.filter) {
-        this.processFilter(input.filter);
-      }
-
       //console.log({ files });
       return files; // Return both directories and files
     } catch (error) {
@@ -127,6 +135,14 @@ export class S3Connection {
     }
   }
 
+  /**
+   ** Creates an S3 upload stream.
+   *
+   * @param {string} key - The S3 key of the object to upload.
+   * @param {string} mimeType - The MIME type of the object.
+   * @returns {{key: string, writeStream: stream.PassThrough, promise: Promise<S3.Types.UploadOutput>}}
+   * A key-value pair containing the S3 key, a writable stream, and a promise that resolves to the S3 upload output.
+   */
   async createUploadStream(key, mimeType) {
     // Create a writable stream for S3 upload
     const pass = new stream.PassThrough();
@@ -150,20 +166,27 @@ export class S3Connection {
     };
   }
 
+  /**
+   ** Processes an upload request.
+   *
+   * @param {object} input - The input object containing the file and folder information.
+   * @param {object} input._upload - The upload information.
+   * @param {File} input._upload.file - The file to upload.
+   * @param {string} input._upload.folder - The folder to upload the file to.
+   * @returns {object} - The response object containing the uploaded file information.
+   */
   async upload(_, { input }) {
-    //console.log({ input });
+    // Extract the file and folder information from the input
     const { file } = input._upload.file;
-    const folder = input._upload.folder.toLowerCase();
-    //console.log(file);
-    //console.log({ folder });
+    const folder = input._upload.directory.toLowerCase();
 
+    // Check if a file was provided
     if (!file) {
       throw new Error('No file provided');
     }
 
+    // Extract the filename and read stream from the file
     const { filename, createReadStream } = await file; // Extract filename directly from the file object
-    //console.log({ filename });
-    //console.log({ createReadStream });
 
     /**
      ** Returns the mime type of a file based on its filename.
@@ -187,45 +210,58 @@ export class S3Connection {
       // Wait for the upload to finish and get the S3 location
       const result = await uploadStream.promise;
 
-      //console.log({ result });
-
-      return { uploaded: result.Location };
+      return { uploaded: { data: result.Location } };
       // Return the uploaded object
     } catch (error) {
       console.error('Error uploading object:', error);
       return null;
     }
   }
-  //add update
+
+  /**
+   ** Processes an update request for objects in an S3 bucket.
+   *
+   * @param {object} _ - Unused parameter (convention for GraphQL resolver functions).
+   * @param {object} input - The input object containing the update information.
+   * @param {string} input._update.directory - The directory to move the object to.
+   * @param {string} input._update.name - The new name of the object.
+   * @param {object} [input._update.filter] - Optional filter object to search for the object to update.
+   * @returns {object|null} - The response object containing the updated object information, or null if an error occurs.
+   */
   async update(_, { input }) {
-    console.log({ input });
     try {
+      // Extract directory and name from the input object.
       const directory = input._update.directory;
       const name = input._update.name;
-      console.log({ name });
-      console.log({ directory });
+
+      // Check if both directory and name are provided.
       if (!directory || !name) {
         throw new Error('Both directory and file name must be provided');
       }
 
-      const filter = await this.processFilter(input._update.filter);
-      console.log({ filter });
-      if (!filter || filter.length === 0) {
+      // Process the filter to obtain the object to update.
+      const filterResults = await this.processFilter(input._update.filter);
+
+      // If no matching objects found, throw an error.
+      if (!filterResults || filterResults.length === 0) {
         throw new Error('No matching objects found for update');
       }
-      const objectKey = filter[0].Key;
-      console.log({ objectKey });
-      const newKey = `${directory}/${name}.${objectKey.split('.').pop()}`;
-      console.log({ newKey });
 
+      // Get the key of the object to update.
+      const objectKey = filterResults[0].Key;
+
+      // Generate the new key based on the directory and name.
+      const newKey = `${directory}/${name}.${objectKey.split('.').pop()}`;
+
+      // Copy the object to the new key.
       const copy = new CopyObjectCommand({
         Bucket: this._bucket,
         CopySource: `${this._bucket}/${objectKey}`,
         Key: newKey,
       });
-
       await this._pool.send(copy);
 
+      // Delete the original object.
       const uncreate = new DeleteObjectsCommand({
         Bucket: this._bucket,
         Delete: {
@@ -235,15 +271,17 @@ export class S3Connection {
       });
       await this._pool.send(uncreate);
 
-      let list;
-      list = new ListObjectsV2Command({
+      // List objects in the bucket.
+      let list = new ListObjectsV2Command({
         Bucket: this._bucket,
       });
       await this._pool.send(list);
 
-      let files = [];
-      if (filter) {
-        files = filter.map((content) => {
+      let updatedFiles = [];
+
+      // If filter results exist, update files array with metadata.
+      if (filterResults) {
+        updatedFiles = filterResults.map((content) => {
           const directory = content.Key.split('/').slice(0, -1).join('/'); // Extract directory from Key
           const name = content.Key.split('/').pop(); // Extract file name from Key
           const type = name.split('.').pop(); // Extract file type from file name
@@ -259,23 +297,41 @@ export class S3Connection {
           };
         });
       }
-      return { updated: files };
+
+      // Return the response object containing the updated files.
+      return { updated: updatedFiles };
     } catch (error) {
-      console.error('Error updating object:', error);
+      // Log the error if one occurs.
+      logger.error('Error updating object:', error);
+      // Return null to indicate an error occurred.
       return null;
     }
   }
 
+  /**
+   ** Processes a delete request for objects in an S3 bucket.
+   *
+   * @param {object} _ - Unused parameter (convention for GraphQL resolver functions).
+   * @param {object} input - The input object containing the delete information.
+   * @param {string} input._delete.directory - The directory from which to delete the object.
+   * @param {string} input._delete.name - The name of the object to delete.
+   * @param {object} [input._delete.filter] - Optional filter object to narrow down the deletion scope.
+   * @returns {object|null} - The response object containing the number of deleted objects, or null if an error occurs.
+   */
   async delete(_, { input }) {
     try {
-      const filter = await this.processFilter(input._delete.filter);
-      console.log({ filter });
-      if (!filter || filter.length === 0) {
-        throw new Error('No matching objects found for update');
+      // Process the filter to obtain the objects to delete.
+      const filterResults = await this.processFilter(input._delete.filter);
+
+      // If no matching objects found, throw an error.
+      if (!filterResults || filterResults.length === 0) {
+        throw new Error('No matching objects found for deletion');
       }
 
-      const objectsToDelete = filter.map((content) => ({ Key: content.Key }));
+      // Extract Keys of objects to delete.
+      const objectsToDelete = filterResults.map((content) => ({ Key: content.Key }));
 
+      // Construct the DeleteObjectsCommand.
       const command = new DeleteObjectsCommand({
         Bucket: this._bucket,
         Delete: {
@@ -284,11 +340,38 @@ export class S3Connection {
         },
       });
 
+      // Send the delete command and retrieve the list of deleted objects.
       const { Deleted } = await this._pool.send(command);
-      console.log({ Deleted });
+
+      // Return the response object containing the number of deleted objects.
       return { deleted: Deleted.length };
     } catch (error) {
+      // Log the error if one occurs.
       logger.error('Error deleting object:', error);
+      // Return null to indicate an error occurred.
+      return null;
+    }
+  }
+
+  /**
+   * *Counts the number of objects in an S3 bucket that match a given filter.
+   *
+   * @param {object} _ - Unused parameter (convention for GraphQL resolver functions).
+   * @param {object} input - The input object containing filter options.
+   * @param {object} input.filter - The filter object to apply for object matching.
+   * @returns {number|null} - The number of objects matching the filter, or null if an error occurs.
+   */
+  async count(_, { input }) {
+    try {
+      // Process the filter to obtain the matching objects.
+      const filterResults = await this.processFilter(input.filter);
+
+      // Return the number of objects that match the filter.
+      return filterResults.length;
+    } catch (error) {
+      // Log the error if one occurs.
+      logger.error('Error counting objects:', error);
+      // Return null to indicate an error occurred.
       return null;
     }
   }

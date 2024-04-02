@@ -15,7 +15,7 @@ _in: String
 _nin: String
 _like: String
     }
-
+  
 
   # Define the root Query
 type Query {
@@ -74,6 +74,26 @@ user_role(input: User_roleMutationOptions): User_roleOutput
 users(input: UsersMutationOptions): UsersOutput
 }
 
+# list Entities
+enum Folders {
+AUTHORS
+BLOG_POSTS
+BRANDS
+CATEGORIES
+COUPONS
+CUSTOMERS
+ORDER_ITEMS
+ORDERS
+PAYMENT
+PRODUCTS
+PRODUCT_REVIEWS
+PROMOTIONS
+S3FILE
+SHIPMENTS
+USER_ROLE
+USERS
+}
+
 type Authors {
 id: ID!
 name: String!
@@ -98,7 +118,11 @@ email: ComparisonOperators
 fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for Authors
+input AuthorsUploadFilter {
+fileUrl: String
+}
+
+    # Allowed query operations for Authors
 input AuthorsQueryOptions {
   filter: AuthorsFilter
   skip: Int
@@ -119,7 +143,7 @@ type AuthorsOutput {
 	created: [Authors]!
 	updated: [Authors]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on Authors
@@ -140,7 +164,7 @@ fileUrl: String
 
   # Input logic for update operations on Authors
 input AuthorsUpdate {
-  filter: AuthorsFilter
+  filter:  AuthorsFilter
 name: String
 email: String
 
@@ -149,14 +173,15 @@ fileUrl: String
 
   # Input logic for delete operations on Authors
 input AuthorsDelete {
-  filter: AuthorsFilter
+  filter:  AuthorsFilter
 }
 
   # Input logic for upload operations on Authors
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input AuthorsUpload {
-  filter: AuthorsFilter
   file: Upload
+  filter: AuthorsFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on Authors
@@ -169,6 +194,11 @@ input AuthorsCount {
 type AuthorsCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type Blog_posts {
 id: ID!
@@ -198,7 +228,11 @@ publish_date: ComparisonOperators
 fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for Blog_posts
+input Blog_postsUploadFilter {
+fileUrl: String
+}
+
+    # Allowed query operations for Blog_posts
 input Blog_postsQueryOptions {
   filter: Blog_postsFilter
   skip: Int
@@ -221,7 +255,7 @@ type Blog_postsOutput {
 	created: [Blog_posts]!
 	updated: [Blog_posts]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on Blog_posts
@@ -243,7 +277,7 @@ fileUrl: String
 
   # Input logic for update operations on Blog_posts
 input Blog_postsUpdate {
-  filter: Blog_postsFilter
+  filter:  Blog_postsFilter
 title: String
 author_id: ID
 content: JSON
@@ -253,14 +287,15 @@ fileUrl: String
 
   # Input logic for delete operations on Blog_posts
 input Blog_postsDelete {
-  filter: Blog_postsFilter
+  filter:  Blog_postsFilter
 }
 
   # Input logic for upload operations on Blog_posts
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input Blog_postsUpload {
-  filter: Blog_postsFilter
   file: Upload
+  filter: Blog_postsFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on Blog_posts
@@ -273,6 +308,11 @@ input Blog_postsCount {
 type Blog_postsCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type Brands {
 id: ID!
@@ -302,7 +342,11 @@ products: ComparisonOperators
 fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for Brands
+input BrandsUploadFilter {
+fileUrl: String
+}
+
+    # Allowed query operations for Brands
 input BrandsQueryOptions {
   filter: BrandsFilter
   skip: Int
@@ -325,7 +369,7 @@ type BrandsOutput {
 	created: [Brands]!
 	updated: [Brands]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on Brands
@@ -347,7 +391,7 @@ fileUrl: String
 
   # Input logic for update operations on Brands
 input BrandsUpdate {
-  filter: BrandsFilter
+  filter:  BrandsFilter
 name: String
 country: String
 founded_year: String
@@ -357,14 +401,15 @@ fileUrl: String
 
   # Input logic for delete operations on Brands
 input BrandsDelete {
-  filter: BrandsFilter
+  filter:  BrandsFilter
 }
 
   # Input logic for upload operations on Brands
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input BrandsUpload {
-  filter: BrandsFilter
   file: Upload
+  filter: BrandsFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on Brands
@@ -377,6 +422,11 @@ input BrandsCount {
 type BrandsCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type Categories {
 category_id: Int!
@@ -402,7 +452,11 @@ icon_class: ComparisonOperators
 icon_label: ComparisonOperators
 }
 
-  # Allowed query operations for Categories
+input CategoriesUploadFilter {
+icon_label: String
+}
+
+    # Allowed query operations for Categories
 input CategoriesQueryOptions {
   filter: CategoriesFilter
   skip: Int
@@ -423,7 +477,7 @@ type CategoriesOutput {
 	created: [Categories]!
 	updated: [Categories]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on Categories
@@ -443,7 +497,7 @@ icon_label: String!
 
   # Input logic for update operations on Categories
 input CategoriesUpdate {
-  filter: CategoriesFilter
+  filter:  CategoriesFilter
 category_name: String
 icon_class: String
 icon_label: String
@@ -451,14 +505,15 @@ icon_label: String
 
   # Input logic for delete operations on Categories
 input CategoriesDelete {
-  filter: CategoriesFilter
+  filter:  CategoriesFilter
 }
 
   # Input logic for upload operations on Categories
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input CategoriesUpload {
-  filter: CategoriesFilter
   file: Upload
+  filter: CategoriesFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on Categories
@@ -471,6 +526,11 @@ input CategoriesCount {
 type CategoriesCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type Coupons {
 id: ID!
@@ -500,7 +560,11 @@ promotion_id: ComparisonOperators
 fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for Coupons
+input CouponsUploadFilter {
+fileUrl: String
+}
+
+    # Allowed query operations for Coupons
 input CouponsQueryOptions {
   filter: CouponsFilter
   skip: Int
@@ -523,7 +587,7 @@ type CouponsOutput {
 	created: [Coupons]!
 	updated: [Coupons]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on Coupons
@@ -545,7 +609,7 @@ fileUrl: String
 
   # Input logic for update operations on Coupons
 input CouponsUpdate {
-  filter: CouponsFilter
+  filter:  CouponsFilter
 code: String
 discount_percent: Int
 expiration_date: String
@@ -555,14 +619,15 @@ fileUrl: String
 
   # Input logic for delete operations on Coupons
 input CouponsDelete {
-  filter: CouponsFilter
+  filter:  CouponsFilter
 }
 
   # Input logic for upload operations on Coupons
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input CouponsUpload {
-  filter: CouponsFilter
   file: Upload
+  filter: CouponsFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on Coupons
@@ -575,6 +640,11 @@ input CouponsCount {
 type CouponsCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type Customers {
 customer_id: Int!
@@ -602,7 +672,11 @@ icon_class: ComparisonOperators
 icon_label: ComparisonOperators
 }
 
-  # Allowed query operations for Customers
+input CustomersUploadFilter {
+icon_label: String
+}
+
+    # Allowed query operations for Customers
 input CustomersQueryOptions {
   filter: CustomersFilter
   skip: Int
@@ -624,7 +698,7 @@ type CustomersOutput {
 	created: [Customers]!
 	updated: [Customers]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on Customers
@@ -646,7 +720,7 @@ icon_label: String
 
   # Input logic for update operations on Customers
 input CustomersUpdate {
-  filter: CustomersFilter
+  filter:  CustomersFilter
 customer_name: String
 email: String
 icon_class: String
@@ -656,14 +730,15 @@ icon_label: String
 
   # Input logic for delete operations on Customers
 input CustomersDelete {
-  filter: CustomersFilter
+  filter:  CustomersFilter
 }
 
   # Input logic for upload operations on Customers
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input CustomersUpload {
-  filter: CustomersFilter
   file: Upload
+  filter: CustomersFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on Customers
@@ -676,6 +751,11 @@ input CustomersCount {
 type CustomersCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type Order_items {
 order_item_id: Int!
@@ -710,7 +790,11 @@ icon_class: ComparisonOperators
 icon_label: ComparisonOperators
 }
 
-  # Allowed query operations for Order_items
+input Order_itemsUploadFilter {
+icon_label: String
+}
+
+    # Allowed query operations for Order_items
 input Order_itemsQueryOptions {
   filter: Order_itemsFilter
   skip: Int
@@ -735,7 +819,7 @@ type Order_itemsOutput {
 	created: [Order_items]!
 	updated: [Order_items]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on Order_items
@@ -759,7 +843,7 @@ icon_label: String
 
   # Input logic for update operations on Order_items
 input Order_itemsUpdate {
-  filter: Order_itemsFilter
+  filter:  Order_itemsFilter
 order_id: Int
 product_id: Int
 quantity: Int
@@ -771,14 +855,15 @@ icon_label: String
 
   # Input logic for delete operations on Order_items
 input Order_itemsDelete {
-  filter: Order_itemsFilter
+  filter:  Order_itemsFilter
 }
 
   # Input logic for upload operations on Order_items
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input Order_itemsUpload {
-  filter: Order_itemsFilter
   file: Upload
+  filter: Order_itemsFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on Order_items
@@ -791,6 +876,11 @@ input Order_itemsCount {
 type Order_itemsCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type Orders {
 order_id: Int!
@@ -821,7 +911,11 @@ icon_class: ComparisonOperators
 icon_label: ComparisonOperators
 }
 
-  # Allowed query operations for Orders
+input OrdersUploadFilter {
+icon_label: String
+}
+
+    # Allowed query operations for Orders
 input OrdersQueryOptions {
   filter: OrdersFilter
   skip: Int
@@ -843,7 +937,7 @@ type OrdersOutput {
 	created: [Orders]!
 	updated: [Orders]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on Orders
@@ -867,7 +961,7 @@ icon_label: String
 
   # Input logic for update operations on Orders
 input OrdersUpdate {
-  filter: OrdersFilter
+  filter:  OrdersFilter
 
 customer_id: Int
 icon_class: String
@@ -879,14 +973,15 @@ icon_label: String
 
   # Input logic for delete operations on Orders
 input OrdersDelete {
-  filter: OrdersFilter
+  filter:  OrdersFilter
 }
 
   # Input logic for upload operations on Orders
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input OrdersUpload {
-  filter: OrdersFilter
   file: Upload
+  filter: OrdersFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on Orders
@@ -899,6 +994,11 @@ input OrdersCount {
 type OrdersCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type Payment {
 id: String!
@@ -930,7 +1030,11 @@ order_id: ComparisonOperators
 fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for Payment
+input PaymentUploadFilter {
+fileUrl: String
+}
+
+    # Allowed query operations for Payment
 input PaymentQueryOptions {
   filter: PaymentFilter
   skip: Int
@@ -954,7 +1058,7 @@ type PaymentOutput {
 	created: [Payment]!
 	updated: [Payment]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on Payment
@@ -977,7 +1081,7 @@ fileUrl: String
 
   # Input logic for update operations on Payment
 input PaymentUpdate {
-  filter: PaymentFilter
+  filter:  PaymentFilter
 payment_method: String
 
 amount: Float
@@ -988,14 +1092,15 @@ fileUrl: String
 
   # Input logic for delete operations on Payment
 input PaymentDelete {
-  filter: PaymentFilter
+  filter:  PaymentFilter
 }
 
   # Input logic for upload operations on Payment
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input PaymentUpload {
-  filter: PaymentFilter
   file: Upload
+  filter: PaymentFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on Payment
@@ -1008,6 +1113,11 @@ input PaymentCount {
 type PaymentCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type Products {
 product_id: Int!
@@ -1039,7 +1149,11 @@ icon_class: ComparisonOperators
 icon_label: ComparisonOperators
 }
 
-  # Allowed query operations for Products
+input ProductsUploadFilter {
+icon_label: String
+}
+
+    # Allowed query operations for Products
 input ProductsQueryOptions {
   filter: ProductsFilter
   skip: Int
@@ -1063,7 +1177,7 @@ type ProductsOutput {
 	created: [Products]!
 	updated: [Products]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on Products
@@ -1087,7 +1201,7 @@ icon_label: String
 
   # Input logic for update operations on Products
 input ProductsUpdate {
-  filter: ProductsFilter
+  filter:  ProductsFilter
 product_name: String
 price: Float
 currency_type: String
@@ -1099,14 +1213,15 @@ icon_label: String
 
   # Input logic for delete operations on Products
 input ProductsDelete {
-  filter: ProductsFilter
+  filter:  ProductsFilter
 }
 
   # Input logic for upload operations on Products
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input ProductsUpload {
-  filter: ProductsFilter
   file: Upload
+  filter: ProductsFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on Products
@@ -1119,6 +1234,11 @@ input ProductsCount {
 type ProductsCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type Product_reviews {
 review_id: Int!
@@ -1153,7 +1273,11 @@ icon_class: ComparisonOperators
 icon_label: ComparisonOperators
 }
 
-  # Allowed query operations for Product_reviews
+input Product_reviewsUploadFilter {
+icon_label: String
+}
+
+    # Allowed query operations for Product_reviews
 input Product_reviewsQueryOptions {
   filter: Product_reviewsFilter
   skip: Int
@@ -1178,7 +1302,7 @@ type Product_reviewsOutput {
 	created: [Product_reviews]!
 	updated: [Product_reviews]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on Product_reviews
@@ -1202,7 +1326,7 @@ icon_label: String
 
   # Input logic for update operations on Product_reviews
 input Product_reviewsUpdate {
-  filter: Product_reviewsFilter
+  filter:  Product_reviewsFilter
 product_id: Int
 customer_id: Int
 rating: Int
@@ -1214,14 +1338,15 @@ icon_label: String
 
   # Input logic for delete operations on Product_reviews
 input Product_reviewsDelete {
-  filter: Product_reviewsFilter
+  filter:  Product_reviewsFilter
 }
 
   # Input logic for upload operations on Product_reviews
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input Product_reviewsUpload {
-  filter: Product_reviewsFilter
   file: Upload
+  filter: Product_reviewsFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on Product_reviews
@@ -1234,6 +1359,11 @@ input Product_reviewsCount {
 type Product_reviewsCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type Promotions {
 id: ID!
@@ -1263,7 +1393,11 @@ end_date: ComparisonOperators
 fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for Promotions
+input PromotionsUploadFilter {
+fileUrl: String
+}
+
+    # Allowed query operations for Promotions
 input PromotionsQueryOptions {
   filter: PromotionsFilter
   skip: Int
@@ -1286,7 +1420,7 @@ type PromotionsOutput {
 	created: [Promotions]!
 	updated: [Promotions]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on Promotions
@@ -1309,7 +1443,7 @@ fileUrl: String
 
   # Input logic for update operations on Promotions
 input PromotionsUpdate {
-  filter: PromotionsFilter
+  filter:  PromotionsFilter
 name: String
 description: String
 start_date: String
@@ -1320,14 +1454,15 @@ fileUrl: String
 
   # Input logic for delete operations on Promotions
 input PromotionsDelete {
-  filter: PromotionsFilter
+  filter:  PromotionsFilter
 }
 
   # Input logic for upload operations on Promotions
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input PromotionsUpload {
-  filter: PromotionsFilter
   file: Upload
+  filter: PromotionsFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on Promotions
@@ -1340,6 +1475,11 @@ input PromotionsCount {
 type PromotionsCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type S3File {
 name: String!
@@ -1369,9 +1509,14 @@ lastModified: ComparisonOperators
 location: ComparisonOperators
 }
 
-  # Allowed query operations for S3File
+input S3FileUploadFilter {
+name: String
+directory: String
+}
+
+    # Allowed query operations for S3File
 input S3FileQueryOptions {
-  filter: S3FileFilter
+  filter: S3FileUploadFilter
   skip: Int
   take: Int = 15
   sort: S3FileSortOptions
@@ -1392,7 +1537,7 @@ type S3FileOutput {
 	created: [S3File]!
 	updated: [S3File]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on S3File
@@ -1415,30 +1560,27 @@ location: String!
 
   # Input logic for update operations on S3File
 input S3FileUpdate {
-  filter: S3FileFilter
+  filter:  S3FileUploadFilter
 name: String
 directory: String
-type: String
-size: Int
-lastModified: GraphQLDate
-location: String
 }
 
   # Input logic for delete operations on S3File
 input S3FileDelete {
-  filter: S3FileFilter
+  filter:  S3FileUploadFilter
 }
 
   # Input logic for upload operations on S3File
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input S3FileUpload {
-  filter: S3FileFilter
   file: Upload
+  filter: S3FileUploadFilter
+  directory: Folders!
 }
 
   # Input logic for count operations on S3File
 input S3FileCount {
-  filter: S3FileFilter
+  filter: S3FileUploadFilter
   _count: Int
 } 
 
@@ -1446,6 +1588,11 @@ input S3FileCount {
 type S3FileCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type Shipments {
 shipment_id: Int!
@@ -1475,7 +1622,11 @@ icon_class: ComparisonOperators
 icon_label: ComparisonOperators
 }
 
-  # Allowed query operations for Shipments
+input ShipmentsUploadFilter {
+icon_label: String
+}
+
+    # Allowed query operations for Shipments
 input ShipmentsQueryOptions {
   filter: ShipmentsFilter
   skip: Int
@@ -1498,7 +1649,7 @@ type ShipmentsOutput {
 	created: [Shipments]!
 	updated: [Shipments]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on Shipments
@@ -1520,7 +1671,7 @@ icon_label: String
 
   # Input logic for update operations on Shipments
 input ShipmentsUpdate {
-  filter: ShipmentsFilter
+  filter:  ShipmentsFilter
 order_id: Int
 
 tracking_int: String
@@ -1530,14 +1681,15 @@ icon_label: String
 
   # Input logic for delete operations on Shipments
 input ShipmentsDelete {
-  filter: ShipmentsFilter
+  filter:  ShipmentsFilter
 }
 
   # Input logic for upload operations on Shipments
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input ShipmentsUpload {
-  filter: ShipmentsFilter
   file: Upload
+  filter: ShipmentsFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on Shipments
@@ -1550,6 +1702,11 @@ input ShipmentsCount {
 type ShipmentsCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type User_role {
 id: ID!
@@ -1573,7 +1730,11 @@ role_name: ComparisonOperators
 fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for User_role
+input User_roleUploadFilter {
+fileUrl: String
+}
+
+    # Allowed query operations for User_role
 input User_roleQueryOptions {
   filter: User_roleFilter
   skip: Int
@@ -1593,7 +1754,7 @@ type User_roleOutput {
 	created: [User_role]!
 	updated: [User_role]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on User_role
@@ -1613,7 +1774,7 @@ fileUrl: String
 
   # Input logic for update operations on User_role
 input User_roleUpdate {
-  filter: User_roleFilter
+  filter:  User_roleFilter
 role_name: String
 
 fileUrl: String
@@ -1621,14 +1782,15 @@ fileUrl: String
 
   # Input logic for delete operations on User_role
 input User_roleDelete {
-  filter: User_roleFilter
+  filter:  User_roleFilter
 }
 
   # Input logic for upload operations on User_role
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input User_roleUpload {
-  filter: User_roleFilter
   file: Upload
+  filter: User_roleFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on User_role
@@ -1641,6 +1803,11 @@ input User_roleCount {
 type User_roleCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
 type Users {
 id: ID!
@@ -1671,7 +1838,11 @@ created_t: ComparisonOperators
 fileUrl: ComparisonOperators
 }
 
-  # Allowed query operations for Users
+input UsersUploadFilter {
+fileUrl: String
+}
+
+    # Allowed query operations for Users
 input UsersQueryOptions {
   filter: UsersFilter
   skip: Int
@@ -1695,7 +1866,7 @@ type UsersOutput {
 	created: [Users]!
 	updated: [Users]!
 	deleted: Int
-  uploaded: String
+  uploaded: UploadResult
 }
 
   # Define the input options for the mutation operations on Users
@@ -1718,7 +1889,7 @@ fileUrl: String
 
   # Input logic for update operations on Users
 input UsersUpdate {
-  filter: UsersFilter
+  filter:  UsersFilter
 password: String
 email: String
 role_id: String
@@ -1729,14 +1900,15 @@ fileUrl: String
 
   # Input logic for delete operations on Users
 input UsersDelete {
-  filter: UsersFilter
+  filter:  UsersFilter
 }
 
   # Input logic for upload operations on Users
 # NOTE: This is not a standard CRUD operation, but is included for file uploads to work properly.
 input UsersUpload {
-  filter: UsersFilter
   file: Upload
+  filter: UsersFilter
+  location: UploadLocation!
 }
 
   # Input logic for count operations on Users
@@ -1749,7 +1921,16 @@ input UsersCount {
 type UsersCountResult {
   count: Int!
 }
+# output of the file upload
+type UploadResult {
+changedRows: Int
+data: String! 
+} 
 
+enum UploadLocation{
+  FS
+  S3
+}
 
 enum Sort {
   ASC
